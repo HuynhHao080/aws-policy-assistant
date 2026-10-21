@@ -1,0 +1,15 @@
+import boto3, json, base64, os
+client = boto3.client('cognito-idp', region_name='ap-southeast-1')
+resp = client.initiate_auth(ClientId='usn7b60eevhmvgsao7ok63a8l', AuthFlow='USER_PASSWORD_AUTH', AuthParameters={'USERNAME':'test-user@local.test','PASSWORD':'[REDACTED_EXPOSED_LEGACY_PASSWORD]'})
+id_token = resp['AuthenticationResult']['IdToken']
+with open('jwt_token.tmp', 'w') as f: f.write(id_token)
+parts = id_token.split('.')
+print('Saved to jwt_token.tmp')
+print('Segments:', len(parts))
+payload = base64.urlsafe_b64decode(parts[1] + '=' * (4 - len(parts[1]) % 4))
+claims = json.loads(payload)
+print('iss:', claims.get('iss'))
+print('aud:', claims.get('aud'))
+print('token_use:', claims.get('token_use'))
+print('exp:', claims.get('exp'))
+print('sub:', claims.get('sub', '')[:8] + '...')

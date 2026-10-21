@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Policy Assistant — Demo</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; background: #f8f9fa; color: #212529; }
+  header { background: #1f3a5c; color: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  h1 { margin: 0; font-size: 1.6rem; }
+  .card { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+  .section { margin-bottom: 0.5rem; }
+  label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+  input[type="text"], input[type="password"] { width: 100%; padding: 0.5rem; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+  button { padding: 0.5rem 1rem; background: #1f3a5c; color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-top: 0.5rem; }
+  button:hover { background: #14325c; }
+  .status { padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-family: monospace; font-size: 0.9rem; }
+  .status.ok { background: #d4edda; color: #155724; }
+  .status.error { background: #f8d7da; color: #721c24; }
+  .status.info { background: #d1ecf1; color: #0c5460; }
+  .hidden { display: none; }
+  .note { font-size: 0.85rem; color: #6c757d; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Policy Assistant — Demo</h1>
+  <p>Serverless policy lookup and document ingestion. <strong>Local demo only.</strong> No production data.</p>
+</header>
+
+<div class="card">
+  <h2>Authentication</h2>
+  <div class="section">
+    <label for="jwt-input">Cognito IdToken (paste temporarily — not saved)</label>
+    <input type="password" id="jwt-input" placeholder="Paste IdToken here (temporary, not stored)" style="font-family: monospace;" />
+    <button onclick="setToken()">Set Token</button>
+    <div class="note">Token is kept only in memory for this session. It is not saved to localStorage, source, or logs.</div>
+  </div>
+  <div id="auth-status" class="status info">Not authenticated</div>
+</</div>
+
+<div class="card">
+  <h2>Policy Lookup</h2>
+  <div class="section">
+    <label for="policy-id">Policy ID</label>
+    <input type="=" id="policy-id" value="POL-001" />
+    <button onclick="lookupPolicy()">Lookup</button>
+  </div>
+  <div id="policy-result" class="status hidden"></div>
+</div>
+
+<div class="card">
+  <h2>Policy Search</h2>
+  <div class="section">
+    <label for="keyword">Keyword</label>
+    <input type="text" id="keyword" value="refund" />
+    <button onclick="searchPolicies()">Search</button>
+  </div>
+  <div id="search-result" class="status hidden"></div>
+</</div>
+
+<div class="card">
+  <h2>Document Upload Session</h2>
+  <div class="section">
+    <button onclick="uploadSession()">Create Upload Session</button>
+  </div>
+  <div id="upload-session-result" class="status hidden"></div>
+</div>
+
+<div class="card">
+  <h2>Document Upload (Full Flow)</h2>
+  <div class="section">
+    <label for="file-input">Select test file</label>
+    <input type="file" id="file-input" />
+    <button onclick="runFullUpload()">Upload → Submit → Status → Download</button>
+  </div>
+  <div id="full-upload-result" class="status hidden"></div>
+</div>
+
+<div class="card">
+  <h2>Document Status</h2>
+  <div class="section">
+    <label for="doc-id">Document ID</label>
+    <input type="text" id="doc-id" placeholder="Enter doc ID from upload" />
+    <button onclick="checkStatus()">Check Status</button>
+  </div>
+  <div id="status-result" class="status hidden"></div>
+</</div>
+
+<div class="card">
+  <h2>Document Download</h2>
+  <div class="section">
+    <label for="download-id">Document ID</label>
+    <input type="text" id="download-id" placeholder="Enter doc ID from upload" />
+    <button onclick="downloadDoc()">Get Download URL</button>
+  </div>
+  <div id="download-result" class="status hidden"></div>
+</div>
+
+<div class="card">
+  <h2>Notes</h2>
+  <ul>
+    <li>Use a valid Cognito IdToken for protected endpoints.</li>
+    <li>Document upload uses a synthetic test file (no confidential data).</li>
+    <li>Presigned URLs are temporary (300 seconds) and not logged.</li>
+    <li>Ownership isolation is enforced by the backend (separate test users required).</li>
+  </ul>
+</div>
+
+<script>
+let apiBase = 'https://ctgt5w6emf.execute-api.ap-southeast-1.amazonaws.com/Prod';
+let authHeader = null;
+
+function setToken() {
+    const input = document.getElementById('jwt-input');
+    const token = input.value.trim();
+    if (token && token.split('.').length === 3) {
+        authHeader = 'Bearer ' + token;
+        document.getElementById('auth-status').textContent = 'Authenticated (token verified locally)';
+        document.getElementById('auth-status').className = 'status ok';
+        input.value = '';
+    } else {
+        document.getElementById('auth-status').textContent = 'Invalid token format (expected 3 segments)';
+        document.getElementById('auth-status').className = 'status error';
+    }
+}
+
+async function lookupPolicy() {
+    const id = document.getElementById('policy-id').value || 'POL-001';
+    try {
+        const res = await fetch(`${apiBase}/policies/${id}`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const body = await res.json();
+        showResult('policy-result', `HTTP ${res.status}: ${JSON.stringify(body).slice(0, 200)}`, res.status >= 400);
+    } catch (e) {
+        showResult('policy-result', `Request failed: ${e.message}`, true);
+    }
+}
+
+async function searchPolicies() {
+    const kw = document.getElementById('keyword').value || 'refund';
+    try {
+        const res = await fetch(`${apiBase}/policies?keyword=${encodeURIComponent(kw)}`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const body = await res.json();
+        showResult('search-result', `HTTP ${res.status}: count=${body.count || 'N/A'}, scanned=${body.scanned_count || 'N/A'}, truncated=${body.truncated || 'N/A'}`, res.status >= 400);
+    } catch (e) {
+        showResult('search-result', `Request failed: ${e.message}`, true);
+    }
+}
+
+async function uploadSession() {
+    try {
+        const res = await fetch(`${apiBase}/documents/upload-session`, { method: 'POST', headers: authHeader ? { 'Authorization': authHeader, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' } });
+        const body = await res.json();
+        showResult('upload-session-result', `HTTP ${res.status}: doc_id=${body.doc_id || 'N/A'}, upload_url=${body.upload_url ? '[PRESIGNED URL REDACTED]' : 'N/A'}`, res.status >= 400);
+    } catch (e) {
+        showResult('upload-session-result', `Request failed: ${e.message}`, true);
+    }
+}
+
+async function checkStatus() {
+    const docId = document.getElementById('doc-id').value.trim();
+    if (!docId) { showResult('status-result', 'Please enter a Document ID', true); return; }
+    try {
+        const res = await fetch(`${apiBase}/documents/${docId}/status`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const body = await res.json();
+        showResult('status-result', `HTTP ${res.status}: status=${body.status || 'N/A'}, s3_key=${body.s3_key || 'N/A'}`, res.status >= 400);
+    } catch (e) {
+        showResult('status-result', `Request failed: ${e.message}`, true);
+    }
+}
+
+async function downloadDoc() {
+    const docId = document.getElementById('download-id').value.trim();
+    if (!docId) { showResult('download-result', 'Please enter a Document ID', true); return; }
+    try {
+        const res = await fetch(`${apiBase}/documents/${docId}/download`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const body = await res.json();
+        showResult('download-result', `HTTP ${res.status}: doc_id=${body.doc_id || 'N/A'}, download_url=${body.download_url ? '[PRESIGNED URL REDACTED]' : 'N/A'}`, res.status >= 400);
+    } catch (e) {
+        showResult('download-result', `Request failed: ${e.message}`, true);
+    }
+}
+
+async function runFullUpload() {
+    const fileInput = document.getElementById('file-input');
+    if (!fileInput.files || !fileInput.files[0]) {
+        showResult('full-upload-result', 'No file selected', true); return;
+    }
+    const file = fileInput.files[0];
+    try {
+        // 1. Upload session
+        const sessionRes = await fetch(`${apiBase}/documents/upload-session`, { method: 'POST', headers: authHeader ? { 'Authorization': authHeader, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' } });
+        if (!sessionRes.ok) { showResult('full-upload-result', `Upload session failed: HTTP ${sessionRes.status}`, true); return; }
+        const sessionBody = await sessionRes.json();
+        const docId = sessionBody.doc_id;
+        const uploadUrl = sessionBody.upload_url;
+        if (!docId || !uploadUrl) { showResult('full-upload-result', 'Missing doc_id or upload_url', true); return; }
+
+        // 2. S3 PUT (do not expose URL in UI)
+        const putRes = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type || 'application/pdf' }, body: file });
+        if (!putRes.ok) { showResult('full-upload-result', `S3 PUT failed: HTTP ${putRes.status}`, true); return; }
+
+        // 3. Submit
+        const submitRes = await fetch(`${apiBase}/documents/submit`, { method: 'POST', headers: authHeader ? { 'Authorization': authHeader, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' }, body: JSON.stringify({ doc_id: docId, s3_key: `uploads/${docId}/document` }) });
+        if (!submitRes.ok) { showResult('full-upload-result', `Submit failed: HTTP ${submitRes.status}`, true); return; }
+
+        // 4. Status
+        const statusRes = await fetch(`${apiBase}/documents/${docId}/status`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const statusBody = await statusRes.json();
+
+        // 5. Download URL (not file content; URL not shown)
+        const downloadRes = await fetch(`${apiBase}/documents/${docId}/download`, { method: 'GET', headers: authHeader ? { 'Authorization': authHeader } : {} });
+        const downloadBody = await downloadRes.json();
+
+        // Update doc-id fields with real ID
+        document.getElementById('doc-id').value = docId;
+        document.getElementById('download-id').value = docId;
+
+        showResult('full-upload-result', `HTTP 200 | doc_id=${docId} | status=${statusBody.status || 'N/A'} | download_url=[REDACTED]`, false);
+    } catch (e) {
+        showResult('full-upload-result', `Error: ${e.message}`, true);
+    }
+}
+
+function showResult(id, text, isError) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.textContent = text;
+        el.className = 'status ' + (isError ? 'error' : 'ok');
+        el.classList.remove('hidden');
+    }
+}
+</script>
+</body>
+</html>

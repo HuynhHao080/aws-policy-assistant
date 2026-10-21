@@ -1,0 +1,29 @@
+flowchart LR
+    subgraph Client["Client Applications"]
+        WebApp["Web Frontend (localhost:3000)"]
+        Chatbot["Chatbot / Internal Tool"]
+        Curl["curl / API Client"]
+    end
+
+    subgraph AWS["AWS Cloud (ap-southeast-1)"]
+        APIGW["API Gateway HTTP API\nPolicyAssistantApi\nStage: Prod"]
+        Lambda["Lambda Function\nPolicyAssistantFunction\nPython 3.12 | 128 MB | 10 s"]
+        DDB["DynamoDB Table\nPolicyAssistantPolicies\nPK: policy_id (String)\nOn-Demand Billing"]
+        CWLogs["CloudWatch Logs\n/aws/lambda/PolicyAssistantFunction-...\nRetention: 30 days | JSON"]
+        IAM["IAM Role\nPolicyAssistantFunctionRole\nLeast-Privilege Policy"]
+    end
+
+    Client -->|HTTPS GET| APIGW
+    APIGW -->|Invoke AWS_PROXY| Lambda
+    Lambda -->|GetItem / Scan| DDB
+    Lambda -->|Logs JSON| CWLogs
+    Lambda -.->|Assumes| IAM
+    IAM -.->|Allows| DDB
+
+    style Client fill:#e1f5fe
+    style AWS fill:#fff3e0
+    style APIGW fill:#fff9c4
+    style Lambda fill:#c8e6c9
+    style DDB fill:#ffccbc
+    style CWLogs fill:#e8eaf6
+    style IAM fill:#f3e5f5

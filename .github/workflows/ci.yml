@@ -1,0 +1,27 @@
+name: Policy Assistant CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install -r policy_assistant/requirements.txt -t .
+          pip install -r tests/requirements.txt
+      - name: SAM build
+        run: sam build
+      - name: Unit tests
+        run: python -m pytest tests/unit -v --tb=short
+      - name: SAM validate
+        run: sam validate --lint

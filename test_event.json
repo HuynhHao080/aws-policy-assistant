@@ -1,0 +1,34 @@
+{
+  "version": "2.0",
+  "routeKey": "GET /policies/{policy_id}",
+  "rawPath": "/policies/POL-001",
+  "rawQueryString": "",
+  "headers": {
+    "accept": "application/json",
+    "host": "localhost:3000"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "test-api",
+    "domainName": "localhost:3000",
+    "domainPrefix": "localhost",
+    "http": {
+      "method": "GET",
+      "path": "/policies/POL-001",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "pytest"
+    },
+    "requestId": "test-request-id",
+    "routeKey": "GET /policies/{policy_id}",
+    "stage": "Prod",
+    "time": "01/Jan/2024:00:00:00 +0000",
+    "timeEpoch": 1704067200000
+  },
+  "pathParameters": {
+    "policy_id": "POL-001"
+  },
+  "queryStringParameters": {},
+  "body": null,
+  "isBase64Encoded": false
+}

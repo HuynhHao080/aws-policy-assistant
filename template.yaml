@@ -1,0 +1,373 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  policy-assistant
+
+  Policy Assistant MVP - Serverless application for policy retrieval and keyword search.
+  No AI/ML services are used in this version.
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.12
+    Architectures:
+      - x86_64
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        POLICIES_TABLE_NAME: !Ref PoliciesTable
+        DOCUMENTS_BUCKET_NAME: !Ref PolicyAssistantDocumentsBucket
+        DOCUMENT_QUEUE_URL: !Ref PolicyAssistantDocumentQueue
+        DOCUMENT_METADATA_TABLE_NAME: !Ref DocumentMetadata
+
+Resources:
+  PolicyAssistantDocumentsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-documents-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveOldDocuments
+            Status: Enabled
+            Transition:
+              StorageClass: GLACIER
+              TransitionInDays: 90
+            ExpirationInDays: 365
+      CorsConfiguration:
+        CorsRules:
+          - Id: PolicyAssistantUploadCors
+            AllowedMethods:
+              - PUT
+            AllowedOrigins:
+              - "http://localhost:8080"
+            AllowedHeaders:
+              - Content-Type
+            MaxAge: 3000
+
+  PolicyAssistantDocumentQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::StackName}-document-queue"
+      VisibilityTimeout: 30
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt PolicyAssistantDocumentDLQ.Arn
+        maxReceiveCount: 3
+
+  PolicyAssistantDocumentDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${AWS::StackName}-document-dlq"
+      MessageRetentionPeriod: 1209600
+
+  PolicyAssistantWorker:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: policy_assistant/
+      Handler: app.worker_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 256
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+                - dynamodb:GetItem
+              Resource: !GetAtt PoliciesTable.Arn
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:UpdateItem
+              Resource: !GetAtt DocumentMetadata.Arn
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: !Sub "arn:aws:s3:::${PolicyAssistantDocumentsBucket}/*"
+            - Effect: Allow
+              Action:
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:GetQueueAttributes
+              Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt PolicyAssistantDocumentDLQ.Arn
+      Events:
+        DocumentQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt PolicyAssistantDocumentQueue.Arn
+            BatchSize: 1
+
+  DocumentMetadata:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: PolicyAssistantDocumentMetadata
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: doc_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: doc_id
+          KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  PolicyAssistantLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${PolicyAssistantFunction}"
+      RetentionInDays: 30
+
+  PoliciesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: PolicyAssistantPolicies
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: policy_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: policy_id
+          KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      # No GSIs needed for MVP - using Scan for keyword search
+      # Note: Scan has limitations for large datasets (1MB limit per request, pagination required)
+      # Document metadata attributes (optional, schemaless): doc_id, s3_key, status, uploaded_at
+
+  PolicyAssistantUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub "${AWS::StackName}-user-pool"
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      MfaConfiguration: "OFF"
+
+  PolicyAssistantUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref PolicyAssistantUserPool
+      ClientName: policy-assistant-client
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: "ENABLED"
+      RefreshTokenValidity: 30
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      EnableTokenRevocation: true
+
+  PolicyAssistantFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: policy_assistant/
+      Handler: app.lambda_handler
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:Scan
+              Resource: !GetAtt PoliciesTable.Arn
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:UpdateItem
+                - dynamodb:PutItem
+              Resource: !GetAtt DocumentMetadata.Arn
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${PolicyAssistantDocumentsBucket}/*"
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
+      Events:
+        GetPolicyById:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /policies/{policy_id}
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+        SearchPolicies:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /policies
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+        HealthCheck:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /health
+            Method: get
+        UploadSession:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /documents/upload-session
+            Method: post
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+        SubmitDocument:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /documents/submit
+            Method: post
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+        DocumentStatus:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /documents/{doc_id}/status
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+        DocumentDownload:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /documents/{doc_id}/download
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
+
+  PolicyAssistantApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: Prod
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 10
+        ThrottlingBurstLimit: 5
+      Auth:
+        Authorizers:
+          PolicyAssistantAuthorizer:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${PolicyAssistantUserPool}"
+              audience:
+                - !Ref PolicyAssistantUserPoolClient
+      # TODO: Replace localhost origins with production frontend domain before deployment.
+      # Do not invent a production domain - this value requires customer input.
+      CorsConfiguration:
+        AllowOrigins:
+          - "http://localhost:3000"
+          - "http://127.0.0.1:3000"
+          - "http://localhost:8080"
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        MaxAge: 300
+
+  PolicyAssistantErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "PolicyAssistant-Errors-"
+      AlarmDescription: "Alarm when Lambda function errors exceed 0 in 5 minutes"
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref PolicyAssistantFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  PolicyAssistantDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "PolicyAssistant-Duration-"
+      AlarmDescription: "Alarm when Lambda function duration exceeds 5000ms in 5 minutes"
+      Namespace: AWS/Lambda
+      MetricName: Duration
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref PolicyAssistantFunction
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5000
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+
+  PolicyAssistantDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub "PolicyAssistant-"
+      DashboardBody: !Sub
+        '{
+          "widgets": [
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "AWS/Lambda", "Invocations", "FunctionName", "PolicyAssistantFunction" ],
+                  [ "AWS/Lambda", "Errors", "FunctionName", "PolicyAssistantFunction" ],
+                  [ "AWS/Lambda", "Duration", "FunctionName", "PolicyAssistantFunction" ],
+                  [ "AWS/Lambda", "Throttles", "FunctionName", "PolicyAssistantFunction" ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "",
+                "title": "Lambda Function Metrics",
+                "annotations": {
+                  "horizontal": []
+                }
+              }
+            }
+          ]
+        }'
+
+Outputs:
+  PolicyAssistantApiUrl:
+    Description: API Gateway HTTP API endpoint URL for Prod stage
+    Value: !Sub "https://${PolicyAssistantApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
+  PolicyAssistantFunctionArn:
+    Description: Policy Assistant Lambda Function ARN
+    Value: !GetAtt PolicyAssistantFunction.Arn
+  PolicyAssistantFunctionIamRole:
+    Description: IAM Role created for Policy Assistant function
+    Value: !GetAtt PolicyAssistantFunctionRole.Arn
+  PoliciesTableName:
+    Description: DynamoDB Table Name
+    Value: !Ref PoliciesTable
