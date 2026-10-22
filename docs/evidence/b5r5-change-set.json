@@ -1,0 +1,137 @@
+{
+  "started_at_utc": "2026-10-21T18:24:52.894484+00:00",
+  "status": "AUDIT_COMPLETE",
+  "decision": "NO_GO_OUT_OF_APPROVED_ACCEPTANCE",
+  "deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "artifact_upload": "NOT_EXECUTED",
+  "create_attempt_count": 1,
+  "preflight": "VERIFIED",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "stack_before": {
+    "StackStatus": "CREATE_COMPLETE",
+    "CreationTime": "2026-10-21 06:34:32.481000+00:00",
+    "LastUpdatedTime": "2026-10-21 09:37:14.982000+00:00"
+  },
+  "old_stack_before": {
+    "StackStatus": "UPDATE_COMPLETE",
+    "CreationTime": "2026-10-12 06:25:48.038000+00:00",
+    "LastUpdatedTime": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "old_artifact_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+  "api_artifact_sha256": "7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd",
+  "api_artifact_key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+  "only_original_diff": "PolicyAssistantFunction.Properties.CodeUri",
+  "worker_recovery_resources_exactly_unchanged": true,
+  "change_set_name": "fcaj-b5r5-api-20261021-182458-e16c8529",
+  "create_attempted_at_utc": "2026-10-21T18:24:58.764501+00:00",
+  "change_set": "CREATED_NOT_EXECUTED",
+  "change_set_status": "CREATE_COMPLETE",
+  "execution_status": "AVAILABLE",
+  "change_set_id_masked": "arn:aws:cloudformation:ap-southeast-1:********0098:changeSet/fcaj-b5r5-api-20261021-182458-e16c8529/c202f831-b371-4326-8167-cc5f9fcac9c0",
+  "resource_changes": {
+    "default": [
+      {
+        "Action": "Modify",
+        "LogicalResourceId": "PolicyAssistantApi",
+        "PhysicalResourceId": "u02lf7tfb0",
+        "ResourceType": "AWS::ApiGatewayV2::Api",
+        "Replacement": "False",
+        "Scope": [
+          "Properties"
+        ],
+        "Details": [
+          {
+            "Target": {
+              "Attribute": "Properties",
+              "Name": "Body",
+              "RequiresRecreation": "Never"
+            },
+            "Evaluation": "Dynamic",
+            "ChangeSource": "ResourceAttribute",
+            "CausingEntity": "PolicyAssistantFunction.Arn"
+          }
+        ]
+      },
+      {
+        "Action": "Modify",
+        "LogicalResourceId": "PolicyAssistantFunction",
+        "PhysicalResourceId": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+        "ResourceType": "AWS::Lambda::Function",
+        "Replacement": "False",
+        "Scope": [
+          "Properties"
+        ],
+        "Details": [
+          {
+            "Target": {
+              "Attribute": "Properties",
+              "Name": "Code",
+              "RequiresRecreation": "Never"
+            },
+            "Evaluation": "Static",
+            "ChangeSource": "DirectModification"
+          }
+        ]
+      }
+    ],
+    "include_property_values": [
+      {
+        "Action": "Modify",
+        "LogicalResourceId": "PolicyAssistantFunction",
+        "PhysicalResourceId": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+        "ResourceType": "AWS::Lambda::Function",
+        "Replacement": "False",
+        "Scope": [
+          "Properties"
+        ],
+        "Details": [
+          {
+            "Target": {
+              "Attribute": "Properties",
+              "Name": "Code",
+              "RequiresRecreation": "Never",
+              "Path": "/Properties/Code/S3Key",
+              "BeforeValue": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e",
+              "AfterValue": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+              "AttributeChangeType": "Modify"
+            },
+            "Evaluation": "Static",
+            "ChangeSource": "DirectModification"
+          }
+        ],
+        "BeforeContext": "{\"Properties\":{\"Role\":\"arn:aws:iam::********0098:role/policy-assistant-fcaj-tes-PolicyAssistantFunctionRo-y5YSPK6ivJjn\",\"Runtime\":\"python3.12\",\"Timeout\":\"10\",\"LoggingConfig\":{\"LogFormat\":\"JSON\"},\"Handler\":\"app.lambda_handler\",\"Environment\":{\"Variables\":{\"POLICIES_TABLE_NAME\":\"policy-assistant-fcaj-test-Policies\",\"DOCUMENTS_BUCKET_NAME\":\"policy-assistant-fcaj-test-documents-********0098\",\"DOCUMENT_METADATA_TABLE_NAME\":\"policy-assistant-fcaj-test-DocumentMetadata\",\"DOCUMENT_QUEUE_URL\":\"https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue\"}},\"Code\":{\"S3Bucket\":\"aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg\",\"S3Key\":\"policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e\"},\"Tags\":[{\"Value\":\"SAM\",\"Key\":\"lambda:createdBy\"}],\"Architectures\":[\"x86_64\"]},\"Metadata\":{\"SamResourceId\":\"PolicyAssistantFunction\"}}",
+        "AfterContext": "{\"Properties\":{\"Role\":\"arn:aws:iam::********0098:role/policy-assistant-fcaj-tes-PolicyAssistantFunctionRo-y5YSPK6ivJjn\",\"Runtime\":\"python3.12\",\"Timeout\":\"10\",\"LoggingConfig\":{\"LogFormat\":\"JSON\"},\"Handler\":\"app.lambda_handler\",\"Environment\":{\"Variables\":{\"POLICIES_TABLE_NAME\":\"policy-assistant-fcaj-test-Policies\",\"DOCUMENTS_BUCKET_NAME\":\"policy-assistant-fcaj-test-documents-********0098\",\"DOCUMENT_METADATA_TABLE_NAME\":\"policy-assistant-fcaj-test-DocumentMetadata\",\"DOCUMENT_QUEUE_URL\":\"https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue\"}},\"Code\":{\"S3Bucket\":\"aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg\",\"S3Key\":\"policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip\"},\"Tags\":[{\"Value\":\"SAM\",\"Key\":\"lambda:createdBy\"}],\"Architectures\":[\"x86_64\"]},\"Metadata\":{\"SamResourceId\":\"PolicyAssistantFunction\"}}"
+      }
+    ]
+  },
+  "iam_static_audit_passed": true,
+  "exact_runtime_allow_resource_star": [],
+  "processed_only_api_code_changed": true,
+  "worker_recovery_code_references_exactly_unchanged": true,
+  "existing_stack_metadata_unchanged": true,
+  "test_stack_not_deployed": true,
+  "old_candidate_after": {
+    "status": "CREATE_COMPLETE",
+    "execution_status": "AVAILABLE"
+  },
+  "completed_at_utc": "2026-10-21T18:25:20.798545+00:00",
+  "change_set_type": "UPDATE",
+  "acceptance_failure": "Default view includes PolicyAssistantApi Modify outside API Lambda; strict B5-R5 criteria require NO-GO",
+  "counts": {
+    "default": {
+      "Add": 0,
+      "Modify": 2,
+      "Remove": 0,
+      "Replacement_Conditional_or_True": 0
+    },
+    "include_property_values": {
+      "Add": 0,
+      "Modify": 1,
+      "Remove": 0,
+      "Replacement_Conditional_or_True": 0
+    }
+  }
+}

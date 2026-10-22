@@ -6,6 +6,37 @@ Description: >
   Policy Assistant MVP - Serverless application for policy retrieval and keyword search.
   No AI/ML services are used in this version.
 
+Parameters:
+  TableNamePrefix:
+    Type: String
+    Default: PolicyAssistant
+    AllowedPattern: '[A-Za-z0-9_.-]{3,200}'
+    Description: Keep the legacy default for the existing stack; use an isolated prefix for a new test stack
+  LocalFrontendOrigin:
+    Type: String
+    Default: http://localhost:8080
+    Description: Local development origin permitted by API and document S3 CORS
+  EnableOwnerIndex:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'true'
+    Description: Set false only for the first upgrade of a legacy table without indexes
+  AlertEmail:
+    Type: String
+    Default: ''
+    Description: Optional email for alarm notifications; recipient must confirm SNS subscription
+
+Conditions:
+  HasAlertEmail:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: AlertEmail
+          - ''
+  OwnerIndexEnabled:
+    Fn::Equals:
+      - Ref: EnableOwnerIndex
+      - 'true'
+
 Globals:
   Function:
     Timeout: 10
@@ -22,8 +53,256 @@ Globals:
         DOCUMENT_METADATA_TABLE_NAME: !Ref DocumentMetadata
 
 Resources:
+  PolicyAssistantFunctionLogWritePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: FunctionLogStreams
+      Roles:
+        - !Ref PolicyAssistantFunctionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !GetAtt PolicyAssistantLogGroup.Arn
+
+  PolicyAssistantWorkerLogWritePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: FunctionLogStreams
+      Roles:
+        - !Ref PolicyAssistantWorkerRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !GetAtt PolicyAssistantWorkerLogGroup.Arn
+
+  DocumentRecoveryLogWritePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: FunctionLogStreams
+      Roles:
+        - !Ref DocumentRecoveryRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !GetAtt DocumentRecoveryLogs.Arn
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+
+  AlertSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasAlertEmail
+    Properties:
+      TopicArn: !Ref AlertTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  DocumentRecoveryRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: RuntimeDataAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: dynamodb:Query
+                Resource: !Sub "${DocumentMetadata.Arn}/index/ByStatus"
+              - Effect: Allow
+                Action: dynamodb:UpdateItem
+                Resource: !GetAtt DocumentMetadata.Arn
+              - Effect: Allow
+                Action: sqs:SendMessage
+                Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
+
+  DocumentRecovery:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: policy_assistant/
+      Handler: app.recovery_handler
+      Timeout: 60
+      Role: !GetAtt DocumentRecoveryRole.Arn
+      Events:
+        RecoverPending:
+          Type: Schedule
+          Properties:
+            Schedule: rate(2 minutes)
+            Enabled: true
+
+  DocumentRecoveryLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${DocumentRecovery}"
+      RetentionInDays: 30
+
+  RecoveryErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref DocumentRecovery
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlertTopic
+
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+
+  FrontendAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-frontend-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FrontendHeaders:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "${AWS::StackName}-frontend-security"
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: no-referrer
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            Override: true
+          ContentSecurityPolicy:
+            ContentSecurityPolicy: !Sub >-
+              default-src 'self'; script-src 'self'; style-src 'self';
+              connect-src 'self' https://cognito-idp.${AWS::Region}.${AWS::URLSuffix}
+              https://*.execute-api.${AWS::Region}.${AWS::URLSuffix}
+              https://*.s3.${AWS::Region}.${AWS::URLSuffix};
+              img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'
+            Override: true
+
+  FrontendDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: frontend
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt FrontendAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: frontend
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          DefaultTTL: 300
+          MinTTL: 0
+          MaxTTL: 3600
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ResponseHeadersPolicyId: !Ref FrontendHeaders
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${FrontendBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
+          - Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt FrontendBucket.Arn
+              - !Sub "${FrontendBucket.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+  DocumentsBucketTlsPolicy:
+    Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      Bucket: !Ref PolicyAssistantDocumentsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt PolicyAssistantDocumentsBucket.Arn
+              - !Sub "${PolicyAssistantDocumentsBucket.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
   PolicyAssistantDocumentsBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub "${AWS::StackName}-documents-${AWS::AccountId}"
       PublicAccessBlockConfiguration:
@@ -35,6 +314,8 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
@@ -42,26 +323,30 @@ Resources:
         Rules:
           - Id: ArchiveOldDocuments
             Status: Enabled
-            Transition:
-              StorageClass: GLACIER
-              TransitionInDays: 90
             ExpirationInDays: 365
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 365
       CorsConfiguration:
         CorsRules:
           - Id: PolicyAssistantUploadCors
             AllowedMethods:
-              - PUT
+              - POST
+              - GET
             AllowedOrigins:
-              - "http://localhost:8080"
+              - !Ref LocalFrontendOrigin
+              - !Sub "https://${FrontendDistribution.DomainName}"
             AllowedHeaders:
               - Content-Type
+            ExposedHeaders:
+              - x-amz-version-id
             MaxAge: 3000
 
   PolicyAssistantDocumentQueue:
     Type: AWS::SQS::Queue
     Properties:
+      SqsManagedSseEnabled: true
       QueueName: !Sub "${AWS::StackName}-document-queue"
-      VisibilityTimeout: 30
+      VisibilityTimeout: 180
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt PolicyAssistantDocumentDLQ.Arn
         maxReceiveCount: 3
@@ -69,8 +354,45 @@ Resources:
   PolicyAssistantDocumentDLQ:
     Type: AWS::SQS::Queue
     Properties:
+      SqsManagedSseEnabled: true
       QueueName: !Sub "${AWS::StackName}-document-dlq"
       MessageRetentionPeriod: 1209600
+      RedriveAllowPolicy:
+        redrivePermission: byQueue
+        sourceQueueArns:
+          # Deterministic queue ARN avoids a DLQ -> source -> DLQ dependency cycle.
+          - !Sub "arn:${AWS::Partition}:sqs:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}-document-queue"
+
+  PolicyAssistantWorkerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: WorkerDocumentAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                Resource: !GetAtt DocumentMetadata.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObjectVersion
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${PolicyAssistantDocumentsBucket}/uploads/*"
+              - Effect: Allow
+                Action:
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
 
   PolicyAssistantWorker:
     Type: AWS::Serverless::Function
@@ -80,50 +402,102 @@ Resources:
       Runtime: python3.12
       Timeout: 30
       MemorySize: 256
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:UpdateItem
-                - dynamodb:GetItem
-              Resource: !GetAtt PoliciesTable.Arn
-            - Effect: Allow
-              Action:
-                - dynamodb:PutItem
-                - dynamodb:GetItem
-                - dynamodb:UpdateItem
-              Resource: !GetAtt DocumentMetadata.Arn
-            - Effect: Allow
-              Action:
-                - s3:GetObject
-                - s3:PutObject
-              Resource: !Sub "arn:aws:s3:::${PolicyAssistantDocumentsBucket}/*"
-            - Effect: Allow
-              Action:
-                - sqs:ReceiveMessage
-                - sqs:DeleteMessage
-                - sqs:GetQueueAttributes
-              Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
-            - Effect: Allow
-              Action:
-                - sqs:SendMessage
-              Resource: !GetAtt PolicyAssistantDocumentDLQ.Arn
+      Role: !GetAtt PolicyAssistantWorkerRole.Arn
       Events:
         DocumentQueueEvent:
           Type: SQS
           Properties:
             Queue: !GetAtt PolicyAssistantDocumentQueue.Arn
             BatchSize: 1
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+
+  PolicyAssistantWorkerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${PolicyAssistantWorker}"
+      RetentionInDays: 30
+
+  DocumentQueueAgeAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Document queue has messages waiting over five minutes
+      Namespace: AWS/SQS
+      MetricName: ApproximateAgeOfOldestMessage
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt PolicyAssistantDocumentQueue.QueueName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 300
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlertTopic
+
+  DocumentDLQAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Document processing has failed repeatedly
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt PolicyAssistantDocumentDLQ.QueueName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlertTopic
 
   DocumentMetadata:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
-      TableName: PolicyAssistantDocumentMetadata
+      TableName: !Sub "${TableNamePrefix}DocumentMetadata"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: doc_id
           AttributeType: S
+        - Fn::If:
+            - OwnerIndexEnabled
+            - AttributeName: owner_sub
+              AttributeType: S
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - OwnerIndexEnabled
+            - AttributeName: created_at
+              AttributeType: S
+            - Ref: AWS::NoValue
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: dispatch_after
+          AttributeType: N
+      GlobalSecondaryIndexes:
+        - Fn::If:
+            - OwnerIndexEnabled
+            - IndexName: ByOwner
+              KeySchema:
+                - AttributeName: owner_sub
+                  KeyType: HASH
+                - AttributeName: created_at
+                  KeyType: RANGE
+              Projection:
+                ProjectionType: ALL
+            - Ref: AWS::NoValue
+        - IndexName: ByStatus
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: dispatch_after
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
       KeySchema:
         - AttributeName: doc_id
           KeyType: HASH
@@ -138,8 +512,10 @@ Resources:
 
   PoliciesTable:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
-      TableName: PolicyAssistantPolicies
+      TableName: !Sub "${TableNamePrefix}Policies"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: policy_id
@@ -161,7 +537,17 @@ Resources:
         - email
       UsernameAttributes:
         - email
+      UserPoolTier: LITE
       MfaConfiguration: "OFF"
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: true
+          RequireUppercase: true
+          RequireNumbers: true
+          RequireSymbols: true
 
   PolicyAssistantUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -177,35 +563,62 @@ Resources:
       IdTokenValidity: 1
       EnableTokenRevocation: true
 
+  PolicyAssistantFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: RuntimeDataAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Scan
+                Resource: !GetAtt PoliciesTable.Arn
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:PutItem
+                Resource: !GetAtt DocumentMetadata.Arn
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                Resource: !Sub "${DocumentMetadata.Arn}/index/ByOwner"
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${PolicyAssistantDocumentsBucket}/uploads/*"
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
+
   PolicyAssistantFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: policy_assistant/
       Handler: app.lambda_handler
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:GetItem
-                - dynamodb:Scan
-              Resource: !GetAtt PoliciesTable.Arn
-            - Effect: Allow
-              Action:
-                - dynamodb:GetItem
-                - dynamodb:UpdateItem
-                - dynamodb:PutItem
-              Resource: !GetAtt DocumentMetadata.Arn
-            - Effect: Allow
-              Action:
-                - s3:PutObject
-                - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${PolicyAssistantDocumentsBucket}/*"
-            - Effect: Allow
-              Action:
-                - sqs:SendMessage
-              Resource: !GetAtt PolicyAssistantDocumentQueue.Arn
+      Role: !GetAtt PolicyAssistantFunctionRole.Arn
       Events:
+        ListDocuments:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PolicyAssistantApi
+            Path: /documents
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
         GetPolicyById:
           Type: HttpApi
           Properties:
@@ -282,7 +695,8 @@ Resources:
         AllowOrigins:
           - "http://localhost:3000"
           - "http://127.0.0.1:3000"
-          - "http://localhost:8080"
+          - !Ref LocalFrontendOrigin
+          - !Sub "https://${FrontendDistribution.DomainName}"
         AllowMethods:
           - GET
           - POST
@@ -295,7 +709,7 @@ Resources:
   PolicyAssistantErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "PolicyAssistant-Errors-"
+      AlarmName: !Sub "${AWS::StackName}-Errors"
       AlarmDescription: "Alarm when Lambda function errors exceed 0 in 5 minutes"
       Namespace: AWS/Lambda
       MetricName: Errors
@@ -308,11 +722,13 @@ Resources:
       Threshold: 0
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlertTopic
 
   PolicyAssistantDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "PolicyAssistant-Duration-"
+      AlarmName: !Sub "${AWS::StackName}-Duration"
       AlarmDescription: "Alarm when Lambda function duration exceeds 5000ms in 5 minutes"
       Namespace: AWS/Lambda
       MetricName: Duration
@@ -325,40 +741,31 @@ Resources:
       Threshold: 5000
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlertTopic
 
   PolicyAssistantDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
-      DashboardName: !Sub "PolicyAssistant-"
+      DashboardName: !Sub "${AWS::StackName}-Dashboard"
       DashboardBody: !Sub
-        '{
-          "widgets": [
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 0,
-              "width": 6,
-              "height": 6,
-              "properties": {
-                "metrics": [
-                  [ "AWS/Lambda", "Invocations", "FunctionName", "PolicyAssistantFunction" ],
-                  [ "AWS/Lambda", "Errors", "FunctionName", "PolicyAssistantFunction" ],
-                  [ "AWS/Lambda", "Duration", "FunctionName", "PolicyAssistantFunction" ],
-                  [ "AWS/Lambda", "Throttles", "FunctionName", "PolicyAssistantFunction" ]
-                ],
-                "period": 300,
-                "stat": "Sum",
-                "region": "",
-                "title": "Lambda Function Metrics",
-                "annotations": {
-                  "horizontal": []
-                }
-              }
-            }
-          ]
-        }'
+        '{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"title":"Lambda Function Metrics","region":"${AWS::Region}","period":300,"stat":"Sum","metrics":[["AWS/Lambda","Invocations","FunctionName","${PolicyAssistantFunction}"],["AWS/Lambda","Errors","FunctionName","${PolicyAssistantFunction}"],["AWS/Lambda","Throttles","FunctionName","${PolicyAssistantFunction}"]]}},{"type":"metric","x":12,"y":0,"width":12,"height":6,"properties":{"title":"Worker and recovery invocations/errors","region":"${AWS::Region}","period":300,"stat":"Sum","metrics":[["AWS/Lambda","Invocations","FunctionName","${PolicyAssistantWorker}"],["AWS/Lambda","Errors","FunctionName","${PolicyAssistantWorker}"],["AWS/Lambda","Invocations","FunctionName","${DocumentRecovery}"],["AWS/Lambda","Errors","FunctionName","${DocumentRecovery}"]]}},{"type":"metric","x":0,"y":6,"width":12,"height":6,"properties":{"title":"Queue backlog and failed deliveries","region":"${AWS::Region}","period":300,"stat":"Maximum","metrics":[["AWS/SQS","ApproximateNumberOfMessagesVisible","QueueName","${PolicyAssistantDocumentQueue.QueueName}"],["AWS/SQS","ApproximateNumberOfMessagesNotVisible","QueueName","${PolicyAssistantDocumentQueue.QueueName}"],["AWS/SQS","ApproximateAgeOfOldestMessage","QueueName","${PolicyAssistantDocumentQueue.QueueName}"],["AWS/SQS","ApproximateNumberOfMessagesVisible","QueueName","${PolicyAssistantDocumentDLQ.QueueName}"]]}},{"type":"metric","x":12,"y":6,"width":12,"height":6,"properties":{"title":"Lambda duration (milliseconds)","region":"${AWS::Region}","period":300,"stat":"Average","metrics":[["AWS/Lambda","Duration","FunctionName","${PolicyAssistantFunction}"],["AWS/Lambda","Duration","FunctionName","${PolicyAssistantWorker}"],["AWS/Lambda","Duration","FunctionName","${DocumentRecovery}"]]}}]}'
 
 Outputs:
+  FrontendUrl:
+    Value: !Sub "https://${FrontendDistribution.DomainName}"
+  FrontendBucketName:
+    Value: !Ref FrontendBucket
+  FrontendDistributionId:
+    Value: !Ref FrontendDistribution
+  CognitoUserPoolId:
+    Value: !Ref PolicyAssistantUserPool
+  CognitoClientId:
+    Value: !Ref PolicyAssistantUserPoolClient
+  DocumentsBucketName:
+    Value: !Ref PolicyAssistantDocumentsBucket
+  AlarmTopicArn:
+    Value: !Ref AlertTopic
   PolicyAssistantApiUrl:
     Description: API Gateway HTTP API endpoint URL for Prod stage
     Value: !Sub "https://${PolicyAssistantApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"

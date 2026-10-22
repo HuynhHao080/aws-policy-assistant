@@ -1,0 +1,20 @@
+{
+  "verified_at_utc": "2026-10-21T17:27:12.750451+00:00",
+  "status": "PASS_DOCUMENT_EVIDENCE_VALIDATION_ONLY",
+  "browser_acceptance": "FAIL_NO_GO",
+  "application_template_source_unchanged": true,
+  "frontend_js_source_unchanged": true,
+  "credential_account_redaction_scan": {
+    "files": 13,
+    "status": "PASS"
+  },
+  "workshop_hugo": "BUILD_PASS_3_EXISTING_THEME_WARNINGS",
+  "workshop_links": {
+    "html_pages": 131,
+    "references": 12582,
+    "failures": 0
+  },
+  "rerun": false,
+  "aws_fix_or_deploy": false,
+  "cleanup": false
+}

@@ -1,0 +1,39 @@
+{
+  "scope": "Local generated EN/VI site, desktop/mobile; external requests blocked",
+  "passed": true,
+  "results": [
+    {
+      "language": "en",
+      "chapter": "workshop",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "sidebarLeft": "-230px"
+    },
+    {
+      "language": "en",
+      "chapter": "cost",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "sidebarLeft": "-230px"
+    },
+    {
+      "language": "vi",
+      "chapter": "workshop",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "sidebarLeft": "-230px"
+    },
+    {
+      "language": "vi",
+      "chapter": "cost",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "sidebarLeft": "-230px"
+    }
+  ],
+  "page_errors": []
+}

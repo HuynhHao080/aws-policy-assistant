@@ -1,0 +1,14 @@
+{
+  "observed_at_utc": "2026-10-21T08:30:43.940421+00:00",
+  "scope": "Local documentation/evidence consistency checks, no AWS calls",
+  "status": "PASS",
+  "resources": 45,
+  "taggable": 28,
+  "not_taggable": 17,
+  "both_explicit": 0,
+  "candidate_source_unchanged": true,
+  "recipient_addresses_in_report": false,
+  "budget_created_or_modified": false,
+  "billing_tags_activated": false,
+  "deployment_executed": false
+}

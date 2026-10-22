@@ -15,10 +15,28 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: aws-actions/setup-sam@v2
       - name: Install dependencies
         run: |
-          pip install -r policy_assistant/requirements.txt -t .
+          pip install -r policy_assistant/requirements.txt
           pip install -r tests/requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install browser tooling
+        run: npm ci
+      - name: Frontend checks
+        run: npm test
+      - name: Python lint and backend type checking
+        run: |
+          python -m ruff check policy_assistant scripts tests --select E9,F63,F7,F82
+          python -m mypy --explicit-package-bases --ignore-missing-imports --check-untyped-defs policy_assistant/app.py
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser workflow (mock API/S3)
+        run: npm run test:browser
+      - name: Full-stack offline browser workflow
+        run: npm run test:local
       - name: SAM build
         run: sam build
       - name: Unit tests

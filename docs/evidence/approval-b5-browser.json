@@ -1,0 +1,103 @@
+{
+  "approval": "B5_ONLY_USER_GRANTED",
+  "started_at_utc": "2026-10-21T17:19:40.726Z",
+  "status": "FAIL",
+  "browser": {
+    "engine": "Chromium",
+    "channel": "Microsoft Edge",
+    "version": "155.0.4283.62",
+    "headless": true,
+    "real_network": true,
+    "mocked_responses": false
+  },
+  "cases": {
+    "real_browser_load": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T17:19:41.306Z",
+      "completed_at_utc": "2026-10-21T17:19:44.457Z",
+      "configuration": "EXACT_TEST_OUTPUTS",
+      "rendered": true
+    },
+    "testa_login_search": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T17:19:44.457Z",
+      "completed_at_utc": "2026-10-21T17:19:46.767Z",
+      "search_count": 1,
+      "expected_policy_found": true
+    },
+    "testa_pdf_flow": {
+      "status": "FAIL",
+      "started_at_utc": "2026-10-21T17:19:46.768Z",
+      "error_type": "Error",
+      "stop_code": "PDF_UI_PIPELINE_FAILED"
+    },
+    "testa_logout": {
+      "status": "NOT_RUN"
+    },
+    "testb_login_isolation": {
+      "status": "NOT_RUN"
+    },
+    "testb_pdf_flow": {
+      "status": "NOT_RUN"
+    },
+    "testb_logout": {
+      "status": "NOT_RUN"
+    },
+    "testa_reverse_isolation": {
+      "status": "NOT_RUN"
+    },
+    "testa_final_logout": {
+      "status": "NOT_RUN"
+    },
+    "responsive_console": {
+      "status": "NOT_RUN"
+    }
+  },
+  "counts": {
+    "logins": 1,
+    "global_signouts": 0,
+    "upload_sessions": 1,
+    "uploads": 0,
+    "downloads": 0,
+    "browser_file_downloads": 0,
+    "upload_bytes": 0,
+    "api_requests": 2,
+    "total_dynamic_requests": 3
+  },
+  "api_responses": [
+    {
+      "method": "GET",
+      "path": "/Prod/policies",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "POST",
+      "path": "/Prod/documents/upload-session",
+      "status": 200,
+      "identity": "TestA"
+    }
+  ],
+  "documents": [
+    {
+      "doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+      "identity": "TestA"
+    }
+  ],
+  "screenshots": [],
+  "blocked_request_count": 0,
+  "page_error_count": 0,
+  "console_error_count": 2,
+  "console_sensitive_findings": 0,
+  "aws_resource_config_writes": 0,
+  "poison_messages": 0,
+  "dlq_operations": 0,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "error_type": "Error",
+  "stop_code": "PDF_UI_PIPELINE_FAILED",
+  "failure_policy": "STOP_NO_RETRY_NO_FIX_NO_REDEPLOY_NO_CLEANUP",
+  "completed_at_utc": "2026-10-21T17:19:48.094Z",
+  "elapsed_seconds": 7.368,
+  "guard_halt": null
+}

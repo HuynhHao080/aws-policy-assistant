@@ -1,0 +1,20 @@
+{
+  "observed_at_utc": "2026-10-21T08:50:22.574376+00:00",
+  "scope": "Offline API-shape, configuration, secret-free template and unchanged candidate checks; not server dry run",
+  "budget_shape": "PASS",
+  "three_notification_shapes": "PASS",
+  "threshold_arithmetic": "PASS",
+  "complete_create_request": "EXPECTED_INCOMPLETE_ACCOUNT_AND_SUBSCRIBERS_PENDING",
+  "semantic_guard": "NOT_DEPLOYABLE_WITH_UNRESOLVED_ACCOUNT_TOKEN",
+  "public_sample_has_actual_email_or_full_account_id": false,
+  "candidate_source_unchanged": true,
+  "preparation_status": "PREPARED_NOT_CREATED",
+  "creation_approval": "NOT_GRANTED",
+  "budget_creation": "NOT_EXECUTED",
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "files_sha256": {
+    "account-monthly-20usd-proposal.json": "b8930b5f9654206ab313a8fecc297df6f16ab3bf9d31bde744e5c3ed4243b77e",
+    "account-monthly-20usd-notifications.json": "ec07209b3a04445365d18f8d2c47462809730a421165086fc324df8271e2ad89",
+    "account-monthly-20usd-preparation.json": "e072a84be07dfd4920b477d414248d31281a29da5f2eb5a3ac7b974d067fc790"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "recorded_at_utc": "2026-10-21T07:34:27.088394+00:00",
+  "stack": "policy-assistant-fcaj-test",
+  "change_set": "fcaj-review-20261021-072124-24ba855e",
+  "scope": "No application integration/E2E executed; waiting for deployment approval",
+  "tests": [
+    {
+      "id": "A01",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A02",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A03",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A04",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A05",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A06",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A07",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A08",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A09",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A10",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A11",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A12",
+      "status": "NOT_RUN"
+    }
+  ],
+  "deployment_executed": false
+}

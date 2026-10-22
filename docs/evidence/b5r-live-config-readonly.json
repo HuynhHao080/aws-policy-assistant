@@ -1,0 +1,34 @@
+{
+  "started_at_utc": "2026-10-21T17:31:02.053504+00:00",
+  "scope": "B5-R configuration read-only; no authentication/business API or data writes",
+  "aws_writes": 0,
+  "facts": {
+    "live_csp": {
+      "classification": "CONFIRMED",
+      "value": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+      "matches_source_iac": true
+    },
+    "cors": {
+      "classification": "CONFIRMED",
+      "test_origin_allowed": true,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    "frontend_config": {
+      "classification": "CONFIRMED",
+      "test_outputs_match": true
+    },
+    "existing_stack": {
+      "status": "UPDATE_COMPLETE",
+      "last_updated": "2026-10-19 11:10:29.038000+00:00"
+    },
+    "template_sha256": "e38d8ad40be8e9877bc6d1de1e08c1326c735ae4ba2ffb20377d2a3d78614596"
+  },
+  "status": "VERIFIED",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "completed_at_utc": "2026-10-21T17:31:07.727426+00:00"
+}

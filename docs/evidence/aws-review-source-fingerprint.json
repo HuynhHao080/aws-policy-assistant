@@ -1,0 +1,13 @@
+{
+  "scope": "Current candidate source fingerprint",
+  "files": {
+    "policy_assistant/app.py": "9d9f5cd03179c46c2e062c9a8f99bc2fa08e3e6500d70baa9a6f3f12eb5cf04a",
+    "policy_assistant/requirements.txt": "d7af9b9f91d4588647d9aa6cda0ccd9cf6d465943d24685784cdfbcb8d17ea89",
+    "policy_assistant/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "frontend/app.js": "c0b52244d1ac5f729da7819dadc585028a6ad1721e16d57c1b790643f8483222",
+    "frontend/config.json": "50b7b9f85dcb72e4e5dac40945bca450487f1cddb8b222281cdf9b28410dba4c",
+    "frontend/index.html": "28182131e09dc5f0e29cba98404c1b5182f7b711fc48f8c77a425891835ff1cd",
+    "frontend/styles.css": "aa65a893213b10a01e3c9484e8c56edb0a425fa9076e246d44938d4859f8588e",
+    "template.yaml": "e38d8ad40be8e9877bc6d1de1e08c1326c735ae4ba2ffb20377d2a3d78614596"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "observed_at_utc": "2026-10-21T09:14:18.047892+00:00",
+  "scope": "Read-only inspection of user-created Budget; no subscriber addresses",
+  "account_masked": "********0098",
+  "budget": {
+    "BudgetName": "policy-assistant-account-monthly",
+    "BudgetLimit": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "TimeUnit": "MONTHLY",
+    "TimePeriod": {
+      "Start": "2026-10-01 07:00:00+07:00",
+      "End": "2087-06-15 07:00:00+07:00"
+    },
+    "CalculatedSpend": {
+      "ActualSpend": {
+        "Amount": "5.422",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "BudgetType": "COST",
+    "LastUpdatedTime": "2026-10-21 16:11:39.795000+07:00",
+    "FilterExpression": {
+      "Not": {
+        "Dimensions": {
+          "Key": "RECORD_TYPE",
+          "Values": [
+            "Refund",
+            "Credit"
+          ]
+        }
+      }
+    },
+    "Metrics": [
+      "UnblendedCost"
+    ],
+    "HealthStatus": {
+      "Status": "HEALTHY",
+      "LastUpdatedTime": "2026-10-21 16:11:39.348000+07:00"
+    }
+  },
+  "billing_view_present": false,
+  "status": "READ_VERIFIED",
+  "budget_creation_time": "NOT_EXPOSED_BY_DESCRIBE_BUDGET; LastUpdatedTime is not creation time"
+}

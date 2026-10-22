@@ -1,0 +1,242 @@
+{
+  "observed_at_utc": "2026-10-21T09:16:20.275433+00:00",
+  "scope": "Read-only verification of owner-created Budget; all subscriber addresses stay in memory",
+  "budget_name": "policy-assistant-account-monthly",
+  "creation_actor": "USER_REPORTED_MANUAL_CONSOLE",
+  "agent_create_or_modify_calls": 0,
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "checks": [
+    {
+      "check": "COST / MONTHLY / fixed 20 USD / UnblendedCost",
+      "passed": true
+    },
+    {
+      "check": "Credit/Refund excluded and no additional filters",
+      "passed": true
+    }
+  ],
+  "account_masked": "********0098",
+  "identity": "VERIFIED",
+  "budget_configuration": {
+    "BudgetName": "policy-assistant-account-monthly",
+    "BudgetLimit": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "TimeUnit": "MONTHLY",
+    "TimePeriod": {
+      "Start": "2026-10-01 07:00:00+07:00",
+      "End": "2087-06-15 07:00:00+07:00"
+    },
+    "CalculatedSpend": {
+      "ActualSpend": {
+        "Amount": "5.422",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "BudgetType": "COST",
+    "LastUpdatedTime": "2026-10-21 16:11:39.795000+07:00",
+    "FilterExpression": {
+      "Not": {
+        "Dimensions": {
+          "Key": "RECORD_TYPE",
+          "Values": [
+            "Refund",
+            "Credit"
+          ]
+        }
+      }
+    },
+    "Metrics": [
+      "UnblendedCost"
+    ],
+    "HealthStatus": {
+      "Status": "HEALTHY",
+      "LastUpdatedTime": "2026-10-21 16:11:39.348000+07:00"
+    }
+  },
+  "billing_view_present": false,
+  "budget_exists": true,
+  "credit_refund_exclusion_exact": true,
+  "billing_account_context": {
+    "status": "VERIFIED_STANDALONE_ACCOUNT",
+    "whole_exact_account_scope": true
+  },
+  "notifications": [
+    {
+      "NotificationType": "ACTUAL",
+      "ComparisonOperator": "GREATER_THAN",
+      "Threshold": 100.0,
+      "NotificationState": "OK"
+    },
+    {
+      "NotificationType": "ACTUAL",
+      "ComparisonOperator": "GREATER_THAN",
+      "Threshold": 80.0,
+      "NotificationState": "OK"
+    },
+    {
+      "NotificationType": "FORECASTED",
+      "ComparisonOperator": "GREATER_THAN",
+      "Threshold": 100.0,
+      "NotificationState": "OK"
+    }
+  ],
+  "notification_count": 3,
+  "notification_targets_match": true,
+  "threshold_types_explicitly_percentage": false,
+  "omitted_threshold_type_count": 3,
+  "recipient_configuration": [
+    {
+      "notification_type": "ACTUAL",
+      "threshold": 100.0,
+      "email_count": 1,
+      "non_email_count": 0,
+      "status": "CONFIGURED",
+      "verification_status_exposed_by_budgets_api": false
+    },
+    {
+      "notification_type": "ACTUAL",
+      "threshold": 80.0,
+      "email_count": 1,
+      "non_email_count": 0,
+      "status": "CONFIGURED",
+      "verification_status_exposed_by_budgets_api": false
+    },
+    {
+      "notification_type": "FORECASTED",
+      "threshold": 100.0,
+      "email_count": 1,
+      "non_email_count": 0,
+      "status": "CONFIGURED",
+      "verification_status_exposed_by_budgets_api": false
+    }
+  ],
+  "same_recipient_set_for_all_alerts": true,
+  "unique_email_recipient_count": 1,
+  "delivery": "DELIVERY_NOT_VERIFIED",
+  "recipient_contact_verification": {
+    "status": "READ_VERIFIED",
+    "matching_contact_count": 0,
+    "matching_contact_statuses": [],
+    "all_budget_emails_have_matching_active_contact": false,
+    "pagination_complete": true,
+    "note": "Active matching contact is separate from actual delivery. Empty contacts do not prove Budget legacy recipient is inactive."
+  },
+  "budget_action_count": 0,
+  "no_budget_actions": true,
+  "budget_count": 7,
+  "old_budget_checks": [
+    {
+      "identifier_sha256": "9b11f6b707d2a03e0265465f32520bc1bc213de121de958539662d0ec1453fcb",
+      "configuration_matches": true,
+      "is_5usd": false
+    },
+    {
+      "identifier_sha256": "66bf7e502a2a4e178123aa39c4a8cf3c713852576d7de104a89d9d4c4b31a50f",
+      "configuration_matches": true,
+      "is_5usd": false
+    },
+    {
+      "identifier_sha256": "bb20bc1af5f031a498933bb6b7b8b1187a8987dd7488244d2ab412136ebfa3b5",
+      "configuration_matches": true,
+      "is_5usd": false
+    },
+    {
+      "identifier_sha256": "24e2d81d590cee6d7f8b19c2541e3995458b40b4eba0e4e4109043a9319897dd",
+      "configuration_matches": true,
+      "is_5usd": false
+    },
+    {
+      "identifier_sha256": "2410f79c6ad84927252d095d6bd50860732e26c7e8ba03e303f1cfc4d692395a",
+      "configuration_matches": true,
+      "is_5usd": false
+    },
+    {
+      "identifier_sha256": "36fb61048aea2940bea0ba5363e482b8b45948315ed8e4e6a9df7f8a103c0831",
+      "configuration_matches": true,
+      "is_5usd": true,
+      "notification_configuration_matches": true
+    }
+  ],
+  "six_existing_budgets_unchanged": true,
+  "only_expected_new_budget": true,
+  "status": "PARTIAL",
+  "budget_created_at": "2026-10-21T09:11:39+00:00",
+  "completed_at_utc": "2026-10-21T09:16:28.705702+00:00",
+  "threshold_readonly_disambiguation": {
+    "observed_at_utc": "2026-10-21T09:17:19.260947+00:00",
+    "lookups": [
+      {
+        "type": "ACTUAL",
+        "threshold": 100.0,
+        "lookups": [
+          {
+            "threshold_type": "PERCENTAGE",
+            "status": "RESOLVED",
+            "subscriber_count": 1
+          },
+          {
+            "threshold_type": "ABSOLUTE_VALUE",
+            "status": "RESOLVED",
+            "subscriber_count": 0
+          }
+        ],
+        "disambiguated_percentage": false
+      },
+      {
+        "type": "ACTUAL",
+        "threshold": 80.0,
+        "lookups": [
+          {
+            "threshold_type": "PERCENTAGE",
+            "status": "RESOLVED",
+            "subscriber_count": 1
+          },
+          {
+            "threshold_type": "ABSOLUTE_VALUE",
+            "status": "RESOLVED",
+            "subscriber_count": 0
+          }
+        ],
+        "disambiguated_percentage": false
+      },
+      {
+        "type": "FORECASTED",
+        "threshold": 100.0,
+        "lookups": [
+          {
+            "threshold_type": "PERCENTAGE",
+            "status": "RESOLVED",
+            "subscriber_count": 1
+          },
+          {
+            "threshold_type": "ABSOLUTE_VALUE",
+            "status": "RESOLVED",
+            "subscriber_count": 0
+          }
+        ],
+        "disambiguated_percentage": false
+      }
+    ],
+    "all_percentage_proven_by_typed_lookup": false,
+    "note": "Positive PERCENTAGE and negative ABSOLUTE_VALUE are read-only lookups, not configuration changes; if both resolve, type remains ambiguous."
+  },
+  "threshold_type_verification": {
+    "status": "VERIFIED_WITH_CLOUDTRAIL_AND_CURRENT_READS",
+    "source": "budget-20usd-cloudtrail-readonly.json",
+    "description": "Successful CreateBudget explicitly recorded all three PERCENTAGE types; current type/threshold/operator tuples and typed subscriber lookup agree. DescribeNotifications omitted ThresholdType, not assumed from omission."
+  },
+  "creation_time_source": "CloudTrail successful CreateBudget; not guessed from LastUpdatedTime",
+  "configuration_status": "CONFIGURED_VERIFIED",
+  "recipient_verification_status": "SUBSCRIPTION_CONFIRMATION_UNVERIFIED",
+  "partial_reason": "Budget and three alerts verified; no API evidence confirming recipient activation/subscription. Contact list had no matching record; legacy/pending/inactive cannot be inferred.",
+  "existing_budgets": "UNCHANGED",
+  "old_budget_comparison_limits": "Compared all six Budget configuration fingerprints and USD5 notification configuration. Old recipient addresses were not collected in the baseline; no historical subscriber-address fingerprint is claimed.",
+  "verification_completed_at_utc": "2026-10-21T09:20:38.610039+00:00"
+}

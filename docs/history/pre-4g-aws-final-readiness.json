@@ -1,0 +1,89 @@
+{
+  "prepared_at_utc": "2026-10-21T07:54:56.204048+00:00",
+  "decision": "NO-GO",
+  "candidate": "fcaj-review-20261021-072124-24ba855e",
+  "stack": "policy-assistant-fcaj-test",
+  "expected_account_suffix": "0098",
+  "configured_region": "ap-southeast-1",
+  "last_successful_candidate_observation_utc": "2026-10-21T07:25:28.212901+00:00",
+  "historical_candidate_status": "CREATE_COMPLETE",
+  "historical_execution_status": "AVAILABLE",
+  "historical_actions": {
+    "Add": 45,
+    "Modify": 0,
+    "Remove": 0,
+    "Replace": 0
+  },
+  "historical_evidence_is_current_confirmation": false,
+  "checks": [
+    {
+      "check": "Local template/app source hash matches candidate",
+      "status": "VERIFIED",
+      "scope": "LOCAL_ONLY",
+      "sha256": "24ba855eb69ff2f6ff251ac21c0202684f2c558a6753965d431ca9dce873e9f1"
+    },
+    {
+      "check": "STS account identity",
+      "status": "BLOCKED",
+      "attempt": {
+        "observed_at_utc": "2026-10-21T07:47:58.919386+00:00",
+        "completed_at_utc": "2026-10-21T07:48:10.724179+00:00",
+        "status": "BLOCKED",
+        "phase": "STS GetCallerIdentity",
+        "error_type": "ConnectTimeoutError",
+        "expected_account_suffix": "0098",
+        "configured_region": "ap-southeast-1",
+        "account_identity_verified": false
+      }
+    },
+    {
+      "check": "Live change set identity/status/actions",
+      "status": "BLOCKED",
+      "observed_at_utc": "2026-10-21T07:49:32.296882+00:00",
+      "completed_at_utc": "2026-10-21T07:49:43.708473+00:00",
+      "error_type": "ConnectTimeoutError"
+    },
+    {
+      "check": "Live processed template IAM/SQS/S3 retention/resource scope",
+      "status": "NOT_RUN",
+      "reason": "Dependent authenticated CFN read blocked; previous saved snapshot audit is historical"
+    },
+    {
+      "check": "S3 downloaded ZIP SHA-256 and member hashes for all three Lambdas",
+      "status": "NOT_RUN",
+      "functions": [
+        "PolicyAssistantFunction",
+        "PolicyAssistantWorker",
+        "DocumentRecovery"
+      ],
+      "reason": "Candidate/template identity could not be freshly verified; TCP/TLS probe is not GetObject proof"
+    },
+    {
+      "check": "AWS application integration/E2E",
+      "status": "NOT_RUN",
+      "reason": "Not authorized"
+    }
+  ],
+  "connectivity_evidence": "aws-connectivity-diagnostics.json",
+  "artifact_attempt_evidence": "aws-review-artifact-fingerprint.json",
+  "automatic_retries_stopped": true,
+  "missing_conditions": [
+    "Restore authenticated STS and CloudFormation connectivity; fresh correct account/region/stack verification",
+    "Fresh CREATE_COMPLETE/AVAILABLE and 45 Add-only verification",
+    "Read/audit current processed template and compare packaged source",
+    "GetObject ZIP SHA-256 and full member digest comparison for all three Lambda artifacts",
+    "Separate explicit owner authorization before any execution or runtime E2E"
+  ],
+  "prohibited_actions_performed": false,
+  "latest_network_review": {
+    "started_at_utc": "2026-10-21T07:53:42.434894+00:00",
+    "completed_at_utc": "2026-10-21T07:54:04.057027+00:00",
+    "evidence": "aws-windows-network-review.json",
+    "root_cause": "UNDETERMINED",
+    "sts_connectivity": "BLOCKED",
+    "cloudformation_connectivity": "BLOCKED",
+    "s3_tcp_tls": "VERIFIED_UNSIGNED_ONLY",
+    "aws_api_retry_this_round": "NOT_RUN",
+    "configuration_changed": false
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "completed_at_utc": "2026-10-22T08:03:31.856105+00:00",
+  "new_assessment_files": [
+    "docs/d2-secret-exposure-review.md",
+    "docs/d3-credential-containment-approval.md",
+    "docs/evidence/d2-credential-exposure.json",
+    "docs/evidence/d2-triage.json"
+  ],
+  "known_secrets_usernames_full_account_jwt_signed_query": "NO_MATCH",
+  "json": "VALID",
+  "both_indexes": "UNCHANGED_EMPTY",
+  "runtime_iac_fingerprint": "UNCHANGED",
+  "tests_builds_apps_poc": "NOT_RUN",
+  "authentication": "NOT_RUN",
+  "aws_writes": 0,
+  "commit_push_rewrite_pages": "NOT_EXECUTED"
+}

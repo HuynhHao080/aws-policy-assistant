@@ -1,0 +1,52 @@
+{
+  "recorded_at_utc": "2026-10-21T09:30:06.026788+00:00",
+  "observation_time_utc": null,
+  "source": "USER_REPORTED_AWS_CONSOLE",
+  "independently_requeried_this_update": false,
+  "budget_name": "policy-assistant-account-monthly",
+  "account_masked": "********0098",
+  "configuration_status": "VERIFIED",
+  "type": "COST",
+  "period": "MONTHLY",
+  "amount_usd": "20",
+  "health": "Healthy",
+  "start_date": "2026-10-01",
+  "actual_usd_display": "5.42",
+  "actual_percent_display": "27.11",
+  "forecast_usd_display": "8.54",
+  "forecast_percent_display": "42.70",
+  "alerts": [
+    {
+      "type": "ACTUAL",
+      "threshold_percent": 80,
+      "threshold_usd": "16",
+      "state": "Not exceeded"
+    },
+    {
+      "type": "ACTUAL",
+      "threshold_percent": 100,
+      "threshold_usd": "20",
+      "state": "Not exceeded"
+    },
+    {
+      "type": "FORECASTED",
+      "threshold_percent": 100,
+      "threshold_usd": "20",
+      "state": "Not exceeded"
+    }
+  ],
+  "budget_actions": 0,
+  "recipient_status": "ACTIVE_LEGACY_USER_CONFIRMED",
+  "email_verification": {
+    "verified": 0,
+    "total": 1,
+    "status": "UNVERIFIED_REQUIRES_TRACKING"
+  },
+  "email_delivery": "DELIVERY_NOT_VERIFIED",
+  "email_address_exported": false,
+  "prior_api_evidence": "budget-20usd-created-readonly-verification.json",
+  "existing_budgets": "UNCHANGED_AT_PRIOR_FINGERPRINT_CHECK_NOT_RECHECKED_THIS_UPDATE",
+  "aws_mutations_this_update": 0,
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN"
+}

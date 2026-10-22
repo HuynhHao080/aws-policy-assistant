@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-21",
+  "scope": "Counts of pre-existing VI table rows, not proof of activity; EN/VI pages flagged",
+  "weeks": [
+    {
+      "week": 1,
+      "dated_rows": 3,
+      "rows_with_reference": 1,
+      "verified_activity": false
+    },
+    {
+      "week": 2,
+      "dated_rows": 5,
+      "rows_with_reference": 5,
+      "verified_activity": false
+    },
+    {
+      "week": 3,
+      "dated_rows": 5,
+      "rows_with_reference": 4,
+      "verified_activity": false
+    },
+    {
+      "week": 4,
+      "dated_rows": 5,
+      "rows_with_reference": 4,
+      "verified_activity": false
+    },
+    {
+      "week": 5,
+      "dated_rows": 5,
+      "rows_with_reference": 5,
+      "verified_activity": false
+    },
+    {
+      "week": 6,
+      "dated_rows": 5,
+      "rows_with_reference": 4,
+      "verified_activity": false
+    },
+    {
+      "week": 7,
+      "dated_rows": 5,
+      "rows_with_reference": 4,
+      "verified_activity": false
+    },
+    {
+      "week": 8,
+      "dated_rows": 5,
+      "rows_with_reference": 4,
+      "verified_activity": false
+    },
+    {
+      "week": 9,
+      "dated_rows": 5,
+      "rows_with_reference": 5,
+      "verified_activity": false
+    },
+    {
+      "week": 10,
+      "dated_rows": 6,
+      "rows_with_reference": 6,
+      "verified_activity": false
+    },
+    {
+      "week": 11,
+      "dated_rows": 6,
+      "rows_with_reference": 5,
+      "verified_activity": false
+    },
+    {
+      "week": 12,
+      "dated_rows": 6,
+      "rows_with_reference": 6,
+      "verified_activity": false
+    }
+  ]
+}

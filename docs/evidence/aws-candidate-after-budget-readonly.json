@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-10-21T09:18:37.085411+00:00",
+  "scope": "Read-only pending candidate readiness; no execution or runtime tests",
+  "candidate": "fcaj-review-20261021-072124-24ba855e",
+  "stack": "policy-assistant-fcaj-test",
+  "region": "ap-southeast-1",
+  "account_masked": "********0098",
+  "status": "CREATE_COMPLETE",
+  "execution_status": "AVAILABLE",
+  "actions": {
+    "Add": 45
+  },
+  "replacement_count": 0,
+  "source_fingerprint_matches": true,
+  "readiness": "VERIFIED",
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN"
+}

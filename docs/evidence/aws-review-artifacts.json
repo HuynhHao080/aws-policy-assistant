@@ -1,0 +1,9 @@
+{
+  "scope": "HISTORICAL inventory for two superseded candidates; NOT current candidate inventory",
+  "object_count": 1,
+  "bytes": 16746794,
+  "review_candidates_created": 2,
+  "approx_bytes_all_review_candidates": 33493588,
+  "current_inventory_verified": false,
+  "current_integrity_evidence": "aws-review-artifact-fingerprint.json"
+}

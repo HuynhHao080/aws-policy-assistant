@@ -1,0 +1,1622 @@
+{
+  "started_at_utc": "2026-10-21T18:41:20.382036+00:00",
+  "status": "VERIFIED",
+  "aws_writes": 0,
+  "cleanup": "NOT_EXECUTED",
+  "scope": "Stack test and narrowly identified external prefixes; not account-wide discovery",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack_status": "UPDATE_COMPLETE",
+  "stack_resource_count": 45,
+  "resource_counts": {
+    "AWS::SNS::Topic": 1,
+    "AWS::CloudWatch::Alarm": 5,
+    "AWS::DynamoDB::Table": 2,
+    "AWS::Lambda::Function": 3,
+    "AWS::IAM::Policy": 3,
+    "AWS::Logs::LogGroup": 3,
+    "AWS::Events::Rule": 1,
+    "AWS::Lambda::Permission": 9,
+    "AWS::IAM::Role": 3,
+    "AWS::S3::BucketPolicy": 2,
+    "AWS::CloudFront::OriginAccessControl": 1,
+    "AWS::S3::Bucket": 2,
+    "AWS::CloudFront::Distribution": 1,
+    "AWS::CloudFront::ResponseHeadersPolicy": 1,
+    "AWS::ApiGatewayV2::Api": 1,
+    "AWS::ApiGatewayV2::Stage": 1,
+    "AWS::CloudWatch::Dashboard": 1,
+    "AWS::SQS::Queue": 2,
+    "AWS::Cognito::UserPool": 1,
+    "AWS::Cognito::UserPoolClient": 1,
+    "AWS::Lambda::EventSourceMapping": 1
+  },
+  "resources": [
+    {
+      "logical_id": "AlertTopic",
+      "type": "AWS::SNS::Topic",
+      "physical_id": "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentDLQAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "physical_id": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentMetadata",
+      "type": "AWS::DynamoDB::Table",
+      "physical_id": "policy-assistant-fcaj-test-DocumentMetadata",
+      "status": "CREATE_COMPLETE",
+      "classification": "RETAIN",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "logical_id": "DocumentQueueAgeAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "physical_id": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function",
+      "physical_id": "policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecoveryLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "physical_id": "polic-Docum-SB7F45dJgdlh",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecoveryLogs",
+      "type": "AWS::Logs::LogGroup",
+      "physical_id": "/aws/lambda/policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecoveryRecoverPending",
+      "type": "AWS::Events::Rule",
+      "physical_id": "policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecoveryRecoverPendingPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-DocumentRecoveryRecoverPendingPermission-2vtk9ji5k3ZS",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentRecoveryRole",
+      "type": "AWS::IAM::Role",
+      "physical_id": "policy-assistant-fcaj-test-DocumentRecoveryRole-12Z3VBHQGnNo",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "DocumentsBucketTlsPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "physical_id": "policy-assistant-fcaj-test-documents-********0098",
+      "status": "CREATE_COMPLETE",
+      "classification": "RETAIN",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "logical_id": "FrontendAccessControl",
+      "type": "AWS::CloudFront::OriginAccessControl",
+      "physical_id": "E2T8KKE73R28PE",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "FrontendBucket",
+      "type": "AWS::S3::Bucket",
+      "physical_id": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "FrontendBucketPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "physical_id": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "FrontendDistribution",
+      "type": "AWS::CloudFront::Distribution",
+      "physical_id": "E1LWE11YCHVIKC",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "FrontendHeaders",
+      "type": "AWS::CloudFront::ResponseHeadersPolicy",
+      "physical_id": "1fdbbd7e-fdcc-4c6c-b252-f92824d10b8a",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PoliciesTable",
+      "type": "AWS::DynamoDB::Table",
+      "physical_id": "policy-assistant-fcaj-test-Policies",
+      "status": "CREATE_COMPLETE",
+      "classification": "RETAIN",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "logical_id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api",
+      "physical_id": "u02lf7tfb0",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantApiProdStage",
+      "type": "AWS::ApiGatewayV2::Stage",
+      "physical_id": "Prod",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantDashboard",
+      "type": "AWS::CloudWatch::Dashboard",
+      "physical_id": "policy-assistant-fcaj-test-Dashboard",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentDLQ",
+      "type": "AWS::SQS::Queue",
+      "physical_id": "https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-dlq",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentQueue",
+      "type": "AWS::SQS::Queue",
+      "physical_id": "https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentsBucket",
+      "type": "AWS::S3::Bucket",
+      "physical_id": "policy-assistant-fcaj-test-documents-********0098",
+      "status": "CREATE_COMPLETE",
+      "classification": "RETAIN",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "logical_id": "PolicyAssistantDurationAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "physical_id": "policy-assistant-fcaj-test-Duration",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "physical_id": "policy-assistant-fcaj-test-Errors",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "status": "UPDATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionDocumentDownloadPermission-PhO7s9wMvtdc",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionDocumentStatusPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionDocumentStatusPermission-TEhHMcAlh7SG",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionGetPolicyByIdPermission-u2zFctHfXYgt",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionHealthCheckPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionHealthCheckPermission-HpDwNBcU3wEU",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionListDocumentsPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionListDocumentsPermission-GqBap8mXOmw1",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "physical_id": "polic-Polic-ojYjrLhZi1iK",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionRole",
+      "type": "AWS::IAM::Role",
+      "physical_id": "policy-assistant-fcaj-tes-PolicyAssistantFunctionRo-y5YSPK6ivJjn",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionSearchPoliciesPermission-K8Xgzvk0oyNE",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionSubmitDocumentPermission-89xn3JrHmx9B",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantFunctionUploadSessionPermission",
+      "type": "AWS::Lambda::Permission",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantFunctionUploadSessionPermission-M9mXGtYw1fgB",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "physical_id": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool",
+      "physical_id": "ap-southeast-1_EfQPshNZ7",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantUserPoolClient",
+      "type": "AWS::Cognito::UserPoolClient",
+      "physical_id": "6phfk8cct9d961svj4ls1j66ua",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function",
+      "physical_id": "policy-assistant-fcaj-test-PolicyAssistantWorker-rIxYN7KaXBbq",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantWorkerDocumentQueueEvent",
+      "type": "AWS::Lambda::EventSourceMapping",
+      "physical_id": "dfe5f3c0-07ad-45d7-99d5-38157db5177d",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantWorkerLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "physical_id": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantWorker-rIxYN7KaXBbq",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantWorkerLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "physical_id": "polic-Polic-qDFlDR5HrToY",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role",
+      "physical_id": "policy-assistant-fcaj-tes-PolicyAssistantWorkerRole-S8xvKepdHs8O",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    },
+    {
+      "logical_id": "RecoveryErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "physical_id": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "status": "CREATE_COMPLETE",
+      "classification": "STACK_MANAGED",
+      "deletion_policy": "Delete(default)",
+      "update_replace_policy": "Delete(default)"
+    }
+  ],
+  "old_stack_before": {
+    "StackStatus": "UPDATE_COMPLETE",
+    "LastUpdatedTime": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "historical_evidence": {
+    "approval-b1-execution.json": {
+      "status": "CREATED_VERIFIED",
+      "sha256": "f04c1b1108a9c5235b739c15f12210e94c06c510885ffd20c552a0e4a9ee0f0d"
+    },
+    "approval-b2-result.json": {
+      "status": "PUBLISHED_STATIC_VERIFIED",
+      "sha256": "2dc1ea678a2f7db220b7123410f66349ca077a665e2f200e972bf81d270c3d41"
+    },
+    "approval-b3-users.json": {
+      "status": "CREATED_VERIFIED",
+      "sha256": "7c850f3519096ad45192747f9eb36c81e81968a9d7cff00e59cfd7aeae9fc94b"
+    },
+    "approval-b4-e2e.json": {
+      "status": "PASS_WITH_NOT_RUN_BROWSER",
+      "sha256": "bb2953162e777910e0393cda9d2c49b0be08fad29720b70258f940e7188bc847"
+    },
+    "approval-b5-browser.json": {
+      "status": "FAIL",
+      "sha256": "4ba2e3c22dd07ba4568324f274f3c6e0d7cccb8751c23e4883e747db774e00f0"
+    },
+    "approval-b5r7-browser.json": {
+      "status": "PASS",
+      "sha256": "a34dae31a7341bc84c5fb284ab32e20f2405ae83292fd11513626cd32f7e6ec1"
+    },
+    "b5r6-execution.json": {
+      "status": "POSTFLIGHT_VERIFIED",
+      "sha256": "f02542135d896d9a4a8841341270823bd6e7d2b8e86a61475e9724e9f5f3d047"
+    }
+  },
+  "dynamodb": {
+    "DocumentMetadata": {
+      "table": "policy-assistant-fcaj-test-DocumentMetadata",
+      "status": "ACTIVE",
+      "billing_mode": {
+        "BillingMode": "PAY_PER_REQUEST",
+        "LastUpdateToPayPerRequestDateTime": "2026-10-21 16:37:20.102000+07:00"
+      },
+      "reported_item_count_delayed": 5,
+      "reported_size_bytes_delayed": 2081,
+      "scanned_records": 7,
+      "scan_note": "Strong per-item read, paginated; not a transaction-wide point-in-time snapshot",
+      "rows": [
+        {
+          "doc_id": "doc-0ca388ce767943bdb439afb9852730ef",
+          "source": "B5-R7",
+          "identity": "TestA",
+          "status": "processed",
+          "s3_key": "uploads/doc-0ca388ce767943bdb439afb9852730ef/document",
+          "created_at": "2026-10-21T18:33:58.072681+00:00",
+          "version_id_sha256": "01e44d0c97c1ffe5697e9fb998b240c8011cd124dcedc8da39a77c660f25b39d"
+        },
+        {
+          "doc_id": "doc-e2eb1a7c9c654ccfa8ad264839b01373",
+          "source": "B4",
+          "identity": "TestB",
+          "status": "failed",
+          "s3_key": "uploads/doc-e2eb1a7c9c654ccfa8ad264839b01373/document",
+          "created_at": "2026-10-21T16:47:53.378013+00:00",
+          "version_id_sha256": "b361c137ba5a32d81635b789f1633c78f8209e71576a8e2f8fa65733f0f5f9bf"
+        },
+        {
+          "doc_id": "doc-695099d7ed66418cb55fc0ed6a4abce7",
+          "source": "B4",
+          "identity": "TestB",
+          "status": "processed",
+          "s3_key": "uploads/doc-695099d7ed66418cb55fc0ed6a4abce7/document",
+          "created_at": "2026-10-21T16:47:35.420791+00:00",
+          "version_id_sha256": "1fc191ae76f4327eeb54b8fa2844a45d6e2c7d8c9106c93bc7b9227caa263b53"
+        },
+        {
+          "doc_id": "doc-1d861bcda8b647a4aedea51ef55c5717",
+          "source": "B5-R7",
+          "identity": "TestB",
+          "status": "processed",
+          "s3_key": "uploads/doc-1d861bcda8b647a4aedea51ef55c5717/document",
+          "created_at": "2026-10-21T18:34:03.413798+00:00",
+          "version_id_sha256": "65a1733ae61255b13a072c32d167f26bb67cb0166d1b762e631dc71f115c6a1e"
+        },
+        {
+          "doc_id": "doc-153ed4349ac1424ca0e822749885b625",
+          "source": "B4",
+          "identity": "TestA",
+          "status": "processed",
+          "s3_key": "uploads/doc-153ed4349ac1424ca0e822749885b625/document",
+          "created_at": "2026-10-21T16:47:45.081169+00:00",
+          "version_id_sha256": "9c17bc215d384a76462223f505bcc55f733a7403d374bbcee349814da0bc3ea8"
+        },
+        {
+          "doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+          "source": "B5",
+          "identity": "TestA",
+          "status": "uploading",
+          "s3_key": "uploads/doc-0dfd6bcb45f347ecab0a7ae5f4b636d1/document",
+          "created_at": "2026-10-21T17:19:47.251138+00:00",
+          "version_id_sha256": null
+        },
+        {
+          "doc_id": "doc-15dd319de1224b4f9df1375fce17bb09",
+          "source": "B4",
+          "identity": "TestA",
+          "status": "processed",
+          "s3_key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document",
+          "created_at": "2026-10-21T16:47:27.918125+00:00",
+          "version_id_sha256": "e562888df5a5d48d0e60f7284e69629463079ba03f81772546a1edf3302a872f"
+        }
+      ],
+      "pitr": {
+        "ContinuousBackupsStatus": "ENABLED",
+        "PointInTimeRecoveryDescription": {
+          "PointInTimeRecoveryStatus": "ENABLED",
+          "RecoveryPeriodInDays": 35,
+          "EarliestRestorableDateTime": "2026-10-21 16:37:40+07:00",
+          "LatestRestorableDateTime": "2026-10-22 01:36:22.841000+07:00"
+        }
+      },
+      "ttl": {
+        "TimeToLiveStatus": "DISABLED"
+      }
+    },
+    "PoliciesTable": {
+      "table": "policy-assistant-fcaj-test-Policies",
+      "status": "ACTIVE",
+      "billing_mode": {
+        "BillingMode": "PAY_PER_REQUEST",
+        "LastUpdateToPayPerRequestDateTime": "2026-10-21 16:37:20.064000+07:00"
+      },
+      "reported_item_count_delayed": 3,
+      "reported_size_bytes_delayed": 3920,
+      "scanned_records": 3,
+      "scan_note": "Strong per-item read, paginated; not a transaction-wide point-in-time snapshot",
+      "rows": [
+        {
+          "policy_id": "POL-001",
+          "source": "B4",
+          "source_basis": "B4 seed/search evidence plus seed implementation"
+        },
+        {
+          "policy_id": "POL-002",
+          "source": "B4",
+          "source_basis": "B4 seed/search evidence plus seed implementation"
+        },
+        {
+          "policy_id": "POL-003",
+          "source": "B4",
+          "source_basis": "B4 seed/search evidence plus seed implementation"
+        }
+      ],
+      "pitr": {
+        "ContinuousBackupsStatus": "ENABLED",
+        "PointInTimeRecoveryDescription": {
+          "PointInTimeRecoveryStatus": "ENABLED",
+          "RecoveryPeriodInDays": 35,
+          "EarliestRestorableDateTime": "2026-10-21 16:37:30+07:00",
+          "LatestRestorableDateTime": "2026-10-22 01:36:23.077000+07:00"
+        }
+      },
+      "ttl": {
+        "TimeToLiveStatus": "DISABLED"
+      }
+    }
+  },
+  "s3": {
+    "FrontendBucket": {
+      "bucket": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f",
+      "prefix": "",
+      "current_objects": [
+        {
+          "Key": "app.js",
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 22780,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "config.json",
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 285,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "index.html",
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 5752,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "styles.css",
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 5096,
+          "StorageClass": "STANDARD"
+        }
+      ],
+      "versions": [
+        {
+          "Key": "app.js",
+          "VersionId": "tIOKI9VBZ_4jQ.oO1z6HQ0XXdeFium.g",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 22780,
+          "StorageClass": "STANDARD",
+          "source": "B2_KEY_MATCH",
+          "provenance_basis": "Expected B2 asset key; no content rehash in C0"
+        },
+        {
+          "Key": "config.json",
+          "VersionId": "GoouuI2xdY.Ww97rorasXaoUs0OdW9op",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 285,
+          "StorageClass": "STANDARD",
+          "source": "B2_KEY_MATCH",
+          "provenance_basis": "Expected B2 asset key; no content rehash in C0"
+        },
+        {
+          "Key": "index.html",
+          "VersionId": "76vx0s.4xhVAKX7EbxDd7xtGwlyqvmVE",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 5752,
+          "StorageClass": "STANDARD",
+          "source": "B2_KEY_MATCH",
+          "provenance_basis": "Expected B2 asset key; no content rehash in C0"
+        },
+        {
+          "Key": "styles.css",
+          "VersionId": "FqsosDE8s9nSBbCt8AETjMKPD27bg5ui",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:28:22+00:00",
+          "Size": 5096,
+          "StorageClass": "STANDARD",
+          "source": "B2_KEY_MATCH",
+          "provenance_basis": "Expected B2 asset key; no content rehash in C0"
+        }
+      ],
+      "delete_markers": [],
+      "current_count": 4,
+      "version_count": 4,
+      "delete_marker_count": 0,
+      "total_version_bytes": 33913,
+      "versioning": "Enabled",
+      "public_access_block": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+      },
+      "encryption": {
+        "Rules": [
+          {
+            "ApplyServerSideEncryptionByDefault": {
+              "SSEAlgorithm": "AES256"
+            },
+            "BucketKeyEnabled": false,
+            "BlockedEncryptionTypes": {
+              "EncryptionType": [
+                "SSE-C"
+              ]
+            }
+          }
+        ]
+      },
+      "lifecycle": [],
+      "policy_statement_summary": [
+        {
+          "Sid": null,
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "cloudfront.amazonaws.com"
+          },
+          "Action": "s3:GetObject",
+          "Condition": {
+            "StringEquals": {
+              "AWS:SourceArn": "arn:aws:cloudfront::********0098:distribution/E1LWE11YCHVIKC"
+            }
+          }
+        },
+        {
+          "Sid": null,
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "s3:*",
+          "Condition": {
+            "Bool": {
+              "aws:SecureTransport": "false"
+            }
+          }
+        }
+      ]
+    },
+    "PolicyAssistantDocumentsBucket": {
+      "bucket": "policy-assistant-fcaj-test-documents-********0098",
+      "prefix": "",
+      "current_objects": [
+        {
+          "Key": "uploads/doc-0ca388ce767943bdb439afb9852730ef/document",
+          "LastModified": "2026-10-21 18:33:59+00:00",
+          "Size": 609,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "uploads/doc-153ed4349ac1424ca0e822749885b625/document",
+          "LastModified": "2026-10-21 16:47:47+00:00",
+          "Size": 10485760,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document",
+          "LastModified": "2026-10-21 16:47:44+00:00",
+          "Size": 606,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "uploads/doc-1d861bcda8b647a4aedea51ef55c5717/document",
+          "LastModified": "2026-10-21 18:34:04+00:00",
+          "Size": 609,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "uploads/doc-695099d7ed66418cb55fc0ed6a4abce7/document",
+          "LastModified": "2026-10-21 16:47:36+00:00",
+          "Size": 594,
+          "StorageClass": "STANDARD"
+        },
+        {
+          "Key": "uploads/doc-e2eb1a7c9c654ccfa8ad264839b01373/document",
+          "LastModified": "2026-10-21 16:47:54+00:00",
+          "Size": 40,
+          "StorageClass": "STANDARD"
+        }
+      ],
+      "versions": [
+        {
+          "Key": "uploads/doc-0ca388ce767943bdb439afb9852730ef/document",
+          "VersionId": "QfB75tAjHJFSi05e_3aePLYCvL8Z7j.9",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 18:33:59+00:00",
+          "Size": 609,
+          "StorageClass": "STANDARD",
+          "source": "B5-R7",
+          "identity": "TestA",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-153ed4349ac1424ca0e822749885b625/document",
+          "VersionId": "6N15cd64e8o1k1TisSv_Hg2V6YjB0JIE",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:47:47+00:00",
+          "Size": 10485760,
+          "StorageClass": "STANDARD",
+          "source": "B4",
+          "identity": "TestA",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document",
+          "VersionId": "IfjhfyBMGiTcY.B2BXfqv_cHzCp7_Ukc",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:47:44+00:00",
+          "Size": 606,
+          "StorageClass": "STANDARD",
+          "source": "B4",
+          "identity": "TestA",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document",
+          "VersionId": "NPgKQ47KJ7vGDIZ77LdbKQQPWG5zWjLf",
+          "IsLatest": false,
+          "LastModified": "2026-10-21 16:47:29+00:00",
+          "Size": 594,
+          "StorageClass": "STANDARD",
+          "source": "B4",
+          "identity": "TestA",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-1d861bcda8b647a4aedea51ef55c5717/document",
+          "VersionId": "9MRsVNtalv6BRz64ZW4PEIE6YQpW2ZuQ",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 18:34:04+00:00",
+          "Size": 609,
+          "StorageClass": "STANDARD",
+          "source": "B5-R7",
+          "identity": "TestB",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-695099d7ed66418cb55fc0ed6a4abce7/document",
+          "VersionId": "Fw2ZeVl4ViMGUt.d2gdFkKkWo0uD2B5H",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:47:36+00:00",
+          "Size": 594,
+          "StorageClass": "STANDARD",
+          "source": "B4",
+          "identity": "TestB",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        },
+        {
+          "Key": "uploads/doc-e2eb1a7c9c654ccfa8ad264839b01373/document",
+          "VersionId": "rNOz.Biz1LCR34QxHk6MYQ89wSTFvmq8",
+          "IsLatest": true,
+          "LastModified": "2026-10-21 16:47:54+00:00",
+          "Size": 40,
+          "StorageClass": "STANDARD",
+          "source": "B4",
+          "identity": "TestB",
+          "provenance_basis": "Document key matches recorded session; per-version content not read"
+        }
+      ],
+      "delete_markers": [],
+      "current_count": 6,
+      "version_count": 7,
+      "delete_marker_count": 0,
+      "total_version_bytes": 10488812,
+      "versioning": "Enabled",
+      "public_access_block": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+      },
+      "encryption": {
+        "Rules": [
+          {
+            "ApplyServerSideEncryptionByDefault": {
+              "SSEAlgorithm": "AES256"
+            },
+            "BucketKeyEnabled": false,
+            "BlockedEncryptionTypes": {
+              "EncryptionType": [
+                "SSE-C"
+              ]
+            }
+          }
+        ]
+      },
+      "lifecycle": [
+        {
+          "Expiration": {
+            "Days": 365
+          },
+          "ID": "ArchiveOldDocuments",
+          "Filter": {
+            "Prefix": ""
+          },
+          "Status": "Enabled",
+          "NoncurrentVersionExpiration": {
+            "NoncurrentDays": 365
+          }
+        }
+      ],
+      "policy_statement_summary": [
+        {
+          "Sid": null,
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "s3:*",
+          "Condition": {
+            "Bool": {
+              "aws:SecureTransport": "false"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "cognito": {
+    "pool": "ap-southeast-1_EfQPshNZ7",
+    "client": "6phfk8cct9d961svj4ls1j66ua",
+    "users": [
+      {
+        "identity": "TestB",
+        "enabled": true,
+        "status": "CONFIRMED",
+        "created_at": "2026-10-21 23:37:36.244000+07:00",
+        "source": "B3_IDENTITY_LINKED_BY_DOCUMENT_OWNER"
+      },
+      {
+        "identity": "TestA",
+        "enabled": true,
+        "status": "CONFIRMED",
+        "created_at": "2026-10-21 23:37:35.287000+07:00",
+        "source": "B3_IDENTITY_LINKED_BY_DOCUMENT_OWNER"
+      }
+    ],
+    "count": 2,
+    "username_email_password_not_saved": true
+  },
+  "lambda": {
+    "PolicyAssistantFunction": {
+      "FunctionName": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "Runtime": "python3.12",
+      "Handler": "app.lambda_handler",
+      "Timeout": 10,
+      "MemorySize": 128,
+      "LastModified": "2026-10-21T18:28:56.000+0000",
+      "CodeSha256": "fAIoMS2VCggsjv3ZrAyuuLpqUcMbMtR8eC5C7OqTS80=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    },
+    "PolicyAssistantWorker": {
+      "FunctionName": "policy-assistant-fcaj-test-PolicyAssistantWorker-rIxYN7KaXBbq",
+      "Runtime": "python3.12",
+      "Handler": "app.worker_handler",
+      "Timeout": 30,
+      "MemorySize": 256,
+      "LastModified": "2026-10-21T09:41:51.343+0000",
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    },
+    "DocumentRecovery": {
+      "FunctionName": "policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "Runtime": "python3.12",
+      "Handler": "app.recovery_handler",
+      "Timeout": 60,
+      "MemorySize": 128,
+      "LastModified": "2026-10-21T09:41:32.566+0000",
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    }
+  },
+  "api": {
+    "id": "u02lf7tfb0",
+    "configuration": {
+      "ApiEndpoint": "https://u02lf7tfb0.execute-api.ap-southeast-1.amazonaws.com",
+      "ApiId": "u02lf7tfb0",
+      "ApiKeySelectionExpression": "$request.header.x-api-key",
+      "CorsConfiguration": {
+        "AllowHeaders": [
+          "content-type",
+          "authorization"
+        ],
+        "AllowMethods": [
+          "GET",
+          "POST",
+          "OPTIONS"
+        ],
+        "AllowOrigins": [
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+          "http://localhost:8080",
+          "https://d3ataim7dfsl7t.cloudfront.net"
+        ],
+        "MaxAge": 300
+      },
+      "CreatedDate": "2026-10-21 09:41:56+00:00",
+      "DisableExecuteApiEndpoint": false,
+      "IpAddressType": "ipv4",
+      "Name": "policy-assistant-fcaj-test",
+      "ProtocolType": "HTTP",
+      "RouteSelectionExpression": "$request.method $request.path",
+      "Tags": {
+        "Project": "PolicyAssistant",
+        "aws:cloudformation:stack-name": "policy-assistant-fcaj-test",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:ap-southeast-1:********0098:stack/policy-assistant-fcaj-test/79a32ed0-cd19-11f1-988e-0affe38a716f",
+        "Environment": "fcaj-test",
+        "aws:cloudformation:logical-id": "PolicyAssistantApi",
+        "Purpose": "FCAJ-demo-review",
+        "httpapi:createdBy": "SAM"
+      },
+      "Version": "1.0"
+    },
+    "routes": [
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "3yxwyjk",
+        "RouteKey": "POST /documents/upload-session",
+        "Target": "integrations/9ojkxtb"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "NONE",
+        "RequestParameters": {},
+        "RouteId": "6dkskj6",
+        "RouteKey": "GET /health",
+        "Target": "integrations/nnrugja"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lk86bv8",
+        "RouteKey": "GET /documents",
+        "Target": "integrations/9ri6udq"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lllwt2m",
+        "RouteKey": "GET /policies/{policy_id}",
+        "Target": "integrations/9a2nrgj"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "maxftfg",
+        "RouteKey": "GET /documents/{doc_id}/download",
+        "Target": "integrations/k5d9og7"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "qt1m8pq",
+        "RouteKey": "POST /documents/submit",
+        "Target": "integrations/vwtv7ft"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "v75zi6e",
+        "RouteKey": "GET /documents/{doc_id}/status",
+        "Target": "integrations/bls3k0e"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "ygk4uzu",
+        "RouteKey": "GET /policies",
+        "Target": "integrations/rkod6y6"
+      }
+    ],
+    "authorizers": [
+      {
+        "AuthorizerId": "kzheps",
+        "AuthorizerType": "JWT",
+        "IdentitySource": [
+          "$request.header.Authorization"
+        ],
+        "JwtConfiguration": {
+          "Audience": [
+            "6phfk8cct9d961svj4ls1j66ua"
+          ],
+          "Issuer": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_EfQPshNZ7"
+        },
+        "Name": "PolicyAssistantAuthorizer"
+      }
+    ],
+    "integrations": [
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9a2nrgj",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ojkxtb",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ri6udq",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "bls3k0e",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "k5d9og7",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "nnrugja",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "rkod6y6",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "vwtv7ft",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    ]
+  },
+  "eventbridge": {
+    "rule": {
+      "Name": "policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "Arn": "arn:aws:events:ap-southeast-1:********0098:rule/policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "ScheduleExpression": "rate(2 minutes)",
+      "State": "ENABLED",
+      "EventBusName": "default",
+      "CreatedBy": "********0098"
+    },
+    "targets": [
+      {
+        "Id": "DocumentRecoveryRecoverPendingLambdaTarget",
+        "Arn": "arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA"
+      }
+    ]
+  },
+  "cloudfront": {
+    "id": "E1LWE11YCHVIKC",
+    "domain": "d3ataim7dfsl7t.cloudfront.net",
+    "status": "Deployed",
+    "enabled": true,
+    "origins": {
+      "Quantity": 1,
+      "Items": [
+        {
+          "Id": "frontend",
+          "DomainName": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f.s3.ap-southeast-1.amazonaws.com",
+          "OriginPath": "",
+          "CustomHeaders": {
+            "Quantity": 0
+          },
+          "S3OriginConfig": {
+            "OriginAccessIdentity": "",
+            "OriginReadTimeout": 30
+          },
+          "ConnectionAttempts": 3,
+          "ConnectionTimeout": 10,
+          "OriginShield": {
+            "Enabled": false
+          },
+          "OriginAccessControlId": "E2T8KKE73R28PE"
+        }
+      ]
+    }
+  },
+  "sqs": {
+    "PolicyAssistantDocumentQueue": {
+      "url": "https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue",
+      "attributes": {
+        "QueueArn": "arn:aws:sqs:ap-southeast-1:********0098:policy-assistant-fcaj-test-document-queue",
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0",
+        "CreatedTimestamp": "1792575439",
+        "LastModifiedTimestamp": "1792575439",
+        "VisibilityTimeout": "180",
+        "MaximumMessageSize": "1048576",
+        "MessageRetentionPeriod": "345600",
+        "DelaySeconds": "0",
+        "RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:ap-southeast-1:********0098:policy-assistant-fcaj-test-document-dlq\",\"maxReceiveCount\":3}",
+        "ReceiveMessageWaitTimeSeconds": "0",
+        "SqsManagedSseEnabled": "true"
+      },
+      "message_content_identity": "NOT_READ_NO_RECEIVE"
+    },
+    "PolicyAssistantDocumentDLQ": {
+      "url": "https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-dlq",
+      "attributes": {
+        "QueueArn": "arn:aws:sqs:ap-southeast-1:********0098:policy-assistant-fcaj-test-document-dlq",
+        "ApproximateNumberOfMessages": "1",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0",
+        "CreatedTimestamp": "1792575438",
+        "LastModifiedTimestamp": "1792575438",
+        "VisibilityTimeout": "30",
+        "MaximumMessageSize": "1048576",
+        "MessageRetentionPeriod": "1209600",
+        "DelaySeconds": "0",
+        "RedriveAllowPolicy": "{\"redrivePermission\":\"byQueue\",\"sourceQueueArns\":[\"arn:aws:sqs:ap-southeast-1:********0098:policy-assistant-fcaj-test-document-queue\"]}",
+        "ReceiveMessageWaitTimeSeconds": "0",
+        "SqsManagedSseEnabled": "true"
+      },
+      "message_content_identity": "NOT_READ_NO_RECEIVE"
+    }
+  },
+  "alarms": [
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "StateValue": "ALARM",
+      "StateReason": "Threshold Crossed: 1 datapoint [1.0 (21/10/26 16:53:00)] was greater than the threshold (0.0).",
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv"
+      ],
+      "OKActions": [],
+      "MetricName": "ApproximateNumberOfMessagesVisible",
+      "Namespace": "AWS/SQS",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 0.0
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: 1 datapoint [0.0 (21/10/26 16:57:00)] was not greater than the threshold (300.0).",
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv"
+      ],
+      "OKActions": [],
+      "MetricName": "ApproximateAgeOfOldestMessage",
+      "Namespace": "AWS/SQS",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 300.0
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Duration",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv"
+      ],
+      "OKActions": [],
+      "MetricName": "Duration",
+      "Namespace": "AWS/Lambda",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 5000.0
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Errors",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv"
+      ],
+      "OKActions": [],
+      "MetricName": "Errors",
+      "Namespace": "AWS/Lambda",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 0.0
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv"
+      ],
+      "OKActions": [],
+      "MetricName": "Errors",
+      "Namespace": "AWS/Lambda",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 0.0
+    }
+  ],
+  "dashboards": [
+    {
+      "name": "policy-assistant-fcaj-test-Dashboard",
+      "widget_count": 4,
+      "widget_types": {
+        "metric": 4
+      }
+    }
+  ],
+  "log_groups": [
+    {
+      "logGroupName": "/aws/lambda/policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "retentionInDays": 30,
+      "storedBytes": 0,
+      "logGroupClass": "STANDARD",
+      "management": "STACK_MANAGED"
+    },
+    {
+      "logGroupName": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "retentionInDays": 30,
+      "storedBytes": 0,
+      "logGroupClass": "STANDARD",
+      "management": "STACK_MANAGED"
+    },
+    {
+      "logGroupName": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantWorker-rIxYN7KaXBbq",
+      "retentionInDays": 30,
+      "storedBytes": 0,
+      "logGroupClass": "STANDARD",
+      "management": "STACK_MANAGED"
+    }
+  ],
+  "metrics_inventory": [
+    {
+      "logical_id": "PolicyAssistantFunction",
+      "namespace": "AWS/Lambda",
+      "metric_names": [
+        "ConcurrentExecutions",
+        "Duration",
+        "Errors",
+        "Invocations",
+        "Throttles"
+      ]
+    },
+    {
+      "logical_id": "PolicyAssistantWorker",
+      "namespace": "AWS/Lambda",
+      "metric_names": [
+        "ConcurrentExecutions",
+        "Duration",
+        "Errors",
+        "Invocations",
+        "Throttles"
+      ]
+    },
+    {
+      "logical_id": "DocumentRecovery",
+      "namespace": "AWS/Lambda",
+      "metric_names": [
+        "AsyncEventAge",
+        "AsyncEventsDropped",
+        "AsyncEventsReceived",
+        "ConcurrentExecutions",
+        "Duration",
+        "Errors",
+        "Invocations",
+        "Throttles"
+      ]
+    },
+    {
+      "logical_id": "PolicyAssistantApi",
+      "namespace": "AWS/ApiGateway",
+      "metric_names": [
+        "4xx",
+        "5xx",
+        "Count",
+        "DataProcessed",
+        "IntegrationLatency",
+        "Latency"
+      ],
+      "inventory_only": true
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentQueue",
+      "namespace": "AWS/SQS",
+      "metric_names": [
+        "ApproximateAgeOfOldestMessage",
+        "ApproximateAgeOfOldestMessageInQuietGroups",
+        "ApproximateNumberOfMessagesDelayed",
+        "ApproximateNumberOfMessagesDelayedInQuietGroups",
+        "ApproximateNumberOfMessagesNotVisible",
+        "ApproximateNumberOfMessagesNotVisibleInQuietGroups",
+        "ApproximateNumberOfMessagesVisible",
+        "ApproximateNumberOfMessagesVisibleInQuietGroups",
+        "ApproximateNumberOfNoisyGroups",
+        "NumberOfEmptyReceives",
+        "NumberOfMessagesDeleted",
+        "NumberOfMessagesReceived",
+        "NumberOfMessagesSent",
+        "SentMessageSize"
+      ],
+      "inventory_only": true
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentDLQ",
+      "namespace": "AWS/SQS",
+      "metric_names": [
+        "ApproximateAgeOfOldestMessage",
+        "ApproximateAgeOfOldestMessageInQuietGroups",
+        "ApproximateNumberOfMessagesDelayed",
+        "ApproximateNumberOfMessagesDelayedInQuietGroups",
+        "ApproximateNumberOfMessagesNotVisible",
+        "ApproximateNumberOfMessagesNotVisibleInQuietGroups",
+        "ApproximateNumberOfMessagesVisible",
+        "ApproximateNumberOfMessagesVisibleInQuietGroups",
+        "ApproximateNumberOfNoisyGroups",
+        "NumberOfEmptyReceives",
+        "NumberOfMessagesDeleted",
+        "NumberOfMessagesReceived",
+        "NumberOfMessagesSent"
+      ],
+      "inventory_only": true
+    }
+  ],
+  "external_artifacts": {
+    "bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+    "prefix": "policy-assistant-fcaj-test/",
+    "current_objects": [
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+        "LastModified": "2026-10-21 17:48:57+00:00",
+        "Size": 16731316,
+        "StorageClass": "STANDARD"
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-063231-1f5cb969/259348981e60d7d9a0fbbf28bc58643e",
+        "LastModified": "2026-10-21 06:33:19+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD"
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-064014-a9a40304/259348981e60d7d9a0fbbf28bc58643e",
+        "LastModified": "2026-10-21 06:41:04+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD"
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e",
+        "LastModified": "2026-10-21 07:22:59+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD"
+      }
+    ],
+    "versions": [
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+        "VersionId": "ZgEnyi6QrVWZYep.H5.g_N2W_llOfQ0G",
+        "IsLatest": true,
+        "LastModified": "2026-10-21 17:48:57+00:00",
+        "Size": 16731316,
+        "StorageClass": "STANDARD",
+        "source": "B5-R2",
+        "currently_referenced": true
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-063231-1f5cb969/259348981e60d7d9a0fbbf28bc58643e",
+        "VersionId": "3_HR5AvJe4T93lvB9SDQoFr1U_ioT2Pu",
+        "IsLatest": true,
+        "LastModified": "2026-10-21 06:33:19+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD",
+        "source": "HISTORICAL_SUPERSEDED_REVIEW_PREFIX",
+        "currently_referenced": false,
+        "provenance_basis": "docs/aws-test-deployment-approval.md and docs/history/aws-test-deployment-approval-a9a40304.md match prefix; contents not rehashed in C0",
+        "cleanup_eligibility": "PENDING_EXPLICIT_KEY_VERSION_APPROVAL_AND_DEPENDENCY_RECHECK"
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-064014-a9a40304/259348981e60d7d9a0fbbf28bc58643e",
+        "VersionId": "EbGsnaVdmsfRXUhYYYrobzXLcw9iYSNX",
+        "IsLatest": true,
+        "LastModified": "2026-10-21 06:41:04+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD",
+        "source": "HISTORICAL_SUPERSEDED_REVIEW_PREFIX",
+        "currently_referenced": false,
+        "provenance_basis": "docs/aws-test-deployment-approval.md and docs/history/aws-test-deployment-approval-a9a40304.md match prefix; contents not rehashed in C0",
+        "cleanup_eligibility": "PENDING_EXPLICIT_KEY_VERSION_APPROVAL_AND_DEPENDENCY_RECHECK"
+      },
+      {
+        "Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e",
+        "VersionId": "PfNduhogPdSksBvADNji1Kaw0gR80_nh",
+        "IsLatest": true,
+        "LastModified": "2026-10-21 07:22:59+00:00",
+        "Size": 16746794,
+        "StorageClass": "STANDARD",
+        "source": "B1_CANDIDATE",
+        "currently_referenced": true
+      }
+    ],
+    "delete_markers": [],
+    "current_count": 4,
+    "version_count": 4,
+    "delete_marker_count": 0,
+    "total_version_bytes": 66971698,
+    "classification": "EXTERNAL_SHARED_DEPLOYMENT_BUCKET_TEST_PREFIX_ONLY",
+    "live_references": {
+      "PolicyAssistantFunction": {
+        "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+        "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip"
+      },
+      "PolicyAssistantWorker": {
+        "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+        "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+      },
+      "DocumentRecovery": {
+        "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+        "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+      }
+    },
+    "bucket_cloudformation_owner_stack": "aws-sam-cli-managed-default"
+  },
+  "remaining_change_sets": [],
+  "external_budget": {
+    "name": "policy-assistant-account-monthly",
+    "scope": "ACCOUNT_WIDE_NOT_OWNED_BY_TEST_STACK",
+    "limit": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "period": "MONTHLY",
+    "calculated_spend_delayed": {
+      "ActualSpend": {
+        "Amount": "5.479",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "notifications": [
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 80.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "FORECASTED",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      }
+    ],
+    "email_delivery": "NOT_VERIFIED",
+    "recipient_verification": "NOT_RECHECKED_NO_EMAIL_READ"
+  },
+  "completed_at_utc": "2026-10-21T18:41:35.758237+00:00",
+  "unknown_data_policy": "Never delete without ownership confirmation",
+  "limitations": [
+    "No document bodies, policy text, passwords/tokens or DLQ messages read",
+    "No account-wide orphan discovery; only stack resources and identified narrow prefixes",
+    "S3/Dynamo scans are paginated but not a cross-service atomic snapshot",
+    "Metric listing may omit inactive series and is not workload or health proof"
+  ],
+  "sns": {
+    "topic": "arn:aws:sns:ap-southeast-1:********0098:policy-assistant-fcaj-test-AlertTopic-Gg2bnsmew5cv",
+    "subscriptions": [],
+    "confirmed_count": "0",
+    "pending_count": "0",
+    "delivery": "NOT_VERIFIED_NO_MESSAGE_SENT"
+  },
+  "supplemental_readonly_completed_at_utc": "2026-10-21T18:42:37.763586+00:00"
+}

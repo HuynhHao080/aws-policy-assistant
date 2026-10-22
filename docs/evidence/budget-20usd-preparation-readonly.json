@@ -1,0 +1,92 @@
+{
+  "observed_at_utc": "2026-10-21T08:44:22.248021+00:00",
+  "scope": "Preparation only; STS and Budget configuration reads, no subscriber addresses queried",
+  "target_name": "policy-assistant-account-monthly",
+  "writes_performed": false,
+  "account_masked": "********0098",
+  "identity": "VERIFIED",
+  "name_available": true,
+  "budget_count": 6,
+  "existing_configuration_baselines": [
+    {
+      "identifier_sha256": "9b11f6b707d2a03e0265465f32520bc1bc213de121de958539662d0ec1453fcb",
+      "configuration_sha256": "f6cc758d8a232bf4169a033cf701491bdafbbcc42693315d9d69123d0c410101",
+      "type": "COST",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "USD"
+      },
+      "is_existing_5usd_cost_budget": false
+    },
+    {
+      "identifier_sha256": "66bf7e502a2a4e178123aa39c4a8cf3c713852576d7de104a89d9d4c4b31a50f",
+      "configuration_sha256": "09592b19daf069271a2a7bd40952e8ca7008b455bbe35eaa8cb71a1dc4516640",
+      "type": "COST",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "USD"
+      },
+      "is_existing_5usd_cost_budget": false
+    },
+    {
+      "identifier_sha256": "bb20bc1af5f031a498933bb6b7b8b1187a8987dd7488244d2ab412136ebfa3b5",
+      "configuration_sha256": "d329829ae8d70d84e75087f5959aa212e011a08cbcdd6ce7030f8e3795208374",
+      "type": "RI_COVERAGE",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "PERCENTAGE"
+      },
+      "is_existing_5usd_cost_budget": false
+    },
+    {
+      "identifier_sha256": "24e2d81d590cee6d7f8b19c2541e3995458b40b4eba0e4e4109043a9319897dd",
+      "configuration_sha256": "f179a2ee8dc48072e2a7ce046c5ddce449ed5f64bbbe9c5ec11da28d8390b494",
+      "type": "SAVINGS_PLANS_UTILIZATION",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "PERCENTAGE"
+      },
+      "is_existing_5usd_cost_budget": false
+    },
+    {
+      "identifier_sha256": "2410f79c6ad84927252d095d6bd50860732e26c7e8ba03e303f1cfc4d692395a",
+      "configuration_sha256": "69669e3c2407948bc6cc59aa728e463911f2816a2c818df4b29f300e12840e71",
+      "type": "USAGE",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "Hrs"
+      },
+      "is_existing_5usd_cost_budget": false
+    },
+    {
+      "identifier_sha256": "36fb61048aea2940bea0ba5363e482b8b45948315ed8e4e6a9df7f8a103c0831",
+      "configuration_sha256": "87abc066114719f4125cad3e556877d00c68a39b00e0b3c29413f722058e2e30",
+      "type": "COST",
+      "limit": {
+        "Amount": "5.0",
+        "Unit": "USD"
+      },
+      "is_existing_5usd_cost_budget": true,
+      "notification_configuration_sha256": "9d7fc687d652d25ca90aa42983701e6a8ded842613a6e9aeb0a8f2a99cbde51e",
+      "notification_count": 2,
+      "notification_types": [
+        "ACTUAL",
+        "ACTUAL"
+      ],
+      "threshold_type_returned": [
+        false,
+        false
+      ],
+      "notification_hash_excludes_dynamic_fields": [
+        "NotificationState"
+      ],
+      "notification_baseline_rechecked_at_utc": "2026-10-21T08:49:39.406433+00:00"
+    }
+  ],
+  "status": "VERIFIED_READ_ONLY",
+  "recipient": "PENDING_USER_CONFIRMATION",
+  "budget_creation": "NOT_EXECUTED",
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "completed_at_utc": "2026-10-21T08:44:25.399046+00:00",
+  "baseline_normalization_status": "VERIFIED_READ_ONLY"
+}

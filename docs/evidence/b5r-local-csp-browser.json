@@ -1,0 +1,43 @@
+{
+  "scope": "LOCAL Edge + mocked API/S3; CSP from source IaC, no AWS requests/credentials",
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+  "actual_helper_post_host": "fcaj-local-fixture.s3.ap-southeast-1.amazonaws.com",
+  "actual_helper_get_host": "fcaj-local-fixture.s3.ap-southeast-1.amazonaws.com",
+  "cases": {
+    "legacy-global": {
+      "status": "PASS",
+      "post_host": "fcaj-local-fixture.s3.amazonaws.com",
+      "get_host": "fcaj-local-fixture.s3.amazonaws.com",
+      "browser_version": "155.0.4283.62",
+      "ui_state": "error",
+      "ui_message": "Upload S3 thất bại hoặc hết thời gian. Tạo phiên mới để thử lại.",
+      "auth_state": "ok",
+      "api_base": "https://fixture-api.execute-api.ap-southeast-1.amazonaws.com/Prod",
+      "csp_violations": [
+        {
+          "effective_directive": "connect-src",
+          "violated_directive": "connect-src",
+          "blocked_host": "fcaj-local-fixture.s3.amazonaws.com",
+          "disposition": "enforce"
+        }
+      ],
+      "s3_post_requests": 0,
+      "s3_get_requests": 0,
+      "unmocked_external_requests": 0
+    },
+    "actual-helper": {
+      "status": "PASS",
+      "post_host": "fcaj-local-fixture.s3.ap-southeast-1.amazonaws.com",
+      "get_host": "fcaj-local-fixture.s3.ap-southeast-1.amazonaws.com",
+      "browser_version": "155.0.4283.62",
+      "ui_state": "ok",
+      "ui_message": "Hoàn tất · doc-csp-fixture\nSHA-256 khớp file gốc, worker và bản tải về:\nec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "auth_state": "ok",
+      "api_base": "https://fixture-api.execute-api.ap-southeast-1.amazonaws.com/Prod",
+      "csp_violations": [],
+      "s3_post_requests": 1,
+      "s3_get_requests": 1,
+      "unmocked_external_requests": 0
+    }
+  }
+}

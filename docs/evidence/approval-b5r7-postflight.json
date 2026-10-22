@@ -1,0 +1,242 @@
+{
+  "started_at_utc": "2026-10-21T18:35:08.527427+00:00",
+  "scope": "Postflight read-only; no auth/business calls, ReceiveMessage or cleanup",
+  "status": "VERIFIED",
+  "aws_writes": 0,
+  "stack_status": "UPDATE_COMPLETE",
+  "lambda": {
+    "PolicyAssistantFunction": {
+      "CodeSha256": "fAIoMS2VCggsjv3ZrAyuuLpqUcMbMtR8eC5C7OqTS80=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    },
+    "PolicyAssistantWorker": {
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    },
+    "DocumentRecovery": {
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "State": "Active",
+      "LastUpdateStatus": "Successful"
+    }
+  },
+  "queues": {
+    "PolicyAssistantDocumentQueue": {
+      "ApproximateNumberOfMessages": "0",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    },
+    "PolicyAssistantDocumentDLQ": {
+      "ApproximateNumberOfMessages": "1",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    }
+  },
+  "alarms": [
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "StateValue": "ALARM",
+      "StateReason": "Threshold Crossed: 1 datapoint [1.0 (21/10/26 16:53:00)] was greater than the threshold (0.0).",
+      "StateUpdatedTimestamp": "2026-10-21 23:59:17.935000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: 1 datapoint [0.0 (21/10/26 16:57:00)] was not greater than the threshold (300.0).",
+      "StateUpdatedTimestamp": "2026-10-22 00:03:20.519000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Duration",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:50.074000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Errors",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:56.704000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:40.250000+07:00"
+    }
+  ],
+  "budget": {
+    "name": "policy-assistant-account-monthly",
+    "limit": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "period": "MONTHLY",
+    "type": "COST",
+    "spend_snapshot_delayed": {
+      "ActualSpend": {
+        "Amount": "5.479",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "notifications": [
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 80.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "FORECASTED",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      }
+    ],
+    "email_delivery": "NOT_VERIFIED",
+    "billing_latency": true
+  },
+  "document_inventory": [
+    {
+      "doc_id": "doc-15dd319de1224b4f9df1375fce17bb09",
+      "identity": "TestA",
+      "status": "processed",
+      "created_at": "2026-10-21T16:47:27.918125+00:00",
+      "source": "PREEXISTING",
+      "sha256": "cddd003cb1498313425bced900b3b954194173455476680174d3f3ac489f5b38",
+      "s3_key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document",
+      "object_exists": true,
+      "bytes": 606,
+      "content_type": "application/pdf",
+      "version_bound": false,
+      "object_version_count": 2,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-153ed4349ac1424ca0e822749885b625",
+      "identity": "TestA",
+      "status": "processed",
+      "created_at": "2026-10-21T16:47:45.081169+00:00",
+      "source": "PREEXISTING",
+      "sha256": "2e5cb9bbd30935f69452ce5033e9712c3dd47f026f19a2efd0be9c695e2086f6",
+      "s3_key": "uploads/doc-153ed4349ac1424ca0e822749885b625/document",
+      "object_exists": true,
+      "bytes": 10485760,
+      "content_type": "application/pdf",
+      "version_bound": true,
+      "object_version_count": 1,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+      "identity": "TestA",
+      "status": "uploading",
+      "created_at": "2026-10-21T17:19:47.251138+00:00",
+      "source": "PREEXISTING",
+      "sha256": null,
+      "s3_key": "uploads/doc-0dfd6bcb45f347ecab0a7ae5f4b636d1/document",
+      "object_exists": false,
+      "object_version_count": 0,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-0ca388ce767943bdb439afb9852730ef",
+      "identity": "TestA",
+      "status": "processed",
+      "created_at": "2026-10-21T18:33:58.072681+00:00",
+      "source": "B5-R7",
+      "sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "s3_key": "uploads/doc-0ca388ce767943bdb439afb9852730ef/document",
+      "object_exists": true,
+      "bytes": 609,
+      "content_type": "application/pdf",
+      "version_bound": true,
+      "object_version_count": 1,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-695099d7ed66418cb55fc0ed6a4abce7",
+      "identity": "TestB",
+      "status": "processed",
+      "created_at": "2026-10-21T16:47:35.420791+00:00",
+      "source": "PREEXISTING",
+      "sha256": "79f8f210c2b2abf72804a59830203153f2efcf382091acd609d6f2b4402206d1",
+      "s3_key": "uploads/doc-695099d7ed66418cb55fc0ed6a4abce7/document",
+      "object_exists": true,
+      "bytes": 594,
+      "content_type": "application/pdf",
+      "version_bound": true,
+      "object_version_count": 1,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-e2eb1a7c9c654ccfa8ad264839b01373",
+      "identity": "TestB",
+      "status": "failed",
+      "created_at": "2026-10-21T16:47:53.378013+00:00",
+      "source": "PREEXISTING",
+      "sha256": null,
+      "s3_key": "uploads/doc-e2eb1a7c9c654ccfa8ad264839b01373/document",
+      "object_exists": true,
+      "bytes": 40,
+      "content_type": "application/pdf",
+      "version_bound": true,
+      "object_version_count": 1,
+      "delete_marker_count": 0
+    },
+    {
+      "doc_id": "doc-1d861bcda8b647a4aedea51ef55c5717",
+      "identity": "TestB",
+      "status": "processed",
+      "created_at": "2026-10-21T18:34:03.413798+00:00",
+      "source": "B5-R7",
+      "sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "s3_key": "uploads/doc-1d861bcda8b647a4aedea51ef55c5717/document",
+      "object_exists": true,
+      "bytes": 609,
+      "content_type": "application/pdf",
+      "version_bound": true,
+      "object_version_count": 1,
+      "delete_marker_count": 0
+    }
+  ],
+  "log_scan": {
+    "start_ms": 1792607631309,
+    "end_ms": 1792607715720,
+    "groups": [
+      {
+        "group": "/aws/lambda/policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+        "events_scanned": 2,
+        "sensitive_findings": 0
+      },
+      {
+        "group": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+        "events_scanned": 55,
+        "sensitive_findings": 0
+      },
+      {
+        "group": "/aws/lambda/policy-assistant-fcaj-test-PolicyAssistantWorker-rIxYN7KaXBbq",
+        "events_scanned": 8,
+        "sensitive_findings": 0
+      }
+    ],
+    "raw_logs_saved": false,
+    "scope": "Known credentials/usernames and token/signed-URL patterns, bounded window only"
+  },
+  "old_stack_metadata": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "completed_at_utc": "2026-10-21T18:35:29.753295+00:00",
+  "cleanup": "NOT_EXECUTED"
+}

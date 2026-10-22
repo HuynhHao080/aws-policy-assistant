@@ -1,0 +1,38 @@
+{
+  "started_at_utc": "2026-10-21T16:26:37.605601+00:00",
+  "scope": "Offline/local checks only; frontend is plain JS/static assets, no TS compiler or bundler configured",
+  "checks": [
+    {
+      "name": "frontend-syntax",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "frontend-unit",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "frontend-browser-local",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "frontend-fullstack-local",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "lint",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "passed": true,
+  "completed_at_utc": "2026-10-21T16:26:54.321152+00:00"
+}

@@ -1,0 +1,209 @@
+{
+  "observed_at_utc": "2026-10-21T06:27:50.471799+00:00",
+  "region": "ap-southeast-1",
+  "account_masked": "********0098",
+  "identity_type": "user",
+  "scope": "Read-only AWS API inspection; no data records, credentials or signed capabilities exported",
+  "stacks": {
+    "policy-assistant": {
+      "status": "UPDATE_COMPLETE",
+      "creation_time": "2026-10-12T06:25:48.038000+00:00",
+      "last_updated": "2026-10-19T11:10:29.038000+00:00",
+      "tags": [],
+      "termination_protection": false,
+      "parameters": [],
+      "output_keys": [
+        "PolicyAssistantFunctionIamRole",
+        "PolicyAssistantFunctionArn",
+        "PolicyAssistantApiUrl",
+        "PoliciesTableName"
+      ],
+      "resources": [
+        {
+          "logical_id": "DocumentMetadata",
+          "type": "AWS::DynamoDB::Table",
+          "status": "CREATE_COMPLETE",
+          "table_status": "ACTIVE",
+          "item_count_approx": 1,
+          "bytes_approx": 112,
+          "indexes": [],
+          "billing": "PAY_PER_REQUEST"
+        },
+        {
+          "logical_id": "PoliciesTable",
+          "type": "AWS::DynamoDB::Table",
+          "status": "UPDATE_COMPLETE",
+          "table_status": "ACTIVE",
+          "item_count_approx": 3,
+          "bytes_approx": 3920,
+          "indexes": [],
+          "billing": "PAY_PER_REQUEST"
+        },
+        {
+          "logical_id": "PolicyAssistantApi",
+          "type": "AWS::ApiGatewayV2::Api",
+          "status": "UPDATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantApiProdStage",
+          "type": "AWS::ApiGatewayV2::Stage",
+          "status": "UPDATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantDashboard",
+          "type": "AWS::CloudWatch::Dashboard",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantDocumentDLQ",
+          "type": "AWS::SQS::Queue",
+          "status": "CREATE_COMPLETE",
+          "attributes": {
+            "ApproximateNumberOfMessages": "0",
+            "ApproximateNumberOfMessagesNotVisible": "0",
+            "VisibilityTimeout": "30",
+            "MessageRetentionPeriod": "1209600",
+            "SqsManagedSseEnabled": "true"
+          }
+        },
+        {
+          "logical_id": "PolicyAssistantDocumentQueue",
+          "type": "AWS::SQS::Queue",
+          "status": "CREATE_COMPLETE",
+          "attributes": {
+            "ApproximateNumberOfMessages": "0",
+            "ApproximateNumberOfMessagesNotVisible": "0",
+            "VisibilityTimeout": "30",
+            "MessageRetentionPeriod": "345600",
+            "SqsManagedSseEnabled": "true"
+          }
+        },
+        {
+          "logical_id": "PolicyAssistantDocumentsBucket",
+          "type": "AWS::S3::Bucket",
+          "status": "UPDATE_COMPLETE",
+          "versioning": "Disabled",
+          "public_access_block": {
+            "BlockPublicAcls": true,
+            "IgnorePublicAcls": true,
+            "BlockPublicPolicy": true,
+            "RestrictPublicBuckets": true
+          },
+          "has_objects": true
+        },
+        {
+          "logical_id": "PolicyAssistantDurationAlarm",
+          "type": "AWS::CloudWatch::Alarm",
+          "status": "CREATE_COMPLETE",
+          "alarm_state": "OK"
+        },
+        {
+          "logical_id": "PolicyAssistantErrorAlarm",
+          "type": "AWS::CloudWatch::Alarm",
+          "status": "CREATE_COMPLETE",
+          "alarm_state": "OK"
+        },
+        {
+          "logical_id": "PolicyAssistantFunction",
+          "type": "AWS::Lambda::Function",
+          "status": "UPDATE_COMPLETE",
+          "runtime": "python3.12",
+          "state": "Active",
+          "last_update_status": "Successful",
+          "timeout": 10,
+          "memory_mb": 128,
+          "event_source_mappings": []
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionDocumentDownloadPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionDocumentStatusPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionGetPolicyByIdPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionHealthCheckPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionRole",
+          "type": "AWS::IAM::Role",
+          "status": "UPDATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionSearchPoliciesPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionSubmitDocumentPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantFunctionUploadSessionPermission",
+          "type": "AWS::Lambda::Permission",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantLogGroup",
+          "type": "AWS::Logs::LogGroup",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantUserPool",
+          "type": "AWS::Cognito::UserPool",
+          "status": "CREATE_COMPLETE",
+          "tier": "ESSENTIALS",
+          "mfa": "OFF",
+          "admin_only": false,
+          "estimated_users": 1
+        },
+        {
+          "logical_id": "PolicyAssistantUserPoolClient",
+          "type": "AWS::Cognito::UserPoolClient",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantWorker",
+          "type": "AWS::Lambda::Function",
+          "status": "UPDATE_COMPLETE",
+          "runtime": "python3.12",
+          "state": "Active",
+          "last_update_status": "Successful",
+          "timeout": 30,
+          "memory_mb": 256,
+          "event_source_mappings": [
+            {
+              "state": "Enabled",
+              "batch_size": 1,
+              "response_types": []
+            }
+          ]
+        },
+        {
+          "logical_id": "PolicyAssistantWorkerDocumentQueueEvent",
+          "type": "AWS::Lambda::EventSourceMapping",
+          "status": "CREATE_COMPLETE"
+        },
+        {
+          "logical_id": "PolicyAssistantWorkerRole",
+          "type": "AWS::IAM::Role",
+          "status": "CREATE_COMPLETE"
+        }
+      ]
+    },
+    "policy-assistant-fcaj-test": {
+      "inspection_error": "ValidationError"
+    }
+  }
+}

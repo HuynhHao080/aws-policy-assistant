@@ -1,0 +1,147 @@
+{
+  "observed_at_utc": "2026-10-21T07:44:01.787228+00:00",
+  "scope": "Local source versus built and packaged SAM template; CodeUri and SAM build metadata normalized; not a fresh AWS read",
+  "source_hash_matches_candidate": true,
+  "checks": [
+    {
+      "resource": "PolicyAssistantFunctionLogWritePolicy",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantWorkerLogWritePolicy",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentRecoveryLogWritePolicy",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "AlertTopic",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "AlertSubscription",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentRecoveryRole",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentRecovery",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentRecoveryLogs",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "RecoveryErrorAlarm",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "FrontendBucket",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "FrontendAccessControl",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "FrontendHeaders",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "FrontendDistribution",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "FrontendBucketPolicy",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentsBucketTlsPolicy",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantDocumentsBucket",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantDocumentQueue",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantDocumentDLQ",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantWorkerRole",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantWorker",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantWorkerLogGroup",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentQueueAgeAlarm",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentDLQAlarm",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "DocumentMetadata",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantLogGroup",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PoliciesTable",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantUserPool",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantUserPoolClient",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantFunctionRole",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantFunction",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantApi",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantErrorAlarm",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantDurationAlarm",
+      "source_build_packaged_match": true
+    },
+    {
+      "resource": "PolicyAssistantDashboard",
+      "source_build_packaged_match": true
+    }
+  ],
+  "parameters_match": true,
+  "outputs_match": true,
+  "resource_ids_match": true,
+  "passed": true
+}

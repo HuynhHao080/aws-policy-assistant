@@ -1,0 +1,32 @@
+{
+  "started_at_utc": "2026-10-21T17:17:58.241067+00:00",
+  "approval": "B5_ONLY_USER_GRANTED",
+  "status": "BLOCKED",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "browser_runs": 0,
+  "secrets_handoff": "Anonymous subprocess stdin pipe; no argv/env/file plaintext",
+  "script_sha256": "2ff76a1e28019452a36a5c94708488974c42ff049e83197399c9a7a77c69a554",
+  "old_stack_before": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "error_type": "AssertionError",
+  "aws_error_code": null,
+  "policy": "STOP_NO_RETRY_NO_FIX_NO_REDEPLOY_NO_CLEANUP",
+  "completed_at_utc": "2026-10-21T17:18:06.705409+00:00",
+  "read_only_diagnostic": {
+    "preflight_recheck": "BLOCKED",
+    "error_type": "AssertionError",
+    "controller_line": 26,
+    "aws_writes": 0
+  },
+  "guard_correction": {
+    "scope": "Local runner only before any browser/auth/upload",
+    "original_error": "Scoped ARN string was tested with substring membership instead of exact resource-list membership",
+    "normalized_resources_selftest": "PASS_4_CASES",
+    "aws_iam_changes": 0,
+    "browser_runs_before_correction": 0
+  }
+}

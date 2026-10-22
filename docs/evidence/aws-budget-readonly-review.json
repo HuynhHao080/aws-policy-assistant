@@ -1,0 +1,85 @@
+{
+  "observed_at_utc": "2026-10-21T08:12:48.347760+00:00",
+  "scope": "Read-only Budget inventory and cost allocation tag activation status; no writes, no subscriber addresses exported",
+  "checks": [
+    {
+      "check": "STS identity",
+      "status": "VERIFIED"
+    }
+  ],
+  "account_masked": "********0098",
+  "budget_inventory": {
+    "status": "VERIFIED",
+    "total": 6,
+    "proposed_name_exists": false,
+    "budgets": [
+      {
+        "type": "COST",
+        "limit": {
+          "Amount": "100.0",
+          "Unit": "USD"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": false,
+        "five_usd_cost_guardrail": false
+      },
+      {
+        "type": "COST",
+        "limit": {
+          "Amount": "100.0",
+          "Unit": "USD"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": true,
+        "five_usd_cost_guardrail": false
+      },
+      {
+        "type": "RI_COVERAGE",
+        "limit": {
+          "Amount": "100.0",
+          "Unit": "PERCENTAGE"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": true,
+        "five_usd_cost_guardrail": false
+      },
+      {
+        "type": "SAVINGS_PLANS_UTILIZATION",
+        "limit": {
+          "Amount": "100.0",
+          "Unit": "PERCENTAGE"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": false,
+        "five_usd_cost_guardrail": false
+      },
+      {
+        "type": "USAGE",
+        "limit": {
+          "Amount": "100.0",
+          "Unit": "Hrs"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": true,
+        "five_usd_cost_guardrail": false
+      },
+      {
+        "type": "COST",
+        "limit": {
+          "Amount": "5.0",
+          "Unit": "USD"
+        },
+        "has_cost_filters": false,
+        "has_filter_expression": false,
+        "five_usd_cost_guardrail": true
+      }
+    ]
+  },
+  "cost_allocation_tags": {
+    "status": "VERIFIED",
+    "tags": [],
+    "pagination_complete": true,
+    "note": "Key activation only; does not prove tag values, per-resource propagation or line-item coverage"
+  },
+  "completed_at_utc": "2026-10-21T08:12:52.178702+00:00"
+}

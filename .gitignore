@@ -289,3 +289,16 @@ downloaded_actual.pdf
 
 # Generated deployment artifacts
 packaged.yaml
+
+# Frontend tooling and browser output
+node_modules/
+test-results/
+playwright-report/
+
+# D1 defense-in-depth: auth material and browser captures
+*.dpapi
+*.dpapi.pending
+*.har
+*.har.zip
+browser-auth-state*.json
+playwright/.auth/

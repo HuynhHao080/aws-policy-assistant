@@ -1,0 +1,189 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_CREATED_NOT_APPROVED",
+  "name": "policy-assistant-fcaj-test-monthly",
+  "type": "COST",
+  "time_unit": "MONTHLY",
+  "limit_usd": "10.00",
+  "cost_basis": "UnblendedCost billed line items, excluding Credit/Refund; not a gross list-price simulator. Taxes/support only counted if their line items satisfy both tags.",
+  "allocation_filter": {
+    "tags_and": {
+      "Environment": "fcaj-test",
+      "Project": "PolicyAssistant"
+    },
+    "region_filter": null
+  },
+  "recipient": {
+    "status": "CONFIRM_ONLY_IN_AUTHORIZED_AWS_CONSOLE",
+    "address": null,
+    "subscription_type": "EMAIL",
+    "public_address_collection": false,
+    "instruction": "Owner confirms recipient privately in authorized AWS console; do not collect/export addresses in chat, repository, logs or screenshots."
+  },
+  "notifications": [
+    {
+      "type": "ACTUAL",
+      "comparison": "GREATER_THAN",
+      "threshold": 80,
+      "threshold_type": "PERCENTAGE"
+    },
+    {
+      "type": "ACTUAL",
+      "comparison": "GREATER_THAN",
+      "threshold": 100,
+      "threshold_type": "PERCENTAGE"
+    },
+    {
+      "type": "FORECASTED",
+      "comparison": "GREATER_THAN",
+      "threshold": 100,
+      "threshold_type": "PERCENTAGE"
+    }
+  ],
+  "budget_actions": [],
+  "limitations": [
+    "Notification budget is not a hard spending cap; delivery and cost allocation can lag",
+    "No region filter because global CloudFront charges must not be silently omitted",
+    "Tag allocation activation and per-service propagation are not verified yet",
+    "Tag-filtered budget may miss dashboard with unconfirmed billing-tag coverage or shared artifact costs; reconcile against account-wide budget/Bills",
+    "Existing account-wide USD5 Budget remains unchanged; do not raise/remove it without separate approval",
+    "Recipient verification and notification delivery have not been tested",
+    "No AWS::Budgets resource is included in the SAM candidate",
+    "Forecast alerts need sufficient history (AWS guidance approximately five weeks); a new tag segment may not have a forecast",
+    "Actual alerts are not repeated reminders; once per threshold per budget period",
+    "Budget name and tags on the Budget resource itself do not allocate workload charges",
+    "Both tag values must match; accidental reuse on old resources includes them; absent/unsupported tags omit charges",
+    "No proof that all 6.6306 USD model charges can be tagged; support/tax and global/shared fees can be missed",
+    "Tag-key appearance and activation can each take up to 24 hours; no historical backfill is authorized"
+  ],
+  "time_period": "From first day of the owner-approved creation month, recurring monthly; exact start must be reviewed before applying",
+  "reviewed_date": "2026-10-21",
+  "account_masked": "********0098",
+  "api_budget_draft": {
+    "BudgetName": "policy-assistant-fcaj-test-monthly",
+    "BudgetType": "COST",
+    "TimeUnit": "MONTHLY",
+    "BudgetLimit": {
+      "Amount": "10.00",
+      "Unit": "USD"
+    },
+    "TimePeriod": {
+      "Start": "2026-10-01T00:00:00Z"
+    },
+    "Metrics": [
+      "UnblendedCost"
+    ],
+    "FilterExpression": {
+      "And": [
+        {
+          "Tags": {
+            "Key": "Environment",
+            "Values": [
+              "fcaj-test"
+            ],
+            "MatchOptions": [
+              "EQUALS"
+            ]
+          }
+        },
+        {
+          "Tags": {
+            "Key": "Project",
+            "Values": [
+              "PolicyAssistant"
+            ],
+            "MatchOptions": [
+              "EQUALS"
+            ]
+          }
+        },
+        {
+          "Not": {
+            "Dimensions": {
+              "Key": "RECORD_TYPE",
+              "Values": [
+                "Credit",
+                "Refund"
+              ],
+              "MatchOptions": [
+                "EQUALS"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "api_draft_is_executable": false,
+  "api_draft_limitations": [
+    "Recipient intentionally null; no CreateBudget request is authorized or emitted",
+    "October 2026 Start is proposed only if approved in October; re-review before any later-month creation",
+    "Omitted end represents recurring monthly; no auto adjustment; no BillingViewArn restriction proposed",
+    "Local SDK request-shape validation only, not a server-side dry run or proof of billing coverage"
+  ],
+  "read_only_review": {
+    "evidence": "evidence/aws-budget-readonly-review.json",
+    "observed_start_utc": "2026-10-21T08:12:48.347760+00:00",
+    "observed_end_utc": "2026-10-21T08:12:52.178702+00:00",
+    "proposed_name_exists": false,
+    "existing_budgets": 6,
+    "cost_allocation_keys_returned": [],
+    "cost_allocation_pagination_complete": true
+  },
+  "activation_gate": {
+    "status": "PENDING_NOT_AUTHORIZED",
+    "keys": [
+      "Environment",
+      "Project"
+    ],
+    "reason": "Fresh 08:22 UTC listing returned no intended keys; 28 taggable processed resources do not explicitly declare both values; stack request verified, propagation unverified.",
+    "scope_warning": "Activating either key changes account billing allocation for all its values, not production resource configuration; requires explicit scope approval",
+    "resource_tag_changes_authorized": false,
+    "do_not_tag_shared_artifact_bucket": "Bucket-prefix cost cannot be isolated by bucket-level tags without misallocating shared costs"
+  },
+  "options": {
+    "account_wide": {
+      "name": "policy-assistant-account-monthly",
+      "monthly_usd": "20.00",
+      "scope": "Exact verified account ending 0098, all services/regions, no resource-tag filter. Restrict LINKED_ACCOUNT to exact account under consolidated billing.",
+      "metric": "UnblendedCost excluding Credit/Refund",
+      "actual_80_usd": "16.00",
+      "actual_100_usd": "20.00",
+      "forecast_100_usd": "20.00",
+      "status": "PROPOSED_NOT_APPROVED",
+      "amount_rationale": "Observed October baseline 8.5391 USD plus full gross test model 6.6306 USD yields conservative 15.1697 USD envelope; 20 USD leaves about 4.8303 USD, not a spending cap.",
+      "existing_budget_changes": false,
+      "budget_actions": []
+    },
+    "test_tagged": {
+      "name": "policy-assistant-fcaj-test-monthly",
+      "monthly_usd": "10.00",
+      "scope": "Exact account ending 0098, Environment=fcaj-test AND Project=PolicyAssistant, all regions/services",
+      "metric": "UnblendedCost excluding Credit/Refund",
+      "actual_80_usd": "8.00",
+      "actual_100_usd": "10.00",
+      "forecast_100_usd": "10.00",
+      "status": "PROPOSED_NOT_READY_NOT_APPROVED",
+      "taggable_resources": 28,
+      "both_tags_explicit": 0,
+      "stack_tags": "VERIFIED",
+      "resource_propagation": "NOT_RUN",
+      "allocation_keys_returned": [],
+      "budget_actions": []
+    }
+  },
+  "recommendation": "Recommend account-wide 20 USD after actual/forecast review; supersedes provisional 15 USD. Keep existing 5 USD unchanged and test-tag 10 USD pending. No creation approved.",
+  "public_recipient_information": "Never request/display recipient addresses publicly; owner confirms only inside authorized AWS console.",
+  "amount_review_evidence": "evidence/aws-october-budget-comparison.json",
+  "account_20usd_packet": {
+    "status": "CREATED_BY_USER_CONFIGURATION_VERIFIED",
+    "approval": "CONDITIONAL_APPROVAL_A_RECEIVED_BUDGET_ONLY",
+    "recipient": "CONFIGURED_VERIFICATION_UNCONFIRMED",
+    "approval_document": "budget-20usd-approval.md",
+    "budget_fragment": "budget/account-monthly-20usd-proposal.json",
+    "notification_fragments": "budget/account-monthly-20usd-notifications.json",
+    "pending_fields": "budget/account-monthly-20usd-preparation.json",
+    "console_guide": "budget/account-monthly-20usd-console.md",
+    "verification_evidence": "evidence/budget-20usd-created-readonly-verification.json",
+    "create_again": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "verified_at_utc": "2026-10-21T17:44:02.401997+00:00",
+  "status": "PASS_LOCAL_DOCUMENT_BUILD_VALIDATION",
+  "template_unchanged": true,
+  "runtime_incremental_changed_members": [
+    "app.py"
+  ],
+  "build_functions": 3,
+  "source_pair_sha256": "e16c8529fdc8fe2fde6d20714699a19ce5ff8af5c962fd8e68021f2e7e34fbea",
+  "tests": "129 backend +17 frontend +3 browser fixture +1 local fullstack PASS; 9 live SKIP=NOT_RUN",
+  "worklog_build": "PASS_3_EXISTING_THEME_WARNINGS",
+  "worklog_links": {
+    "html_pages": 131,
+    "references": 12582,
+    "failures": 0
+  },
+  "new_public_account_redaction_scan": "PASS",
+  "aws_writes": 0,
+  "deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "change_set": "NOT_CREATED_NEW_S3_OBJECT_PROHIBITED",
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED"
+}

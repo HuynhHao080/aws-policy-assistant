@@ -1,0 +1,350 @@
+{
+  "observed_at_utc": "2026-10-21T08:09:00.589889+00:00",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "change_set_name": "fcaj-review-20261021-072124-24ba855e",
+  "change_set_type": "CREATE",
+  "status": "CREATE_COMPLETE",
+  "execution_status": "AVAILABLE",
+  "source_hash": "24ba855eb69ff2f6ff251ac21c0202684f2c558a6753965d431ca9dce873e9f1",
+  "parameters": {
+    "TableNamePrefix": "policy-assistant-fcaj-test-",
+    "EnableOwnerIndex": "true",
+    "LocalFrontendOrigin": "http://localhost:8080",
+    "AlertEmail": ""
+  },
+  "changes": [
+    {
+      "Action": "Add",
+      "LogicalResourceId": "AlertTopic",
+      "ResourceType": "AWS::SNS::Topic",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentDLQAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentMetadata",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentQueueAgeAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecoveryLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecoveryLogs",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecoveryRecoverPendingPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecoveryRecoverPending",
+      "ResourceType": "AWS::Events::Rule",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecoveryRole",
+      "ResourceType": "AWS::IAM::Role",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "DocumentsBucketTlsPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "FrontendAccessControl",
+      "ResourceType": "AWS::CloudFront::OriginAccessControl",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "FrontendBucketPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "FrontendBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "FrontendDistribution",
+      "ResourceType": "AWS::CloudFront::Distribution",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "FrontendHeaders",
+      "ResourceType": "AWS::CloudFront::ResponseHeadersPolicy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PoliciesTable",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantApiProdStage",
+      "ResourceType": "AWS::ApiGatewayV2::Stage",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantDashboard",
+      "ResourceType": "AWS::CloudWatch::Dashboard",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantDocumentDLQ",
+      "ResourceType": "AWS::SQS::Queue",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantDocumentQueue",
+      "ResourceType": "AWS::SQS::Queue",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantDocumentsBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantDurationAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentStatusPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionHealthCheckPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionListDocumentsPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionRole",
+      "ResourceType": "AWS::IAM::Role",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunctionUploadSessionPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantUserPoolClient",
+      "ResourceType": "AWS::Cognito::UserPoolClient",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantUserPool",
+      "ResourceType": "AWS::Cognito::UserPool",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantWorkerDocumentQueueEvent",
+      "ResourceType": "AWS::Lambda::EventSourceMapping",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantWorkerLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantWorkerLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantWorkerRole",
+      "ResourceType": "AWS::IAM::Role",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "Scope": [],
+      "Details": []
+    },
+    {
+      "Action": "Add",
+      "LogicalResourceId": "RecoveryErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "Scope": [],
+      "Details": []
+    }
+  ],
+  "cloud_writes_performed": [
+    "Uploaded built code under isolated prefix in existing artifact bucket",
+    "Created unexecuted CREATE change set and REVIEW_IN_PROGRESS stack placeholder"
+  ],
+  "application_deployed": false,
+  "existing_stack_modified": false,
+  "initial_observed_at_utc": "2026-10-21T07:25:28.212901+00:00",
+  "verification_status": "VERIFIED",
+  "latest_readonly_verification_window": {
+    "start": "2026-10-21T08:07:43.948327+00:00",
+    "end": "2026-10-21T08:08:59.475170+00:00"
+  },
+  "latest_readonly_verification_sources": [
+    "aws-review-artifact-fingerprint.json",
+    "aws-test-iam-review.json"
+  ]
+}

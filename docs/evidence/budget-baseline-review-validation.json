@@ -1,0 +1,11 @@
+{
+  "observed_at_utc": "2026-10-21T08:40:15.664748+00:00",
+  "status": "PASS",
+  "scope": "Offline arithmetic, report consistency and unchanged candidate source checks; no extra AWS queries",
+  "actual_service_daily_sum_matches": true,
+  "actual_forecast_periods_adjacent_no_overlap": true,
+  "planning_envelope_matches": true,
+  "candidate_source_unchanged": true,
+  "recommended_budget_usd": "20",
+  "budget_write_performed": false
+}

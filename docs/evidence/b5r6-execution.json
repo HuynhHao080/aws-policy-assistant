@@ -1,0 +1,759 @@
+{
+  "started_at_utc": "2026-10-21T18:28:43.653550+00:00",
+  "status": "POSTFLIGHT_VERIFIED",
+  "deployment": "UPDATE_COMPLETE_VERIFIED",
+  "execute_attempt_count": 1,
+  "browser_e2e": "NOT_RUN",
+  "region": "ap-southeast-1",
+  "account_masked": "********0098",
+  "preflight": "VERIFIED",
+  "stack": "policy-assistant-fcaj-test",
+  "change_set_name": "fcaj-b5r5-api-20261021-182458-e16c8529",
+  "change_set_id_masked": "arn:aws:cloudformation:ap-southeast-1:********0098:changeSet/fcaj-b5r5-api-20261021-182458-e16c8529/c202f831-b371-4326-8167-cc5f9fcac9c0",
+  "preflight_default": [
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "PhysicalResourceId": "u02lf7tfb0",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Body",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Dynamic",
+          "ChangeSource": "ResourceAttribute",
+          "CausingEntity": "PolicyAssistantFunction.Arn"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "PhysicalResourceId": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "ResourceType": "AWS::Lambda::Function",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Code",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Static",
+          "ChangeSource": "DirectModification"
+        }
+      ]
+    }
+  ],
+  "preflight_detailed": [
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "PhysicalResourceId": "policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd",
+      "ResourceType": "AWS::Lambda::Function",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Code",
+            "RequiresRecreation": "Never",
+            "Path": "/Properties/Code/S3Key",
+            "BeforeValue": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e",
+            "AfterValue": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+            "AttributeChangeType": "Modify"
+          },
+          "Evaluation": "Static",
+          "ChangeSource": "DirectModification"
+        }
+      ],
+      "BeforeContext": "{\"Properties\":{\"Role\":\"arn:aws:iam::********0098:role/policy-assistant-fcaj-tes-PolicyAssistantFunctionRo-y5YSPK6ivJjn\",\"Runtime\":\"python3.12\",\"Timeout\":\"10\",\"LoggingConfig\":{\"LogFormat\":\"JSON\"},\"Handler\":\"app.lambda_handler\",\"Environment\":{\"Variables\":{\"POLICIES_TABLE_NAME\":\"policy-assistant-fcaj-test-Policies\",\"DOCUMENTS_BUCKET_NAME\":\"policy-assistant-fcaj-test-documents-********0098\",\"DOCUMENT_METADATA_TABLE_NAME\":\"policy-assistant-fcaj-test-DocumentMetadata\",\"DOCUMENT_QUEUE_URL\":\"https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue\"}},\"Code\":{\"S3Bucket\":\"aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg\",\"S3Key\":\"policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e\"},\"Tags\":[{\"Value\":\"SAM\",\"Key\":\"lambda:createdBy\"}],\"Architectures\":[\"x86_64\"]},\"Metadata\":{\"SamResourceId\":\"PolicyAssistantFunction\"}}",
+      "AfterContext": "{\"Properties\":{\"Role\":\"arn:aws:iam::********0098:role/policy-assistant-fcaj-tes-PolicyAssistantFunctionRo-y5YSPK6ivJjn\",\"Runtime\":\"python3.12\",\"Timeout\":\"10\",\"LoggingConfig\":{\"LogFormat\":\"JSON\"},\"Handler\":\"app.lambda_handler\",\"Environment\":{\"Variables\":{\"POLICIES_TABLE_NAME\":\"policy-assistant-fcaj-test-Policies\",\"DOCUMENTS_BUCKET_NAME\":\"policy-assistant-fcaj-test-documents-********0098\",\"DOCUMENT_METADATA_TABLE_NAME\":\"policy-assistant-fcaj-test-DocumentMetadata\",\"DOCUMENT_QUEUE_URL\":\"https://sqs.ap-southeast-1.amazonaws.com/********0098/policy-assistant-fcaj-test-document-queue\"}},\"Code\":{\"S3Bucket\":\"aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg\",\"S3Key\":\"policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip\"},\"Tags\":[{\"Value\":\"SAM\",\"Key\":\"lambda:createdBy\"}],\"Architectures\":[\"x86_64\"]},\"Metadata\":{\"SamResourceId\":\"PolicyAssistantFunction\"}}"
+    }
+  ],
+  "artifact_sha256": "7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd",
+  "old_stack_before": {
+    "StackStatus": "UPDATE_COMPLETE",
+    "CreationTime": "2026-10-12 06:25:48.038000+00:00",
+    "LastUpdatedTime": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "test_stack_before": {
+    "StackStatus": "CREATE_COMPLETE",
+    "CreationTime": "2026-10-21 06:34:32.481000+00:00",
+    "LastUpdatedTime": "2026-10-21 09:37:14.982000+00:00"
+  },
+  "code_references_before": {
+    "PolicyAssistantFunction": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+    },
+    "PolicyAssistantWorker": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+    },
+    "DocumentRecovery": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+    }
+  },
+  "execute_requested_at_utc": "2026-10-21T18:28:50.136088+00:00",
+  "execute_api_response": "ACCEPTED",
+  "last_stack_status": "UPDATE_COMPLETE",
+  "last_observed_at_utc": "2026-10-21T18:29:11.534245+00:00",
+  "stack_final_status": "UPDATE_COMPLETE",
+  "monitoring_finished_at_utc": "2026-10-21T18:29:11.535487+00:00",
+  "stack_events": [
+    {
+      "Timestamp": "2026-10-21 18:29:08.445000+00:00",
+      "LogicalResourceId": "policy-assistant-fcaj-test",
+      "ResourceType": "AWS::CloudFormation::Stack",
+      "ResourceStatus": "UPDATE_COMPLETE",
+      "ResourceStatusReason": null
+    },
+    {
+      "Timestamp": "2026-10-21 18:29:07.585000+00:00",
+      "LogicalResourceId": "policy-assistant-fcaj-test",
+      "ResourceType": "AWS::CloudFormation::Stack",
+      "ResourceStatus": "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
+      "ResourceStatusReason": null
+    },
+    {
+      "Timestamp": "2026-10-21 18:29:02.648000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "UPDATE_COMPLETE",
+      "ResourceStatusReason": null
+    },
+    {
+      "Timestamp": "2026-10-21 18:28:54.712000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "UPDATE_IN_PROGRESS",
+      "ResourceStatusReason": null
+    }
+  ],
+  "code_references_after": {
+    "PolicyAssistantFunction": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip"
+    },
+    "PolicyAssistantWorker": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+    },
+    "DocumentRecovery": {
+      "S3Bucket": "aws-sam-cli-managed-default-samclisourcebucket-efw1spucsorg",
+      "S3Key": "policy-assistant-fcaj-test/reviews/fcaj-review-20261021-072124-24ba855e/259348981e60d7d9a0fbbf28bc58643e"
+    }
+  },
+  "lambda_states": {
+    "PolicyAssistantFunction": {
+      "State": "Active",
+      "LastUpdateStatus": "Successful",
+      "CodeSha256": "fAIoMS2VCggsjv3ZrAyuuLpqUcMbMtR8eC5C7OqTS80=",
+      "LastModified": "2026-10-21T18:28:56.000+0000"
+    },
+    "PolicyAssistantWorker": {
+      "State": "Active",
+      "LastUpdateStatus": "Successful",
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "LastModified": "2026-10-21T09:41:51.343+0000"
+    },
+    "DocumentRecovery": {
+      "State": "Active",
+      "LastUpdateStatus": "Successful",
+      "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE=",
+      "LastModified": "2026-10-21T09:41:32.566+0000"
+    }
+  },
+  "worker_recovery_code_and_last_modified_unchanged": true,
+  "api_before": {
+    "api": {
+      "ApiEndpoint": "https://u02lf7tfb0.execute-api.ap-southeast-1.amazonaws.com",
+      "ApiId": "u02lf7tfb0",
+      "ApiKeySelectionExpression": "$request.header.x-api-key",
+      "CorsConfiguration": {
+        "AllowHeaders": [
+          "content-type",
+          "authorization"
+        ],
+        "AllowMethods": [
+          "GET",
+          "POST",
+          "OPTIONS"
+        ],
+        "AllowOrigins": [
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+          "http://localhost:8080",
+          "https://d3ataim7dfsl7t.cloudfront.net"
+        ],
+        "MaxAge": 300
+      },
+      "CreatedDate": "2026-10-21 09:41:56+00:00",
+      "DisableExecuteApiEndpoint": false,
+      "IpAddressType": "ipv4",
+      "Name": "policy-assistant-fcaj-test",
+      "ProtocolType": "HTTP",
+      "RouteSelectionExpression": "$request.method $request.path",
+      "Tags": {
+        "Project": "PolicyAssistant",
+        "aws:cloudformation:stack-name": "policy-assistant-fcaj-test",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:ap-southeast-1:********0098:stack/policy-assistant-fcaj-test/79a32ed0-cd19-11f1-988e-0affe38a716f",
+        "Environment": "fcaj-test",
+        "aws:cloudformation:logical-id": "PolicyAssistantApi",
+        "Purpose": "FCAJ-demo-review",
+        "httpapi:createdBy": "SAM"
+      },
+      "Version": "1.0"
+    },
+    "routes": [
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "3yxwyjk",
+        "RouteKey": "POST /documents/upload-session",
+        "Target": "integrations/9ojkxtb"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "NONE",
+        "RequestParameters": {},
+        "RouteId": "6dkskj6",
+        "RouteKey": "GET /health",
+        "Target": "integrations/nnrugja"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lk86bv8",
+        "RouteKey": "GET /documents",
+        "Target": "integrations/9ri6udq"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lllwt2m",
+        "RouteKey": "GET /policies/{policy_id}",
+        "Target": "integrations/9a2nrgj"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "maxftfg",
+        "RouteKey": "GET /documents/{doc_id}/download",
+        "Target": "integrations/k5d9og7"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "qt1m8pq",
+        "RouteKey": "POST /documents/submit",
+        "Target": "integrations/vwtv7ft"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "v75zi6e",
+        "RouteKey": "GET /documents/{doc_id}/status",
+        "Target": "integrations/bls3k0e"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "ygk4uzu",
+        "RouteKey": "GET /policies",
+        "Target": "integrations/rkod6y6"
+      }
+    ],
+    "authorizers": [
+      {
+        "AuthorizerId": "kzheps",
+        "AuthorizerType": "JWT",
+        "IdentitySource": [
+          "$request.header.Authorization"
+        ],
+        "JwtConfiguration": {
+          "Audience": [
+            "6phfk8cct9d961svj4ls1j66ua"
+          ],
+          "Issuer": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_EfQPshNZ7"
+        },
+        "Name": "PolicyAssistantAuthorizer"
+      }
+    ],
+    "integrations": [
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9a2nrgj",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ojkxtb",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ri6udq",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "bls3k0e",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "k5d9og7",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "nnrugja",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "rkod6y6",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "vwtv7ft",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    ]
+  },
+  "api_after": {
+    "api": {
+      "ApiEndpoint": "https://u02lf7tfb0.execute-api.ap-southeast-1.amazonaws.com",
+      "ApiId": "u02lf7tfb0",
+      "ApiKeySelectionExpression": "$request.header.x-api-key",
+      "CorsConfiguration": {
+        "AllowHeaders": [
+          "content-type",
+          "authorization"
+        ],
+        "AllowMethods": [
+          "GET",
+          "POST",
+          "OPTIONS"
+        ],
+        "AllowOrigins": [
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+          "http://localhost:8080",
+          "https://d3ataim7dfsl7t.cloudfront.net"
+        ],
+        "MaxAge": 300
+      },
+      "CreatedDate": "2026-10-21 09:41:56+00:00",
+      "DisableExecuteApiEndpoint": false,
+      "IpAddressType": "ipv4",
+      "Name": "policy-assistant-fcaj-test",
+      "ProtocolType": "HTTP",
+      "RouteSelectionExpression": "$request.method $request.path",
+      "Tags": {
+        "Project": "PolicyAssistant",
+        "aws:cloudformation:stack-name": "policy-assistant-fcaj-test",
+        "aws:cloudformation:stack-id": "arn:aws:cloudformation:ap-southeast-1:********0098:stack/policy-assistant-fcaj-test/79a32ed0-cd19-11f1-988e-0affe38a716f",
+        "Environment": "fcaj-test",
+        "aws:cloudformation:logical-id": "PolicyAssistantApi",
+        "Purpose": "FCAJ-demo-review",
+        "httpapi:createdBy": "SAM"
+      },
+      "Version": "1.0"
+    },
+    "routes": [
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "3yxwyjk",
+        "RouteKey": "POST /documents/upload-session",
+        "Target": "integrations/9ojkxtb"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "NONE",
+        "RequestParameters": {},
+        "RouteId": "6dkskj6",
+        "RouteKey": "GET /health",
+        "Target": "integrations/nnrugja"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lk86bv8",
+        "RouteKey": "GET /documents",
+        "Target": "integrations/9ri6udq"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "lllwt2m",
+        "RouteKey": "GET /policies/{policy_id}",
+        "Target": "integrations/9a2nrgj"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "maxftfg",
+        "RouteKey": "GET /documents/{doc_id}/download",
+        "Target": "integrations/k5d9og7"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "qt1m8pq",
+        "RouteKey": "POST /documents/submit",
+        "Target": "integrations/vwtv7ft"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "v75zi6e",
+        "RouteKey": "GET /documents/{doc_id}/status",
+        "Target": "integrations/bls3k0e"
+      },
+      {
+        "ApiKeyRequired": false,
+        "AuthorizationScopes": [],
+        "AuthorizationType": "JWT",
+        "AuthorizerId": "kzheps",
+        "RequestParameters": {},
+        "RouteId": "ygk4uzu",
+        "RouteKey": "GET /policies",
+        "Target": "integrations/rkod6y6"
+      }
+    ],
+    "authorizers": [
+      {
+        "AuthorizerId": "kzheps",
+        "AuthorizerType": "JWT",
+        "IdentitySource": [
+          "$request.header.Authorization"
+        ],
+        "JwtConfiguration": {
+          "Audience": [
+            "6phfk8cct9d961svj4ls1j66ua"
+          ],
+          "Issuer": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_EfQPshNZ7"
+        },
+        "Name": "PolicyAssistantAuthorizer"
+      }
+    ],
+    "integrations": [
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9a2nrgj",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ojkxtb",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "9ri6udq",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "bls3k0e",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "k5d9og7",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "nnrugja",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "rkod6y6",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      },
+      {
+        "ConnectionType": "INTERNET",
+        "IntegrationId": "vwtv7ft",
+        "IntegrationMethod": "POST",
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": "arn:aws:apigateway:ap-southeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-PolicyAssistantFunction-mMfXz543diZd/invocations",
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    ]
+  },
+  "api_configuration_and_ids_unchanged": true,
+  "eventbridge_permission_before": {
+    "rule": {
+      "Name": "policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "Arn": "arn:aws:events:ap-southeast-1:********0098:rule/policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "ScheduleExpression": "rate(2 minutes)",
+      "State": "ENABLED",
+      "EventBusName": "default",
+      "CreatedBy": "********0098"
+    },
+    "targets": [
+      {
+        "Id": "DocumentRecoveryRecoverPendingLambdaTarget",
+        "Arn": "arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA"
+      }
+    ],
+    "permission": {
+      "Sid": "policy-assistant-fcaj-test-DocumentRecoveryRecoverPendingPermission-2vtk9ji5k3ZS",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "Condition": {
+        "ArnLike": {
+          "AWS:SourceArn": "arn:aws:events:ap-southeast-1:********0098:rule/policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX"
+        }
+      }
+    }
+  },
+  "eventbridge_permission_after": {
+    "rule": {
+      "Name": "policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "Arn": "arn:aws:events:ap-southeast-1:********0098:rule/policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX",
+      "ScheduleExpression": "rate(2 minutes)",
+      "State": "ENABLED",
+      "EventBusName": "default",
+      "CreatedBy": "********0098"
+    },
+    "targets": [
+      {
+        "Id": "DocumentRecoveryRecoverPendingLambdaTarget",
+        "Arn": "arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA"
+      }
+    ],
+    "permission": {
+      "Sid": "policy-assistant-fcaj-test-DocumentRecoveryRecoverPendingPermission-2vtk9ji5k3ZS",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:ap-southeast-1:********0098:function:policy-assistant-fcaj-test-DocumentRecovery-7VtPmQIGMjKA",
+      "Condition": {
+        "ArnLike": {
+          "AWS:SourceArn": "arn:aws:events:ap-southeast-1:********0098:rule/policy-assistant-fcaj-tes-DocumentRecoveryRecoverPe-wZYhuInXzabX"
+        }
+      }
+    }
+  },
+  "eventbridge_permission_unchanged": true,
+  "old_stack_metadata_unchanged": true,
+  "queues": {
+    "PolicyAssistantDocumentQueue": {
+      "ApproximateNumberOfMessages": "0",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    },
+    "PolicyAssistantDocumentDLQ": {
+      "ApproximateNumberOfMessages": "1",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    }
+  },
+  "alarms": [
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "StateValue": "ALARM",
+      "StateReason": "Threshold Crossed: 1 datapoint [1.0 (21/10/26 16:53:00)] was greater than the threshold (0.0).",
+      "StateUpdatedTimestamp": "2026-10-21 23:59:17.935000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: 1 datapoint [0.0 (21/10/26 16:57:00)] was not greater than the threshold (300.0).",
+      "StateUpdatedTimestamp": "2026-10-22 00:03:20.519000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Duration",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:50.074000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-Errors",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:56.704000+07:00"
+    },
+    {
+      "AlarmName": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "StateValue": "OK",
+      "StateReason": "Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].",
+      "StateUpdatedTimestamp": "2026-10-21 16:42:40.250000+07:00"
+    }
+  ],
+  "budget": {
+    "BudgetName": "policy-assistant-account-monthly",
+    "BudgetType": "COST",
+    "TimeUnit": "MONTHLY",
+    "BudgetLimit": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "CostTypes": null,
+    "CostFilters": null,
+    "CalculatedSpend": {
+      "ActualSpend": {
+        "Amount": "5.479",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "notifications": [
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 80.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "FORECASTED",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      }
+    ],
+    "email_delivery": "NOT_VERIFIED",
+    "billing_latency_note": "Billing snapshot delayed; not incremental deployment cost"
+  },
+  "decision": "GO_TO_REQUEST_SEPARATE_BOUNDED_BROWSER_RERUN_APPROVAL",
+  "completed_at_utc": "2026-10-21T18:29:15.974253+00:00"
+}

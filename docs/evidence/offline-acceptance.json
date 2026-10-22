@@ -1,0 +1,57 @@
+{
+  "scope": "offline; real application with simulated AWS; live tests disabled",
+  "python": "3.12.10",
+  "checks": [
+    {
+      "check": "python-lint",
+      "exit_code": 0,
+      "seconds": 0.86
+    },
+    {
+      "check": "backend-typecheck",
+      "exit_code": 0,
+      "seconds": 0.69
+    },
+    {
+      "check": "frontend-syntax",
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "check": "backend",
+      "exit_code": 0,
+      "seconds": 35.42
+    },
+    {
+      "check": "live-tests-disabled",
+      "exit_code": 0,
+      "seconds": 0.83
+    },
+    {
+      "check": "frontend",
+      "exit_code": 0,
+      "seconds": 0.81
+    },
+    {
+      "check": "browser-fixtures",
+      "exit_code": 0,
+      "seconds": 4.98
+    },
+    {
+      "check": "full-stack-local",
+      "exit_code": 0,
+      "seconds": 6.48
+    },
+    {
+      "check": "sam-lint",
+      "exit_code": 0,
+      "seconds": 35.59
+    },
+    {
+      "check": "sam-build",
+      "exit_code": 0,
+      "seconds": 16.61
+    }
+  ],
+  "passed": true
+}

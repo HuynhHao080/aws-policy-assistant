@@ -1,0 +1,95 @@
+{
+  "started_at_utc": "2026-10-21T16:29:01.099094+00:00",
+  "scope": "Static HTTP/HTTPS checks only; no application API, Cognito or SQS calls",
+  "https": [
+    {
+      "path": "/",
+      "status_code": 200,
+      "bytes": 5752,
+      "sha256": "28182131e09dc5f0e29cba98404c1b5182f7b711fc48f8c77a425891835ff1cd",
+      "matches_build": true,
+      "content_type": "text/html; charset=utf-8",
+      "headers": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-cache",
+        "X-Cache": "Miss from cloudfront"
+      }
+    },
+    {
+      "path": "/index.html",
+      "status_code": 200,
+      "bytes": 5752,
+      "sha256": "28182131e09dc5f0e29cba98404c1b5182f7b711fc48f8c77a425891835ff1cd",
+      "matches_build": true,
+      "content_type": "text/html; charset=utf-8",
+      "headers": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-cache",
+        "X-Cache": "Miss from cloudfront"
+      }
+    },
+    {
+      "path": "/app.js",
+      "status_code": 200,
+      "bytes": 22780,
+      "sha256": "c0b52244d1ac5f729da7819dadc585028a6ad1721e16d57c1b790643f8483222",
+      "matches_build": true,
+      "content_type": "application/javascript; charset=utf-8",
+      "headers": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-cache",
+        "X-Cache": "Miss from cloudfront"
+      }
+    },
+    {
+      "path": "/styles.css",
+      "status_code": 200,
+      "bytes": 5096,
+      "sha256": "aa65a893213b10a01e3c9484e8c56edb0a425fa9076e246d44938d4859f8588e",
+      "matches_build": true,
+      "content_type": "text/css; charset=utf-8",
+      "headers": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-cache",
+        "X-Cache": "Miss from cloudfront"
+      }
+    },
+    {
+      "path": "/config.json",
+      "status_code": 200,
+      "bytes": 285,
+      "sha256": "150bc0f17ac6fd19172ada9934dd2e896d472a70ec064d4a2f685c6c0c41e678",
+      "matches_build": true,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "Strict-Transport-Security": "max-age=31536000",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-store",
+        "X-Cache": "Miss from cloudfront"
+      }
+    }
+  ],
+  "aws_business_e2e": "NOT_RUN",
+  "browser_visual_test": "NOT_RUN",
+  "http": {
+    "status_code": 301,
+    "location": "https://d3ataim7dfsl7t.cloudfront.net/",
+    "redirects_to_expected_https": true
+  },
+  "status": "VERIFIED",
+  "completed_at_utc": "2026-10-21T16:29:07.628010+00:00"
+}

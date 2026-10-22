@@ -1,0 +1,49 @@
+{
+  "approval": "B5-R7",
+  "status": "PASS",
+  "case_totals": {
+    "PASS": 10,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT_RUN": 0
+  },
+  "browser_start_utc": "2026-10-21T18:33:51.309Z",
+  "browser_end_utc": "2026-10-21T18:34:09.011Z",
+  "counts": {
+    "logins": 3,
+    "global_signouts": 3,
+    "upload_sessions": 2,
+    "uploads": 2,
+    "downloads": 2,
+    "browser_file_downloads": 2,
+    "upload_bytes": 1218,
+    "api_requests": 17,
+    "total_dynamic_requests": 27,
+    "observed_dynamic_requests": 27
+  },
+  "browser_acceptance": "GO_BOUNDED_TEST_SCOPE",
+  "system_acceptance": "GO_FOR_TEST_DEMO_WITH_OPEN_OPERATIONAL_ITEMS",
+  "new_metadata_records": 2,
+  "preexisting_metadata_records": 5,
+  "object_versions_in_known_document_inventory": 7,
+  "dlq": "APPROX_ONE_MESSAGE_NOT_RECEIVED",
+  "email_delivery": "NOT_VERIFIED",
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "screenshots_reviewed_for_visible_secrets": true,
+  "evidence_files": {
+    "approval-b5r7-browser.json": "a34dae31a7341bc84c5fb284ab32e20f2405ae83292fd11513626cd32f7e6ec1",
+    "approval-b5r7-controller.json": "b3da905774e824d3a7f962d564d91e20d5b8e177cc57061e731fbf06a272555a",
+    "approval-b5r7-postflight.json": "057a4cd342d3f1ee77eca89c52c96833578021f51948dd3b458bb58de23bfac0",
+    "b5r7-testa-desktop.png": "086d772d8484cc5cf775056757b679b9457449cd54b206e7cb93a069a7cbc5db",
+    "b5r7-mobile-loggedout.png": "dd0399b92e8654d2ee93e73c58a1f613319205f0d11f2e2c7ce72f97dc1438e1"
+  },
+  "limitations": [
+    "Headless Edge155 on Windows; not all browsers/devices",
+    "No claim of exhaustive security audit or production readiness",
+    "Known-pattern log scan bounded to captured window; delayed events may arrive later",
+    "SQS counters approximate; message identity not read",
+    "Legacy B5 failure preserved as history",
+    "A local read-only postflight helper namespace error was corrected; only read-only postflight repeated, browser not rerun"
+  ]
+}

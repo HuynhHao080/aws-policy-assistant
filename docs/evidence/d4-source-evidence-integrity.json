@@ -1,0 +1,63 @@
+{
+  "runtime_and_config_d1_manifest_entries_compared": 41,
+  "differences": [],
+  "original_evidence_vs_d1": [
+    {
+      "file": "approval-b1-execution.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b2-result.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b3-users.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b4-e2e.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b5-browser.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b5r7-browser.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b5r7-controller.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "approval-b5r7-postflight.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "b5r6-execution.json",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "b5r7-mobile-loggedout.png",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    },
+    {
+      "file": "b5r7-testa-desktop.png",
+      "d1_manifest_hash_available": true,
+      "unchanged": true
+    }
+  ],
+  "local_checks_only": true,
+  "aws_calls": 0
+}

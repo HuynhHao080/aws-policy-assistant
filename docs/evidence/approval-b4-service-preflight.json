@@ -1,0 +1,369 @@
+{
+  "observed_at_utc": "2026-10-21T16:42:53.066008+00:00",
+  "scope": "B4 mandatory service preflight; read-only before tests",
+  "checks": [
+    {
+      "id": "PolicyAssistantDocumentDLQ",
+      "type": "AWS::SQS::Queue",
+      "status": "VERIFIED",
+      "configuration": {
+        "VisibilityTimeout": "30",
+        "MessageRetentionPeriod": "1209600",
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "SqsManagedSseEnabled": "true",
+        "redrive_permission": "byQueue",
+        "allowed_source_count": 1,
+        "source_queue_test_only": true
+      }
+    },
+    {
+      "id": "PolicyAssistantDocumentQueue",
+      "type": "AWS::SQS::Queue",
+      "status": "VERIFIED",
+      "configuration": {
+        "VisibilityTimeout": "180",
+        "MessageRetentionPeriod": "345600",
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "SqsManagedSseEnabled": "true",
+        "maxReceiveCount": 3
+      }
+    },
+    {
+      "id": "DocumentMetadata",
+      "type": "AWS::DynamoDB::Table",
+      "status": "VERIFIED",
+      "configuration": {
+        "status": "ACTIVE",
+        "item_count": 0,
+        "indexes": [
+          {
+            "name": "ByOwner",
+            "status": "ACTIVE"
+          },
+          {
+            "name": "ByStatus",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function",
+      "status": "VERIFIED",
+      "configuration": {
+        "State": "Active",
+        "StateReasonCode": null,
+        "LastUpdateStatus": "Successful",
+        "LastUpdateStatusReasonCode": null,
+        "Runtime": "python3.12",
+        "Timeout": 60,
+        "MemorySize": 128,
+        "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+      }
+    },
+    {
+      "id": "DocumentRecoveryLogs",
+      "type": "AWS::Logs::LogGroup",
+      "status": "VERIFIED",
+      "configuration": {
+        "exists": true,
+        "retention_days": 30,
+        "stored_bytes": 0
+      }
+    },
+    {
+      "id": "DocumentRecoveryRole",
+      "type": "AWS::IAM::Role",
+      "status": "VERIFIED",
+      "configuration": {
+        "managed_policy_count": 0,
+        "inline_policy_count": 2,
+        "allow_resource_star": 0,
+        "logging_grants": [
+          {
+            "actions": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "resource_count": 1,
+            "test_log_group_only": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "FrontendBucket",
+      "type": "AWS::S3::Bucket",
+      "status": "VERIFIED",
+      "configuration": {
+        "public_access_block": {
+          "BlockPublicAcls": true,
+          "IgnorePublicAcls": true,
+          "BlockPublicPolicy": true,
+          "RestrictPublicBuckets": true
+        },
+        "encryption_algorithms": [
+          "AES256"
+        ],
+        "versioning": "Enabled",
+        "https_deny": true
+      }
+    },
+    {
+      "id": "FrontendDistribution",
+      "type": "AWS::CloudFront::Distribution",
+      "status": "VERIFIED",
+      "configuration": {
+        "status": "Deployed",
+        "enabled": true,
+        "viewer_protocols": [
+          "redirect-to-https"
+        ]
+      }
+    },
+    {
+      "id": "PoliciesTable",
+      "type": "AWS::DynamoDB::Table",
+      "status": "VERIFIED",
+      "configuration": {
+        "status": "ACTIVE",
+        "item_count": 0,
+        "indexes": []
+      }
+    },
+    {
+      "id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api",
+      "status": "VERIFIED",
+      "configuration": {
+        "protocol": "HTTP",
+        "disable_execute_api_endpoint": false,
+        "stages": [
+          {
+            "name": "Prod",
+            "auto_deploy": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "PolicyAssistantDashboard",
+      "type": "AWS::CloudWatch::Dashboard",
+      "status": "VERIFIED",
+      "configuration": {
+        "exists": true,
+        "widgets": 4
+      }
+    },
+    {
+      "id": "PolicyAssistantDocumentsBucket",
+      "type": "AWS::S3::Bucket",
+      "status": "VERIFIED",
+      "configuration": {
+        "public_access_block": {
+          "BlockPublicAcls": true,
+          "IgnorePublicAcls": true,
+          "BlockPublicPolicy": true,
+          "RestrictPublicBuckets": true
+        },
+        "encryption_algorithms": [
+          "AES256"
+        ],
+        "versioning": "Enabled",
+        "https_deny": true
+      }
+    },
+    {
+      "id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function",
+      "status": "VERIFIED",
+      "configuration": {
+        "State": "Active",
+        "StateReasonCode": null,
+        "LastUpdateStatus": "Successful",
+        "LastUpdateStatusReasonCode": null,
+        "Runtime": "python3.12",
+        "Timeout": 10,
+        "MemorySize": 128,
+        "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+      }
+    },
+    {
+      "id": "PolicyAssistantFunctionRole",
+      "type": "AWS::IAM::Role",
+      "status": "VERIFIED",
+      "configuration": {
+        "managed_policy_count": 0,
+        "inline_policy_count": 2,
+        "allow_resource_star": 0,
+        "logging_grants": [
+          {
+            "actions": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "resource_count": 1,
+            "test_log_group_only": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "PolicyAssistantLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "status": "VERIFIED",
+      "configuration": {
+        "exists": true,
+        "retention_days": 30,
+        "stored_bytes": 0
+      }
+    },
+    {
+      "id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool",
+      "status": "VERIFIED",
+      "configuration": {
+        "mfa": "OFF",
+        "estimated_users": 2
+      }
+    },
+    {
+      "id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function",
+      "status": "VERIFIED",
+      "configuration": {
+        "State": "Active",
+        "StateReasonCode": null,
+        "LastUpdateStatus": "Successful",
+        "LastUpdateStatusReasonCode": null,
+        "Runtime": "python3.12",
+        "Timeout": 30,
+        "MemorySize": 256,
+        "CodeSha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+      }
+    },
+    {
+      "id": "PolicyAssistantWorkerDocumentQueueEvent",
+      "type": "AWS::Lambda::EventSourceMapping",
+      "status": "VERIFIED",
+      "configuration": {
+        "State": "Enabled",
+        "BatchSize": 1,
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures"
+        ],
+        "LastProcessingResult": null
+      }
+    },
+    {
+      "id": "PolicyAssistantWorkerLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "status": "VERIFIED",
+      "configuration": {
+        "exists": true,
+        "retention_days": 30,
+        "stored_bytes": 0
+      }
+    },
+    {
+      "id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role",
+      "status": "VERIFIED",
+      "configuration": {
+        "managed_policy_count": 0,
+        "inline_policy_count": 2,
+        "allow_resource_star": 0,
+        "logging_grants": [
+          {
+            "actions": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "resource_count": 1,
+            "test_log_group_only": true
+          }
+        ]
+      }
+    }
+  ],
+  "aws_writes": 0,
+  "aws_e2e": "NOT_RUN",
+  "alarms": [
+    {
+      "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Duration",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Errors",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "state": "OK",
+      "actions_enabled": true
+    }
+  ],
+  "outputs": [
+    {
+      "key": "PolicyAssistantFunctionIamRole",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "CognitoUserPoolId",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "CognitoClientId",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "DocumentsBucketName",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendBucketName",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendDistributionId",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "PolicyAssistantFunctionArn",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendUrl",
+      "value": "https://d3ataim7dfsl7t.cloudfront.net"
+    },
+    {
+      "key": "AlarmTopicArn",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "PolicyAssistantApiUrl",
+      "value": "https://u02lf7tfb0.execute-api.ap-southeast-1.amazonaws.com/Prod/"
+    },
+    {
+      "key": "PoliciesTableName",
+      "value": "REDACTED_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    }
+  ],
+  "status": "CONTROL_PLANE_READS_VERIFIED",
+  "completed_at_utc": "2026-10-21T16:43:07.858201+00:00"
+}

@@ -1,0 +1,44 @@
+{
+  "started_at_utc": "2026-10-21T17:38:45.323312+00:00",
+  "scope": "Read-only AWS old ZIP and local new build; no writes to AWS",
+  "status": "VERIFIED",
+  "aws_writes": 0,
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "deployed_processed_template_matches_approved": true,
+  "template_source_unchanged": true,
+  "old_zip_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+  "functions": [
+    {
+      "function": "DocumentRecovery",
+      "old_files": 2199,
+      "new_files": 2199,
+      "changed_members": [
+        "app.py"
+      ]
+    },
+    {
+      "function": "PolicyAssistantWorker",
+      "old_files": 2199,
+      "new_files": 2199,
+      "changed_members": [
+        "app.py"
+      ]
+    },
+    {
+      "function": "PolicyAssistantFunction",
+      "old_files": 2199,
+      "new_files": 2199,
+      "changed_members": [
+        "app.py"
+      ]
+    }
+  ],
+  "logical_runtime_diff": "Exactly one Config line; line endings normalized for textual comparison",
+  "old_source_pair_expected": "24ba855eb69ff2f6ff251ac21c0202684f2c558a6753965d431ca9dce873e9f1",
+  "new_source_pair_sha256": "e16c8529fdc8fe2fde6d20714699a19ce5ff8af5c962fd8e68021f2e7e34fbea",
+  "runtime_patch": "b5r-runtime.patch",
+  "change_set": "NOT_CREATED",
+  "reason": "New Lambda code needs new S3 artifact; B5-R prohibits creating S3 objects. No IaC source change.",
+  "completed_at_utc": "2026-10-21T17:38:51.445295+00:00"
+}

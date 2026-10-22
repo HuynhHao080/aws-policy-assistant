@@ -1,0 +1,64 @@
+{
+  "observed_at_utc": "2026-10-21T08:22:20.627886+00:00",
+  "scope": "Read-only allocation-key, Budget and candidate stack-tag review; no recipient addresses queried or exported",
+  "account": "********0098",
+  "allocation_tags": {
+    "status": "VERIFIED",
+    "tags": [],
+    "pagination_complete": true
+  },
+  "candidate": {
+    "name": "fcaj-review-20261021-072124-24ba855e",
+    "status": "CREATE_COMPLETE",
+    "execution_status": "AVAILABLE",
+    "stack_tags": [
+      {
+        "Key": "Project",
+        "Value": "PolicyAssistant"
+      },
+      {
+        "Key": "Environment",
+        "Value": "fcaj-test"
+      },
+      {
+        "Key": "Purpose",
+        "Value": "FCAJ-demo-review"
+      }
+    ],
+    "add": 45
+  },
+  "fresh_processed_matches_saved": true,
+  "budget_inventory": {
+    "count": 6,
+    "pagination_complete": true,
+    "proposed_test_name_exists": false,
+    "proposed_account_name_exists": false
+  },
+  "existing_five_usd": [
+    {
+      "cost_filters_present": false,
+      "filter_expression_present": false,
+      "metric": [
+        "UnblendedCost"
+      ],
+      "cost_types": null,
+      "notifications": [
+        {
+          "type": "ACTUAL",
+          "comparison": "GREATER_THAN",
+          "threshold": 50.0,
+          "threshold_type": "OMITTED_NOT_INFERRED"
+        },
+        {
+          "type": "ACTUAL",
+          "comparison": "GREATER_THAN",
+          "threshold": 80.0,
+          "threshold_type": "OMITTED_NOT_INFERRED"
+        }
+      ],
+      "notifications_complete": true
+    }
+  ],
+  "status": "VERIFIED_READS",
+  "completed_at_utc": "2026-10-21T08:22:32.485855+00:00"
+}

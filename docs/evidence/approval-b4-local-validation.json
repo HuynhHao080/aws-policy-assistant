@@ -1,0 +1,29 @@
+{
+  "verified_at_utc": "2026-10-21T17:03:56.764667+00:00",
+  "scope": "Local B4 evidence/document validation only; no further AWS calls",
+  "case_counts": {
+    "PASS": 19,
+    "NOT_RUN": 1
+  },
+  "poison_send_attempts": 1,
+  "private_credential_scan": {
+    "status": "PASS",
+    "files": 7,
+    "secret_values_exported": false
+  },
+  "hugo_build": {
+    "status": "PASS",
+    "version": "0.167.0",
+    "en_pages": 130,
+    "vi_pages": 129,
+    "existing_theme_deprecation_warnings": 3,
+    "published": false
+  },
+  "worklog_links": {
+    "status": "PASS",
+    "html_pages": 131,
+    "references": 12582,
+    "failures": 0
+  },
+  "status": "PASS"
+}

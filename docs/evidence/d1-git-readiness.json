@@ -1,0 +1,81 @@
+{
+  "status": "PREPARED_LOCAL_ONLY",
+  "observed_at_utc": "2026-10-21T19:05:04.763646+00:00",
+  "aws_calls": 0,
+  "aws_writes": 0,
+  "local_commit_proposal": "GO_FOR_SEPARATE_SELECTED_COMMIT_APPROVAL",
+  "public_push": "NO_GO_PENDING_HISTORY_CREDENTIAL_ROTATION_REVOCATION_PROOF",
+  "git_status": {
+    "application": {
+      "head": "80c4eef",
+      "status_counts": {
+        " M": 25,
+        "??": 180
+      },
+      "staged_changes_present": false,
+      "deleted_paths": []
+    },
+    "worklog": {
+      "head": "846d2ff",
+      "status_counts": {
+        " M": 67,
+        "??": 27
+      },
+      "staged_changes_present": false,
+      "deleted_paths": []
+    }
+  },
+  "current_candidate_scan": {
+    "findings": [],
+    "counts": {
+      "text": 510,
+      "python_ast": 40,
+      "json": 99
+    },
+    "scope": "Publication hygiene, not exhaustive vulnerability assessment; no matched values exported"
+  },
+  "history": {
+    "commits_checked": 2,
+    "file_versions_checked": 46,
+    "password_literals_in_HEAD": [
+      "get_token.py:3",
+      "verify_e2e.py:5",
+      "verify_jwt.py:3",
+      "verify_search.py:4"
+    ],
+    "exact_old_password_in_current_candidates": false,
+    "rotation_proof": "NOT_AVAILABLE",
+    "other_clones_remote_refs_reflogs": "NOT_INSPECTED"
+  },
+  "checks": {
+    "ruff": "PASS",
+    "mypy_backend": "PASS",
+    "js_syntax": "PASS",
+    "ast_json": "PASS",
+    "ignore_and_tracked_private_files": "PASS",
+    "runtime_iac_fingerprint": "UNCHANGED",
+    "hugo": "PASS_3_EXISTING_DEPRECATION_WARNINGS",
+    "html_pages": 131,
+    "link_failures": 0,
+    "unit_browser_aws_e2e_rerun": false
+  },
+  "original_execution_evidence_unchanged": [
+    "approval-b1-execution.json",
+    "approval-b2-result.json",
+    "approval-b3-users.json",
+    "approval-b4-e2e.json",
+    "approval-b5-browser.json",
+    "approval-b5r7-browser.json",
+    "approval-b5r7-controller.json",
+    "approval-b5r7-postflight.json",
+    "b5r6-execution.json",
+    "b5r7-mobile-loggedout.png",
+    "b5r7-testa-desktop.png"
+  ],
+  "demo": "GO_BOUNDED_TEST_DEMO_NOT_PRODUCTION",
+  "environment_end_date": "PENDING_OWNER_DECISION",
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "worklog_main_push": "AUTO_GITHUB_PAGES_PUBLICATION_REQUIRES_EXPLICIT_APPROVAL",
+  "release_zip": "NOT_BUILT_NOT_CERTIFIED"
+}

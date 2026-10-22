@@ -1,0 +1,44 @@
+{
+  "observed_at_utc": "2026-10-21T09:18:33.208658+00:00",
+  "scope": "Bounded read-only CloudTrail configuration evidence; raw events/subscriber addresses never exported",
+  "matched_events": [
+    {
+      "event_name": "CreateBudget",
+      "event_time_utc": "2026-10-21T09:11:39+00:00",
+      "notifications": [
+        {
+          "notificationType": "ACTUAL",
+          "threshold": 80,
+          "thresholdType": "PERCENTAGE",
+          "comparisonOperator": "GREATER_THAN"
+        },
+        {
+          "notificationType": "ACTUAL",
+          "threshold": 100,
+          "thresholdType": "PERCENTAGE",
+          "comparisonOperator": "GREATER_THAN"
+        },
+        {
+          "notificationType": "FORECASTED",
+          "threshold": 100,
+          "thresholdType": "PERCENTAGE",
+          "comparisonOperator": "GREATER_THAN"
+        }
+      ],
+      "error_code": null,
+      "source": "CloudTrail requestParameters, configuration evidence not delivery proof"
+    }
+  ],
+  "queries": [
+    {
+      "event_name": "CreateBudget",
+      "more_pages_not_read": false
+    },
+    {
+      "event_name": "CreateNotification",
+      "more_pages_not_read": false
+    }
+  ],
+  "status": "READ_COMPLETE",
+  "note": "Absence of a matching event in this bounded lookup is not proof no event occurred; CloudTrail propagation can lag."
+}

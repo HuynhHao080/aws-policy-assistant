@@ -1,0 +1,188 @@
+{
+  "started_at_utc": "2026-10-21T17:48:50.055474+00:00",
+  "status": "VERIFIED_PLAN_OUT_OF_APPROVED_SCOPE",
+  "artifact_upload": "VERIFIED",
+  "change_set": "CREATED_NOT_EXECUTED",
+  "deployment": "NOT_EXECUTED",
+  "browser_e2e_rerun": "NOT_RUN",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "source_pair_sha256": "e16c8529fdc8fe2fde6d20714699a19ce5ff8af5c962fd8e68021f2e7e34fbea",
+  "changed_zip_members": [
+    "app.py"
+  ],
+  "zip_file_count": 2199,
+  "preflight": {
+    "account": "VERIFIED",
+    "test_stack": {
+      "StackStatus": "CREATE_COMPLETE",
+      "CreationTime": "2026-10-21 06:34:32.481000+00:00",
+      "LastUpdatedTime": "2026-10-21 09:37:14.982000+00:00"
+    },
+    "old_stack_before": {
+      "StackStatus": "UPDATE_COMPLETE",
+      "CreationTime": "2026-10-12 06:25:48.038000+00:00",
+      "LastUpdatedTime": "2026-10-19 11:10:29.038000+00:00"
+    },
+    "source_build": "VERIFIED",
+    "deployed_processed_matches_snapshot": true,
+    "original_matches_packaged": true,
+    "deployment_bucket_region_owner": "VERIFIED"
+  },
+  "artifact_key": "policy-assistant-fcaj-test/reviews/fcaj-b5r2-20261021-174854-e16c8529/lambda-7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd.zip",
+  "artifact_sha256": "7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd",
+  "artifact_bytes": 16731316,
+  "change_set_name": "fcaj-b5r2-20261021-174854-e16c8529",
+  "upload_attempted_at_utc": "2026-10-21T17:48:56.345824+00:00",
+  "artifact_verified_at_utc": "2026-10-21T17:48:59.002893+00:00",
+  "create_attempted_at_utc": "2026-10-21T17:48:59.005095+00:00",
+  "completed_at_utc": "2026-10-21T17:49:49.669013+00:00",
+  "decision": "NO_GO",
+  "change_set_status": "CREATE_COMPLETE",
+  "execution_status": "AVAILABLE",
+  "change_set_id_masked": "arn:aws:cloudformation:ap-southeast-1:********0098:changeSet/fcaj-b5r2-20261021-174854-e16c8529/17bb1e79-6bf3-49c9-accf-98dedf77273f",
+  "changes": [
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "DocumentRecoveryRecoverPendingPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "Replacement": "Conditional",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "SourceArn",
+            "RequiresRecreation": "Always"
+          },
+          "Evaluation": "Dynamic",
+          "ChangeSource": "ResourceAttribute",
+          "CausingEntity": "DocumentRecoveryRecoverPending.Arn"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "DocumentRecoveryRecoverPending",
+      "ResourceType": "AWS::Events::Rule",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Targets",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Dynamic",
+          "ChangeSource": "ResourceAttribute",
+          "CausingEntity": "DocumentRecovery.Arn"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Code",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Static",
+          "ChangeSource": "DirectModification"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Body",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Dynamic",
+          "ChangeSource": "ResourceAttribute",
+          "CausingEntity": "PolicyAssistantFunction.Arn"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Code",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Static",
+          "ChangeSource": "DirectModification"
+        }
+      ]
+    },
+    {
+      "Action": "Modify",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "Replacement": "False",
+      "Scope": [
+        "Properties"
+      ],
+      "Details": [
+        {
+          "Target": {
+            "Attribute": "Properties",
+            "Name": "Code",
+            "RequiresRecreation": "Never"
+          },
+          "Evaluation": "Static",
+          "ChangeSource": "DirectModification"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "Add": 0,
+    "Modify": 6,
+    "Remove": 0,
+    "Replacement_True": 0,
+    "Replacement_Conditional": 1
+  },
+  "processed_only_three_code_references_changed": true,
+  "iam_audit_passed": true,
+  "runtime_iam_allow_resource_star": [],
+  "remaining_scoped_wildcards": [
+    "LogGroup.Arn includes :* for streams inside the exact group",
+    "S3 uploads/* and frontend-bucket object prefix only",
+    "API route/stage wildcard within the new API/account/region",
+    "S3 TLS-only Deny uses Principal * and Action s3:* on the named bucket; not an Allow"
+  ],
+  "existing_and_test_stack_metadata_unchanged": true,
+  "acceptance_failure": "6 Modify rather than <=3 Lambda Code only; dynamic dependencies include Lambda Permission Conditional replacement",
+  "second_change_set_created": false
+}

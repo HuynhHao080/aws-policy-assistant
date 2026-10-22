@@ -1,0 +1,42 @@
+{
+  "started_at_utc": "2026-10-21T17:19:29.445062+00:00",
+  "approval": "B5_ONLY_USER_GRANTED",
+  "status": "FAIL",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "browser_runs": 1,
+  "secrets_handoff": "Anonymous subprocess stdin pipe; no argv/env/file plaintext",
+  "script_sha256": "2ff76a1e28019452a36a5c94708488974c42ff049e83197399c9a7a77c69a554",
+  "old_stack_before": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "preconditions": "VERIFIED",
+  "browser_evidence": "approval-b5-browser.json",
+  "counts": {
+    "logins": 1,
+    "global_signouts": 0,
+    "upload_sessions": 1,
+    "uploads": 0,
+    "downloads": 0,
+    "browser_file_downloads": 0,
+    "upload_bytes": 0,
+    "api_requests": 2,
+    "total_dynamic_requests": 3
+  },
+  "cases": {
+    "real_browser_load": "PASS",
+    "testa_login_search": "PASS",
+    "testa_pdf_flow": "FAIL",
+    "testa_logout": "NOT_RUN",
+    "testb_login_isolation": "NOT_RUN",
+    "testb_pdf_flow": "NOT_RUN",
+    "testb_logout": "NOT_RUN",
+    "testa_reverse_isolation": "NOT_RUN",
+    "testa_final_logout": "NOT_RUN",
+    "responsive_console": "NOT_RUN"
+  },
+  "safe_child_output_scan": "PASS",
+  "completed_at_utc": "2026-10-21T17:19:48.118409+00:00"
+}

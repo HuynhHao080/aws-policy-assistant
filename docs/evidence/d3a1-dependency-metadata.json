@@ -1,0 +1,241 @@
+{
+  "started_at_utc": "2026-10-22T08:21:30.740393+00:00",
+  "status": "METADATA_AND_STATIC_REVIEW_COMPLETE",
+  "aws_writes": 0,
+  "authentication_calls": 0,
+  "d3a": "BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION",
+  "identity": {
+    "account_masked": "********0098",
+    "region": "ap-southeast-1",
+    "pool_id": "ap-southeast-1_zzeu6TjQs",
+    "client_id": "usn7b60eevhmvgsao7ok63a8l",
+    "alias": "EXPOSED_LEGACY_IDENTITY_1",
+    "sub_matches_d3a_binding": true,
+    "enabled": true,
+    "status": "CONFIRMED",
+    "stack_status": "UPDATE_COMPLETE",
+    "stack_last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "source_references": [
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/d2-secret-exposure-review.md",
+      "reference_types": [
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/d3-credential-containment-approval.md",
+      "reference_types": [
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/d3a-containment-result.md",
+      "reference_types": [
+        "pool_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/evidence/d2-credential-exposure.json",
+      "reference_types": [
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/evidence/d2-triage.json",
+      "reference_types": [
+        "pool_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "working",
+      "path": "docs/evidence/d3a-preflight.json",
+      "reference_types": [
+        "pool_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "PROJECT_SUMMARY.md",
+      "reference_types": [
+        "exact_username"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "docs/deployment-review.md",
+      "reference_types": [
+        "client_id"
+      ],
+      "kind": "DOC_OR_CONFIG",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "get_token.py",
+      "reference_types": [
+        "exact_username",
+        "client_id"
+      ],
+      "kind": "CODE",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "verify_e2e.py",
+      "reference_types": [
+        "exact_username",
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "CODE",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "verify_jwt.py",
+      "reference_types": [
+        "exact_username",
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "CODE",
+      "values_not_exported": true
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": "verify_search.py",
+      "reference_types": [
+        "exact_username",
+        "pool_id",
+        "client_id"
+      ],
+      "kind": "CODE",
+      "values_not_exported": true
+    }
+  ],
+  "workflows": [
+    {
+      "repo": "application",
+      "view": "working",
+      "path": ".github/workflows/ci.yml",
+      "mentions_auth_scripts": [],
+      "direct_cognito_auth_command": false,
+      "github_pages_publish": false,
+      "aws_deploy_command": false
+    },
+    {
+      "repo": "application",
+      "view": "HEAD",
+      "path": ".github/workflows/ci.yml",
+      "mentions_auth_scripts": [],
+      "direct_cognito_auth_command": false,
+      "github_pages_publish": false,
+      "aws_deploy_command": false
+    },
+    {
+      "repo": "worklog",
+      "view": "working",
+      "path": ".github/workflows/hugo.yml",
+      "mentions_auth_scripts": [],
+      "direct_cognito_auth_command": false,
+      "github_pages_publish": true,
+      "aws_deploy_command": false
+    },
+    {
+      "repo": "worklog",
+      "view": "HEAD",
+      "path": ".github/workflows/hugo.yml",
+      "mentions_auth_scripts": [],
+      "direct_cognito_auth_command": false,
+      "github_pages_publish": true,
+      "aws_deploy_command": false
+    }
+  ],
+  "lambda_automation": [
+    {
+      "logical_id": "PolicyAssistantFunction",
+      "function": "policy-assistant-PolicyAssistantFunction-FqcCAzZso7lI",
+      "state": "Active",
+      "env_key_names": [
+        "DOCUMENTS_BUCKET_NAME",
+        "POLICIES_TABLE_NAME",
+        "DOCUMENT_METADATA_TABLE_NAME",
+        "DOCUMENT_QUEUE_URL"
+      ],
+      "exact_reference_matches": [],
+      "default_bus_rules_targeting_unqualified_function": [],
+      "event_source_mapping_count": 0,
+      "deployed_code_package": "NOT_DOWNLOADED_NOT_INSPECTED"
+    },
+    {
+      "logical_id": "PolicyAssistantWorker",
+      "function": "policy-assistant-PolicyAssistantWorker-qiWP0iSidCYq",
+      "state": "Active",
+      "env_key_names": [
+        "DOCUMENTS_BUCKET_NAME",
+        "POLICIES_TABLE_NAME",
+        "DOCUMENT_METADATA_TABLE_NAME",
+        "DOCUMENT_QUEUE_URL"
+      ],
+      "exact_reference_matches": [],
+      "default_bus_rules_targeting_unqualified_function": [],
+      "event_source_mapping_count": 1,
+      "deployed_code_package": "NOT_DOWNLOADED_NOT_INSPECTED"
+    }
+  ],
+  "cognito_config": {
+    "tier": "ESSENTIALS",
+    "addons": null,
+    "lambda_trigger_names": [],
+    "explicit_auth_flows": [
+      "ALLOW_REFRESH_TOKEN_AUTH",
+      "ALLOW_USER_PASSWORD_AUTH"
+    ],
+    "mfa": "OFF"
+  },
+  "log_delivery": {
+    "UserPoolId": "ap-southeast-1_zzeu6TjQs",
+    "LogConfigurations": []
+  },
+  "user_auth_events": {
+    "status": "UNAVAILABLE",
+    "error_type": "UserPoolAddOnNotEnabledException",
+    "error_code": "UserPoolAddOnNotEnabledException"
+  },
+  "completed_at_utc": "2026-10-22T08:21:45.186124+00:00"
+}

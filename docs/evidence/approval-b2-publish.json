@@ -1,0 +1,86 @@
+{
+  "started_at_utc": "2026-10-21T16:28:19.935148+00:00",
+  "approval": "B2_FRONTEND_ONLY_USER_GRANTED",
+  "status": "UPLOADED_VERIFIED",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "uploads": [
+    {
+      "key": "index.html",
+      "bytes": 5752,
+      "sha256": "28182131e09dc5f0e29cba98404c1b5182f7b711fc48f8c77a425891835ff1cd",
+      "requested_at_utc": "2026-10-21T16:28:21.604630+00:00",
+      "status": "UPLOADED_CONTENT_VERIFIED",
+      "put_result": "ACCEPTED",
+      "verified_at_utc": "2026-10-21T16:28:21.746771+00:00"
+    },
+    {
+      "key": "app.js",
+      "bytes": 22780,
+      "sha256": "c0b52244d1ac5f729da7819dadc585028a6ad1721e16d57c1b790643f8483222",
+      "requested_at_utc": "2026-10-21T16:28:21.747785+00:00",
+      "status": "UPLOADED_CONTENT_VERIFIED",
+      "put_result": "ACCEPTED",
+      "verified_at_utc": "2026-10-21T16:28:21.886814+00:00"
+    },
+    {
+      "key": "styles.css",
+      "bytes": 5096,
+      "sha256": "aa65a893213b10a01e3c9484e8c56edb0a425fa9076e246d44938d4859f8588e",
+      "requested_at_utc": "2026-10-21T16:28:21.887818+00:00",
+      "status": "UPLOADED_CONTENT_VERIFIED",
+      "put_result": "ACCEPTED",
+      "verified_at_utc": "2026-10-21T16:28:22.014430+00:00"
+    },
+    {
+      "key": "config.json",
+      "bytes": 285,
+      "sha256": "150bc0f17ac6fd19172ada9934dd2e896d472a70ec064d4a2f685c6c0c41e678",
+      "requested_at_utc": "2026-10-21T16:28:22.015490+00:00",
+      "status": "UPLOADED_CONTENT_VERIFIED",
+      "put_result": "ACCEPTED",
+      "verified_at_utc": "2026-10-21T16:28:22.145726+00:00"
+    }
+  ],
+  "s3_delete_operations": 0,
+  "cloudformation_writes": 0,
+  "lambda_api_deployments": 0,
+  "cognito_users_created": 0,
+  "application_api_calls": 0,
+  "aws_business_e2e": "NOT_RUN",
+  "sqs_messages_sent": 0,
+  "budget_writes": 0,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "target": {
+    "bucket": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f",
+    "distribution": "E1LWE11YCHVIKC",
+    "cloudfront_url": "https://d3ataim7dfsl7t.cloudfront.net",
+    "bucket_source": "Exact current stack outputs + resource identity + CloudFront origin",
+    "region": "ap-southeast-1"
+  },
+  "objects_overwritten": [],
+  "objects_deleted": [],
+  "invalidation": {
+    "paths": [
+      "/",
+      "/index.html",
+      "/app.js",
+      "/styles.css",
+      "/config.json"
+    ],
+    "note": "Root / is alias of index.html; no wildcard invalidation",
+    "attempts": 1,
+    "requested_at_utc": "2026-10-21T16:28:22.173897+00:00",
+    "status": "Completed",
+    "id": "I3QP9GCKWVCDRQT8ERMMBUUOT2",
+    "completed_at_utc": "2026-10-21T16:28:46.713662+00:00"
+  },
+  "old_stack_after": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "unchanged_metadata": true
+  },
+  "completed_at_utc": "2026-10-21T16:28:47.184633+00:00"
+}

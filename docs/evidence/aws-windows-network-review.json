@@ -1,0 +1,53 @@
+{
+  "observed_at_utc": "2026-10-21T07:53:42.434894+00:00",
+  "scope": "Local configuration and unsigned connectivity only",
+  "aws_cli": "2.36.17",
+  "environment_variable_names": [],
+  "urllib_proxy_configured": false,
+  "config_file_present": true,
+  "profile_count": 1,
+  "configured_region": "us-west-2",
+  "config_endpoint_entries": [],
+  "config_ca_entries": [],
+  "config_proxy_entries": [],
+  "windows_internet_settings": {
+    "ProxyEnable_present_or_enabled": false,
+    "ProxyServer_present_or_enabled": false,
+    "AutoConfigURL_present_or_enabled": false,
+    "AutoDetect_present_or_enabled": false
+  },
+  "endpoints": [
+    {
+      "host": "sts.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "status": "BLOCKED",
+      "error_type": "TimeoutError"
+    },
+    {
+      "host": "cloudformation.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "status": "BLOCKED",
+      "error_type": "TimeoutError"
+    },
+    {
+      "host": "s3.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "completed_at_utc": "2026-10-21T07:54:04.057027+00:00",
+  "aws_api_retry_this_round": "NOT_RUN",
+  "retry_reason": "No recovery evidence: STS and CloudFormation direct TCP connections still timed out",
+  "root_cause": "UNDETERMINED",
+  "configuration_changed": false,
+  "credentials_changed": false,
+  "tls_verification_disabled": false,
+  "next_steps": [
+    "Ask network administrator to inspect approved outbound HTTPS/routing/VPN access to the exact regional endpoints",
+    "Check whether an approved proxy is required; do not disable TLS verification or firewall",
+    "After a real connectivity/configuration change and successful STS endpoint connection, make one bounded signed STS call",
+    "Only after successful identity verification, read candidate/template and GetObject all three function artifacts"
+  ]
+}

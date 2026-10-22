@@ -1,0 +1,411 @@
+{
+  "started_at_utc": "2026-10-21T17:07:16.654101+00:00",
+  "scope": "B5 preparation READ-ONLY; no authentication, business API, ReceiveMessage or AWS writes",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "status": "VERIFIED",
+  "checks": {
+    "identity": {
+      "status": "VERIFIED",
+      "account_masked": "********0098",
+      "region": "ap-southeast-1"
+    },
+    "stack": {
+      "status": "VERIFIED",
+      "stack_status": "CREATE_COMPLETE",
+      "resource_count": 45,
+      "frontend_url": "https://d3ataim7dfsl7t.cloudfront.net"
+    },
+    "lambda": {
+      "status": "VERIFIED",
+      "functions": [
+        {
+          "logical_id": "PolicyAssistantFunction",
+          "state": "Active",
+          "last_update_status": "Successful",
+          "code_sha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+        },
+        {
+          "logical_id": "PolicyAssistantWorker",
+          "state": "Active",
+          "last_update_status": "Successful",
+          "code_sha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+        },
+        {
+          "logical_id": "DocumentRecovery",
+          "state": "Active",
+          "last_update_status": "Successful",
+          "code_sha256": "jvcJqierIglLgwcVkfnM4bVG94rrw7X9ALHsJXq21ZE="
+        }
+      ]
+    },
+    "mapping": {
+      "status": "VERIFIED",
+      "state": "Enabled",
+      "batch_size": 1,
+      "response_types": [
+        "ReportBatchItemFailures"
+      ]
+    },
+    "queues": {
+      "status": "VERIFIED",
+      "queues": {
+        "PolicyAssistantDocumentQueue": {
+          "ApproximateNumberOfMessages": "0",
+          "ApproximateNumberOfMessagesNotVisible": "0",
+          "ApproximateNumberOfMessagesDelayed": "0",
+          "VisibilityTimeout": "180",
+          "MessageRetentionPeriod": "345600",
+          "LastModifiedTimestamp": "1792575439",
+          "max_receive_count": 3
+        },
+        "PolicyAssistantDocumentDLQ": {
+          "ApproximateNumberOfMessages": "1",
+          "ApproximateNumberOfMessagesNotVisible": "0",
+          "ApproximateNumberOfMessagesDelayed": "0",
+          "VisibilityTimeout": "30",
+          "MessageRetentionPeriod": "1209600",
+          "LastModifiedTimestamp": "1792575438",
+          "redrive_permission": "byQueue"
+        }
+      },
+      "main_quiescent": true,
+      "dlq_approx_one_visible": true,
+      "dlq_identity": "NOT_REREAD; approximate count consistent with B4 marker-verified retained poison; no ReceiveMessage issued"
+    },
+    "alarms": {
+      "status": "VERIFIED",
+      "alarms": [
+        {
+          "logical_id": "DocumentDLQAlarm",
+          "state": "ALARM",
+          "updated_at_utc": "2026-10-21T16:59:17.935000+00:00",
+          "metric": "ApproximateNumberOfMessagesVisible",
+          "namespace": "AWS/SQS",
+          "statistic": "Maximum",
+          "period": 300,
+          "evaluation_periods": 1,
+          "threshold": 0.0,
+          "comparison": "GreaterThanThreshold",
+          "treat_missing": "notBreaching",
+          "actions_enabled": true
+        },
+        {
+          "logical_id": "DocumentQueueAgeAlarm",
+          "state": "OK",
+          "updated_at_utc": "2026-10-21T17:03:20.519000+00:00",
+          "metric": "ApproximateAgeOfOldestMessage",
+          "namespace": "AWS/SQS",
+          "statistic": "Maximum",
+          "period": 300,
+          "evaluation_periods": 1,
+          "threshold": 300.0,
+          "comparison": "GreaterThanThreshold",
+          "treat_missing": "notBreaching",
+          "actions_enabled": true
+        },
+        {
+          "logical_id": "PolicyAssistantDurationAlarm",
+          "state": "OK",
+          "updated_at_utc": "2026-10-21T09:42:50.074000+00:00",
+          "metric": "Duration",
+          "namespace": "AWS/Lambda",
+          "statistic": "Maximum",
+          "period": 300,
+          "evaluation_periods": 1,
+          "threshold": 5000.0,
+          "comparison": "GreaterThanThreshold",
+          "treat_missing": "notBreaching",
+          "actions_enabled": true
+        },
+        {
+          "logical_id": "PolicyAssistantErrorAlarm",
+          "state": "OK",
+          "updated_at_utc": "2026-10-21T09:42:56.704000+00:00",
+          "metric": "Errors",
+          "namespace": "AWS/Lambda",
+          "statistic": "Sum",
+          "period": 300,
+          "evaluation_periods": 1,
+          "threshold": 0.0,
+          "comparison": "GreaterThanThreshold",
+          "treat_missing": "notBreaching",
+          "actions_enabled": true
+        },
+        {
+          "logical_id": "RecoveryErrorAlarm",
+          "state": "OK",
+          "updated_at_utc": "2026-10-21T09:42:40.250000+00:00",
+          "metric": "Errors",
+          "namespace": "AWS/Lambda",
+          "statistic": "Sum",
+          "period": 300,
+          "evaluation_periods": 1,
+          "threshold": 0.0,
+          "comparison": "GreaterThanThreshold",
+          "treat_missing": "notBreaching",
+          "actions_enabled": true
+        }
+      ]
+    },
+    "queue_metrics": {
+      "status": "VERIFIED",
+      "window_minutes": 20,
+      "truncated": false,
+      "series": [
+        {
+          "metric": "PolicyAssistantDocumentQueue.ApproximateAgeOfOldestMessage",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:05:00+00:00",
+            "2026-10-21T17:04:00+00:00",
+            "2026-10-21T17:03:00+00:00",
+            "2026-10-21T17:02:00+00:00",
+            "2026-10-21T17:01:00+00:00",
+            "2026-10-21T17:00:00+00:00",
+            "2026-10-21T16:59:00+00:00",
+            "2026-10-21T16:58:00+00:00",
+            "2026-10-21T16:57:00+00:00",
+            "2026-10-21T16:56:00+00:00",
+            "2026-10-21T16:55:00+00:00",
+            "2026-10-21T16:54:00+00:00",
+            "2026-10-21T16:53:00+00:00",
+            "2026-10-21T16:52:00+00:00",
+            "2026-10-21T16:51:00+00:00",
+            "2026-10-21T16:50:00+00:00",
+            "2026-10-21T16:49:00+00:00",
+            "2026-10-21T16:48:00+00:00",
+            "2026-10-21T16:47:00+00:00"
+          ],
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            519.0,
+            416.0,
+            361.0,
+            301.0,
+            259.0,
+            180.0,
+            158.0,
+            101.0,
+            38.0,
+            0.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantDocumentQueue.ApproximateNumberOfMessagesVisible",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:05:00+00:00",
+            "2026-10-21T17:04:00+00:00",
+            "2026-10-21T17:03:00+00:00",
+            "2026-10-21T17:02:00+00:00",
+            "2026-10-21T17:01:00+00:00",
+            "2026-10-21T17:00:00+00:00",
+            "2026-10-21T16:59:00+00:00",
+            "2026-10-21T16:58:00+00:00",
+            "2026-10-21T16:57:00+00:00",
+            "2026-10-21T16:56:00+00:00",
+            "2026-10-21T16:55:00+00:00",
+            "2026-10-21T16:54:00+00:00",
+            "2026-10-21T16:53:00+00:00",
+            "2026-10-21T16:52:00+00:00",
+            "2026-10-21T16:51:00+00:00",
+            "2026-10-21T16:50:00+00:00",
+            "2026-10-21T16:49:00+00:00",
+            "2026-10-21T16:48:00+00:00",
+            "2026-10-21T16:47:00+00:00"
+          ],
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantDocumentQueue.ApproximateNumberOfMessagesNotVisible",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:05:00+00:00",
+            "2026-10-21T17:04:00+00:00",
+            "2026-10-21T17:03:00+00:00",
+            "2026-10-21T17:02:00+00:00",
+            "2026-10-21T17:01:00+00:00",
+            "2026-10-21T17:00:00+00:00",
+            "2026-10-21T16:59:00+00:00",
+            "2026-10-21T16:58:00+00:00",
+            "2026-10-21T16:57:00+00:00",
+            "2026-10-21T16:56:00+00:00",
+            "2026-10-21T16:55:00+00:00",
+            "2026-10-21T16:54:00+00:00",
+            "2026-10-21T16:53:00+00:00",
+            "2026-10-21T16:52:00+00:00",
+            "2026-10-21T16:51:00+00:00",
+            "2026-10-21T16:50:00+00:00",
+            "2026-10-21T16:49:00+00:00",
+            "2026-10-21T16:48:00+00:00",
+            "2026-10-21T16:47:00+00:00"
+          ],
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantDocumentDLQ.ApproximateNumberOfMessagesVisible",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:05:00+00:00",
+            "2026-10-21T17:04:00+00:00",
+            "2026-10-21T17:03:00+00:00",
+            "2026-10-21T17:02:00+00:00",
+            "2026-10-21T17:01:00+00:00",
+            "2026-10-21T17:00:00+00:00",
+            "2026-10-21T16:59:00+00:00",
+            "2026-10-21T16:58:00+00:00",
+            "2026-10-21T16:57:00+00:00",
+            "2026-10-21T16:56:00+00:00",
+            "2026-10-21T16:55:00+00:00",
+            "2026-10-21T16:54:00+00:00",
+            "2026-10-21T16:53:00+00:00",
+            "2026-10-21T16:52:00+00:00",
+            "2026-10-21T16:51:00+00:00",
+            "2026-10-21T16:50:00+00:00",
+            "2026-10-21T16:49:00+00:00",
+            "2026-10-21T16:48:00+00:00",
+            "2026-10-21T16:47:00+00:00"
+          ],
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "budget": {
+      "status": "VERIFIED",
+      "type": "COST",
+      "time_unit": "MONTHLY",
+      "limit": {
+        "Amount": "20.0",
+        "Unit": "USD"
+      },
+      "metric": [
+        "UnblendedCost"
+      ],
+      "filter": {
+        "Not": {
+          "Dimensions": {
+            "Key": "RECORD_TYPE",
+            "Values": [
+              "Refund",
+              "Credit"
+            ]
+          }
+        }
+      },
+      "notifications": [
+        {
+          "NotificationType": "ACTUAL",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 100.0,
+          "NotificationState": "OK"
+        },
+        {
+          "NotificationType": "ACTUAL",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 80.0,
+          "NotificationState": "OK"
+        },
+        {
+          "NotificationType": "FORECASTED",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 100.0,
+          "NotificationState": "OK"
+        }
+      ],
+      "actions": 0,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "5.479",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "8.539",
+          "Unit": "USD"
+        }
+      },
+      "last_updated_utc": "2026-10-21T10:05:01.238000+00:00",
+      "email_delivery": "NOT_VERIFIED",
+      "billing_note": "Newly read Budget snapshot; Billing lags, no fresh CE request or test-only attribution"
+    },
+    "old_stack": {
+      "status": "VERIFIED",
+      "stack_status": "UPDATE_COMPLETE",
+      "last_updated": "2026-10-19 11:10:29.038000+00:00",
+      "scope": "metadata read only, no full drift scan"
+    }
+  },
+  "aws_writes": 0,
+  "cognito_auth_calls": 0,
+  "business_api_calls": 0,
+  "sqs_send_receive_delete_calls": 0,
+  "completed_at_utc": "2026-10-21T17:07:22.257679+00:00"
+}

@@ -1,0 +1,669 @@
+{
+  "checks": [
+    {
+      "check": "DocumentRecoveryRole: no broad managed policies",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantWorkerRole: no broad managed policies",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantFunctionRole: no broad managed policies",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantFunction: data environment uses only new stack references",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantFunction: exact log-group permission",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantWorker: data environment uses only new stack references",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantWorker: exact log-group permission",
+      "passed": true
+    },
+    {
+      "check": "DocumentRecovery: data environment uses only new stack references",
+      "passed": true
+    },
+    {
+      "check": "DocumentRecovery: exact log-group permission",
+      "passed": true
+    },
+    {
+      "check": "No Allow Resource * in any runtime policy",
+      "passed": true
+    },
+    {
+      "check": "PoliciesTable: retained on deletion/replacement",
+      "passed": true
+    },
+    {
+      "check": "DocumentMetadata: retained on deletion/replacement",
+      "passed": true
+    },
+    {
+      "check": "PolicyAssistantDocumentsBucket: retained on deletion/replacement",
+      "passed": true
+    },
+    {
+      "check": "DocumentsBucketTlsPolicy: retained on deletion/replacement",
+      "passed": true
+    },
+    {
+      "check": "Retained HTTPS deny remains attached to retained document bucket",
+      "passed": true
+    },
+    {
+      "check": "Only the deterministic same-stack queue can use DLQ",
+      "passed": true
+    },
+    {
+      "check": "No cross-stack ImportValue",
+      "passed": true
+    },
+    {
+      "check": "No circular resource dependencies",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "runtime_iam_allow_resource_star": [],
+  "roles": {
+    "DocumentRecoveryRole": {
+      "AssumeRolePolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      },
+      "Policies": [
+        {
+          "PolicyName": "RuntimeDataAccess",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": "dynamodb:Query",
+                "Resource": {
+                  "Fn::Sub": "${DocumentMetadata.Arn}/index/ByStatus"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": "dynamodb:UpdateItem",
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "DocumentMetadata",
+                    "Arn"
+                  ]
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": "sqs:SendMessage",
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "PolicyAssistantDocumentQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "PolicyAssistantWorkerRole": {
+      "AssumeRolePolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      },
+      "Policies": [
+        {
+          "PolicyName": "WorkerDocumentAccess",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "dynamodb:GetItem",
+                  "dynamodb:UpdateItem"
+                ],
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "DocumentMetadata",
+                    "Arn"
+                  ]
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetObjectVersion"
+                ],
+                "Resource": {
+                  "Fn::Sub": "arn:${AWS::Partition}:s3:::${PolicyAssistantDocumentsBucket}/uploads/*"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "sqs:ReceiveMessage",
+                  "sqs:DeleteMessage",
+                  "sqs:GetQueueAttributes"
+                ],
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "PolicyAssistantDocumentQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "PolicyAssistantFunctionRole": {
+      "AssumeRolePolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      },
+      "Policies": [
+        {
+          "PolicyName": "RuntimeDataAccess",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "dynamodb:GetItem",
+                  "dynamodb:Scan"
+                ],
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "PoliciesTable",
+                    "Arn"
+                  ]
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "dynamodb:GetItem",
+                  "dynamodb:UpdateItem",
+                  "dynamodb:PutItem"
+                ],
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "DocumentMetadata",
+                    "Arn"
+                  ]
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "dynamodb:Query"
+                ],
+                "Resource": {
+                  "Fn::Sub": "${DocumentMetadata.Arn}/index/ByOwner"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:PutObject",
+                  "s3:GetObject",
+                  "s3:GetObjectVersion"
+                ],
+                "Resource": {
+                  "Fn::Sub": "arn:${AWS::Partition}:s3:::${PolicyAssistantDocumentsBucket}/uploads/*"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "sqs:SendMessage"
+                ],
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "PolicyAssistantDocumentQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "log_policies": {
+    "PolicyAssistantFunctionLogWritePolicy": {
+      "PolicyName": "FunctionLogStreams",
+      "Roles": [
+        {
+          "Ref": "PolicyAssistantFunctionRole"
+        }
+      ],
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": {
+              "Fn::GetAtt": [
+                "PolicyAssistantLogGroup",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "PolicyAssistantWorkerLogWritePolicy": {
+      "PolicyName": "FunctionLogStreams",
+      "Roles": [
+        {
+          "Ref": "PolicyAssistantWorkerRole"
+        }
+      ],
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": {
+              "Fn::GetAtt": [
+                "PolicyAssistantWorkerLogGroup",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "DocumentRecoveryLogWritePolicy": {
+      "PolicyName": "FunctionLogStreams",
+      "Roles": [
+        {
+          "Ref": "DocumentRecoveryRole"
+        }
+      ],
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": {
+              "Fn::GetAtt": [
+                "DocumentRecoveryLogs",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "active_resource_count": 45,
+  "resource_counts": {
+    "AWS::CloudWatch::Alarm": 5,
+    "AWS::Lambda::EventSourceMapping": 1,
+    "AWS::Lambda::Function": 3,
+    "AWS::IAM::Role": 3,
+    "AWS::ApiGatewayV2::Stage": 1,
+    "AWS::IAM::Policy": 3,
+    "AWS::Cognito::UserPoolClient": 1,
+    "AWS::SQS::Queue": 2,
+    "AWS::Lambda::Permission": 9,
+    "AWS::S3::Bucket": 2,
+    "AWS::ApiGatewayV2::Api": 1,
+    "AWS::DynamoDB::Table": 2,
+    "AWS::S3::BucketPolicy": 2,
+    "AWS::Events::Rule": 1,
+    "AWS::CloudFront::OriginAccessControl": 1,
+    "AWS::Logs::LogGroup": 3,
+    "AWS::CloudWatch::Dashboard": 1,
+    "AWS::Cognito::UserPool": 1,
+    "AWS::CloudFront::Distribution": 1,
+    "AWS::SNS::Topic": 1,
+    "AWS::CloudFront::ResponseHeadersPolicy": 1
+  },
+  "resource_inventory": [
+    {
+      "id": "AlertTopic",
+      "type": "AWS::SNS::Topic",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentDLQAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentMetadata",
+      "type": "AWS::DynamoDB::Table",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "id": "DocumentQueueAgeAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecoveryLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecoveryLogs",
+      "type": "AWS::Logs::LogGroup",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPending",
+      "type": "AWS::Events::Rule",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPendingPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentRecoveryRole",
+      "type": "AWS::IAM::Role",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "DocumentsBucketTlsPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "id": "FrontendAccessControl",
+      "type": "AWS::CloudFront::OriginAccessControl",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "FrontendBucket",
+      "type": "AWS::S3::Bucket",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "FrontendBucketPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "FrontendDistribution",
+      "type": "AWS::CloudFront::Distribution",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "FrontendHeaders",
+      "type": "AWS::CloudFront::ResponseHeadersPolicy",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PoliciesTable",
+      "type": "AWS::DynamoDB::Table",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantApiProdStage",
+      "type": "AWS::ApiGatewayV2::Stage",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantDashboard",
+      "type": "AWS::CloudWatch::Dashboard",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantDocumentDLQ",
+      "type": "AWS::SQS::Queue",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantDocumentQueue",
+      "type": "AWS::SQS::Queue",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantDocumentsBucket",
+      "type": "AWS::S3::Bucket",
+      "deletion_policy": "Retain",
+      "update_replace_policy": "Retain"
+    },
+    {
+      "id": "PolicyAssistantDurationAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentStatusPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionHealthCheckPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionListDocumentsPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionRole",
+      "type": "AWS::IAM::Role",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantFunctionUploadSessionPermission",
+      "type": "AWS::Lambda::Permission",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantUserPoolClient",
+      "type": "AWS::Cognito::UserPoolClient",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantWorkerDocumentQueueEvent",
+      "type": "AWS::Lambda::EventSourceMapping",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    },
+    {
+      "id": "RecoveryErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "deletion_policy": "Delete (default)",
+      "update_replace_policy": "Delete (default)"
+    }
+  ],
+  "remaining_scoped_wildcards": [
+    "LogGroup.Arn includes :* for streams inside the exact group",
+    "S3 uploads/* and frontend-bucket object prefix only",
+    "API route/stage wildcard within the new API/account/region",
+    "S3 TLS-only Deny uses Principal * and Action s3:* on the named bucket; not an Allow"
+  ],
+  "observed_at_utc": "2026-10-21T08:09:00.589889+00:00",
+  "scope": "Actual processed CloudFormation candidate; not deployed or an effective-permission simulation",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "change_set": "fcaj-review-20261021-072124-24ba855e",
+  "execution_status": "AVAILABLE",
+  "fresh_aws_status_verified": true,
+  "existing_stack_readonly": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "no_write_to_existing_stack_performed": true
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "observed_at_utc": "2026-10-21T08:36:25.068869+00:00",
+  "source_evidence": "aws-october-account-cost.json",
+  "verification_window_utc": [
+    "2026-10-21T08:34:26.297656+00:00",
+    "2026-10-21T08:34:33.063490+00:00"
+  ],
+  "metric": "UnblendedCost",
+  "excluded_record_types": [
+    "Credit",
+    "Refund"
+  ],
+  "account_masked": "********0098",
+  "actual_oct01_through_oct20_usd": "5.4222749168",
+  "remaining_oct21_through_oct31_forecast_usd": "3.1167914980116933",
+  "derived_whole_october_baseline_usd": "8.5390664148116933",
+  "full_30_day_test_model_usd": "6.630595096500",
+  "conservative_planning_envelope_usd": "15.1696615113116933",
+  "planning_envelope_is_aws_forecast": false,
+  "forecast_excludes_new_test_behavior": true,
+  "ce_requests_attempted": 2,
+  "ce_standard_api_planning_fee_usd": "0.02",
+  "fee_is_measured_billing": false,
+  "all_daily_actual_periods_estimated": true,
+  "stack_cost_attributed_usd": null,
+  "resource_level_unallocated_usd": "5.4222749168",
+  "unallocated_reason": "Service/usage types lack resource IDs and activated stack allocation tags; inventory alone is not attribution",
+  "rows": [
+    {
+      "monthly_budget_usd": "10",
+      "actual_80_usd": "8.0",
+      "actual_100_usd": "10",
+      "forecast_100_usd": "10",
+      "headroom_vs_baseline_usd": "1.4609335851883067",
+      "headroom_vs_baseline_plus_full_test_usd": "-5.1696615113116933",
+      "baseline_above_actual_80": true,
+      "planning_envelope_above_limit": true,
+      "assessment": "Too low for baseline plus full planned test; keep only if owner wants deliberately early frequent alerts"
+    },
+    {
+      "monthly_budget_usd": "15",
+      "actual_80_usd": "12.0",
+      "actual_100_usd": "15",
+      "forecast_100_usd": "15",
+      "headroom_vs_baseline_usd": "6.4609335851883067",
+      "headroom_vs_baseline_plus_full_test_usd": "-0.1696615113116933",
+      "baseline_above_actual_80": false,
+      "planning_envelope_above_limit": true,
+      "assessment": "Tight; slightly below full-month planning envelope, little margin for late charges"
+    },
+    {
+      "monthly_budget_usd": "20",
+      "actual_80_usd": "16.0",
+      "actual_100_usd": "20",
+      "forecast_100_usd": "20",
+      "headroom_vs_baseline_usd": "11.4609335851883067",
+      "headroom_vs_baseline_plus_full_test_usd": "4.8303384886883067",
+      "baseline_above_actual_80": false,
+      "planning_envelope_above_limit": false,
+      "assessment": "Recommended notification threshold; margin but not a cap or spending guarantee"
+    }
+  ],
+  "recommendation_usd": "20",
+  "approval": "NOT_GRANTED",
+  "aws_writes_performed": false,
+  "stack_cost_interpretation": "No reliable allocation established; null means unknown, not zero stack cost"
+}

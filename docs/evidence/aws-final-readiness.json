@@ -1,0 +1,464 @@
+{
+  "prepared_at_utc": "2026-10-21T08:10:26.859568+00:00",
+  "decision": "C0_GO_TIMEBOXED_TEST_DEMO_NO_GO_PRODUCTION",
+  "technical_predeployment_verification": "GO_VERIFIED",
+  "candidate": "fcaj-review-20261021-072124-24ba855e",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "verification_window_start_utc": "2026-10-21T09:32:20.015604+00:00",
+  "verification_window_end_utc": "2026-10-21T09:33:32.652185+00:00",
+  "last_processed_audit_at_utc": "2026-10-21T09:33:11.098709+00:00",
+  "current_status": "CREATE_COMPLETE",
+  "current_execution_status": "NOT_AVAILABLE_AFTER_EXECUTION",
+  "actions": {
+    "Add": 45,
+    "Modify": 0,
+    "Remove": 0,
+    "Replace": 0
+  },
+  "checks": [
+    {
+      "check": "local source fingerprint",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "STS account identity",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "live candidate identity and actions",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "original candidate matches packaged template",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "processed candidate matches saved AWS template",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "live processed IAM SQS S3 and resource isolation audit",
+      "status": "VERIFIED"
+    },
+    {
+      "check": "S3 ZIP contents match all local built functions",
+      "status": "VERIFIED",
+      "function": "DocumentRecovery",
+      "zip_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+      "files": 2199,
+      "bytes": 16746794
+    },
+    {
+      "check": "S3 ZIP contents match all local built functions",
+      "status": "VERIFIED",
+      "function": "PolicyAssistantWorker",
+      "zip_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+      "files": 2199,
+      "bytes": 16746794
+    },
+    {
+      "check": "S3 ZIP contents match all local built functions",
+      "status": "VERIFIED",
+      "function": "PolicyAssistantFunction",
+      "zip_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+      "files": 2199,
+      "bytes": 16746794
+    },
+    {
+      "check": "existing stack read-only status",
+      "status": "VERIFIED"
+    }
+  ],
+  "runtime_iam_allow_resource_star": [],
+  "fresh_aws_status_verified": true,
+  "remaining_scoped_wildcards": [
+    "LogGroup.Arn includes :* for streams inside the exact group",
+    "S3 uploads/* and frontend-bucket object prefix only",
+    "API route/stage wildcard within the new API/account/region",
+    "S3 TLS-only Deny uses Principal * and Action s3:* on the named bucket; not an Allow"
+  ],
+  "resource_inventory_evidence": "aws-test-iam-review.json",
+  "connectivity_evidence": "aws-4g-connectivity.json",
+  "artifact_evidence": "aws-review-artifact-fingerprint.json",
+  "aws_runtime_acceptance": {
+    "status": "PASS_API_SDK_BROWSER_NOT_RUN",
+    "cases": {
+      "PASS": 19,
+      "NOT_RUN": 1
+    },
+    "evidence": "approval-b4-e2e.json",
+    "alarm_followup": "approval-b4-alarm-followup.json",
+    "browser_e2e": "FAIL_B5_STOPPED",
+    "email_delivery": "NOT_VERIFIED",
+    "poison_messages_sent": 1,
+    "dlq_message_retained": true,
+    "workshop_local_validation": "approval-b4-local-validation.json",
+    "browser_evidence": "approval-b5-result.json"
+  },
+  "budget_configuration": {
+    "status": "VERIFIED",
+    "budget_name": "policy-assistant-account-monthly",
+    "amount_usd": "20",
+    "recipient_configuration": "CONFIGURED_ONE_COMMON_EMAIL_RECIPIENT",
+    "recipient_confirmation": "ACTIVE_LEGACY_USER_CONFIRMED",
+    "delivery": "DELIVERY_NOT_VERIFIED",
+    "actions": 0,
+    "existing_budgets": "UNCHANGED",
+    "evidence": "budget-20usd-created-readonly-verification.json",
+    "email_verification": "0/1_VERIFIED_USER_REPORTED",
+    "latest_evidence": "budget-20usd-user-console-confirmation.json",
+    "latest_api_preflight": "approval-b-final-preflight-readonly.json"
+  },
+  "remaining_risks": [
+    "Test and old stack still share account, concurrency and billing",
+    "Retained tables/document bucket and HTTPS policy survive deletion; ongoing data costs and separately approved cleanup",
+    "Application AlertEmail remains empty; Budget recipient Active (legacy) per owner Console observation; email verification 0/1 and delivery unverified",
+    "Cloud connectivity may recur; recheck identity/candidate/source/artifact before approved execution",
+    "B4 API/SDK tests passed; authenticated CloudFront browser E2E and full PDF/malware parsing are not proven",
+    "One deliberate poison message remains in test DLQ; DLQ/queue-age alarms observed ALARM; cleanup not authorized",
+    "Bounded log/metric scans and delayed Billing do not prove all future behavior or email delivery",
+    "B5 real Edge upload UI failed before S3 request; likely CSP/regional endpoint mismatch, no fix applied; one orphan uploading record and non-GlobalSignOut TestA session"
+  ],
+  "required_approvals": [
+    "New artifact S3 upload and test-only unexecuted change set preparation",
+    "Separate execution approval after actual change set/resource/IAM/artifact review",
+    "Separate bounded browser rerun approval",
+    "Separate C cleanup/Retain/user/DLQ operations"
+  ],
+  "prohibited_actions_performed": false,
+  "existing_stack_readonly": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "no_write_to_existing_stack_performed": true
+  },
+  "budget_preparation_review": {
+    "evidence": "aws-budget-tag-coverage-readonly.json",
+    "observed_at_utc": "2026-10-21T08:22:20.627886+00:00",
+    "taggable_resources": 28,
+    "without_tag_property": 17,
+    "both_tags_explicit_in_processed_template": 0,
+    "stack_tags": "VERIFIED",
+    "resource_propagation": "NOT_RUN_UNDEPLOYED",
+    "proposed_budget_exists": false,
+    "allocation_keys_returned": [],
+    "tag_coverage": "NOT_VERIFIED",
+    "configuration_status": "ACCOUNT20_CONFIGURED_TEST_TAG10_PENDING",
+    "recipient_status": "ACTIVE_LEGACY_USER_CONFIRMED_MODERN_VERIFICATION_0_OF_1",
+    "activation_status": "NOT_AUTHORIZED",
+    "account_wide_option": "20 USD now exists; read-only configuration verified; no agent mutations",
+    "test_tag_option": "10 USD proposed; not approved; coverage unverified",
+    "dashboard_correction": "Current AWS supports Tags; billing attribution not proven",
+    "decision": "NO_BUDGET_MUTATION_AUTHORIZED_CURRENT_TASK",
+    "account_budget_exists": true
+  },
+  "budget_amount_review": {
+    "evidence": "aws-october-budget-comparison.json",
+    "actual_oct01_through_oct20_usd": "5.4222749168",
+    "forecast_baseline_month_usd": "8.5390664148116933",
+    "baseline_plus_full_test_envelope_usd": "15.1696615113116933",
+    "recommended_limit_usd": "20",
+    "actual_alerts_usd": [
+      "16",
+      "20"
+    ],
+    "forecast_alert_usd": "20",
+    "status": "IMPLEMENTED_BY_OWNER_CONFIGURATION_VERIFIED",
+    "stack_cost_allocation": "NOT_VERIFIED",
+    "latest_actual_forecast_evidence": "approval-b-final-preflight-readonly.json",
+    "latest_queried_at_utc": "2026-10-21T09:33:32.652185+00:00"
+  },
+  "budget_20usd_preparation": {
+    "status": "USER_CREATED_CONFIGURATION_VERIFIED",
+    "recipient": "ACTIVE_LEGACY_USER_CONFIRMED",
+    "approval": "APPROVAL_A_FULFILLED_BY_OWNER_CREATION",
+    "creation_decision": "DO_NOT_CREATE_AGAIN",
+    "account_and_name_readonly": "VERIFIED",
+    "existing_budget_count": 7,
+    "name_available": false,
+    "api_fragment_shapes": "PASS_OFFLINE",
+    "full_create_request": "NOT_ASSEMBLED_ACCOUNT_AND_SUBSCRIBERS_PENDING",
+    "read_only_evidence": "budget-20usd-approval-a-preflight.json",
+    "validation_evidence": "budget-20usd-local-validation.json",
+    "approval_document": "../budget-20usd-approval.md",
+    "budget_creation": "CREATED_BY_USER",
+    "cloudformation_deployment": "EXECUTED_B1_ONLY",
+    "existing_budgets": "UNCHANGED_CONFIGURATIONS_VERIFIED",
+    "agent_budget_creation": "NOT_EXECUTED",
+    "created_at_utc": "2026-10-21T09:11:39+00:00"
+  },
+  "budget_operational_readiness": "CONFIGURATION_VERIFIED_LEGACY_ACTIVE_EMAIL_VERIFICATION_AND_DELIVERY_OPEN",
+  "deployment_approval_readiness": "LOCAL_REMEDIATION_READY_NO_APPROVED_DEPLOY",
+  "latest_candidate_readonly_evidence": "approval-b-final-preflight-readonly.json",
+  "budget_20usd_verification": {
+    "status": "CONFIGURATION_VERIFIED_EMAIL_TRACKING_OPEN",
+    "configuration": "VERIFIED",
+    "created_at_utc": "2026-10-21T09:11:39+00:00",
+    "verification_window_utc": [
+      "2026-10-21T09:16:20.275433+00:00",
+      "2026-10-21T09:16:28.705702+00:00"
+    ],
+    "percentage_threshold_evidence": "Successful CloudTrail CreateBudget plus current reads and typed subscriber lookups",
+    "recipient_configuration": "CONFIGURED_ONE_COMMON_EMAIL",
+    "recipient_confirmation": "ACTIVE_LEGACY_USER_CONFIRMED",
+    "email_delivery": "DELIVERY_NOT_VERIFIED",
+    "actions": 0,
+    "existing_budgets": "UNCHANGED",
+    "evidence": "budget-20usd-created-readonly-verification.json",
+    "cloudtrail_evidence": "budget-20usd-cloudtrail-readonly.json",
+    "agent_budget_writes": 0,
+    "email_verification": "0/1_VERIFIED_USER_REPORTED",
+    "latest_console_evidence": "budget-20usd-user-console-confirmation.json"
+  },
+  "updated_at_utc": "2026-10-21T17:42:38.951413+00:00",
+  "approval_b_document": "../aws-test-deployment-approval-b.md",
+  "latest_deployment_evidence": "approval-b1-execution.json",
+  "latest_service_readiness_evidence": "approval-b1-service-readiness.json",
+  "deployment_b1": {
+    "approval": "B1_ONLY_GRANTED",
+    "status": "CREATED_VERIFIED",
+    "execute_attempts": 1,
+    "start_utc": "2026-10-21T09:37:14.915928+00:00",
+    "terminal_utc": "2026-10-21T09:42:51.750240+00:00",
+    "duration_seconds": 336.83,
+    "resources_create_complete": 45,
+    "resource_failures": 0,
+    "deployed_template_matches_approved": true,
+    "b2": "PENDING_USER_APPROVAL",
+    "b3": "PENDING_USER_APPROVAL",
+    "b4": "NOT_RUN_PENDING_USER_APPROVAL"
+  },
+  "deployment_b2": {
+    "updated_at_utc": "2026-10-21T16:30:19.948899+00:00",
+    "approval": "B2_ONLY_GRANTED",
+    "status": "PUBLISHED_STATIC_VERIFIED",
+    "account_masked": "********0098",
+    "region": "ap-southeast-1",
+    "stack": "policy-assistant-fcaj-test",
+    "target": {
+      "bucket": "policy-assistant-fcaj-test-frontendbucket-icggnkicte7f",
+      "distribution": "E1LWE11YCHVIKC",
+      "cloudfront_url": "https://d3ataim7dfsl7t.cloudfront.net",
+      "bucket_source": "Exact current stack outputs + resource identity + CloudFront origin",
+      "region": "ap-southeast-1"
+    },
+    "assets": [
+      {
+        "key": "index.html",
+        "bytes": 5752,
+        "sha256": "28182131e09dc5f0e29cba98404c1b5182f7b711fc48f8c77a425891835ff1cd"
+      },
+      {
+        "key": "app.js",
+        "bytes": 22780,
+        "sha256": "c0b52244d1ac5f729da7819dadc585028a6ad1721e16d57c1b790643f8483222"
+      },
+      {
+        "key": "styles.css",
+        "bytes": 5096,
+        "sha256": "aa65a893213b10a01e3c9484e8c56edb0a425fa9076e246d44938d4859f8588e"
+      },
+      {
+        "key": "config.json",
+        "bytes": 285,
+        "sha256": "150bc0f17ac6fd19172ada9934dd2e896d472a70ec064d4a2f685c6c0c41e678"
+      }
+    ],
+    "invalidation": {
+      "paths": [
+        "/",
+        "/index.html",
+        "/app.js",
+        "/styles.css",
+        "/config.json"
+      ],
+      "note": "Root / is alias of index.html; no wildcard invalidation",
+      "attempts": 1,
+      "requested_at_utc": "2026-10-21T16:28:22.173897+00:00",
+      "status": "Completed",
+      "id": "I3QP9GCKWVCDRQT8ERMMBUUOT2",
+      "completed_at_utc": "2026-10-21T16:28:46.713662+00:00"
+    },
+    "http_redirect": "301_TO_HTTPS",
+    "https_static_assets": "200_ALL_SHA256_MATCH",
+    "local_checks": "PASS_17_UNIT_AND_TWO_LOCAL_BROWSER_SUITES_LINT_TYPECHECK_SYNTAX",
+    "aws_browser_visual_test": "NOT_RUN",
+    "aws_business_e2e": "NOT_RUN",
+    "cognito_users_created": 0,
+    "production_resource_write_targets": [],
+    "existing_stack_metadata": "UNCHANGED",
+    "objects_overwritten": [],
+    "objects_deleted": [],
+    "b3": "GO_FOR_REVIEW_PENDING_USER_APPROVAL",
+    "b4": "NOT_AUTHORIZED",
+    "cleanup": "NOT_AUTHORIZED",
+    "evidence": [
+      "approval-b2-preflight.json",
+      "approval-b2-local-checks.json",
+      "approval-b2-publish.json",
+      "approval-b2-static-http-verification.json"
+    ]
+  },
+  "deployment_b3": {
+    "status": "CREATED_VERIFIED",
+    "users_created": 2,
+    "user_pool_id": "ap-southeast-1_EfQPshNZ7",
+    "distinct_subjects": true,
+    "users": [
+      {
+        "identity": "TestA",
+        "enabled": true,
+        "user_status": "CONFIRMED",
+        "email_verified": false
+      },
+      {
+        "identity": "TestB",
+        "enabled": true,
+        "user_status": "CONFIRMED",
+        "email_verified": false
+      }
+    ],
+    "credentials": "DPAPI_CURRENT_USER_ENCRYPTED_GIT_IGNORED_ACL_RESTRICTED",
+    "login_tokens": "EXECUTED_UNDER_B4_IN_MEMORY_ONLY",
+    "evidence": "approval-b3-users.json"
+  },
+  "browser_b5_preparation": {
+    "status": "PREPARED_NOT_AUTHORIZED",
+    "read_only_review": "approval-b5-readonly-review.json",
+    "proposal": "approval-b5-proposal.json",
+    "approval_document": "../aws-browser-b5-approval.md",
+    "browser_execution": "NOT_RUN",
+    "main_queue": "QUIESCENT",
+    "queue_age_alarm": "OK",
+    "dlq_alarm": "ALARM_BASELINE_ONE_RETAINED_POISON",
+    "aws_writes": 0
+  },
+  "browser_b5_execution": {
+    "status": "FAIL_STOPPED",
+    "case_counts": {
+      "PASS": 2,
+      "FAIL": 1,
+      "NOT_RUN": 7
+    },
+    "counts": {
+      "logins": 1,
+      "global_signouts": 0,
+      "upload_sessions": 1,
+      "uploads": 0,
+      "downloads": 0,
+      "browser_file_downloads": 0,
+      "upload_bytes": 0,
+      "api_requests": 2,
+      "total_dynamic_requests": 3
+    },
+    "evidence": "approval-b5-result.json",
+    "diagnosis": "LIKELY_CSP_S3_ENDPOINT_MISMATCH",
+    "fix_applied": false,
+    "rerun": false,
+    "additional_orphan_metadata": 1
+  },
+  "browser_b5r_remediation": {
+    "status": "LOCAL_FIX_VERIFIED_NOT_DEPLOYED",
+    "source_pair_sha256": "e16c8529fdc8fe2fde6d20714699a19ce5ff8af5c962fd8e68021f2e7e34fbea",
+    "evidence": "b5r-local-remediation.json",
+    "iac_changed": false,
+    "expected_lambda_code_updates": 3,
+    "actual_change_set": "NOT_CREATED_S3_OBJECT_WRITE_PROHIBITED",
+    "aws_e2e": "NOT_RUN",
+    "old_deployed_browser_status": "B5_FAIL"
+  },
+  "b5r2": {
+    "decision": "NO_GO_PLAN_OUT_OF_APPROVED_SCOPE",
+    "evidence": "b5r2-preparation.json",
+    "artifact_upload": "VERIFIED",
+    "change_set": "CREATED_NOT_EXECUTED",
+    "actual_modify": 6,
+    "conditional_replacement": 1,
+    "deployment": "NOT_EXECUTED",
+    "browser_rerun": "NOT_RUN",
+    "observed_at_utc": "2026-10-21T17:49:49.669013+00:00"
+  },
+  "b5r3": {
+    "evidence": "b5r3-impact-audit.json",
+    "decision": "NO_GO",
+    "aws_writes": 0,
+    "deployment": "NOT_EXECUTED",
+    "observed_at_utc": "2026-10-21T17:55:48.694960+00:00"
+  },
+  "b5r4": {
+    "evidence": "b5r4-strategy.json",
+    "recommendation": "API-only CodeUri using existing verified artifact; keep old Worker/Recovery",
+    "new_change_set": "NOT_CREATED",
+    "aws_writes": 0,
+    "deployment": "NOT_EXECUTED",
+    "observed_at_utc": "2026-10-21T18:04:33.121837+00:00"
+  },
+  "b5r5": {
+    "evidence": "b5r5-change-set.json",
+    "change_set_name": "fcaj-b5r5-api-20261021-182458-e16c8529",
+    "change_set": "CREATED_NOT_EXECUTED",
+    "default_modify": 2,
+    "detailed_modify": 1,
+    "conditional_or_true_replacement": 0,
+    "deployment": "NOT_EXECUTED",
+    "observed_at_utc": "2026-10-21T18:25:20.798545+00:00"
+  },
+  "b5r6": {
+    "evidence": "b5r6-execution.json",
+    "change_set_name": "fcaj-b5r5-api-20261021-182458-e16c8529",
+    "deployment": "UPDATE_COMPLETE_VERIFIED",
+    "browser_rerun": "NOT_RUN",
+    "cleanup": "NOT_EXECUTED",
+    "observed_at_utc": "2026-10-21T18:29:15.974253+00:00"
+  },
+  "b5r7": {
+    "evidence": "approval-b5r7-result.json",
+    "browser": "PASS",
+    "pass": 10,
+    "fail": 0,
+    "blocked": 0,
+    "not_run": 0,
+    "cleanup": "NOT_EXECUTED",
+    "observed_at_utc": "2026-10-21T18:35:29.753295+00:00"
+  },
+  "c0": {
+    "evidence": "approval-c0-summary.json",
+    "inventory": "approval-c0-inventory.json",
+    "stack_resources": 45,
+    "retained_resources": 4,
+    "sns_subscriptions": 0,
+    "budget_email_delivery": "NOT_VERIFIED",
+    "aws_writes": 0,
+    "cleanup": "NOT_EXECUTED",
+    "e2e_rerun": "NOT_RUN",
+    "observed_at_utc": "2026-10-21T18:42:37.763586+00:00"
+  },
+  "d1": {
+    "scope": "LOCAL_ONLY_NO_FRESH_AWS_CHECK",
+    "evidence": "d1-git-readiness.json",
+    "local_commit_proposal": "READY_FOR_SEPARATE_APPROVAL",
+    "public_push": "NO_GO_PENDING_HISTORY_CREDENTIAL_GATE",
+    "cleanup": "NOT_EXECUTED",
+    "environment_end_date": "PENDING_OWNER_DECISION"
+  },
+  "d2": {
+    "evidence": "d2-credential-exposure.json",
+    "exposure": "CONFIRMED_PUBLIC",
+    "target": "ONE_LEGACY_POOL_IDENTITY_NOT_TESTA_TESTB",
+    "credential_validity": "UNKNOWN",
+    "rotation_revocation": "UNKNOWN",
+    "unauthorized_access": "UNKNOWN",
+    "public_push": "NO_GO",
+    "pages_publish": "NO_GO_NOT_AUTHORIZED",
+    "d3": "PREPARED_NOT_APPROVED"
+  },
+  "d3a": {
+    "preflight": "TECHNICAL_PASS_OWNER_OPERATIONAL_CONFIRMATION_PENDING",
+    "evidence": "d3a-preflight.json",
+    "status": "BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION",
+    "admin_disable_user": "NOT_EXECUTED",
+    "admin_user_global_signout": "NOT_EXECUTED",
+    "aws_writes": 0
+  }
+}

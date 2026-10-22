@@ -1,0 +1,32 @@
+{
+  "status": "READ_ONLY_INVENTORY_VERIFIED",
+  "decision": "GO_TIMEBOXED_TEST_DEMO_WITH_MANUAL_MONITORING_NO_GO_PRODUCTION",
+  "observed_at_utc": "2026-10-21T18:42:37.763586+00:00",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "stack_resources": 45,
+  "retained_count": 4,
+  "stack_managed_delete_default_count": 41,
+  "metadata_by_origin": {
+    "B5-R7": 2,
+    "B4": 4,
+    "B5": 1
+  },
+  "policies": 3,
+  "unknown_inventory_counts": {
+    "document_records": 0,
+    "policies": 0,
+    "users": 0,
+    "document_versions": 0,
+    "frontend_versions": 0
+  },
+  "external_artifact_versions": 4,
+  "sns_subscriptions": 0,
+  "email_delivery": "NOT_VERIFIED",
+  "cleanup": "NOT_EXECUTED",
+  "aws_writes": 0,
+  "e2e_rerun": "NOT_RUN",
+  "commit_push": "NOT_EXECUTED",
+  "source_evidence_sha256": "e5c861ae301dfa9087b557ba8f039e09a41f6a770aa1af5425de2b293ed36697"
+}

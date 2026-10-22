@@ -1,0 +1,10 @@
+{
+  "verification_status": "VERIFIED",
+  "scope": "STS identity verified by successful signed SDK GetCallerIdentity, not TCP/TLS",
+  "account_masked": "********0098",
+  "configured_region": "ap-southeast-1",
+  "candidate_arn_region_verified": "ap-southeast-1",
+  "verification_window_start_utc": "2026-10-21T08:07:43.948327+00:00",
+  "verification_window_end_utc": "2026-10-21T08:08:59.475170+00:00",
+  "source": "aws-review-artifact-fingerprint.json"
+}

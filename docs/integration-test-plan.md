@@ -1,3 +1,5 @@
+> Historical review/planning snapshot. For current source and verification use README.md, api-contract.md, final-verification.md and deployment-review.md (updated 2026-10-21). Earlier test/deployment counts below are not current acceptance evidence.
+
 # Policy Assistant — Integration Test Plan
 
 **Project:** `C:\Users\accli\Documents\Project\policy-assistant`
@@ -115,7 +117,7 @@ Each case includes: purpose, prerequisites, request, expected result, data-impac
 ## Data Safety & Avoidance of Production Impact
 
 - All integration tests are **read-only** (GET only).
-- No `POST`/`PUT`/`DELETE` endpoints exist; no data modification possible via API.
+- Policy routes are read-only; protected document POST routes create sessions/submit work. No document PUT/DELETE API is implemented. Ownership checks apply to all document routes.
 - To avoid affecting live data: use `limit=1` for pagination tests; do not run repeated scans at high frequency.
 - If testing against production DynamoDB: use a separate test table or restore from `sample_data/policies.json` after any accidental write (not expected for read-only tests).
 - Cognito JWT tokens should be obtained from a test user pool or temporary user; do not use production user credentials.

@@ -1,0 +1,1430 @@
+{
+  "approval": "B1_ONLY_USER_EXPLICIT",
+  "started_at_utc": "2026-10-21T09:37:13.235307+00:00",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "candidate": "fcaj-review-20261021-072124-24ba855e",
+  "status": "CREATED_VERIFIED",
+  "execute_attempts": 1,
+  "events": [
+    {
+      "Timestamp": "2026-10-21 06:34:32.481000+00:00",
+      "LogicalResourceId": "policy-assistant-fcaj-test",
+      "ResourceType": "AWS::CloudFormation::Stack",
+      "ResourceStatus": "REVIEW_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:14.982000+00:00",
+      "LogicalResourceId": "policy-assistant-fcaj-test",
+      "ResourceType": "AWS::CloudFormation::Stack",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.771000+00:00",
+      "LogicalResourceId": "DocumentMetadata",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.779000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentDLQ",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.792000+00:00",
+      "LogicalResourceId": "AlertTopic",
+      "ResourceType": "AWS::SNS::Topic",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.792000+00:00",
+      "LogicalResourceId": "FrontendBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.795000+00:00",
+      "LogicalResourceId": "FrontendHeaders",
+      "ResourceType": "AWS::CloudFront::ResponseHeadersPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.799000+00:00",
+      "LogicalResourceId": "FrontendAccessControl",
+      "ResourceType": "AWS::CloudFront::OriginAccessControl",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.809000+00:00",
+      "LogicalResourceId": "PoliciesTable",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:17.809000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPool",
+      "ResourceType": "AWS::Cognito::UserPool",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.466000+00:00",
+      "LogicalResourceId": "AlertTopic",
+      "ResourceType": "AWS::SNS::Topic",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.486000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentDLQ",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.713000+00:00",
+      "LogicalResourceId": "FrontendBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.733000+00:00",
+      "LogicalResourceId": "PoliciesTable",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.771000+00:00",
+      "LogicalResourceId": "DocumentMetadata",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.855000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentDLQ",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.869000+00:00",
+      "LogicalResourceId": "FrontendHeaders",
+      "ResourceType": "AWS::CloudFront::ResponseHeadersPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:18.915000+00:00",
+      "LogicalResourceId": "AlertTopic",
+      "ResourceType": "AWS::SNS::Topic",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.194000+00:00",
+      "LogicalResourceId": "FrontendAccessControl",
+      "ResourceType": "AWS::CloudFront::OriginAccessControl",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.276000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentQueue",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.426000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPool",
+      "ResourceType": "AWS::Cognito::UserPool",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.497000+00:00",
+      "LogicalResourceId": "DocumentDLQAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.669000+00:00",
+      "LogicalResourceId": "FrontendHeaders",
+      "ResourceType": "AWS::CloudFront::ResponseHeadersPolicy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.868000+00:00",
+      "LogicalResourceId": "FrontendAccessControl",
+      "ResourceType": "AWS::CloudFront::OriginAccessControl",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:19.978000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentQueue",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:20.214000+00:00",
+      "LogicalResourceId": "DocumentDLQAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:20.331000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPool",
+      "ResourceType": "AWS::Cognito::UserPool",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:20.358000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentQueue",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:20.763000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPoolClient",
+      "ResourceType": "AWS::Cognito::UserPoolClient",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:20.844000+00:00",
+      "LogicalResourceId": "DocumentQueueAgeAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:21.570000+00:00",
+      "LogicalResourceId": "DocumentQueueAgeAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:21.681000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPoolClient",
+      "ResourceType": "AWS::Cognito::UserPoolClient",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:22.158000+00:00",
+      "LogicalResourceId": "DocumentDLQAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:22.211000+00:00",
+      "LogicalResourceId": "PolicyAssistantUserPoolClient",
+      "ResourceType": "AWS::Cognito::UserPoolClient",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:23.504000+00:00",
+      "LogicalResourceId": "DocumentQueueAgeAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:31.305000+00:00",
+      "LogicalResourceId": "PoliciesTable",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:33.129000+00:00",
+      "LogicalResourceId": "FrontendBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:34.974000+00:00",
+      "LogicalResourceId": "FrontendDistribution",
+      "ResourceType": "AWS::CloudFront::Distribution",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:36.938000+00:00",
+      "LogicalResourceId": "FrontendDistribution",
+      "ResourceType": "AWS::CloudFront::Distribution",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:38.548000+00:00",
+      "LogicalResourceId": "FrontendDistribution",
+      "ResourceType": "AWS::CloudFront::Distribution",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:37:41.656000+00:00",
+      "LogicalResourceId": "DocumentMetadata",
+      "ResourceType": "AWS::DynamoDB::Table",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:38:20.156000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentDLQ",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:38:21.667000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentQueue",
+      "ResourceType": "AWS::SQS::Queue",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:38:22.686000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:38:23.887000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:38:41.469000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:12.053000+00:00",
+      "LogicalResourceId": "FrontendDistribution",
+      "ResourceType": "AWS::CloudFront::Distribution",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:13.088000+00:00",
+      "LogicalResourceId": "FrontendBucketPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:13.203000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentsBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:14.145000+00:00",
+      "LogicalResourceId": "FrontendBucketPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:14.365000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentsBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:14.596000+00:00",
+      "LogicalResourceId": "FrontendBucketPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:29.513000+00:00",
+      "LogicalResourceId": "PolicyAssistantDocumentsBucket",
+      "ResourceType": "AWS::S3::Bucket",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:29.922000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:30.339000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:30.524000+00:00",
+      "LogicalResourceId": "DocumentsBucketTlsPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:31.122000+00:00",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:31.163000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:31.553000+00:00",
+      "LogicalResourceId": "DocumentsBucketTlsPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:31.583000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:32.021000+00:00",
+      "LogicalResourceId": "DocumentsBucketTlsPolicy",
+      "ResourceType": "AWS::S3::BucketPolicy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:33.188000+00:00",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:33.867000+00:00",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.172000+00:00",
+      "LogicalResourceId": "RecoveryErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.182000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogs",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.205000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPending",
+      "ResourceType": "AWS::Events::Rule",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.888000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogs",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.899000+00:00",
+      "LogicalResourceId": "RecoveryErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:34.942000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPending",
+      "ResourceType": "AWS::Events::Rule",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:36.945000+00:00",
+      "LogicalResourceId": "RecoveryErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:39.249000+00:00",
+      "LogicalResourceId": "DocumentRecovery",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:43.459000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogs",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:43.735000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogs",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:43.912000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:45.223000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:48.321000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:48.643000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionRole",
+      "ResourceType": "AWS::IAM::Role",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:49.900000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:50.238000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:52.046000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:52.378000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:52.720000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.035000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerDocumentQueueEvent",
+      "ResourceType": "AWS::Lambda::EventSourceMapping",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.037000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.088000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.394000+00:00",
+      "LogicalResourceId": "PolicyAssistantLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.404000+00:00",
+      "LogicalResourceId": "PolicyAssistantErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.422000+00:00",
+      "LogicalResourceId": "PolicyAssistantDurationAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.433000+00:00",
+      "LogicalResourceId": "PolicyAssistantDashboard",
+      "ResourceType": "AWS::CloudWatch::Dashboard",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.443000+00:00",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:53.683000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:54.023000+00:00",
+      "LogicalResourceId": "PolicyAssistantLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:54.192000+00:00",
+      "LogicalResourceId": "PolicyAssistantErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:54.220000+00:00",
+      "LogicalResourceId": "PolicyAssistantDurationAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:54.242000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerDocumentQueueEvent",
+      "ResourceType": "AWS::Lambda::EventSourceMapping",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:54.348000+00:00",
+      "LogicalResourceId": "PolicyAssistantDashboard",
+      "ResourceType": "AWS::CloudWatch::Dashboard",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:56.147000+00:00",
+      "LogicalResourceId": "PolicyAssistantDurationAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:56.164000+00:00",
+      "LogicalResourceId": "PolicyAssistantErrorAlarm",
+      "ResourceType": "AWS::CloudWatch::Alarm",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:56.945000+00:00",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.466000+00:00",
+      "LogicalResourceId": "PolicyAssistantApi",
+      "ResourceType": "AWS::ApiGatewayV2::Api",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.887000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.895000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.897000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.899000+00:00",
+      "LogicalResourceId": "PolicyAssistantApiProdStage",
+      "ResourceType": "AWS::ApiGatewayV2::Stage",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.906000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.907000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionListDocumentsPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.910000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentStatusPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.917000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionUploadSessionPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:57.935000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionHealthCheckPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.074000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorker",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.425000+00:00",
+      "LogicalResourceId": "PolicyAssistantDashboard",
+      "ResourceType": "AWS::CloudWatch::Dashboard",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.426000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunction",
+      "ResourceType": "AWS::Lambda::Function",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.596000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.674000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.744000+00:00",
+      "LogicalResourceId": "PolicyAssistantApiProdStage",
+      "ResourceType": "AWS::ApiGatewayV2::Stage",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.744000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionListDocumentsPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.821000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.901000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionUploadSessionPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:58.943000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.025000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentStatusPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.103000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.179000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionListDocumentsPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.231000+00:00",
+      "LogicalResourceId": "PolicyAssistantApiProdStage",
+      "ResourceType": "AWS::ApiGatewayV2::Stage",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.274000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.356000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionUploadSessionPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.420000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:41:59.563000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionDocumentStatusPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:00.688000+00:00",
+      "LogicalResourceId": "DocumentRecoveryLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:02.249000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:02.550000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:02.573000+00:00",
+      "LogicalResourceId": "PolicyAssistantLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:02.824000+00:00",
+      "LogicalResourceId": "PolicyAssistantLogGroup",
+      "ResourceType": "AWS::Logs::LogGroup",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:02.841000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:03.115000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:03.172000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionHealthCheckPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:03.576000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionHealthCheckPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:04.867000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:05.247000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:05.490000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerDocumentQueueEvent",
+      "ResourceType": "AWS::Lambda::EventSourceMapping",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:20.304000+00:00",
+      "LogicalResourceId": "PolicyAssistantWorkerLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:20.668000+00:00",
+      "LogicalResourceId": "PolicyAssistantFunctionLogWritePolicy",
+      "ResourceType": "AWS::IAM::Policy",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:35.740000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPending",
+      "ResourceType": "AWS::Events::Rule",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:36.372000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPendingPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:37.074000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPendingPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_IN_PROGRESS"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:37.529000+00:00",
+      "LogicalResourceId": "DocumentRecoveryRecoverPendingPermission",
+      "ResourceType": "AWS::Lambda::Permission",
+      "ResourceStatus": "CREATE_COMPLETE"
+    },
+    {
+      "Timestamp": "2026-10-21 09:42:40.643000+00:00",
+      "LogicalResourceId": "policy-assistant-fcaj-test",
+      "ResourceType": "AWS::CloudFormation::Stack",
+      "ResourceStatus": "CREATE_COMPLETE"
+    }
+  ],
+  "frontend_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "cognito_users_created": 0,
+  "sqs_messages_sent": 0,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "preconditions": "VERIFIED",
+  "preflight_evidence": "approval-b-final-preflight-readonly.json",
+  "artifact_evidence": "aws-review-artifact-fingerprint.json",
+  "actions": {
+    "Add": 45,
+    "Modify": 0,
+    "Remove": 0,
+    "Replace": 0
+  },
+  "expected_resources": [
+    {
+      "id": "AlertTopic",
+      "type": "AWS::SNS::Topic"
+    },
+    {
+      "id": "DocumentDLQAlarm",
+      "type": "AWS::CloudWatch::Alarm"
+    },
+    {
+      "id": "DocumentMetadata",
+      "type": "AWS::DynamoDB::Table"
+    },
+    {
+      "id": "DocumentQueueAgeAlarm",
+      "type": "AWS::CloudWatch::Alarm"
+    },
+    {
+      "id": "DocumentRecoveryLogWritePolicy",
+      "type": "AWS::IAM::Policy"
+    },
+    {
+      "id": "DocumentRecoveryLogs",
+      "type": "AWS::Logs::LogGroup"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPendingPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPending",
+      "type": "AWS::Events::Rule"
+    },
+    {
+      "id": "DocumentRecoveryRole",
+      "type": "AWS::IAM::Role"
+    },
+    {
+      "id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function"
+    },
+    {
+      "id": "DocumentsBucketTlsPolicy",
+      "type": "AWS::S3::BucketPolicy"
+    },
+    {
+      "id": "FrontendAccessControl",
+      "type": "AWS::CloudFront::OriginAccessControl"
+    },
+    {
+      "id": "FrontendBucketPolicy",
+      "type": "AWS::S3::BucketPolicy"
+    },
+    {
+      "id": "FrontendBucket",
+      "type": "AWS::S3::Bucket"
+    },
+    {
+      "id": "FrontendDistribution",
+      "type": "AWS::CloudFront::Distribution"
+    },
+    {
+      "id": "FrontendHeaders",
+      "type": "AWS::CloudFront::ResponseHeadersPolicy"
+    },
+    {
+      "id": "PoliciesTable",
+      "type": "AWS::DynamoDB::Table"
+    },
+    {
+      "id": "PolicyAssistantApiProdStage",
+      "type": "AWS::ApiGatewayV2::Stage"
+    },
+    {
+      "id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api"
+    },
+    {
+      "id": "PolicyAssistantDashboard",
+      "type": "AWS::CloudWatch::Dashboard"
+    },
+    {
+      "id": "PolicyAssistantDocumentDLQ",
+      "type": "AWS::SQS::Queue"
+    },
+    {
+      "id": "PolicyAssistantDocumentQueue",
+      "type": "AWS::SQS::Queue"
+    },
+    {
+      "id": "PolicyAssistantDocumentsBucket",
+      "type": "AWS::S3::Bucket"
+    },
+    {
+      "id": "PolicyAssistantDurationAlarm",
+      "type": "AWS::CloudWatch::Alarm"
+    },
+    {
+      "id": "PolicyAssistantErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentStatusPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionHealthCheckPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionListDocumentsPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionLogWritePolicy",
+      "type": "AWS::IAM::Policy"
+    },
+    {
+      "id": "PolicyAssistantFunctionRole",
+      "type": "AWS::IAM::Role"
+    },
+    {
+      "id": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunctionUploadSessionPermission",
+      "type": "AWS::Lambda::Permission"
+    },
+    {
+      "id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function"
+    },
+    {
+      "id": "PolicyAssistantLogGroup",
+      "type": "AWS::Logs::LogGroup"
+    },
+    {
+      "id": "PolicyAssistantUserPoolClient",
+      "type": "AWS::Cognito::UserPoolClient"
+    },
+    {
+      "id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool"
+    },
+    {
+      "id": "PolicyAssistantWorkerDocumentQueueEvent",
+      "type": "AWS::Lambda::EventSourceMapping"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogGroup",
+      "type": "AWS::Logs::LogGroup"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogWritePolicy",
+      "type": "AWS::IAM::Policy"
+    },
+    {
+      "id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role"
+    },
+    {
+      "id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function"
+    },
+    {
+      "id": "RecoveryErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm"
+    }
+  ],
+  "execute_requested_at_utc": "2026-10-21T09:37:14.915928+00:00",
+  "execute_api_result": "ACCEPTED",
+  "stack_status": "CREATE_COMPLETE",
+  "last_observed_at_utc": "2026-10-21T09:42:51.309288+00:00",
+  "terminal_at_utc": "2026-10-21T09:42:51.750240+00:00",
+  "resources": [
+    {
+      "id": "AlertTopic",
+      "type": "AWS::SNS::Topic",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentDLQAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentMetadata",
+      "type": "AWS::DynamoDB::Table",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentQueueAgeAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecoveryLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecoveryLogs",
+      "type": "AWS::Logs::LogGroup",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPending",
+      "type": "AWS::Events::Rule",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecoveryRecoverPendingPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentRecoveryRole",
+      "type": "AWS::IAM::Role",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "DocumentsBucketTlsPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "FrontendAccessControl",
+      "type": "AWS::CloudFront::OriginAccessControl",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "FrontendBucket",
+      "type": "AWS::S3::Bucket",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "FrontendBucketPolicy",
+      "type": "AWS::S3::BucketPolicy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "FrontendDistribution",
+      "type": "AWS::CloudFront::Distribution",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "FrontendHeaders",
+      "type": "AWS::CloudFront::ResponseHeadersPolicy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PoliciesTable",
+      "type": "AWS::DynamoDB::Table",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantApiProdStage",
+      "type": "AWS::ApiGatewayV2::Stage",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantDashboard",
+      "type": "AWS::CloudWatch::Dashboard",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantDocumentDLQ",
+      "type": "AWS::SQS::Queue",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantDocumentQueue",
+      "type": "AWS::SQS::Queue",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantDocumentsBucket",
+      "type": "AWS::S3::Bucket",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantDurationAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentDownloadPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionDocumentStatusPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionGetPolicyByIdPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionHealthCheckPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionListDocumentsPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionRole",
+      "type": "AWS::IAM::Role",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionSearchPoliciesPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionSubmitDocumentPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantFunctionUploadSessionPermission",
+      "type": "AWS::Lambda::Permission",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantUserPoolClient",
+      "type": "AWS::Cognito::UserPoolClient",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantWorkerDocumentQueueEvent",
+      "type": "AWS::Lambda::EventSourceMapping",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogGroup",
+      "type": "AWS::Logs::LogGroup",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantWorkerLogWritePolicy",
+      "type": "AWS::IAM::Policy",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role",
+      "status": "CREATE_COMPLETE"
+    },
+    {
+      "id": "RecoveryErrorAlarm",
+      "type": "AWS::CloudWatch::Alarm",
+      "status": "CREATE_COMPLETE"
+    }
+  ],
+  "resource_failures": [],
+  "outputs": [
+    {
+      "key": "PolicyAssistantFunctionIamRole",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "CognitoUserPoolId",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "CognitoClientId",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "DocumentsBucketName",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendBucketName",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendDistributionId",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "PolicyAssistantFunctionArn",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "FrontendUrl",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "AlarmTopicArn",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "PolicyAssistantApiUrl",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    },
+    {
+      "key": "PoliciesTableName",
+      "value": "REDACTED_VALUE_AVAILABLE_IN_AUTHORIZED_CONSOLE"
+    }
+  ],
+  "existing_stack_after": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "unchanged_metadata": true
+  },
+  "budget_after": {
+    "amount": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "type": "COST",
+    "time_unit": "MONTHLY",
+    "metrics": [
+      "UnblendedCost"
+    ],
+    "filter": {
+      "Not": {
+        "Dimensions": {
+          "Key": "RECORD_TYPE",
+          "Values": [
+            "Refund",
+            "Credit"
+          ]
+        }
+      }
+    },
+    "notifications": [
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "ACTUAL",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 80.0,
+        "NotificationState": "OK"
+      },
+      {
+        "NotificationType": "FORECASTED",
+        "ComparisonOperator": "GREATER_THAN",
+        "Threshold": 100.0,
+        "NotificationState": "OK"
+      }
+    ],
+    "actions": 0,
+    "calculated_spend": {
+      "ActualSpend": {
+        "Amount": "5.422",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "note": "Billing lags; not a measurement of newly deployed stack cost"
+  },
+  "completed_at_utc": "2026-10-21T09:42:54.219924+00:00"
+}

@@ -1,0 +1,1273 @@
+{
+  "started_at_utc": "2026-10-21T16:47:11.696488+00:00",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "approval": "B4_CONTROLLED_SYNTHETIC_ONLY",
+  "status": "PASS_WITH_NOT_RUN_BROWSER",
+  "cases": {
+    "preflight": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:11.940398+00:00",
+      "completed_at_utc": "2026-10-21T16:47:17.953668+00:00",
+      "identity": "STS_VERIFIED",
+      "stack": "CREATE_COMPLETE",
+      "dpapi": "DECRYPTED_IN_MEMORY_ONLY",
+      "limits": {
+        "api_calls_max": 160,
+        "document_sessions_max": 5,
+        "s3_requests_max": 12,
+        "upload_bytes_max": 25165824,
+        "poison_messages_max": 1,
+        "dlq_wait_seconds_max": 900,
+        "sequential_only": true,
+        "no_retries_on_writes": true,
+        "allowed_pool_users": "Existing encrypted B3 TestA and TestB only",
+        "no_resource_or_data_cleanup": true
+      },
+      "upload_contract": "CONSTRAINED_POST_NOT_PUT"
+    },
+    "authentication_valid": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:17.954668+00:00",
+      "completed_at_utc": "2026-10-21T16:47:18.571704+00:00",
+      "users": 2,
+      "distinct_subjects": true,
+      "email_verified_false_did_not_block": true,
+      "tokens": "IN_MEMORY_ONLY_NOT_EXPORTED"
+    },
+    "authentication_wrong_password": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:18.572978+00:00",
+      "completed_at_utc": "2026-10-21T16:47:18.833886+00:00",
+      "rejected": true,
+      "aws_error_code": "NotAuthorizedException",
+      "attempts": 1
+    },
+    "jwt_missing_invalid": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:18.833886+00:00",
+      "completed_at_utc": "2026-10-21T16:47:19.807282+00:00",
+      "http_codes": [
+        401,
+        401
+      ]
+    },
+    "health": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:19.808489+00:00",
+      "completed_at_utc": "2026-10-21T16:47:21.368821+00:00",
+      "http": 200,
+      "healthy": true
+    },
+    "policy_search": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:21.369818+00:00",
+      "completed_at_utc": "2026-10-21T16:47:24.255205+00:00",
+      "seed_created": 3,
+      "lookup_http": 200,
+      "search_count": 1,
+      "missing_policy_http": 404
+    },
+    "policy_pagination_validation": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:24.256448+00:00",
+      "completed_at_utc": "2026-10-21T16:47:26.688718+00:00",
+      "pages": 3,
+      "unique_policy_ids": 2,
+      "invalid_query_codes": [
+        400,
+        400
+      ]
+    },
+    "cors": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:26.689760+00:00",
+      "completed_at_utc": "2026-10-21T16:47:27.133457+00:00",
+      "http": 204,
+      "origin": "EXACT_TEST_CLOUDFRONT"
+    },
+    "pdf_A": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:27.133457+00:00",
+      "completed_at_utc": "2026-10-21T16:47:35.370538+00:00",
+      "upload": {
+        "http_status": 201,
+        "s3_error_code": null,
+        "bytes_attempted": 594
+      },
+      "submit_status": "pending",
+      "final_status": "processed",
+      "sha256": "cddd003cb1498313425bced900b3b954194173455476680174d3f3ac489f5b38",
+      "processed_at": "2026-10-21T16:47:31.652858+00:00"
+    },
+    "pdf_B": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:35.371583+00:00",
+      "completed_at_utc": "2026-10-21T16:47:39.064309+00:00",
+      "upload": {
+        "http_status": 201,
+        "s3_error_code": null,
+        "bytes_attempted": 594
+      },
+      "submit_status": "pending",
+      "final_status": "processed",
+      "sha256": "79f8f210c2b2abf72804a59830203153f2efcf382091acd609d6f2b4402206d1",
+      "processed_at": "2026-10-21T16:47:37.309177+00:00"
+    },
+    "authorization_both_directions": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:39.065781+00:00",
+      "completed_at_utc": "2026-10-21T16:47:43.063817+00:00",
+      "cross_user_denials": [
+        404,
+        404,
+        404,
+        404,
+        404,
+        404
+      ],
+      "foreign_documents_not_listed": true,
+      "both_directions": true
+    },
+    "upload_size_boundary": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:44.999632+00:00",
+      "completed_at_utc": "2026-10-21T16:47:52.433808+00:00",
+      "max_plus_one_bytes": 10485761,
+      "rejected": {
+        "http_status": 400,
+        "s3_error_code": "EntityTooLarge",
+        "bytes_attempted": 10485761
+      },
+      "exact_max_bytes": 10485760,
+      "accepted": {
+        "http_status": 201,
+        "s3_error_code": null,
+        "bytes_attempted": 10485760
+      },
+      "exact_max_processed": true
+    },
+    "upload_mime_key_tamper": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:52.433808+00:00",
+      "completed_at_utc": "2026-10-21T16:47:53.268507+00:00",
+      "mime": {
+        "http_status": 403,
+        "s3_error_code": "AccessDenied",
+        "bytes_attempted": 599
+      },
+      "key": {
+        "http_status": 403,
+        "s3_error_code": "AccessDenied",
+        "bytes_attempted": 599
+      }
+    },
+    "invalid_pdf_bytes": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:53.270763+00:00",
+      "completed_at_utc": "2026-10-21T16:47:57.363044+00:00",
+      "upload": {
+        "http_status": 201,
+        "s3_error_code": null,
+        "bytes_attempted": 40
+      },
+      "final_status": "failed",
+      "error_code": "INVALID_PDF",
+      "download_and_resubmit_http": [
+        409,
+        409
+      ]
+    },
+    "frozen_version_idempotency": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:43.065325+00:00",
+      "completed_at_utc": "2026-10-21T16:47:44.997536+00:00",
+      "new_current_version_upload": {
+        "http_status": 201,
+        "s3_error_code": null,
+        "bytes_attempted": 606
+      },
+      "download_frozen_original_sha256": "cddd003cb1498313425bced900b3b954194173455476680174d3f3ac489f5b38",
+      "resubmit_status": "processed"
+    },
+    "partial_batch_direct": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:57.364062+00:00",
+      "completed_at_utc": "2026-10-21T16:47:57.914121+00:00",
+      "failed_ids": [
+        "b4-controlled-bad"
+      ],
+      "healthy_id_acknowledged": true,
+      "method": "DIRECT_LAMBDA_WITH_REAL_DYNAMODB_EXISTING_PROCESSED_RECORD",
+      "limitation": "Healthy record exercises idempotent acknowledgement; fresh processing proved separately by actual SQS. Mapping stays BatchSize=1, not natural mixed SQS delivery."
+    },
+    "retry_dlq": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:47:57.916222+00:00",
+      "observations": [
+        {
+          "at_utc": "2026-10-21T16:47:58.079672+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:48:28.145800+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:48:58.226558+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:49:28.307086+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:49:58.392743+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:50:28.475971+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:50:58.559776+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:51:29.136558+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:51:59.202320+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:52:29.269771+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:52:59.336807+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:53:29.405193+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:53:59.506554+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:54:29.577650+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:54:59.643277+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:55:30.223669+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:56:00.329695+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:56:30.430184+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:57:00.526195+00:00",
+          "main_visible": 0,
+          "main_inflight": 1,
+          "dlq_visible": 0
+        },
+        {
+          "at_utc": "2026-10-21T16:57:30.626989+00:00",
+          "main_visible": 0,
+          "main_inflight": 0,
+          "dlq_visible": 1
+        }
+      ],
+      "completed_at_utc": "2026-10-21T16:57:30.689943+00:00",
+      "poison_sent": 1,
+      "body_marker_matched": true,
+      "message_id_matches": true,
+      "observed_approximate_receive_count": 4,
+      "visibility_timeout_on_probe_read": 0,
+      "deleted": false,
+      "expected_worker_error_type": "KeyError"
+    },
+    "observability_logs": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:57:30.692485+00:00",
+      "completed_at_utc": "2026-10-21T16:57:32.401092+00:00",
+      "groups": [
+        {
+          "logical_group": "DocumentRecoveryLogs",
+          "events_scanned": 10,
+          "possible_sensitive_events": 0,
+          "error_type_counts": {},
+          "scan_truncated": false
+        },
+        {
+          "logical_group": "PolicyAssistantLogGroup",
+          "events_scanned": 123,
+          "possible_sensitive_events": 0,
+          "error_type_counts": {},
+          "scan_truncated": false
+        },
+        {
+          "logical_group": "PolicyAssistantWorkerLogGroup",
+          "events_scanned": 25,
+          "possible_sensitive_events": 0,
+          "error_type_counts": {
+            "JSONDecodeError": 1,
+            "KeyError": 3
+          },
+          "scan_truncated": false
+        }
+      ],
+      "possible_sensitive_events": 0
+    },
+    "observability_metrics_alarms": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T16:57:32.402661+00:00",
+      "completed_at_utc": "2026-10-21T16:57:34.895576+00:00",
+      "metric_series": 17,
+      "alarms": [
+        {
+          "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+          "state": "OK",
+          "actions_enabled": true
+        },
+        {
+          "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+          "state": "ALARM",
+          "actions_enabled": true
+        },
+        {
+          "name": "policy-assistant-fcaj-test-Duration",
+          "state": "OK",
+          "actions_enabled": true
+        },
+        {
+          "name": "policy-assistant-fcaj-test-Errors",
+          "state": "OK",
+          "actions_enabled": true
+        },
+        {
+          "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+          "state": "OK",
+          "actions_enabled": true
+        }
+      ]
+    },
+    "frontend_browser": {
+      "status": "NOT_RUN",
+      "reason": "No actual browser authenticated flow performed by this API/SDK runner; local browser suites are separate evidence"
+    }
+  },
+  "guardrails": {
+    "api_calls_max": 160,
+    "document_sessions_max": 5,
+    "s3_requests_max": 12,
+    "upload_bytes_max": 25165824,
+    "poison_messages_max": 1,
+    "dlq_wait_seconds_max": 900,
+    "sequential_only": true,
+    "no_retries_on_writes": true,
+    "allowed_pool_users": "Existing encrypted B3 TestA and TestB only",
+    "no_resource_or_data_cleanup": true
+  },
+  "counts": {
+    "api": 40,
+    "auth_attempts": 3,
+    "sessions": 4,
+    "s3_requests": 11,
+    "upload_bytes_attempted": 20974553,
+    "policy_items_created": 3,
+    "direct_worker_invocations": 1,
+    "poison_send_attempts": 1,
+    "dlq_receive_calls": 1
+  },
+  "documents": [
+    {
+      "label": "A",
+      "identity": "TestA",
+      "doc_id": "doc-15dd319de1224b4f9df1375fce17bb09",
+      "s3_key": "uploads/doc-15dd319de1224b4f9df1375fce17bb09/document"
+    },
+    {
+      "label": "B",
+      "identity": "TestB",
+      "doc_id": "doc-695099d7ed66418cb55fc0ed6a4abce7",
+      "s3_key": "uploads/doc-695099d7ed66418cb55fc0ed6a4abce7/document"
+    },
+    {
+      "label": "size-boundary",
+      "identity": "TestA",
+      "doc_id": "doc-153ed4349ac1424ca0e822749885b625",
+      "s3_key": "uploads/doc-153ed4349ac1424ca0e822749885b625/document"
+    },
+    {
+      "label": "invalid-pdf",
+      "identity": "TestB",
+      "doc_id": "doc-e2eb1a7c9c654ccfa8ad264839b01373",
+      "s3_key": "uploads/doc-e2eb1a7c9c654ccfa8ad264839b01373/document"
+    }
+  ],
+  "api_operations": [
+    {
+      "method": "GET",
+      "path": "/documents",
+      "identity": null,
+      "status_code": 401,
+      "at_utc": "2026-10-21T16:47:19.312161+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents",
+      "identity": null,
+      "status_code": 401,
+      "at_utc": "2026-10-21T16:47:19.805172+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "identity": null,
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:21.367819+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies/POL-001",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:23.125942+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:23.685514+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies/POL-999",
+      "identity": "TestA",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:24.252912+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:24.764770+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:25.205437+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:25.778565+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 400,
+      "at_utc": "2026-10-21T16:47:26.253908+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/policies",
+      "identity": "TestA",
+      "status_code": 400,
+      "at_utc": "2026-10-21T16:47:26.685479+00:00"
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/documents",
+      "identity": null,
+      "status_code": 204,
+      "at_utc": "2026-10-21T16:47:27.132454+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/upload-session",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:28.414263+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:30.280330+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:30.753066+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:34.267683+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:34.894958+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/upload-session",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:35.925423+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:37.545364+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:38.044485+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:38.586740+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestA",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:39.570538+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestA",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:40.025467+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestA",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:40.524427+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:41.045426+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestB",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:41.540414+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestB",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:42.094105+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestB",
+      "status_code": 404,
+      "at_utc": "2026-10-21T16:47:42.588013+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:43.062811+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:44.126490+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:44.994342+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/upload-session",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:45.592520+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:48.492081+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:48.964149+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestA",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:52.428038+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/upload-session",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:53.832950+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:55.993475+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/status",
+      "identity": "TestB",
+      "status_code": 200,
+      "at_utc": "2026-10-21T16:47:56.452791+00:00"
+    },
+    {
+      "method": "GET",
+      "path": "/documents/[synthetic-doc]/download",
+      "identity": "TestB",
+      "status_code": 409,
+      "at_utc": "2026-10-21T16:47:56.864228+00:00"
+    },
+    {
+      "method": "POST",
+      "path": "/documents/submit",
+      "identity": "TestB",
+      "status_code": 409,
+      "at_utc": "2026-10-21T16:47:57.359953+00:00"
+    }
+  ],
+  "forbidden_resource_mutations": 0,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "old_stack_before": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "alarms_before": [
+    {
+      "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Duration",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Errors",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "state": "OK",
+      "actions_enabled": true
+    }
+  ],
+  "budget_before": {
+    "status": "VERIFIED",
+    "amount_usd": "20",
+    "notifications": 3,
+    "actions": 0,
+    "calculated_spend": {
+      "ActualSpend": {
+        "Amount": "5.479",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "email_delivery": "NOT_VERIFIED"
+  },
+  "poison_requested_at_utc": "2026-10-21T16:47:57.986406+00:00",
+  "poison_message_id_sha256": "68f967134dd47973a93045925806d4ce8b7e146643ea0bf65d6d7944bcd9a245",
+  "log_scan": {
+    "start_utc": "2026-10-21T16:47:11.940398+00:00",
+    "end_epoch_ms": 1792601850694,
+    "groups": [
+      {
+        "logical_group": "DocumentRecoveryLogs",
+        "events_scanned": 10,
+        "possible_sensitive_events": 0,
+        "error_type_counts": {},
+        "scan_truncated": false
+      },
+      {
+        "logical_group": "PolicyAssistantLogGroup",
+        "events_scanned": 123,
+        "possible_sensitive_events": 0,
+        "error_type_counts": {},
+        "scan_truncated": false
+      },
+      {
+        "logical_group": "PolicyAssistantWorkerLogGroup",
+        "events_scanned": 25,
+        "possible_sensitive_events": 0,
+        "error_type_counts": {
+          "JSONDecodeError": 1,
+          "KeyError": 3
+        },
+        "scan_truncated": false
+      }
+    ],
+    "raw_messages_exported": false,
+    "limitation": "Bounded time/window/pattern scan, not proof of absence of every secret or future delayed log"
+  },
+  "metrics": {
+    "read_at_utc": "2026-10-21T16:57:33.016267+00:00",
+    "data": [
+      {
+        "metric": "DocumentRecovery.Invocations",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "metric": "DocumentRecovery.Errors",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "DocumentRecovery.Throttles",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantFunction.Invocations",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00"
+        ],
+        "values": [
+          37.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantFunction.Errors",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00"
+        ],
+        "values": [
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantFunction.Throttles",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00"
+        ],
+        "values": [
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantWorker.Invocations",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:53:00+07:00"
+        ],
+        "values": [
+          6.0,
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantWorker.Errors",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:53:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantWorker.Throttles",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:53:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentQueue.NumberOfMessagesReceived",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          5.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentQueue.NumberOfMessagesDeleted",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          4.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentQueue.ApproximateNumberOfMessagesVisible",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentQueue.ApproximateNumberOfMessagesNotVisible",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentDLQ.NumberOfMessagesReceived",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentDLQ.NumberOfMessagesDeleted",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentDLQ.ApproximateNumberOfMessagesVisible",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "metric": "PolicyAssistantDocumentDLQ.ApproximateNumberOfMessagesNotVisible",
+        "status": "Complete",
+        "timestamps": [
+          "2026-10-21T23:46:00+07:00",
+          "2026-10-21T23:47:00+07:00",
+          "2026-10-21T23:48:00+07:00",
+          "2026-10-21T23:49:00+07:00",
+          "2026-10-21T23:50:00+07:00",
+          "2026-10-21T23:51:00+07:00",
+          "2026-10-21T23:52:00+07:00",
+          "2026-10-21T23:53:00+07:00",
+          "2026-10-21T23:54:00+07:00",
+          "2026-10-21T23:55:00+07:00",
+          "2026-10-21T23:56:00+07:00"
+        ],
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "pagination_remaining": false,
+    "limitation": "CloudWatch publication lag; empty series is NOT proof of zero activity"
+  },
+  "alarms_after": [
+    {
+      "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "state": "ALARM",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Duration",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Errors",
+      "state": "OK",
+      "actions_enabled": true
+    },
+    {
+      "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "state": "OK",
+      "actions_enabled": true
+    }
+  ],
+  "queues_after": {
+    "main": {
+      "ApproximateNumberOfMessages": "0",
+      "ApproximateNumberOfMessagesNotVisible": "0"
+    },
+    "dlq": {
+      "ApproximateNumberOfMessages": "1",
+      "ApproximateNumberOfMessagesNotVisible": "0"
+    }
+  },
+  "budget_after": {
+    "amount": {
+      "Amount": "20.0",
+      "Unit": "USD"
+    },
+    "calculated_spend": {
+      "ActualSpend": {
+        "Amount": "5.479",
+        "Unit": "USD"
+      },
+      "ForecastedSpend": {
+        "Amount": "8.539",
+        "Unit": "USD"
+      }
+    },
+    "email_delivery": "NOT_VERIFIED",
+    "billing_lag": true
+  },
+  "old_stack_after": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "unchanged_metadata": true
+  },
+  "completed_at_utc": "2026-10-21T16:57:34.897615+00:00",
+  "runner": {
+    "path": ".aws-sam/test-review/b4_controlled_e2e.py",
+    "sha256": "74da2a509581ebb01cf107f93cdef6c5a8ced8e9edf54e80c6e37bc70e22bf05",
+    "invocations": 1,
+    "interruption_handling": "Existing background process resumed/observed; no rerun or additional poison"
+  },
+  "final_alarm_followup": "approval-b4-alarm-followup.json",
+  "case_counts": {
+    "PASS": 19,
+    "NOT_RUN": 1
+  },
+  "acceptance_decision": "GO_BACKEND_API_SDK_REVIEW_BROWSER_ACCEPTANCE_NOT_RUN"
+}

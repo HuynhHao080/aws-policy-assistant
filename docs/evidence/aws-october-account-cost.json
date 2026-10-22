@@ -1,0 +1,544 @@
+{
+  "observed_at_utc": "2026-10-21T08:34:26.297656+00:00",
+  "scope": "Read-only October cost baseline, not an invoice or deployment",
+  "account_masked": "********0098",
+  "metric": "UnblendedCost",
+  "currency": "USD",
+  "actual_period": {
+    "Start": "2026-10-01",
+    "End": "2026-10-21",
+    "end_exclusive": true
+  },
+  "forecast_period": {
+    "Start": "2026-10-21",
+    "End": "2026-11-01",
+    "end_exclusive": true
+  },
+  "excluded_record_types": [
+    "Credit",
+    "Refund"
+  ],
+  "ce_requests_attempted": 2,
+  "resource_level_attribution": "NOT_VERIFIED; service/usage-type data does not identify stack ownership",
+  "identity": "VERIFIED",
+  "filter": {
+    "And": [
+      {
+        "Dimensions": {
+          "Key": "LINKED_ACCOUNT",
+          "Values": [
+            "[VERIFIED_ACCOUNT]"
+          ]
+        }
+      },
+      {
+        "Not": {
+          "Dimensions": {
+            "Key": "RECORD_TYPE",
+            "Values": [
+              "Credit",
+              "Refund"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "actual": {
+    "status": "VERIFIED",
+    "amount_usd": "5.4222749168",
+    "days_returned": 20,
+    "daily": [
+      {
+        "date": "2026-10-01",
+        "amount_usd": "0.2770013739",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-02",
+        "amount_usd": "0.2769484022",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-03",
+        "amount_usd": "0.2756043162",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-04",
+        "amount_usd": "0.2769534022",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-05",
+        "amount_usd": "0.2769550156",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-06",
+        "amount_usd": "0.2769935272",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-07",
+        "amount_usd": "0.2835501405",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-08",
+        "amount_usd": "0.2756150983",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-09",
+        "amount_usd": "0.2769839814",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-10",
+        "amount_usd": "0.2770121805",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-11",
+        "amount_usd": "0.2769593296",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-12",
+        "amount_usd": "0.2771367727",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-13",
+        "amount_usd": "0.2742910242",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-14",
+        "amount_usd": "0.2746168327",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-15",
+        "amount_usd": "0.2770782608",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-16",
+        "amount_usd": "0.2772972133",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-17",
+        "amount_usd": "0.2771162562",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-18",
+        "amount_usd": "0.2771903562",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-19",
+        "amount_usd": "0.2775365872",
+        "estimated": true
+      },
+      {
+        "date": "2026-10-20",
+        "amount_usd": "0.1594348459",
+        "estimated": true
+      }
+    ],
+    "services": {
+      "AWS Glue": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "APS2-Catalog-Request": "0",
+          "USE1-Catalog-Request": "0",
+          "USW2-Catalog-Request": "0",
+          "APS1-Catalog-Request": "0"
+        }
+      },
+      "AWS Key Management Service": {
+        "amount_usd": "0.633064506",
+        "usage_types_usd": {
+          "us-west-2-KMS-Keys": "0.633064506",
+          "us-east-1-KMS-Requests": "0",
+          "us-west-2-KMS-Requests": "0",
+          "ap-southeast-1-KMS-Requests": "0"
+        }
+      },
+      "Amazon Bedrock": {
+        "amount_usd": "0.0000061",
+        "usage_types_usd": {
+          "USE1-TitanEmbeddingV2-Text-input-tokens": "0.0000061"
+        }
+      },
+      "Amazon Bedrock AgentCore": {
+        "amount_usd": "0.0009637436",
+        "usage_types_usd": {
+          "USW2-Memory:Consumption-based:LTM-Storage:Built-in-memory": "0.0009637436"
+        }
+      },
+      "Amazon Cognito": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "USE1-CognitoEssentialsMAU": "0",
+          "APS1-CognitoEssentialsMAU": "0"
+        }
+      },
+      "Amazon DynamoDB": {
+        "amount_usd": "0.0008443301",
+        "usage_types_usd": {
+          "ReadRequestUnits": "0.0006856250",
+          "TimedStorage-ByteHrs": "0",
+          "WriteRequestUnits": "0.000139375",
+          "APS1-ReadRequestUnits": "0.0000136088",
+          "APS1-TimedStorage-ByteHrs": "0",
+          "APS1-WriteRequestUnits": "0.00000568",
+          "APS1-TimedPITRStorage-ByteHrs": "4.13E-8"
+        }
+      },
+      "EC2 - Other": {
+        "amount_usd": "4.7772774714",
+        "usage_types_usd": {
+          "EBS:SnapshotUsage": "0.920073081",
+          "EBS:VolumeUsage.gp3": "3.8572043904"
+        }
+      },
+      "Amazon Simple Storage Service": {
+        "amount_usd": "0.0037095157",
+        "usage_types_usd": {
+          "DataTransfer-In-Bytes": "0",
+          "DataTransfer-Out-Bytes": "0",
+          "Global-Bucket-Hrs-FreeTier": "0",
+          "Requests-Tier1": "0.000855",
+          "Requests-Tier2": "0.0002992",
+          "TimedStorage-ByteHrs": "0.0000119673",
+          "USW2-TimedStorage-ByteHrs": "0.0017587638",
+          "USE1-USW2-AWS-Out-Bytes": "1.266E-7",
+          "USW2-Requests-Tier2": "0.0000156",
+          "APS1-Requests-Tier1": "0.000290",
+          "USE1-APS1-AWS-Out-Bytes": "6.56E-8",
+          "USW2-DataTransfer-In-Bytes": "0",
+          "USW2-DataTransfer-Out-Bytes": "0",
+          "USW2-Requests-Tier1": "0.000030",
+          "USE1-APS2-AWS-Out-Bytes": "3.4E-9",
+          "APS1-DataTransfer-In-Bytes": "0",
+          "APS1-DataTransfer-Out-Bytes": "0",
+          "APS1-Requests-Tier2": "0.0001556",
+          "USE1-APS1-AWS-In-Bytes": "0",
+          "APS1-TimedStorage-ByteHrs": "0.0002876890",
+          "APS2-Requests-Tier1": "0.0000055"
+        }
+      },
+      "AmazonCloudWatch": {
+        "amount_usd": "0.00018",
+        "usage_types_usd": {
+          "USW2-TimedStorage-ByteHrs": "0",
+          "CW:Requests": "0",
+          "USE1-VendedLog-Bytes": "0",
+          "USW2-CW:GMD-Metrics": "0.00002",
+          "USE1-TimedStorage-ByteHrs": "0",
+          "APS1-CW:GMD-Metrics": "0.00012",
+          "APS1-VendedLog-Bytes": "0",
+          "APS1-TimedStorage-ByteHrs": "0",
+          "CW:GMD-Metrics": "0.00004",
+          "APS1-CW:AlarmMonitorUsage": "0",
+          "APS1-CW:Requests": "0",
+          "DashboardsUsageHour-Basic": "0"
+        }
+      },
+      "Tax": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "EBS:SnapshotUsage": "0",
+          "EBS:VolumeUsage.gp3": "0",
+          "USE1-Group2-ImagesProcessed": "0",
+          "us-west-2-KMS-Keys": "0"
+        }
+      },
+      "AWS CloudFormation": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "USE1-Resource-Operation-Count": "0",
+          "APS1-Resource-Operation-Count": "0"
+        }
+      },
+      "AWS Lambda": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "Lambda-GB-Second": "0",
+          "Request": "0",
+          "APS1-Lambda-GB-Second": "0",
+          "APS1-Request": "0"
+        }
+      },
+      "AWS Secrets Manager": {
+        "amount_usd": "0.000015",
+        "usage_types_usd": {
+          "APS1-AWSSecretsManagerAPIRequest": "0.000015"
+        }
+      },
+      "Amazon Rekognition": {
+        "amount_usd": "0.006",
+        "usage_types_usd": {
+          "USE1-Group2-ImagesProcessed": "0.006"
+        }
+      },
+      "Amazon Simple Notification Service": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "APS1-Requests-Tier1": "0"
+        }
+      },
+      "Amazon Simple Queue Service": {
+        "amount_usd": "0",
+        "usage_types_usd": {
+          "APS1-Requests-Tier1": "0",
+          "DataTransfer-In-Bytes": "0",
+          "DataTransfer-Out-Bytes": "0",
+          "Requests-RBP": "0"
+        }
+      },
+      "CloudWatch Events": {
+        "amount_usd": "0.000043",
+        "usage_types_usd": {
+          "USE1-Event-64K-Chunks": "0.000043"
+        }
+      },
+      "Amazon API Gateway": {
+        "amount_usd": "0.00017125",
+        "usage_types_usd": {
+          "APS1-ApiGatewayHttpRequest": "0.00017125",
+          "APS1-DataTransfer-Out-Bytes": "0"
+        }
+      }
+    },
+    "note": "Accrued costs through completed UTC dates; current day excluded and billing can lag"
+  },
+  "forecast": {
+    "status": "VERIFIED",
+    "prediction_interval_level": 80,
+    "remaining_period_total": {
+      "Amount": "3.1167914980116933",
+      "Unit": "USD"
+    },
+    "daily": [
+      {
+        "TimePeriod": {
+          "Start": "2026-10-21",
+          "End": "2026-10-22"
+        },
+        "MeanValue": "0.2830311258759958",
+        "PredictionIntervalLowerBound": "0.2502276491256955",
+        "PredictionIntervalUpperBound": "0.31583460262629615"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-22",
+          "End": "2026-10-23"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.23753497842962798",
+        "PredictionIntervalUpperBound": "0.3292170959975115"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-23",
+          "End": "2026-10-24"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.22760395448020154",
+        "PredictionIntervalUpperBound": "0.33914811994693794"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-24",
+          "End": "2026-10-25"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.21919155502042154",
+        "PredictionIntervalUpperBound": "0.34756051940671795"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-25",
+          "End": "2026-10-26"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.21176060384626105",
+        "PredictionIntervalUpperBound": "0.35499147058087843"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-26",
+          "End": "2026-10-27"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.20503133197848467",
+        "PredictionIntervalUpperBound": "0.3617207424486548"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-27",
+          "End": "2026-10-28"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.19883601485517877",
+        "PredictionIntervalUpperBound": "0.3679160595719607"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-28",
+          "End": "2026-10-29"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.19306469837761764",
+        "PredictionIntervalUpperBound": "0.37368737604952185"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-29",
+          "End": "2026-10-30"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.1876406703718065",
+        "PredictionIntervalUpperBound": "0.37911140405533295"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-30",
+          "End": "2026-10-31"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.18250789057494138",
+        "PredictionIntervalUpperBound": "0.3842441838521981"
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-10-31",
+          "End": "2026-11-01"
+        },
+        "MeanValue": "0.28337603721356974",
+        "PredictionIntervalLowerBound": "0.17762394244331609",
+        "PredictionIntervalUpperBound": "0.3891281319838234"
+      }
+    ],
+    "note": "AWS prediction for remaining period, not whole-month total and not a guarantee"
+  },
+  "budget_snapshots": [
+    {
+      "type": "COST",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "USD"
+      },
+      "metric": [
+        "UnblendedCost"
+      ],
+      "has_filters": false,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "0.0",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "3.117",
+          "Unit": "USD"
+        }
+      },
+      "time_unit": "MONTHLY",
+      "note": "Not a substitute for the exact CE Credit/Refund exclusion filter"
+    },
+    {
+      "type": "COST",
+      "limit": {
+        "Amount": "100.0",
+        "Unit": "USD"
+      },
+      "metric": [
+        "UnblendedCost"
+      ],
+      "has_filters": true,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "5.422",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "8.539",
+          "Unit": "USD"
+        }
+      },
+      "time_unit": "MONTHLY",
+      "note": "Not a substitute for the exact CE Credit/Refund exclusion filter"
+    },
+    {
+      "type": "COST",
+      "limit": {
+        "Amount": "5.0",
+        "Unit": "USD"
+      },
+      "metric": [
+        "UnblendedCost"
+      ],
+      "has_filters": false,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "0.0",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "3.117",
+          "Unit": "USD"
+        }
+      },
+      "time_unit": "MONTHLY",
+      "note": "Not a substitute for the exact CE Credit/Refund exclusion filter"
+    }
+  ],
+  "budgets_pagination_complete": true,
+  "existing_stack": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "resource_types": [
+      "AWS::DynamoDB::Table",
+      "AWS::DynamoDB::Table",
+      "AWS::ApiGatewayV2::Api",
+      "AWS::ApiGatewayV2::Stage",
+      "AWS::CloudWatch::Dashboard",
+      "AWS::SQS::Queue",
+      "AWS::SQS::Queue",
+      "AWS::S3::Bucket",
+      "AWS::CloudWatch::Alarm",
+      "AWS::CloudWatch::Alarm",
+      "AWS::Lambda::Function",
+      "AWS::Lambda::Permission",
+      "AWS::Lambda::Permission",
+      "AWS::Lambda::Permission",
+      "AWS::Lambda::Permission",
+      "AWS::IAM::Role",
+      "AWS::Lambda::Permission",
+      "AWS::Lambda::Permission",
+      "AWS::Lambda::Permission",
+      "AWS::Logs::LogGroup",
+      "AWS::Cognito::UserPool",
+      "AWS::Cognito::UserPoolClient",
+      "AWS::Lambda::Function",
+      "AWS::Lambda::EventSourceMapping",
+      "AWS::IAM::Role"
+    ],
+    "resource_inventory_complete": true,
+    "attribution": "Inventory correlation only; no billing resource IDs or active stack cost tag proven"
+  },
+  "test_candidate": {
+    "name": "fcaj-review-20261021-072124-24ba855e",
+    "status": "CREATE_COMPLETE",
+    "execution_status": "AVAILABLE",
+    "executed_by_this_script": false
+  },
+  "completed_at_utc": "2026-10-21T08:34:33.063490+00:00",
+  "aws_writes_performed": false
+}

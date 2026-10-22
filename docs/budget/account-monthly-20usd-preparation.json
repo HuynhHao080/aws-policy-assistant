@@ -1,0 +1,43 @@
+{
+  "status": "USER_CREATED_READ_ONLY_CONFIGURATION_VERIFIED",
+  "creation_approval": "APPROVAL_A_FULFILLED_BY_OWNER_MANUAL_CREATION",
+  "budget_creation": "CREATED_BY_USER",
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "expected_account_masked": "********0098",
+  "budget_file": "account-monthly-20usd-proposal.json",
+  "budget_file_api_shape": "Budget",
+  "notifications_file": "account-monthly-20usd-notifications.json",
+  "notifications_file_api_shape": "Array of Notification; not NotificationWithSubscribers",
+  "is_complete_create_budget_request": false,
+  "recipient_status": "CONFIGURED_VERIFICATION_UNCONFIRMED",
+  "pending_confirmations": [
+    {
+      "field": "Recipient activation/verification status",
+      "status": "UNVERIFIED_BY_API",
+      "instruction": "Owner checks Active or Active (legacy) privately in AWS; do not publish address. No resend/activation or subscription mutation is authorized."
+    },
+    {
+      "field": "Deployment approval B",
+      "status": "NOT_GRANTED",
+      "instruction": "Budget existence is not CloudFormation deployment or E2E approval."
+    }
+  ],
+  "budget_actions": [],
+  "existing_budget_changes": false,
+  "cost_allocation_tag_activation": false,
+  "console_guide": "account-monthly-20usd-console.md",
+  "approval_document": "../budget-20usd-approval.md",
+  "read_only_evidence": "../evidence/budget-20usd-created-readonly-verification.json",
+  "previous_preparation_status": "PREPARED_NOT_CREATED",
+  "console_handoff": "SUPERSEDED_BY_OWNER_MANUAL_CREATION",
+  "agent_budget_creation": "NOT_EXECUTED",
+  "creation_disabled": true,
+  "do_not_reuse_for_create": "Budget already exists; historical API fragments remain unresolved samples, never call create again from this packet",
+  "historical_assembly_contract": {
+    "AccountId": "Exact verified account from the private session",
+    "Budget": "Reviewed Budget object with unresolved account token replaced",
+    "NotificationsWithSubscribers": "Three objects, each containing Notification from the notifications file and privately supplied approved Subscribers",
+    "do_not_send_preparation_metadata_to_api": true
+  },
+  "assembly_disabled_reason": "Budget already exists. This read-only verification authorizes no new CreateBudget or mutation."
+}

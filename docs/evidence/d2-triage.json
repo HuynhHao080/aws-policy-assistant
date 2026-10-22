@@ -1,0 +1,105 @@
+{
+  "schema_version": "triage-finding/v0",
+  "repository": {
+    "path": "C:\\Users\\accli\\Documents\\Project\\policy-assistant-github",
+    "revision": "80c4eeffd92c21c0cdd37b53591c2cd0daba3677"
+  },
+  "findings": [
+    {
+      "triage_item_id": "triage-001",
+      "input_id": "D1-public-auth-literal-exposure",
+      "source_type": "freeform",
+      "title": "Publicly committed credential-candidate material for an existing legacy Cognito identity",
+      "normalized_input": {
+        "vulnerable_component": "Historical auth scripts and PROJECT_SUMMARY.md",
+        "claimed_source": "Unauthenticated readers of public Git commit80c4eef",
+        "claimed_sink": "Disclosure of embedded Cognito username/password/client inputs",
+        "claimed_control": "Authentication secrets must not be committed publicly",
+        "affected_version_or_path": "80c4eef:fourauthscripts and PROJECT_SUMMARY.md:14",
+        "preconditions": [
+          "Public repository contains exact affected commit"
+        ],
+        "impact": "Disclosure of candidate login material; successful authentication and unauthorized access NOT established",
+        "references": [
+          "D1 handover finding",
+          "User D2 instructions"
+        ]
+      },
+      "verdict": "confirmed",
+      "confidence": "high",
+      "affected_locations": [
+        {
+          "label": "historical_auth_material",
+          "path": "get_token.py",
+          "lines": "3",
+          "detail": "At commit80c4eef; same credential used by Cognito password-auth path; value omitted"
+        },
+        {
+          "label": "historical_auth_material",
+          "path": "verify_e2e.py",
+          "lines": "5",
+          "detail": "At commit80c4eef; same credential used by Cognito password-auth path; value omitted"
+        },
+        {
+          "label": "historical_auth_material",
+          "path": "verify_jwt.py",
+          "lines": "3",
+          "detail": "At commit80c4eef; same credential used by Cognito password-auth path; value omitted"
+        },
+        {
+          "label": "historical_auth_material",
+          "path": "verify_search.py",
+          "lines": "4",
+          "detail": "At commit80c4eef; same credential used by Cognito password-auth path; value omitted"
+        },
+        {
+          "label": "historical_documentation",
+          "path": "PROJECT_SUMMARY.md",
+          "lines": "14",
+          "detail": "Same exact password literal; current working file does not contain value"
+        }
+      ],
+      "reachable_path": [
+        "Public GitHub metadata confirms repository visibility and remote main SHA",
+        "Local Git object for that exact SHA contains shared credential literals",
+        "Same AppClient resolves through legacy stack resources to existing Enabled/CONFIRMED user; no authentication attempted"
+      ],
+      "boundary_assessment": {
+        "product_surface": "CLI and docs exposed in public repository",
+        "source_trust": "untrusted repository readers",
+        "boundary_crossed": true,
+        "policy_basis": "User non-disclosure invariant and README credential-rotation warning; no applicable SECURITY.md resolved"
+      },
+      "exploitability_stack_rank": {
+        "rank_queue": "confirmed",
+        "rank": 1,
+        "rationale": "Only supplied aggregate finding; unauthenticated public read confirmed, credential validity unknown",
+        "drivers": [
+          "public reachability",
+          "no GitHub authentication required",
+          "existing legacy identity and auth client",
+          "runtime validity unknown"
+        ]
+      },
+      "evidence": [
+        "Remote main SHA equals affected SHA; repository public via anonymous API",
+        "Four scripts share exact same username/password/client in memory",
+        "Additional same literal in historical PROJECT_SUMMARY.md",
+        "Cognito metadata matches legacy stack; current source does not contain exact literal"
+      ],
+      "counterevidence": [
+        "Working tree auth wrappers no longer embed password",
+        "No password validity or successful historical auth proof",
+        "Distinct from current TestA/TestB client"
+      ],
+      "proof_gaps": [
+        "Credential validity UNKNOWN",
+        "Revocation/rotation UNKNOWN",
+        "Unauthorized access UNKNOWN",
+        "Other clones/caches/remote-only publication artifacts not scanned"
+      ],
+      "recommended_next_step": "Seek explicit D3 narrowly scoped credential containment/rotation approval before any writes",
+      "fix_finding_handoff": "Separately approved remediation only: source public commit80c4eef locations above; sink credential disclosure; exact legacy user resolved by source username in memory; invariant old password and sessions must not remain usable. Limit fix to that user in pool ap-southeast-1_zzeu6TjQs/account\u20260098; no test-pool users/stack updates/deletion. Verify administrative results without testing old password; account for offline JWT acceptance until expiration. Username/password not included here."
+    }
+  ]
+}

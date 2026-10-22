@@ -1,0 +1,28 @@
+{
+  "observed_at_utc": "2026-10-21T07:48:07.983467+00:00",
+  "scope": "Unsigned DNS/TCP/TLS diagnostics; no credentials or AWS mutations",
+  "proxy_configured": false,
+  "endpoints": [
+    {
+      "host": "sts.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "connection": "BLOCKED",
+      "error_type": "TimeoutError"
+    },
+    {
+      "host": "cloudformation.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "s3.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "completed_at_utc": "2026-10-21T07:48:28.791827+00:00"
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-21",
+  "scope": "Local verification of hardened 45-resource candidate; not AWS acceptance",
+  "command": "python -m scripts.verify",
+  "backend_passed": 128,
+  "frontend_passed": 17,
+  "browser_suites_passed": 2,
+  "live_tests_skipped": 9,
+  "checks": [
+    "Ruff fatal categories",
+    "mypy app.py",
+    "frontend syntax",
+    "sam validate --lint",
+    "sam build"
+  ],
+  "passed": true,
+  "source": "offline-acceptance.json",
+  "lint_rerun": {
+    "command": ".venv/Scripts/python.exe -m ruff check policy_assistant scripts tests --select E9,F63,F7,F82",
+    "result": "PASS",
+    "note": "System Python313 lacked ruff; rerun in existing project venv succeeded"
+  },
+  "site": {
+    "hugo": "v0.167.0",
+    "build": "PASS",
+    "en_pages": 128,
+    "vi_pages": 127,
+    "html_checked": 129,
+    "references_checked": 12274,
+    "link_failures": 0,
+    "theme_deprecation_warnings": 3
+  }
+}

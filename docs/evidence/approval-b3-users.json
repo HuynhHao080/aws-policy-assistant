@@ -1,0 +1,68 @@
+{
+  "started_at_utc": "2026-10-21T16:37:32.961685+00:00",
+  "approval": "B3_ONLY_USER_GRANTED",
+  "status": "CREATED_VERIFIED",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "users": [
+    {
+      "identity": "TestA",
+      "status": "CREATED_VERIFIED",
+      "created": true,
+      "after_create_status": "FORCE_CHANGE_PASSWORD",
+      "enabled": true,
+      "user_status": "CONFIRMED",
+      "email_attribute": "SYNTHETIC_INVALID_DOMAIN_NOT_EXPORTED",
+      "email_verified": false,
+      "phone_present": false,
+      "verified_at_utc": "2026-10-21T16:37:36.317672+00:00"
+    },
+    {
+      "identity": "TestB",
+      "status": "CREATED_VERIFIED",
+      "created": true,
+      "after_create_status": "FORCE_CHANGE_PASSWORD",
+      "enabled": true,
+      "user_status": "CONFIRMED",
+      "email_attribute": "SYNTHETIC_INVALID_DOMAIN_NOT_EXPORTED",
+      "email_verified": false,
+      "phone_present": false,
+      "verified_at_utc": "2026-10-21T16:37:37.255654+00:00"
+    }
+  ],
+  "admin_create_user_attempts": 2,
+  "admin_set_user_password_attempts": 2,
+  "message_action": "SUPPRESS",
+  "email_verification_sent": false,
+  "admin_auth_or_token_requests": 0,
+  "application_api_calls": 0,
+  "documents_uploaded": 0,
+  "sqs_messages_sent": 0,
+  "cloudformation_frontend_iam_budget_writes": 0,
+  "aws_e2e": "NOT_RUN",
+  "user_deletions": 0,
+  "commit_push": "NOT_EXECUTED",
+  "user_pool_id": "ap-southeast-1_EfQPshNZ7",
+  "credential_protection": {
+    "method": "Windows DPAPI current-user scope + protected NTFS directory current user/SYSTEM",
+    "encrypted_bundle": ".aws-sam/test-review/b3-private/credentials.dpapi",
+    "dpapi_roundtrip": "VERIFIED_BEFORE_AWS_WRITES",
+    "git_ignored": true,
+    "plaintext_credentials_in_logs_files_chat": false,
+    "password_length": 32,
+    "temporary_passwords": "Random in-memory only; distinct from protected permanent password",
+    "b4_access": "Same authorized Windows user decrypts in process memory after B4 approval; no display/export required",
+    "file_acl_verified": "CURRENT_USER_AND_SYSTEM_ONLY"
+  },
+  "distinct_cognito_subjects": true,
+  "final_pool_user_count": 2,
+  "existing_stack_after": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00",
+    "unchanged_metadata": true
+  },
+  "b4": "PENDING_USER_APPROVAL",
+  "authentication_delivery_runtime": "NOT_TESTED",
+  "completed_at_utc": "2026-10-21T16:37:37.414305+00:00"
+}

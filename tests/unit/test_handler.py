@@ -52,14 +52,14 @@ SAMPLE_POLICIES = [
 
 
 @pytest.fixture(scope="function")
-def aws_credentials():
+def aws_credentials(monkeypatch):
     """Mocked AWS Credentials for moto."""
-    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
-    os.environ["AWS_SECURITY_TOKEN"] = "testing"
-    os.environ["AWS_SESSION_TOKEN"] = "testing"
-    os.environ["AWS_DEFAULT_REGION"] = "ap-southeast-1"
-    os.environ["AWS_REGION"] = "ap-southeast-1"
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
+    monkeypatch.setenv("AWS_SECURITY_TOKEN", "testing")
+    monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
+    monkeypatch.setenv("AWS_DEFAULT_REGION", "ap-southeast-1")
+    monkeypatch.setenv("AWS_REGION", "ap-southeast-1")
 
 
 @pytest.fixture(scope="function")
@@ -971,7 +971,7 @@ class TestSearchPagination:
                 "Items": [SAMPLE_POLICIES[0]],
                 "ScannedCount": 3,
                 "Count": 1,
-                "LastEvaluatedKey": {"policy_id": {"S": "POL-002"}}
+                "LastEvaluatedKey": {"policy_id": "POL-002"}
             }
 
         app.table.scan = mock_scan_first
@@ -1003,7 +1003,7 @@ class TestSearchPagination:
                 "Items": [SAMPLE_POLICIES[0]],
                 "ScannedCount": 3,
                 "Count": 1,
-                "LastEvaluatedKey": {"policy_id": {"S": "POL-002"}}
+                "LastEvaluatedKey": {"policy_id": "POL-002"}
             }
 
         def mock_scan_second(**kwargs):
@@ -1049,7 +1049,7 @@ class TestSearchPagination:
                 "Items": [SAMPLE_POLICIES[0]],
                 "ScannedCount": 3,
                 "Count": 1,
-                "LastEvaluatedKey": {"policy_id": {"S": "POL-002"}}
+                "LastEvaluatedKey": {"policy_id": "POL-002"}
             }
 
         def mock_scan_second(**kwargs):
@@ -1107,7 +1107,7 @@ class TestSearchPagination:
                 "Items": [SAMPLE_POLICIES[0]],
                 "ScannedCount": 3,
                 "Count": 1,
-                "LastEvaluatedKey": {"policy_id": {"S": "POL-002"}}
+                "LastEvaluatedKey": {"policy_id": "POL-002"}
             }
 
         def mock_scan_second(**kwargs):
@@ -1152,8 +1152,8 @@ class TestSearchPagination:
         bad_token = base64.b64encode(json.dumps({"bad_key": "value"}).encode()).decode()
         event = _create_apigw_event("/policies", query_parameters={"keyword": "refund", "next_token": bad_token})
         response = app.lambda_handler(event, None)
-        # DynamoDB mock may accept or reject bad ExclusiveStartKey; handler must not crash or leak internals
-        assert response["statusCode"] in (200, 500)
+        # Invalid cursor keys must be rejected before calling DynamoDB
+        assert response["statusCode"] == 400
         if response["statusCode"] == 500:
             body = json.loads(response["body"])
             assert body["error"] == "Internal server error"
@@ -1186,7 +1186,7 @@ class TestSearchPagination:
                 "Items": [SAMPLE_POLICIES[0]],
                 "ScannedCount": 3,
                 "Count": 1,
-                "LastEvaluatedKey": {"policy_id": {"S": "POL-002"}}
+                "LastEvaluatedKey": {"policy_id": "POL-002"}
             }
 
         def mock_scan_second(**kwargs):
@@ -1238,7 +1238,7 @@ class TestCloudWatchMonitoring:
 
         alarm = template["Resources"]["PolicyAssistantErrorAlarm"]
         assert alarm["Type"] == "AWS::CloudWatch::Alarm"
-        assert alarm["Properties"]["AlarmName"] == "PolicyAssistant-Errors-" 
+        assert alarm["Properties"]["AlarmName"] == "${AWS::StackName}-Errors"
         assert alarm["Properties"]["Namespace"] == "AWS/Lambda"
         assert alarm["Properties"]["MetricName"] == "Errors"
         assert alarm["Properties"]["Statistic"] == "Sum"
@@ -1266,7 +1266,7 @@ class TestCloudWatchMonitoring:
 
         alarm = template["Resources"]["PolicyAssistantDurationAlarm"]
         assert alarm["Type"] == "AWS::CloudWatch::Alarm"
-        assert alarm["Properties"]["AlarmName"] == "PolicyAssistant-Duration-" 
+        assert alarm["Properties"]["AlarmName"] == "${AWS::StackName}-Duration"
         assert alarm["Properties"]["Namespace"] == "AWS/Lambda"
         assert alarm["Properties"]["MetricName"] == "Duration"
         assert alarm["Properties"]["Statistic"] == "Maximum"
@@ -1295,19 +1295,19 @@ class TestCloudWatchMonitoring:
 
         dashboard = template["Resources"]["PolicyAssistantDashboard"]
         assert dashboard["Type"] == "AWS::CloudWatch::Dashboard"
-        assert dashboard["Properties"]["DashboardName"] == "PolicyAssistant-" 
+        assert dashboard["Properties"]["DashboardName"] == "${AWS::StackName}-Dashboard"
 
         dashboard_body = dashboard["Properties"]["DashboardBody"]
         assert isinstance(dashboard_body, str)
 
         dashboard_json = json.loads(dashboard_body)
         widgets = dashboard_json["widgets"]
-        assert len(widgets) == 1
+        assert len(widgets) >= 1
         assert widgets[0]["type"] == "metric"
         assert widgets[0]["properties"]["title"] == "Lambda Function Metrics"
 
         metrics = widgets[0]["properties"]["metrics"]
-        metric_names = [m[1] for m in metrics if len(m) >= 2]
+        metric_names = [m[1] for widget in widgets for m in widget["properties"]["metrics"] if len(m) >= 2]
         assert "Invocations" in metric_names
         assert "Errors" in metric_names
         assert "Duration" in metric_names
@@ -1340,6 +1340,8 @@ class TestCognitoAuthorization:
         assert "email" in pool["Properties"]["AutoVerifiedAttributes"]
         assert "email" in pool["Properties"]["UsernameAttributes"]
         assert pool["Properties"]["MfaConfiguration"] in ("OFF", False)
+        assert pool["Properties"]["AdminCreateUserConfig"]["AllowAdminCreateUserOnly"] is True
+        assert pool["Properties"]["Policies"]["PasswordPolicy"]["MinimumLength"] >= 12
 
     def test_user_pool_client_exists(self):
         """Test that Cognito User Pool Client resource exists with correct properties."""
@@ -1424,8 +1426,10 @@ class TestCognitoAuthorization:
         """Test Lambda IAM policy has only required DynamoDB actions on table ARN."""
         template = self._load_template()
         function = template["Resources"]["PolicyAssistantFunction"]
-        policies = function["Properties"]["Policies"]
-        statement = policies[0]["Statement"][0]
+        # The explicit role prevents SAM from attaching wildcard managed policies.
+        assert function["Properties"]["Role"] == "PolicyAssistantFunctionRole.Arn"
+        policies = template["Resources"]["PolicyAssistantFunctionRole"]["Properties"]["Policies"]
+        statement = policies[0]["PolicyDocument"]["Statement"][0]
         assert statement["Effect"] == "Allow"
         actions = statement["Action"]
         assert sorted(actions) == ["dynamodb:GetItem", "dynamodb:Scan"]

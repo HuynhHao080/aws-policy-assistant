@@ -1,0 +1,100 @@
+{
+  "started_at_utc": "2026-10-21T18:33:33.126230+00:00",
+  "approval": "B5_R7_ONLY_USER_GRANTED",
+  "status": "PASS",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "browser_runs": 1,
+  "secrets_handoff": "Anonymous subprocess stdin pipe; no argv/env/file plaintext",
+  "script_sha256": "5d6058aa78bc1ebfb92895a507673643905a3e6c503ba0c9d512477dc160e4db",
+  "old_stack_before": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "preflight": {
+    "stack_status": "UPDATE_COMPLETE",
+    "api_code_hash": "VERIFIED",
+    "frontend_config_cloudfront_api_cognito_s3": "VERIFIED",
+    "budget": {
+      "amount_usd": 20,
+      "notification_count": 3,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "5.479",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "8.539",
+          "Unit": "USD"
+        }
+      },
+      "email_delivery": "NOT_VERIFIED"
+    },
+    "queues": {
+      "PolicyAssistantDocumentQueue": {
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0"
+      },
+      "PolicyAssistantDocumentDLQ": {
+        "ApproximateNumberOfMessages": "1",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0"
+      }
+    },
+    "alarms": [
+      {
+        "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+        "state": "ALARM"
+      },
+      {
+        "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+        "state": "OK"
+      },
+      {
+        "name": "policy-assistant-fcaj-test-Duration",
+        "state": "OK"
+      },
+      {
+        "name": "policy-assistant-fcaj-test-Errors",
+        "state": "OK"
+      },
+      {
+        "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+        "state": "OK"
+      }
+    ],
+    "old_orphan_doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+    "old_orphan_status": "uploading",
+    "runner_regional_s3_only": true
+  },
+  "preconditions": "VERIFIED",
+  "browser_evidence": "approval-b5r7-browser.json",
+  "counts": {
+    "logins": 3,
+    "global_signouts": 3,
+    "upload_sessions": 2,
+    "uploads": 2,
+    "downloads": 2,
+    "browser_file_downloads": 2,
+    "upload_bytes": 1218,
+    "api_requests": 17,
+    "total_dynamic_requests": 27,
+    "observed_dynamic_requests": 27
+  },
+  "cases": {
+    "real_browser_load": "PASS",
+    "testa_login_search": "PASS",
+    "testa_pdf_flow": "PASS",
+    "testa_logout": "PASS",
+    "testb_login_isolation": "PASS",
+    "testb_pdf_flow": "PASS",
+    "testb_logout": "PASS",
+    "testa_reverse_isolation": "PASS",
+    "testa_final_logout": "PASS",
+    "responsive_console": "PASS"
+  },
+  "safe_child_output_scan": "PASS",
+  "completed_at_utc": "2026-10-21T18:34:09.037813+00:00"
+}

@@ -1,0 +1,44 @@
+{
+  "started_at_utc": "2026-10-22T08:07:17.277263+00:00",
+  "status": "BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "pool": "ap-southeast-1_zzeu6TjQs",
+  "target_alias": "EXPOSED_LEGACY_IDENTITY_1",
+  "owner_operational_confirmation": "PENDING",
+  "aws_writes": 0,
+  "authentication_calls": 0,
+  "technical_preflight": "PASS",
+  "username_sub_reverse_lookup": "PASS",
+  "d2_creation_modified_metadata_matches": true,
+  "enabled_before": true,
+  "user_status_before": "CONFIRMED",
+  "legacy_stack_before": {
+    "StackStatus": "UPDATE_COMPLETE",
+    "LastUpdatedTime": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "test_stack_before": {
+    "StackStatus": "UPDATE_COMPLETE",
+    "LastUpdatedTime": "2026-10-21 18:28:50.001000+00:00"
+  },
+  "test_users_baseline_count": 2,
+  "iam": [
+    {
+      "action": "cognito-idp:AdminDisableUser",
+      "decision": "allowed",
+      "missing_context": [],
+      "boundary": null,
+      "organizations": null
+    },
+    {
+      "action": "cognito-idp:AdminUserGlobalSignOut",
+      "decision": "allowed",
+      "missing_context": [],
+      "boundary": null,
+      "organizations": null
+    }
+  ],
+  "iam_limit": "Simulation is evidence, not a guarantee of all runtime SCP/session/conditions or service outcomes",
+  "operational_dependency": "Cannot infer absence of owner-required workflows from metadata; awaiting explicit owner response",
+  "completed_at_utc": "2026-10-22T08:07:21.619867+00:00"
+}

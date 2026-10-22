@@ -1,0 +1,44 @@
+{
+  "BudgetName": "policy-assistant-account-monthly",
+  "BudgetType": "COST",
+  "TimeUnit": "MONTHLY",
+  "BudgetLimit": {
+    "Amount": "20.00",
+    "Unit": "USD"
+  },
+  "TimePeriod": {
+    "Start": "2026-10-01T00:00:00Z"
+  },
+  "Metrics": [
+    "UnblendedCost"
+  ],
+  "FilterExpression": {
+    "And": [
+      {
+        "Dimensions": {
+          "Key": "LINKED_ACCOUNT",
+          "Values": [
+            "PENDING_VERIFIED_ACCOUNT_ID"
+          ],
+          "MatchOptions": [
+            "EQUALS"
+          ]
+        }
+      },
+      {
+        "Not": {
+          "Dimensions": {
+            "Key": "RECORD_TYPE",
+            "Values": [
+              "Credit",
+              "Refund"
+            ],
+            "MatchOptions": [
+              "EQUALS"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

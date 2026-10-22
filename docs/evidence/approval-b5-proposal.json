@@ -1,0 +1,82 @@
+{
+  "prepared_at_utc": "2026-10-21T17:10:19.787021+00:00",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "scope": "B5 real-browser E2E only, no fault injection or deployment",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "stack": "policy-assistant-fcaj-test",
+  "frontend": "https://d3ataim7dfsl7t.cloudfront.net/",
+  "identities": [
+    "Existing B3 TestA",
+    "Existing B3 TestB"
+  ],
+  "browser_live_auth_execution": "NOT_RUN",
+  "approval_required": true,
+  "planned_aws_operations": {
+    "cognito_successful_login_sessions_max": 3,
+    "cognito_global_signout_max": 3,
+    "cognito_auth_refresh_extra": "NOT_PLANNED_STOP_IF_NEEDED",
+    "document_upload_sessions_max": 2,
+    "s3_post_uploads_max": 2,
+    "s3_downloads_max": 2,
+    "fixture_bytes_per_file_max": 65536,
+    "cumulative_upload_bytes_max": 131072,
+    "application_requests_including_preflight_and_polling_max": 80,
+    "policy_search_pages_max": 2,
+    "poison_send_max": 0,
+    "direct_worker_invocations_max": 0,
+    "dlq_receive_delete_redrive_purge_max": 0,
+    "deploy_and_config_changes_max": 0
+  },
+  "timing": {
+    "entire_run_seconds_max": 900,
+    "worker_poll_seconds_max_each": 90,
+    "poll_interval_seconds": 5,
+    "automatic_write_retry": false
+  },
+  "cost_controls": {
+    "soft_planning_allowance_usd": "0.10",
+    "classification": "Proposed operational reserve, NOT an AWS price estimate, actual measurement or enforced spending cap",
+    "stop_before_run_if_budget_actual_usd_gte": "16",
+    "stop_before_run_if_budget_forecast_usd_gte": "20",
+    "billing_lag": true,
+    "hard_cap_available": false,
+    "account_budget_changes": false
+  },
+  "fixtures": [
+    {
+      "identity": "TestA",
+      "path": "docs/fixtures/browser-b5/synthetic-testa.pdf",
+      "bytes": 609,
+      "sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a"
+    },
+    {
+      "identity": "TestB",
+      "path": "docs/fixtures/browser-b5/synthetic-testb.pdf",
+      "bytes": 609,
+      "sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae"
+    }
+  ],
+  "preflight_evidence": "approval-b5-readonly-review.json",
+  "expected_baseline": {
+    "main_visible": 0,
+    "main_inflight": 0,
+    "dlq_visible_approx": 1,
+    "dlq_alarm": "ALARM_EXPECTED_FROM_B4",
+    "queue_age_alarm": "OK"
+  },
+  "credential_handling": {
+    "method": "Existing current-user DPAPI; future authorized runner decrypts in memory only",
+    "no_secrets_in": "Chat/tool arguments, shell args/env, source, screenshots, traces/HAR/video or request/error logs",
+    "no_plaintext_handoff": true,
+    "if_safe_browser_injection_unavailable": "BLOCKED_NO_UNSAFE_FALLBACK"
+  },
+  "future_cleanup_approval": "SEPARATE_APPROVAL_C_REQUIRED",
+  "cleanup_scope_inventory": [
+    "Two new document metadata records",
+    "Two new synthetic S3 current versions; include any unexpected partial objects/versions if creation was uncertain",
+    "Two local synthetic downloads/screenshots if operator elects local removal",
+    "Existing B4 three policies/four metadata sessions/S3 versions/one DLQ message and existing B3 users remain separate targets"
+  ],
+  "current_task_aws_writes": 0
+}

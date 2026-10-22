@@ -1,0 +1,53 @@
+{
+  "assessment": "D3-A1",
+  "finalized_at_utc": "2026-10-22T08:27:34.571927+00:00",
+  "account": "********0098",
+  "region": "ap-southeast-1",
+  "target_alias": "EXPOSED_LEGACY_IDENTITY_1",
+  "status": "BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION",
+  "decision": "NO_GO_D3A_EXECUTION",
+  "owner_confirmation": "NOT_PROVIDED",
+  "identity_enabled": true,
+  "identity_binding_verified": true,
+  "public_exposure": "CONFIRMED_FROM_D2",
+  "credential_validity": "UNKNOWN",
+  "rotation_revocation": "UNKNOWN",
+  "unauthorized_access": "UNKNOWN",
+  "historical_authentication_requests": {
+    "classification": "HISTORICAL_USE",
+    "count": 13,
+    "first": "2026-10-19 15:38:43+07:00",
+    "latest": "2026-10-19 18:06:53+07:00",
+    "latest_event_id": "3a0fd360-cc5d-4aca-9bfd-7fdd04f17225",
+    "does_not_prove": "Current operational need, exact exposed password use, completed authentication or authorized access"
+  },
+  "current_exact_identity_required_dependency": "UNKNOWN",
+  "confirmed_active_dependency_found": false,
+  "bounded_no_dependency_found": [
+    "inspected workflow definitions",
+    "legacy Lambda environment exact identifier references",
+    "default-bus rules targeting unqualified legacy Lambda ARNs"
+  ],
+  "coverage": {
+    "cloudtrail": "Management Event History only; matches request/response parameters, not redacted identities. Absence is not proof of non-use.",
+    "cloudtrail_events_scanned": 109,
+    "cloudtrail_truncated": false,
+    "cloudwatch_exact_identity_matches": 0,
+    "cloudwatch_filter_truncated": false,
+    "cognito_auth_history": "UNAVAILABLE_UserPoolAddOnNotEnabledException",
+    "legacy_api_access_logging": false,
+    "not_inspected": [
+      "deployed Lambda ZIP contents",
+      "GitHub secrets and runtime workflow runs",
+      "local scheduled jobs and notebooks",
+      "external systems",
+      "other-region and organization logging stores"
+    ]
+  },
+  "aws_writes": 0,
+  "authentication_calls": 0,
+  "admin_disable_user": "NOT_EXECUTED",
+  "admin_user_global_sign_out": "NOT_EXECUTED",
+  "git_stage_commit_push_rewrite": "NOT_EXECUTED",
+  "next_gate": "Explicit owner operational confirmation, then refreshed D3-A narrow preflight"
+}

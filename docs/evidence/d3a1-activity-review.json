@@ -1,0 +1,431 @@
+{
+  "started_at_utc": "2026-10-22T08:24:27.924755+00:00",
+  "aws_writes": 0,
+  "authentication_calls": 0,
+  "status": "READ_ONLY_REVIEW_COMPLETE",
+  "cloudtrail_history": {
+    "region": "ap-southeast-1",
+    "window_start": "2026-07-24 08:24:29.253008+00:00",
+    "window_end": "2026-10-22 08:24:29.253008+00:00",
+    "event_source": "cognito-idp.amazonaws.com",
+    "pages_read": 3,
+    "events_scanned": 109,
+    "truncated": false,
+    "oldest_returned_event": "2026-10-07 17:01:58+07:00",
+    "newest_returned_event": "2026-10-22 15:21:45+07:00",
+    "related_events": [
+      {
+        "event_id": "07356f7b-c914-4f12-9e90-a9b8b0d00423",
+        "event_time": "2026-10-22 15:21:45+07:00",
+        "event_name": "AdminListUserAuthEvents",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": "UserPoolAddOnNotEnabledException",
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "00396d54-7153-45a8-a50b-e6c51ab171d5",
+        "event_time": "2026-10-22 15:21:44+07:00",
+        "event_name": "DescribeUserPool",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "61210599-a394-44f6-8b0e-c6a4bb8e05a8",
+        "event_time": "2026-10-22 15:21:44+07:00",
+        "event_name": "DescribeUserPoolClient",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "676ffcf7-bfcf-4833-b7bf-a73a4f6722bc",
+        "event_time": "2026-10-22 15:21:44+07:00",
+        "event_name": "GetLogDeliveryConfiguration",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "83cf84d8-1204-46a0-b9e1-a1120b17a9f9",
+        "event_time": "2026-10-22 15:21:32+07:00",
+        "event_name": "AdminGetUser",
+        "association": "EXACT_IDENTITY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "33d7e83b-1570-42b8-a5c0-e713d8d0edae",
+        "event_time": "2026-10-22 15:07:19+07:00",
+        "event_name": "AdminGetUser",
+        "association": "EXACT_IDENTITY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "7294be23-6f9f-4bb3-a886-ba2b7079454d",
+        "event_time": "2026-10-22 15:07:19+07:00",
+        "event_name": "AdminGetUser",
+        "association": "EXACT_IDENTITY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "9f7bf279-ee53-4203-aacf-9d90c634b2bf",
+        "event_time": "2026-10-22 14:53:31+07:00",
+        "event_name": "DescribeUserPool",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "aabc6361-23ae-4e94-89d9-ef4a4ee301d1",
+        "event_time": "2026-10-22 14:53:31+07:00",
+        "event_name": "AdminGetUser",
+        "association": "EXACT_IDENTITY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "c22990f8-1437-45d4-9d2b-48b8ac4ce227",
+        "event_time": "2026-10-22 14:53:30+07:00",
+        "event_name": "DescribeUserPoolClient",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "cbc40596-7ed4-4f73-930d-9dad4daa3e15",
+        "event_time": "2026-10-22 05:35:35+07:00",
+        "event_name": "ListGroups",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "383158bf-ec4b-431b-9b79-a658664fa9e1",
+        "event_time": "2026-10-21 13:28:07+07:00",
+        "event_name": "DescribeUserPool",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "3a0fd360-cc5d-4aca-9bfd-7fdd04f17225",
+        "event_time": "2026-10-19 18:06:53+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "2d0c19bc-d392-453c-bfd2-8ff0d23332fd",
+        "event_time": "2026-10-19 17:59:22+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "20c67999-838d-430e-adc0-c939d1f9e4d9",
+        "event_time": "2026-10-19 17:00:24+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "1ba874d7-5814-4667-895f-cf8288af6187",
+        "event_time": "2026-10-19 16:55:08+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "d50999d6-8ee3-4d80-b82f-5faf732bf2c6",
+        "event_time": "2026-10-19 16:54:02+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "754a1b99-4533-489a-94b3-8fbb34429dd6",
+        "event_time": "2026-10-19 16:48:03+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "1593c248-ed82-434c-b48e-95146c7c9eeb",
+        "event_time": "2026-10-19 16:42:26+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "e49275b4-8e6b-4103-be84-ea8cc2b85641",
+        "event_time": "2026-10-19 16:42:07+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "180ba61b-11eb-4a8c-ab9a-ceb2a605655e",
+        "event_time": "2026-10-19 16:07:37+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "5311218e-daf3-4ae4-a459-27c99e564d66",
+        "event_time": "2026-10-19 15:59:18+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "8391e3d0-2363-4257-8205-f350ccdfb632",
+        "event_time": "2026-10-19 15:57:57+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "aa31b4e2-02dc-4738-bfc4-83c4bf53a73d",
+        "event_time": "2026-10-19 15:57:44+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "0788a513-bb05-4325-bda8-186d136226fd",
+        "event_time": "2026-10-19 15:38:43+07:00",
+        "event_name": "InitiateAuth",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "28c9dc89-b30c-4887-a3ea-deda333971ec",
+        "event_time": "2026-10-19 15:38:19+07:00",
+        "event_name": "DescribeUserPoolClient",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "e5c8cb08-944e-4fa2-8b16-044b9f725567",
+        "event_time": "2026-10-19 15:38:06+07:00",
+        "event_name": "AdminSetUserPassword",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "ba09ce2b-3a67-46ad-a775-6cb84e7091b9",
+        "event_time": "2026-10-19 15:37:59+07:00",
+        "event_name": "AdminCreateUser",
+        "association": "EXACT_IDENTITY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "d34d2fa1-a94b-4be4-92a9-ba66cc9865c9",
+        "event_time": "2026-10-19 15:32:33+07:00",
+        "event_name": "CreateUserPoolClient",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": false,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "dcc9038f-0091-42c6-9dcf-2d869c0ce8d6",
+        "event_time": "2026-10-19 15:32:33+07:00",
+        "event_name": "DescribeUserPoolClient",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      },
+      {
+        "event_id": "e78baa6e-69fb-4ad2-9b5e-8656c74e8d34",
+        "event_time": "2026-10-19 15:32:32+07:00",
+        "event_name": "GetUserPoolMfaConfig",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": false
+      },
+      {
+        "event_id": "faff09f2-9afb-4f48-9a51-ba006ee3b2c6",
+        "event_time": "2026-10-19 15:32:32+07:00",
+        "event_name": "DescribeUserPool",
+        "association": "POOL_CLIENT_ONLY",
+        "read_only": true,
+        "event_category": "Management",
+        "error_code": null,
+        "review_metadata_call": true
+      }
+    ],
+    "limitation": "Management Event History only; matches request/response parameters, not redacted identities. Absence is not proof of non-use.",
+    "identity_match_scope": "Exact username/sub searched across entire event JSON in memory; matching values never exported."
+  },
+  "cloudtrail_configuration": {
+    "trails": [],
+    "event_data_stores": {
+      "items": [],
+      "truncated": false,
+      "contents": "NOT_QUERIED_NO_START_QUERY"
+    }
+  },
+  "cloudwatch_logs": [
+    {
+      "group": "/aws/lambda/policy-assistant-PolicyAssistantFunction-FqcCAzZso7lI",
+      "scope": "legacy Lambda",
+      "identity_scan_window_start": "2026-07-24 08:24:29.253008+00:00",
+      "identity_scan_window_end": "2026-10-22 08:24:29.253008+00:00",
+      "retention_days": 30,
+      "stored_bytes": 76234,
+      "latest_stream_event_ms": 1792408779493,
+      "identity_matches": [
+        {
+          "marker": "EXACT_USERNAME",
+          "matched_events_first_page": 0,
+          "timestamps_ms": [],
+          "raw_messages": "NOT_EXPORTED",
+          "pages_read": 10,
+          "matched_events": 0,
+          "truncated": false
+        },
+        {
+          "marker": "EXACT_SUB",
+          "matched_events_first_page": 0,
+          "timestamps_ms": [],
+          "raw_messages": "NOT_EXPORTED",
+          "pages_read": 10,
+          "matched_events": 0,
+          "truncated": false
+        }
+      ],
+      "status": "READ_COMPLETE_BOUNDED"
+    },
+    {
+      "group": "/aws/lambda/policy-assistant-PolicyAssistantWorker-qiWP0iSidCYq",
+      "scope": "legacy Lambda",
+      "identity_scan_window_start": "2026-07-24 08:24:29.253008+00:00",
+      "identity_scan_window_end": "2026-10-22 08:24:29.253008+00:00",
+      "retention_days": "INDEFINITE",
+      "stored_bytes": 936,
+      "latest_stream_event_ms": 1792408303468,
+      "identity_matches": [
+        {
+          "marker": "EXACT_USERNAME",
+          "matched_events_first_page": 0,
+          "timestamps_ms": [],
+          "raw_messages": "NOT_EXPORTED",
+          "pages_read": 5,
+          "matched_events": 0,
+          "truncated": false
+        },
+        {
+          "marker": "EXACT_SUB",
+          "matched_events_first_page": 0,
+          "timestamps_ms": [],
+          "raw_messages": "NOT_EXPORTED",
+          "pages_read": 5,
+          "matched_events": 0,
+          "truncated": false
+        }
+      ],
+      "status": "READ_COMPLETE_BOUNDED"
+    }
+  ],
+  "completed_at_utc": "2026-10-22T08:24:34.651339+00:00",
+  "api_logging_and_auth": [
+    {
+      "logical_id": "PolicyAssistantApi",
+      "stages": [
+        {
+          "name": "Prod",
+          "access_logging_configured": false
+        }
+      ],
+      "authorizers": [
+        {
+          "type": "JWT",
+          "approved_pool_issuer": true,
+          "approved_client_in_audience": true
+        }
+      ]
+    }
+  ],
+  "followup_completed_at_utc": "2026-10-22T08:25:23.229785+00:00"
+}

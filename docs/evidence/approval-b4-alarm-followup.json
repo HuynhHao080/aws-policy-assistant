@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-10-21T16:59:27.702859+00:00",
+  "scope": "One read-only follow-up for alarm publication lag; no new tests/messages",
+  "alarms": [
+    {
+      "name": "policy-assistant-fcaj-test-DocumentDLQAlarm-b1DKU337nh8A",
+      "state": "ALARM",
+      "updated_at_utc": "2026-10-21T16:59:17.935000+00:00"
+    },
+    {
+      "name": "policy-assistant-fcaj-test-DocumentQueueAgeAlarm-oIF96hZ3Zegg",
+      "state": "ALARM",
+      "updated_at_utc": "2026-10-21T16:55:20.520000+00:00"
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Duration",
+      "state": "OK",
+      "updated_at_utc": "2026-10-21T09:42:50.074000+00:00"
+    },
+    {
+      "name": "policy-assistant-fcaj-test-Errors",
+      "state": "OK",
+      "updated_at_utc": "2026-10-21T09:42:56.704000+00:00"
+    },
+    {
+      "name": "policy-assistant-fcaj-test-RecoveryErrorAlarm-uGYsYmQ0uObI",
+      "state": "OK",
+      "updated_at_utc": "2026-10-21T09:42:40.250000+00:00"
+    }
+  ],
+  "aws_writes": 0,
+  "email_delivery": "NOT_VERIFIED"
+}

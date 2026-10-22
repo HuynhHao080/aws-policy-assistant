@@ -1,3 +1,5 @@
+> Historical review/planning snapshot. For current source and verification use README.md, api-contract.md, final-verification.md and deployment-review.md (updated 2026-10-21). Earlier test/deployment counts below are not current acceptance evidence.
+
 # Policy Assistant — Architecture Review
 
 **Project:** `C:\Users\accli\Documents\Project\policy-assistant`

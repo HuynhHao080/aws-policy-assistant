@@ -1,0 +1,14 @@
+{
+  "scope": "Read-only checks; not proof of all deployment permissions, quota availability or service creation",
+  "region": "ap-southeast-1",
+  "checks": {
+    "lambda_account": {
+      "concurrent_executions_limit": 10,
+      "functions_count": 2
+    },
+    "cloudfront_read_access": {
+      "readable": true,
+      "page_items": 0
+    }
+  }
+}

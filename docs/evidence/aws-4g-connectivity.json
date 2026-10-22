@@ -1,0 +1,28 @@
+{
+  "observed_at_utc": "2026-10-21T08:07:36.091333+00:00",
+  "scope": "Direct unsigned network probes after owner reported Wi-Fi to 4G switch; actual execution environment",
+  "endpoints": [
+    {
+      "host": "sts.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "cloudformation.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "s3.ap-southeast-1.amazonaws.com",
+      "dns": "VERIFIED",
+      "tcp_443": "VERIFIED",
+      "tls": "VERIFIED",
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "completed_at_utc": "2026-10-21T08:07:37.979416+00:00"
+}

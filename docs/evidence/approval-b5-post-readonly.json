@@ -1,0 +1,251 @@
+{
+  "started_at_utc": "2026-10-21T17:21:16.300674+00:00",
+  "scope": "B5 post-failure READ-ONLY investigation; no auth/retry/upload/ReceiveMessage or changes",
+  "status": "READ_ONLY_INVESTIGATION_COMPLETE_BROWSER_FAILURE_UNRESOLVED",
+  "aws_writes": 0,
+  "checks": {
+    "identity_stack": {
+      "account_masked": "********0098",
+      "region": "ap-southeast-1",
+      "stack_status": "CREATE_COMPLETE"
+    },
+    "live_csp": {
+      "http_status": 200,
+      "policy": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://cognito-idp.ap-southeast-1.amazonaws.com https://*.execute-api.ap-southeast-1.amazonaws.com https://*.s3.ap-southeast-1.amazonaws.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    },
+    "s3_cors": {
+      "test_origin_allowed": true,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    "offline_signing_host": {
+      "host": "policy-assistant-fcaj-test-documents-[ACCOUNT].s3.amazonaws.com",
+      "method": "Local installed SDK signing with fake credentials only; no request and no production capability",
+      "regional_connect_src_allows_this_host": false,
+      "global_s3_host": true,
+      "not_actual_captured_lambda_response": true,
+      "sdk_version": "1.43.116",
+      "saved_build_sdk_version": "1.43.116",
+      "saved_build_matches_local_sdk": true
+    },
+    "residual_documents": [
+      {
+        "doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+        "identity_label": "TestA",
+        "metadata_exists": true,
+        "status": "uploading",
+        "s3_object_exists": false,
+        "s3_head_code": "404"
+      }
+    ],
+    "queues": {
+      "PolicyAssistantDocumentQueue": {
+        "ApproximateNumberOfMessages": "0",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0"
+      },
+      "PolicyAssistantDocumentDLQ": {
+        "ApproximateNumberOfMessages": "1",
+        "ApproximateNumberOfMessagesNotVisible": "0",
+        "ApproximateNumberOfMessagesDelayed": "0"
+      }
+    },
+    "alarms": [
+      {
+        "logical_id": "DocumentDLQAlarm",
+        "state": "ALARM"
+      },
+      {
+        "logical_id": "DocumentQueueAgeAlarm",
+        "state": "OK"
+      },
+      {
+        "logical_id": "PolicyAssistantDurationAlarm",
+        "state": "OK"
+      },
+      {
+        "logical_id": "PolicyAssistantErrorAlarm",
+        "state": "OK"
+      },
+      {
+        "logical_id": "RecoveryErrorAlarm",
+        "state": "OK"
+      }
+    ],
+    "logs": {
+      "window_start_utc": "2026-10-21T17:19:40.726000+00:00",
+      "window_end_utc": "2026-10-21T17:21:21.535308+00:00",
+      "bounded_scan": true,
+      "raw_messages_exported": false,
+      "groups": [
+        {
+          "logical_group": "PolicyAssistantLogGroup",
+          "events_scanned": 10,
+          "possible_sensitive_events": 0,
+          "pagination_remaining": true
+        },
+        {
+          "logical_group": "PolicyAssistantWorkerLogGroup",
+          "events_scanned": 0,
+          "possible_sensitive_events": 0,
+          "pagination_remaining": false
+        },
+        {
+          "logical_group": "DocumentRecoveryLogs",
+          "events_scanned": 2,
+          "possible_sensitive_events": 0,
+          "pagination_remaining": true
+        }
+      ]
+    },
+    "metrics": {
+      "read_at_utc": "2026-10-21T17:21:21.535308+00:00",
+      "series": [
+        {
+          "metric": "PolicyAssistantFunction.Invocations",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:19:00+00:00"
+          ],
+          "values": [
+            2.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantFunction.Errors",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:19:00+00:00"
+          ],
+          "values": [
+            0.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantFunction.Throttles",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:19:00+00:00"
+          ],
+          "values": [
+            0.0
+          ]
+        },
+        {
+          "metric": "PolicyAssistantWorker.Invocations",
+          "status": "Complete",
+          "timestamps": [],
+          "values": []
+        },
+        {
+          "metric": "PolicyAssistantWorker.Errors",
+          "status": "Complete",
+          "timestamps": [],
+          "values": []
+        },
+        {
+          "metric": "PolicyAssistantWorker.Throttles",
+          "status": "Complete",
+          "timestamps": [],
+          "values": []
+        },
+        {
+          "metric": "DocumentRecovery.Invocations",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:18:00+00:00",
+            "2026-10-21T17:20:00+00:00"
+          ],
+          "values": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "metric": "DocumentRecovery.Errors",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:18:00+00:00",
+            "2026-10-21T17:20:00+00:00"
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "metric": "DocumentRecovery.Throttles",
+          "status": "Complete",
+          "timestamps": [
+            "2026-10-21T17:18:00+00:00",
+            "2026-10-21T17:20:00+00:00"
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "publication_lag": true
+    },
+    "budget": {
+      "amount": {
+        "Amount": "20.0",
+        "Unit": "USD"
+      },
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "5.479",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "8.539",
+          "Unit": "USD"
+        }
+      },
+      "last_updated_utc": "2026-10-21T10:05:01.238000+00:00",
+      "email_delivery": "NOT_VERIFIED",
+      "billing_lag": true
+    },
+    "old_stack": {
+      "status": "UPDATE_COMPLETE",
+      "last_updated": "2026-10-19 11:10:29.038000+00:00",
+      "unchanged_metadata": true
+    },
+    "gateway_request_count": {
+      "window_start_utc": "2026-10-21T17:19:00Z",
+      "window_end_utc": "2026-10-21T17:20:00Z",
+      "series": [
+        {
+          "id": "sum",
+          "timestamps": [
+            "2026-10-21T17:19:00+00:00"
+          ],
+          "values": [
+            2.0
+          ],
+          "status": "Complete"
+        },
+        {
+          "id": "samples",
+          "timestamps": [
+            "2026-10-21T17:19:00+00:00"
+          ],
+          "values": [
+            2.0
+          ],
+          "status": "Complete"
+        }
+      ],
+      "attribution_note": "Gateway period aggregate may include browser-internal CORS preflights; browser runner records actual routed API calls separately"
+    }
+  },
+  "diagnosis": {
+    "status": "LIKELY_CSP_S3_ENDPOINT_MISMATCH",
+    "evidence": "Upload-session HTTP200, no S3 request reached browser routing, 2 console errors, real CSP restricts S3 to regional hostname; offline signer produces global bucket hostname",
+    "limitation": "Raw console messages and actual signed response intentionally not retained. Cause is not asserted from an exact captured CSP violation. No new signed API call or browser retry performed."
+  },
+  "completed_at_utc": "2026-10-21T17:21:24.508195+00:00"
+}

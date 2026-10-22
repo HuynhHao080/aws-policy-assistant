@@ -1,0 +1,13 @@
+{
+  "observed_at_utc": "2026-10-21T09:23:50.113388+00:00",
+  "status": "PASS_OFFLINE_EVIDENCE_CONSISTENCY",
+  "budget_overall_status": "PARTIAL",
+  "budget_configuration": "CONFIGURED_VERIFIED",
+  "recipient_confirmation": "SUBSCRIPTION_CONFIRMATION_UNVERIFIED",
+  "delivery": "DELIVERY_NOT_VERIFIED",
+  "six_existing_budget_configurations": "UNCHANGED",
+  "candidate": "AVAILABLE_45_ADD",
+  "agent_aws_write_calls": 0,
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN"
+}

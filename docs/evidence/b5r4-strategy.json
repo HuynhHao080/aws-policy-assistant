@@ -1,0 +1,182 @@
+{
+  "started_at_utc": "2026-10-21T18:01:40.201213+00:00",
+  "aws_writes": 0,
+  "decision": "NO_GO_EXECUTE_GO_LOCAL_PREPARATION",
+  "status": "VERIFIED_LOCAL_MODEL_NOT_AWS_PLAN",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "existing_candidate_status": "CREATE_COMPLETE",
+  "existing_candidate_execution_status": "AVAILABLE",
+  "call_graph": {
+    "_now": [],
+    "_s3": [],
+    "_owner": [],
+    "_owned_document": [],
+    "_strip_stage_prefix": [],
+    "_mark_failed": [
+      "_now"
+    ],
+    "worker_handler": [
+      "_process_document_record"
+    ],
+    "_process_document_record": [
+      "_mark_failed",
+      "_now",
+      "_s3"
+    ],
+    "recovery_handler": [],
+    "lambda_handler": [
+      "_document_download",
+      "_document_list",
+      "_document_status",
+      "_document_submit",
+      "_document_upload_session",
+      "_error_response",
+      "_get_policy_by_id",
+      "_owner",
+      "_search_policies",
+      "_strip_stage_prefix",
+      "_success_response",
+      "_valid_document_id"
+    ],
+    "_get_policy_by_id": [
+      "_error_response",
+      "_strip_internal_fields",
+      "_success_response"
+    ],
+    "_search_policies": [
+      "_decode_next_token",
+      "_error_response",
+      "_strip_internal_fields",
+      "_success_response"
+    ],
+    "_json_body": [],
+    "_valid_document_id": [],
+    "_document_upload_session": [
+      "_error_response",
+      "_json_body",
+      "_now",
+      "_owner",
+      "_s3",
+      "_success_response"
+    ],
+    "_document_submit": [
+      "_error_response",
+      "_json_body",
+      "_now",
+      "_owned_document",
+      "_owner",
+      "_s3",
+      "_success_response",
+      "_valid_document_id"
+    ],
+    "_document_status": [
+      "_error_response",
+      "_owned_document",
+      "_success_response"
+    ],
+    "_document_list": [
+      "_encode_next_token",
+      "_error_response",
+      "_success_response"
+    ],
+    "_document_download": [
+      "_error_response",
+      "_owned_document",
+      "_s3",
+      "_success_response"
+    ],
+    "_success_response": [
+      "_cors_headers"
+    ],
+    "_strip_internal_fields": [],
+    "_decode_next_token": [],
+    "_encode_next_token": [],
+    "_cors_headers": [],
+    "_error_response": [
+      "_cors_headers"
+    ]
+  },
+  "reachable_by_handler": {
+    "lambda_handler": [
+      "_cors_headers",
+      "_decode_next_token",
+      "_document_download",
+      "_document_list",
+      "_document_status",
+      "_document_submit",
+      "_document_upload_session",
+      "_encode_next_token",
+      "_error_response",
+      "_get_policy_by_id",
+      "_json_body",
+      "_now",
+      "_owned_document",
+      "_owner",
+      "_s3",
+      "_search_policies",
+      "_strip_internal_fields",
+      "_strip_stage_prefix",
+      "_success_response",
+      "_valid_document_id",
+      "lambda_handler"
+    ],
+    "worker_handler": [
+      "_mark_failed",
+      "_now",
+      "_process_document_record",
+      "_s3",
+      "worker_handler"
+    ],
+    "recovery_handler": [
+      "recovery_handler"
+    ]
+  },
+  "presigning_functions": [
+    "_document_download",
+    "_document_upload_session"
+  ],
+  "handlers_reaching_presigner": {
+    "lambda_handler": [
+      "_document_download",
+      "_document_upload_session"
+    ],
+    "worker_handler": [],
+    "recovery_handler": []
+  },
+  "api_only_template_changes": [
+    "PolicyAssistantFunction.Properties.CodeUri"
+  ],
+  "worker_recovery_resources_exactly_unchanged": true,
+  "worker_recovery_code_uri_matches_live": true,
+  "api_artifact_sha256": "7c0228312d950a082c8efdd9ac0caeb8ba6a51c31b32d47c782e42ecea934bcd",
+  "local_proposal_template": "Gitignored b5r4-local/api-only-original.json; not uploaded",
+  "limitations": [
+    "AST direct-name call graph; checked imports/dynamic dispatch separately",
+    "No new AWS change set; actual future dependency list UNKNOWN"
+  ],
+  "completed_at_utc": "2026-10-21T18:04:33.121837+00:00",
+  "old_worker_recovery_artifact_sha256": "8ef709aa27ab22094b83071591f9cce1b546f78aebc3b5fd00b1ec257ab6d591",
+  "zip_member_count": 2199,
+  "changed_zip_members": [
+    "app.py"
+  ],
+  "dependencies_member_hashes_equal": true,
+  "local_sam_build_code_uris_preserved": true,
+  "sam_build_scope": "Remote S3 CodeUri: all three functions skipped by SAM; packaging/template check only, not dependency rebuild",
+  "tests": {
+    "backend_unit_plus_mixed_artifact": {
+      "pass": 130,
+      "original_unit_cases": 129,
+      "new_mixed_artifact_cases": 1
+    },
+    "frontend_unit_pass": 17,
+    "browser_fixture_pass": 3,
+    "fullstack_local_pass": 1,
+    "sam_validate_lint": "PASS",
+    "sam_build_packaged_template": "PASS_REMOTE_CODE_SKIPPED",
+    "aws_e2e": "NOT_RUN"
+  },
+  "runtime_source_template_modified": false,
+  "existing_candidate_replaced": false
+}

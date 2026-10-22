@@ -1,0 +1,9 @@
+{
+  "observed_at_utc": "2026-10-21T08:17:07.702481+00:00",
+  "scope": "Offline SDK schema validation only; no CreateBudget or AWS dry run",
+  "budget_shape": "PASS",
+  "three_notification_shapes": "PASS",
+  "recipient": "PENDING_OWNER_CONFIRMATION",
+  "tag_coverage": "NOT_VERIFIED_KEYS_ABSENT",
+  "budget_write_performed": false
+}

@@ -1,0 +1,93 @@
+{
+  "prepared_at_utc": "2026-10-21T17:42:38.951413+00:00",
+  "status": "LOCAL_FIX_VERIFIED_NOT_DEPLOYED",
+  "classification": {
+    "CONFIRMED": [
+      "Live CSP matches IaC; test S3 CORS permits origin GET/POST",
+      "Old helper emits global POST/GET hosts with same SDK as deployed build",
+      "Real Edge local captures connect-src CSP violation and prevents global-host upload",
+      "One-line virtual addressing produces regional POST/GET and local frontend pipeline/hash success"
+    ],
+    "LIKELY": [
+      "Same CSP/presigner mismatch caused original B5 AWS failure"
+    ],
+    "UNKNOWN": [
+      "Original B5 exact CSP event/response not retained",
+      "Behavior of fixed artifact on AWS; no deployment/rerun"
+    ]
+  },
+  "runtime_change": "One Config line in policy_assistant/app.py",
+  "supporting_files": [
+    "tests/unit/test_presigner_endpoints.py",
+    "tests/frontend/csp.e2e.cjs",
+    "package.json"
+  ],
+  "iac_frontend_iam_cors_csp_changes": false,
+  "test_counts": {
+    "backend_pass": 129,
+    "frontend_unit_pass": 17,
+    "browser_fixture_pass": 3,
+    "fullstack_local_pass": 1,
+    "live_integration_skip_NOT_RUN": 9
+  },
+  "checks": [
+    {
+      "check": "python-lint",
+      "exit_code": 0,
+      "seconds": 0.86
+    },
+    {
+      "check": "backend-typecheck",
+      "exit_code": 0,
+      "seconds": 0.69
+    },
+    {
+      "check": "frontend-syntax",
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "check": "backend",
+      "exit_code": 0,
+      "seconds": 35.42
+    },
+    {
+      "check": "live-tests-disabled",
+      "exit_code": 0,
+      "seconds": 0.83
+    },
+    {
+      "check": "frontend",
+      "exit_code": 0,
+      "seconds": 0.81
+    },
+    {
+      "check": "browser-fixtures",
+      "exit_code": 0,
+      "seconds": 4.98
+    },
+    {
+      "check": "full-stack-local",
+      "exit_code": 0,
+      "seconds": 6.48
+    },
+    {
+      "check": "sam-lint",
+      "exit_code": 0,
+      "seconds": 35.59
+    },
+    {
+      "check": "sam-build",
+      "exit_code": 0,
+      "seconds": 16.61
+    }
+  ],
+  "source_pair_sha256": "e16c8529fdc8fe2fde6d20714699a19ce5ff8af5c962fd8e68021f2e7e34fbea",
+  "expected_deployment": "Three Lambda Code changes due shared CodeUri, NOT verified actual change set",
+  "change_set": "NOT_CREATED_NEW_S3_OBJECT_PROHIBITED",
+  "aws_writes": 0,
+  "deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED"
+}

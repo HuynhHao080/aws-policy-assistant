@@ -1,0 +1,40 @@
+{
+  "started_at_utc": "2026-10-21T16:35:43.149691+00:00",
+  "status": "VERIFIED_READ_ONLY",
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "aws_writes": 0,
+  "stack": "policy-assistant-fcaj-test",
+  "stack_status": "CREATE_COMPLETE",
+  "user_pool_id": "ap-southeast-1_EfQPshNZ7",
+  "client_belongs_to_same_pool": true,
+  "existing_user_count": 0,
+  "password_policy": {
+    "MinimumLength": 12,
+    "RequireUppercase": true,
+    "RequireLowercase": true,
+    "RequireNumbers": true,
+    "RequireSymbols": true,
+    "TemporaryPasswordValidityDays": 7
+  },
+  "username_attributes": [
+    "email"
+  ],
+  "auto_verified_attributes": [
+    "email"
+  ],
+  "required_schema_attributes": [
+    "sub"
+  ],
+  "mfa": "OFF",
+  "lambda_trigger_names": [],
+  "client_auth_flows": [
+    "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_USER_PASSWORD_AUTH"
+  ],
+  "old_stack": {
+    "status": "UPDATE_COMPLETE",
+    "last_updated": "2026-10-19 11:10:29.038000+00:00"
+  },
+  "completed_at_utc": "2026-10-21T16:35:45.311738+00:00"
+}

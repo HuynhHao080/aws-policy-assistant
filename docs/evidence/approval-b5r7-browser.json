@@ -1,0 +1,283 @@
+{
+  "approval": "B5_R7_ONLY_USER_GRANTED",
+  "started_at_utc": "2026-10-21T18:33:51.309Z",
+  "status": "PASS",
+  "browser": {
+    "engine": "Chromium",
+    "channel": "Microsoft Edge",
+    "version": "155.0.4283.62",
+    "headless": true,
+    "real_network": true,
+    "mocked_responses": false
+  },
+  "cases": {
+    "real_browser_load": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:33:52.054Z",
+      "completed_at_utc": "2026-10-21T18:33:55.268Z",
+      "configuration": "EXACT_TEST_OUTPUTS",
+      "rendered": true
+    },
+    "testa_login_search": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:33:55.268Z",
+      "completed_at_utc": "2026-10-21T18:33:57.594Z",
+      "search_count": 1,
+      "expected_policy_found": true
+    },
+    "testa_pdf_flow": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:33:57.595Z",
+      "completed_at_utc": "2026-10-21T18:34:02.595Z",
+      "hashes": "FIXTURE_WORKER_S3_BROWSER_DOWNLOAD_ALL_MATCH"
+    },
+    "testa_logout": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:02.595Z",
+      "completed_at_utc": "2026-10-21T18:34:02.929Z",
+      "global_signout_http": 200,
+      "local_state_cleared": true,
+      "protected_action_blocked_locally": true
+    },
+    "testb_login_isolation": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:02.930Z",
+      "completed_at_utc": "2026-10-21T18:34:03.603Z",
+      "foreign_document_absent": true,
+      "status_http": 404,
+      "download_http": 404
+    },
+    "testb_pdf_flow": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:03.604Z",
+      "completed_at_utc": "2026-10-21T18:34:07.327Z",
+      "hashes": "FIXTURE_WORKER_S3_BROWSER_DOWNLOAD_ALL_MATCH"
+    },
+    "testb_logout": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:07.327Z",
+      "completed_at_utc": "2026-10-21T18:34:07.578Z",
+      "global_signout_http": 200,
+      "local_state_cleared": true
+    },
+    "testa_reverse_isolation": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:07.578Z",
+      "completed_at_utc": "2026-10-21T18:34:08.309Z",
+      "foreign_document_absent": true,
+      "status_http": 404,
+      "download_http": 404
+    },
+    "testa_final_logout": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:08.309Z",
+      "completed_at_utc": "2026-10-21T18:34:08.577Z",
+      "global_signout_http": 200,
+      "local_state_cleared": true
+    },
+    "responsive_console": {
+      "status": "PASS",
+      "started_at_utc": "2026-10-21T18:34:08.577Z",
+      "completed_at_utc": "2026-10-21T18:34:08.688Z",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "horizontal_overflow": false,
+      "page_errors": 0,
+      "secret_console_matches": 0,
+      "expected_console_http_errors": "Foreign document 404 requests may produce browser console error entries; no raw text exported"
+    }
+  },
+  "counts": {
+    "logins": 3,
+    "global_signouts": 3,
+    "upload_sessions": 2,
+    "uploads": 2,
+    "downloads": 2,
+    "browser_file_downloads": 2,
+    "upload_bytes": 1218,
+    "api_requests": 17,
+    "total_dynamic_requests": 27,
+    "observed_dynamic_requests": 27
+  },
+  "api_responses": [
+    {
+      "method": "GET",
+      "path": "/Prod/policies",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "POST",
+      "path": "/Prod/documents/upload-session",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "POST",
+      "path": "/Prod/documents/submit",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/download",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 404,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/download",
+      "status": 404,
+      "identity": "TestB"
+    },
+    {
+      "method": "POST",
+      "path": "/Prod/documents/upload-session",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "POST",
+      "path": "/Prod/documents/submit",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/download",
+      "status": 200,
+      "identity": "TestB"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents",
+      "status": 200,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/status",
+      "status": 404,
+      "identity": "TestA"
+    },
+    {
+      "method": "GET",
+      "path": "/Prod/documents/[synthetic-doc]/download",
+      "status": 404,
+      "identity": "TestA"
+    }
+  ],
+  "documents": [
+    {
+      "doc_id": "doc-0ca388ce767943bdb439afb9852730ef",
+      "identity": "TestA",
+      "processed": true,
+      "worker_sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "download_metadata_sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "s3_download_sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "browser_download_sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "fixture_sha256": "ec60bdc781a7584ace672151908a04640bf4e5217d3562c4bbb374a753c4029a",
+      "browser_identity": "TestA"
+    },
+    {
+      "doc_id": "doc-1d861bcda8b647a4aedea51ef55c5717",
+      "identity": "TestB",
+      "processed": true,
+      "worker_sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "download_metadata_sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "s3_download_sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "browser_download_sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "fixture_sha256": "44467808b22c3c0c303f911341a58a2ae7fad69c10c9df1c0d2fa2b9373a4dae",
+      "browser_identity": "TestB"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/evidence/b5r7-testa-desktop.png",
+      "credentials_masked": true
+    },
+    {
+      "path": "docs/evidence/b5r7-mobile-loggedout.png",
+      "credentials_masked": true
+    }
+  ],
+  "blocked_request_count": 0,
+  "page_error_count": 0,
+  "console_error_count": 4,
+  "console_sensitive_findings": 0,
+  "aws_resource_config_writes": 0,
+  "poison_messages": 0,
+  "dlq_operations": 0,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "s3_diagnostics": [
+    {
+      "hostname": "policy-assistant-fcaj-test-documents-********0098.s3.ap-southeast-1.amazonaws.com",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "hostname": "policy-assistant-fcaj-test-documents-********0098.s3.ap-southeast-1.amazonaws.com",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "hostname": "policy-assistant-fcaj-test-documents-********0098.s3.ap-southeast-1.amazonaws.com",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "hostname": "policy-assistant-fcaj-test-documents-********0098.s3.ap-southeast-1.amazonaws.com",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "csp_violations": [],
+  "global_signout_http": [
+    200,
+    200,
+    200
+  ],
+  "integrity_contract": "Current worker validates and hashes frozen original PDF; download returns same S3 version, no PDF transformation",
+  "completed_at_utc": "2026-10-21T18:34:09.011Z",
+  "elapsed_seconds": 17.701,
+  "guard_halt": null
+}

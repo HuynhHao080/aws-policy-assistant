@@ -1,0 +1,62 @@
+{
+  "updated_at_utc": "2026-10-21T17:26:02.648155+00:00",
+  "status": "FAIL_STOPPED",
+  "decision": "NO_GO_BROWSER_ACCEPTANCE",
+  "case_counts": {
+    "PASS": 2,
+    "FAIL": 1,
+    "NOT_RUN": 7
+  },
+  "browser": {
+    "engine": "Chromium",
+    "channel": "Microsoft Edge",
+    "version": "155.0.4283.62",
+    "headless": true,
+    "real_network": true,
+    "mocked_responses": false
+  },
+  "started_at_utc": "2026-10-21T17:19:40.726Z",
+  "completed_at_utc": "2026-10-21T17:19:48.094Z",
+  "counts": {
+    "logins": 1,
+    "global_signouts": 0,
+    "upload_sessions": 1,
+    "uploads": 0,
+    "downloads": 0,
+    "browser_file_downloads": 0,
+    "upload_bytes": 0,
+    "api_requests": 2,
+    "total_dynamic_requests": 3
+  },
+  "main_queue": "EMPTY",
+  "dlq": "ONE_PREEXISTING_B4_MESSAGE_NO_RECEIVE_DELETE",
+  "diagnosis": {
+    "status": "LIKELY_CSP_S3_ENDPOINT_MISMATCH",
+    "evidence": "Upload-session HTTP200, no S3 request reached browser routing, 2 console errors, real CSP restricts S3 to regional hostname; offline signer produces global bucket hostname",
+    "limitation": "Raw console messages and actual signed response intentionally not retained. Cause is not asserted from an exact captured CSP violation. No new signed API call or browser retry performed."
+  },
+  "residual_documents": [
+    {
+      "doc_id": "doc-0dfd6bcb45f347ecab0a7ae5f4b636d1",
+      "identity_label": "TestA",
+      "metadata_exists": true,
+      "status": "uploading",
+      "s3_object_exists": false,
+      "s3_head_code": "404"
+    }
+  ],
+  "screenshots": 0,
+  "fix_applied": false,
+  "redeployed": false,
+  "rerun": false,
+  "application_source_changed": false,
+  "cleanup": "NOT_EXECUTED",
+  "commit_push": "NOT_EXECUTED",
+  "evidence": [
+    "approval-b5-execution-preflight.json",
+    "approval-b5-prelaunch-guard-diagnostic.json",
+    "approval-b5-execution-controller.json",
+    "approval-b5-browser.json",
+    "approval-b5-post-readonly.json"
+  ]
+}

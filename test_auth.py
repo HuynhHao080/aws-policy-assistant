@@ -1,19 +1,8 @@
-import urllib.request, urllib.error, json, os
+"""Compatibility entry point: credentials are prompted; tokens/URLs are never printed.
 
-with open('jwt_token.tmp') as f:
-    token = f.read().strip()
+Supply --api-url, --client-id and --username. No live calls occur on import.
+"""
+from scripts.check_live import main
 
-req = urllib.request.Request(
-    'https://ctgt5w6emf.execute-api.ap-southeast-1.amazonaws.com/Prod/policies/POL-001',
-    headers={'Authorization': f'Bearer {token}'}
-)
-try:
-    with urllib.request.urlopen(req, timeout=15) as r:
-        print('AUTHENTICATED POLICY LOOKUP:', r.status)
-        body = r.read()[:200].decode('utf-8', errors='replace')
-        print('Response snippet:', body[:100])
-except urllib.error.HTTPError as e:
-    print('AUTHENTICATED POLICY LOOKUP:', e.code)
-    print('Response snippet:', e.read()[:200].decode('utf-8', errors='replace'))
-except Exception as e:
-    print('AUTHENTICATED POLICY LOOKUP: ERROR —', type(e).__name__, str(e)[:100])
+if __name__ == "__main__":
+    raise SystemExit(main(default_mode="policies"))

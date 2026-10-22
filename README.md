@@ -1,466 +1,158 @@
-# AI Policy Assistant MVP
+> D4 local-only review: [final readiness](docs/d4-final-readiness-review.md), [internship report summary](docs/d4-internship-project-summary.md). D3-A remains **BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION**; [owner checklist](docs/d3a2-owner-operational-confirmation.md) is prepared, not answered. Public push/Pages and cleanup remain NO-GO. No fresh AWS health check or E2E is claimed.
+>
+> D2 update: public credential-candidate exposure confirmed in commit80c4eef (four auth scripts plus PROJECT_SUMMARY.md). Metadata maps one legacy policy-assistant Cognito identity, not TestA/TestB; validity/rotation/unauthorized access UNKNOWN. [D2 review](docs/d2-secret-exposure-review.md), [D3 proposal](docs/d3-credential-containment-approval.md) (D3-A conditional approval is blocked; other actions need separate approval). Public push remains NO-GO.
 
-A serverless application for policy retrieval and keyword search, built with AWS SAM, Python 3.12, API Gateway HTTP API, and DynamoDB.
+# AWS Policy Assistant — verified test demo
+
+A working policy lookup and owner-isolated PDF document application for the First Cloud AI Journey internship. Includes a browser UI, API/worker/recovery backend, offline full-stack demo, AWS SAM infrastructure, automated tests, deployment/runbook documentation and a handover packager.
+
+**Scope:** keyword search and PDF byte verification. No Bedrock/RAG, OCR, semantic search, malware scanning or policy text extraction is claimed. Local acceptance is complete only when `scripts.verify` passes; dated AWS evidence is summarized below; future execution requires separate authorization.
+
+## Current verified status — 2026-10-22
+
+Test stack `policy-assistant-fcaj-test`, ap-southeast-1, account …0098 reached **UPDATE_COMPLETE** after the approved API-only presigner update. Frontend: https://d3ataim7dfsl7t.cloudfront.net/ . D1 uses dated evidence, not a fresh AWS health check.
+
+| Evidence | Result |
+|---|---|
+| B4 AWS API/SDK |19 PASS; browser NOT_RUN at that stage |
+| Original B5 browser |FAIL upload; retained as history |
+| B5-R7 real Edge browser |10 PASS after fix: login/search/upload/process/download/hash/ownership/logout |
+| C0 inventory |45 resources/4 Retain; GO bounded test demo, NO-GO production |
+
+**Environment end date has not been set by the owner.** DLQ has approximately one diagnostic message/ALARM; alarm SNS topic has **0 subscriptions**. Budget20USD/month is account-wide, not a cap; email delivery is unverified. Cleanup and Git commit/push are not authorized.
+
+Presigner `addressing_style="virtual"` fits regional S3 CSP without broadening IAM/CSP/CORS. Deployed API has the new ZIP; Worker/Recovery retain the old verified ZIP. Source SAM still shares CodeUri: a future generic package/deploy can update all three, unlike the reviewed API-only update.
+
+See [D1 Git/handover review](docs/d1-handover-review.md), [R7 result](docs/aws-browser-b5r7-result.md), [C0 cleanup options](docs/cleanup-c0-inventory-and-acceptance.md) and [demo script](docs/demo-script.md). No production readiness or AI/RAG/OCR is claimed.
+
+## Start the complete demo (no AWS account required)
+
+On this Windows checkout:
+
+```powershell
+.venv/Scripts/python.exe -m scripts.demo_server
+```
+
+For a fresh Windows environment:
+
+```powershell
+pwsh -File scripts/start-demo.ps1
+```
+
+Open the printed loopback URL. Sign in as **alice@demo.local** without a password. Look up `POL-001`, search `refund`, upload a synthetic PDF (up to 10 MiB), wait for the worker, download with SHA-256 verification and refresh **Tài liệu của bạn**. Sign out, sign in as **bob@demo.local**, and verify that Alice's ID returns 404.
+
+The offline server runs the **real Lambda handlers** with moto-simulated S3/DynamoDB/SQS; authentication and the signed-URL adapter are explicitly local substitutes. It binds only 127.0.0.1. All demo data disappears on shutdown. It does not contact AWS or validate real Cognito tokens. Ctrl+C stops the demo.
+
+## Setup on other environments
+
+Python 3.12 and Node.js 22+ are recommended:
+
+```bash
+python3.12 -m venv .venv
+# Activate the environment using your shell's activation script.
+python -m pip install -r policy_assistant/requirements.txt -r tests/requirements.txt
+npm ci
+npx playwright install chromium
+python -m scripts.demo_server
+```
+
+Windows browser tests use system Edge; other platforms use Playwright Chromium. AWS SAM CLI is needed for infrastructure checks. Dependency manifests include the test/simulation dependencies separately from Lambda runtime dependencies.
+
+## Capabilities
+
+- Native Cognito login, initial password-change/MFA challenges, in-memory refresh and logout. Manual token mode remains an advanced diagnostic option. The current pool defaults to MFA OFF; accounts are administrator-provisioned.
+- Exact policy lookup and bounded keyword search with next-page navigation.
+- Owned upload sessions, named document library, processing status, retry and verified downloads.
+- Private S3 versioning: submissions and downloads use the same immutable version.
+- Worker success is idempotent; stale delivery attempts cannot affect newer retries.
+- Explicit failed states for invalid PDFs and exhausted transient processing. Scheduled indexed recovery covers metadata/queue-send gaps.
+- Private S3 frontend hosting through CloudFront OAC/HTTPS with security headers and matching API/document CORS, defined in SAM.
+- CloudWatch alarms/logs, SNS notification topic and optional confirmed email subscription.
 
 ## Architecture
 
-- **Region**: `ap-southeast-1`
-- **Runtime**: Python 3.12
-- **API**: API Gateway HTTP API (v2)
-- **Database**: DynamoDB (`PolicyAssistantPolicies` table, on-demand billing)
-- **Compute**: AWS Lambda
-- **Logging**: CloudWatch Logs (JSON format)
-- **Frontend**: None (API-only; no frontend files in repository)
-- **Authentication**: Cognito User Pool + API Gateway JWT Authorizer configured in `template.yaml` (not deployed)
+The Mermaid below is an assistant reference, not a student-authored FCAJ diagram. Use [the self-drawing worksheet](docs/architecture-self-draw.md) to create and explain your own official-icon diagram.
 
-## Features
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/policies/{policy_id}` | GET | Retrieve a policy by exact ID |
-| `/policies` | GET | Case-insensitive keyword search across title, category, content, and keywords |
-| `/policies?keyword=xxx&limit=N` | GET | Case-insensitive keyword search with optional result limit (max 100) and per-request scan budget |
-| `/policies?keyword=xxx&limit=N&next_token=xxx` | GET | Case-insensitive keyword search with cursor-based pagination using `next_token` from previous page |
-| `/health` | GET | Lightweight liveness check (Lambda availability only; does not verify DynamoDB connectivity) | Authentication: Public
-
-### Response Format
-
-**Success (200):**
-```json
-// GET /policies/POL-001
-{
-  "policy_id": "POL-001",
-  "title": "Customer Refund Policy",
-  "category": "Customer Service",
-  "content": "...",
-  "keywords": ["refund", "return", "customer", ...]
-}
-
-// GET /policies?keyword=refund
-{
-  "policies": [...],
-  "count": 1,
-  "scanned_count": 3,
-  "truncated": false
-}
-
-// GET /policies?keyword=legal&limit=1
-{
-  "policies": [...],
-  "count": 1,
-  "scanned_count": 3,
-  "truncated": false
-}
-
-// Budget exhausted before enough matches found
-{
-  "policies": [...],
-  "count": 5,
-  "scanned_count": 1000,
-  "truncated": true
-}
-
-// GET /health
-{
-  "status": "healthy"
-}
+```mermaid
+flowchart LR
+  UI[Browser / CloudFront HTTPS] -->|JWT| API[HTTP API + Cognito]
+  API --> Handler[API Lambda]
+  Handler --> Policies[(Policies DynamoDB)]
+  Handler --> Metadata[(Document Metadata + owner/due indexes)]
+  UI -->|Bounded signed POST / versioned GET| S3[(Private versioned S3)]
+  Handler --> Queue[SQS]
+  Recovery[Scheduled recovery Lambda] --> Metadata
+  Recovery --> Queue
+  Queue --> Worker[PDF byte verification worker]
+  Worker --> S3
+  Worker --> Metadata
+  Queue -->|Exhausted retries| DLQ[DLQ]
+  Worker --> CW[CloudWatch / SNS]
 ```
 
-**Response fields:**
-- `policies`: List of matching policy objects (internal `*_lower` fields stripped)
-- `count`: Number of policies returned in this response
-- `scanned_count`: Total number of items DynamoDB evaluated across all Scan pages
-- `truncated`: `true` if the per-request scan budget was exhausted before all matching items were found; results may be incomplete
+Each document's owner comes from the API Gateway JWT authorizer `sub`. Unknown, unowned legacy and other users' records are not exposed. Metadata listing uses an owner index. Submit freezes the S3 version and a processing attempt ID; the worker verifies bytes/hash for that attempt. A bounded two-minute recovery task re-enqueues due pending work. Invalid PDFs become terminal failures; the owner can retry transient failures as a new attempt without changing bytes. See [operations](docs/operations.md).
 
-**Error Responses:**
-- `400 Bad Request` - Missing or invalid parameters (including invalid `limit`)
-- `404 Not Found` - Policy not found or invalid endpoint
-- `405 Method Not Allowed` - Only GET supported
-- `500 Internal Server Error` - Unexpected errors or DynamoDB failures
+## Verify everything offline
 
-## Project Structure
-
-```
-policy-assistant/
-├── template.yaml              # SAM template (infrastructure)
-├── samconfig.toml             # SAM CLI configuration
-├── policy_assistant/
-│   ├── app.py                 # Lambda handler
-│   └── requirements.txt       # Python dependencies
-├── sample_data/
-│   └── policies.json          # Sample policy records (3 policies)
-├── tests/
-│   ├── requirements.txt       # Test dependencies
-│   ├── unit/
-│   │   └── test_handler.py    # Unit tests (mocked DynamoDB)
-│   └── integration/
-│       └── test_api_gateway.py # Integration tests (requires deployment)
-└── README.md                  # This file
-
-> Architecture diagrams are in `architecture.mmd` and `architecture.png`.
-> Additional documentation is available in the `docs/` directory:
-> - `docs/internship-report.md` — Full internship report
-> - `docs/evidence-index.md` — Evidence index and verification status
+```powershell
+.venv/Scripts/python.exe -m scripts.verify
 ```
 
-## Documentation
+This runs selected fatal Python lint checks, backend mypy, JS syntax, backend tests, skipped-by-default live tests, frontend tests, mocked-service browser tests, a full-stack browser scenario, SAM lint and SAM build. It removes live-test opt-in variables from its child environment and writes a sanitized result to `docs/evidence/offline-acceptance.json`. CI config runs the same functional layers and never deploys.
 
-Architecture diagrams are available as:
-- `architecture.mmd` — Mermaid flowchart source
-- `architecture.png` — Rendered diagram
+Individual commands:
 
-## Prerequisites
-
-- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) >= 1.100
-- [Python 3.12](https://www.python.org/downloads/)
-- [Docker](https://www.docker.com/) (for `sam build --use-container` and `sam local`)
-- AWS CLI configured (for deployment)
-
-## Local Development
-
-### 1. Install Dependencies
-
-```bash
-# Lambda dependencies
-cd policy-assistant/policy_assistant
-pip install -r requirements.txt -t .
-
-# Test dependencies
-cd ../tests
-pip install -r requirements.txt
-```
-
-### 2. Validate Template
-
-```bash
-cd policy-assistant
+```powershell
+.venv/Scripts/python.exe -m pytest tests/unit -q
+npm test
+npm run test:browser
+npm run test:local
+$env:PATH = "$((Resolve-Path .venv/Scripts).Path);$env:PATH"
 sam.cmd validate --lint
-```
-
-### 3. Build Application
-
-```bash
 sam.cmd build
 ```
 
-### 4. Run Unit Tests
+See [verification record](docs/final-verification.md) and [evidence index](docs/evidence-index.md). Local/mocked screenshots are not AWS proof; R7 screenshots accompany the real AWS browser evidence.
 
-```bash
-# From policy-assistant directory
-python -m pytest tests/unit -v
+## API
+
+| Route | Access | Purpose |
+|---|---|---|
+| `GET /health` | Public | Handler liveness |
+| `GET /policies/{policy_id}` | JWT | Lookup |
+| `GET /policies?keyword=...&limit=...&next_token=...` | JWT | Bounded search |
+| `GET /documents?limit=...&next_token=...` | JWT + owner | Private paginated library |
+| `POST /documents/upload-session` | JWT + sub | Named owned session |
+| `POST /documents/submit` | JWT + owner | Freeze bytes, enqueue or retry |
+| `GET /documents/{doc_id}/status` | JWT + owner | State, timestamps, failure code and hash |
+| `GET /documents/{doc_id}/download` | JWT + owner | Processed version URL |
+
+Details: [API contract](docs/api-contract.md).
+
+## AWS deployment boundary
+
+No deployment or publication is performed automatically. `samconfig.toml` defaults to the old `policy-assistant` stack: never run default deploy/sync as a test-demo step. **Previously committed passwords require rotation/revocation evidence before public push**; D1 does not change credentials or history. Follow [operations](docs/operations.md) only with separate authorization. Preserve existing data and never guess an owner for legacy records.
+
+For a future separately authorized operation, export public outputs with `python -m scripts.export_frontend_config --stack policy-assistant-fcaj-test --output .aws-sam/test-review/public-config.json`; review them before any upload. Do not overwrite the blank portable frontend config for handover. Local `python -m http.server 8080 --directory frontend` needs the intended public configuration; the complete offline server supplies its own local configuration.
+
+`tests/integration` requires both `AWS_SAM_STACK_NAME` and `POLICY_ASSISTANT_ID_TOKEN`; only run directly after choosing the intended account. `scripts/check_live.py --help` describes an explicit live policy/document verifier. Neither is part of an automatic AWS deployment.
+
+## Handover and report
+
+```powershell
+.venv/Scripts/python.exe -m scripts.build_release
 ```
 
-Expected output: All tests pass with mocked DynamoDB (no AWS credentials needed).
-
-### 5. Start Local API
-
-```bash
-sam local start-api --port 3000
-```
-
-The API will be available at `http://localhost:3000`.
-
-#### Test Endpoints Locally
-
-```bash
-# Get policy by ID
-curl http://localhost:3000/policies/POL-001
-
-# Search policies by keyword
-curl "http://localhost:3000/policies?keyword=refund"
-curl "http://localhost:3000/policies?keyword=privacy"
-curl "http://localhost:3000/policies?keyword=legal"
-
-# Test error cases
-curl http://localhost:3000/policies/POL-999        # 404
-curl "http://localhost:3000/policies?keyword="    # 400
-curl -X POST http://localhost:3000/policies/POL-001 # 405
-```
-
-### 6. Invoke Lambda Directly
-
-```bash
-# Get policy by ID
-sam local invoke PolicyAssistantFunction --event events/get_policy.json
-
-# Search policies
-sam local invoke PolicyAssistantFunction --event events/search_policies.json
-```
-
-Create test events in `events/` directory following the API Gateway HTTP API v2 format.
-
-## Sample Data
-
-Three fictional policies are included in `sample_data/policies.json`:
-
-1. **POL-001** - Customer Refund Policy (Customer Service)
-2. **POL-002** - Privacy Policy (Legal)
-3. **POL-003** - Terms of Service (Legal)
-
-### Load Sample Data into Local DynamoDB (for `sam local`)
-
-```bash
-# Start local DynamoDB
-docker run -d -p 8000:8000 amazon/dynamodb-local
-
-# Create table and load data
-aws dynamodb create-table \
-  --table-name PolicyAssistantPolicies \
-  --attribute-definitions AttributeName=policy_id,AttributeType=S \
-  --key-schema AttributeName=policy_id,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST \
-  --endpoint-url http://localhost:8000 \
-  --region ap-southeast-1
-
-# Load sample policies
-for policy in $(cat sample_data/policies.json | jq -c '.[]'); do
-  aws dynamodb put-item \
-    --table-name PolicyAssistantPolicies \
-    --item "$policy" \
-    --endpoint-url http://localhost:8000 \
-    --region ap-southeast-1
-done
-```
-
-Then run `sam local start-api --docker-network host` to connect to local DynamoDB.
-
-## Deployment
-
-### 1. Deploy to AWS
-
-```bash
-sam deploy --guided
-```
-
-Follow the prompts:
-- Stack Name: `policy-assistant`
-- AWS Region: `ap-southeast-1`
-- Confirm changes: `y`
-- Allow SAM CLI IAM role creation: `y`
-- Save to samconfig.toml: `y`
-
-### 2. Verify Deployment
-
-```bash
-# Get API URL from stack outputs
-aws cloudformation describe-stacks
-  --stack-name policy-assistant
-  --query "Stacks[0].Outputs[?OutputKey=='PolicyAssistantApiUrl'].OutputValue"
-  --output text
-```
-
-**Deployed API URL:** `https://ctgt5w6emf.execute-api.ap-southeast-1.amazonaws.com/Prod/`
-
-### 3. Load Sample Data into Production DynamoDB
-
-```bash
-for policy in $(cat sample_data/policies.json | jq -c '.[]'); do
-  aws dynamodb put-item
-    --table-name PolicyAssistantPolicies
-    --item "$policy"
-    --region ap-southeast-1
-done
-```
-
-Or using Python:
-```bash
-python -c "
-import json, boto3
-dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
-table = dynamodb.Table('PolicyAssistantPolicies')
-with open('sample_data/policies.json') as f:
-    for policy in json.load(f):
-        table.put_item(Item=policy)
-        print(f'Loaded: {policy[\"policy_id\"]}')
-"
-```
-
-### 4. Test Deployed API
-
-```bash
-API_URL="https://ctgt5w6emf.execute-api.ap-southeast-1.amazonaws.com/Prod"
-
-# Get policy by ID
-curl "$API_URL/policies/POL-001"
-
-# Search policies
-curl "$API_URL/policies?keyword=refund"
-```
-
-## Deployed API Test Results
-
-The Policy Assistant stack was deployed to AWS CloudFormation in region `ap-southeast-1` (stack name: `policy-assistant`, status: `UPDATE_COMPLETE`). Integration tests were executed against the live deployed API at `https://ctgt5w6emf.execute-api.ap-southeast-1.amazonaws.com/Prod/`.
-
-### Integration Test Results (Live API)
-
-All 9 integration tests passed against the deployed API:
-
-| Test | Endpoint | Status |
-|------|----------|--------|
-| Get existing policy | `GET /policies/POL-001` | 200 PASS |
-| Get non-existent policy | `GET /policies/POL-999` | 404 PASS |
-| Search matching keyword | `GET /policies?keyword=refund` | 200 PASS |
-| Search case-insensitive | `GET /policies?keyword=REFUND` | 200 PASS |
-| Search no matches | `GET /policies?keyword=nonexistentkeyword123` | 200 PASS |
-| Search missing keyword | `GET /policies` | 400 PASS |
-| Search empty keyword | `GET /policies?keyword=` | 400 PASS |
-| CORS preflight | `OPTIONS /policies/POL-001` | 204 PASS |
-| Invalid method | `POST /policies/POL-001` | 404 PASS |
-
-Integration tests require a deployed stack and `AWS_SAM_STACK_NAME` environment variable:
-
-```bash
-export AWS_SAM_STACK_NAME=policy-assistant
-export AWS_DEFAULT_REGION=ap-southeast-1
-python -m pytest tests/integration -v
-```
-
-### Unit Test Results
-
-All 43 unit tests pass (mocked DynamoDB, no AWS credentials required):
-
-```bash
-python -m pytest tests/unit -v --tb=short
-```
-
-```
-============================= 43 passed ==============================
-```
-
-## Cost Considerations
-
-| Resource | Pricing Model |
-|----------|---------------|
-| Lambda | Pay per request + GB-seconds |
-| API Gateway HTTP API | Pay per request |
-| DynamoDB | On-demand (PAY_PER_REQUEST) |
-| CloudWatch Logs | Pay per GB ingested/stored |
-
-**No specific cost figures are provided.** Actual monthly costs depend on request volume, data size, and usage patterns. Use the AWS Pricing Calculator to estimate costs for your expected workload.
-
-### Cost Optimization Notes
-
-- DynamoDB on-demand billing: No capacity planning needed, pay only for what you use
-- No NAT Gateway, EC2, RDS, or X-Ray - minimal infrastructure
-- HTTP API is cheaper than REST API
-- CloudWatch Logs JSON format enables efficient querying
-- Search uses DynamoDB Scan (suitable for small MVP datasets only; not for production at scale)
-
-## Cleanup
-
-To delete all AWS resources created by this stack:
-
-```bash
-sam delete --stack-name policy-assistant --region ap-southeast-1
-```
-
-Or via AWS Console: CloudFormation → Stacks → policy-assistant → Delete
-
-## Known Limitations
-
-1. **Keyword Search uses DynamoDB Scan**
-   - Scans entire table (max 1 MB per request)
-   - Pagination handled in code via `LastEvaluatedKey`
-   - Optional `limit` parameter caps returned results (max 100)
-   - Per-request scan budget of 1,000 evaluated items bounds read capacity consumption
-   - When the scan budget is exhausted, `truncated` is `true` and results may be incomplete
-   - Suitable for MVP with small dataset (< 100 policies)
-   - **Not suitable for production at scale**
-   - Production alternatives: Global Secondary Index (GSI) with `begins_with`, OpenSearch, or dedicated search service
-
-2. **Case-Insensitive Search**
-   - Implemented by storing lowercase keywords and using `contains` on lowercase fields
-   - Internal lowercase fields (`title_lower`, `category_lower`, `content_lower`, `keywords_lower`) are stripped from client responses
-   - For true case-insensitive search at scale, consider storing normalized (lowercase) copies of searchable fields
-
-3. **No Authentication/Authorization**
-   - Cognito User Pool and API Gateway JWT Authorizer are configured in `template.yaml` but NOT deployed. Policy routes require a valid JWT; `/health` remains public. A Cognito User Pool and client must be deployed and configured before live authentication can work.
-
-3. **No Request Validation at API Gateway Level**
-   - HTTP API (`AWS::Serverless::HttpApi`) does not support `RequestParameters` / JSON Schema request models (REST API feature); `keyword` and `limit` validation remains authoritative in Lambda.
-   - Lambda validates `keyword` (required, non-empty), `limit` (positive integer ≤100), and `next_token` format.
-4. **Least-Privilege IAM Verified**
-   - Lambda IAM grants only `dynamodb:GetItem` and `dynamodb:Scan` on `!GetAtt PoliciesTable.Arn`; no wildcard actions or unnecessary DynamoDB permissions.
-
-5. **CORS Limited to Localhost**
-   - Configured for `http://localhost:3000` and `http://127.0.0.1:3000`
-   - **Requires customer input**: Replace with production frontend domain in `template.yaml` before deployment
-
-6. **No Custom Domain / SSL**
-   - Uses default API Gateway domain; configure custom domain for production
-
-7. **Health Check Scope**
-   - `/health` is a lightweight liveness check that verifies Lambda handler availability only
-   - Does NOT verify DynamoDB connectivity or any downstream dependency
-   - CloudWatch Alarms and Dashboard are defined locally but NOT deployed
-   - CloudWatch Alarms: Lambda Errors > 0 and Lambda Duration > 5000ms
-   - CloudWatch Dashboard: Lambda metrics (Invocations, Errors, Duration, Throttles)
-
-8. **No AI/ML Capabilities**
-   - No Amazon Bedrock, RAG, embeddings, or vector search
-   - These are evaluated as potential future enhancements only
-
-## Extending the MVP
-
-### Add New Policy Fields
-1. Update `sample_data/policies.json`
-2. No schema migration needed (DynamoDB is schemaless)
-3. Update Lambda handler if new fields need special handling
-
-### Add Pagination with Next Token
-The current `limit` parameter caps results but does not support `next_token` for cursor-based pagination. Add `LastEvaluatedKey` passthrough for client-side pagination.
-
-### Add Policy Creation/Update Endpoints
-1. Add POST/PUT routes in `template.yaml`
-2. Add `dynamodb:PutItem`/`UpdateItem` permissions to Lambda policy
-3. Implement handlers in `app.py`
-
-### Improve Search Performance
-1. Add GSI on `category` for category-based filtering
-2. Use OpenSearch for full-text search
-3. Pre-compute search vectors for semantic search
-
-### Add Authentication
-1. Add Amazon Cognito user pool or API Gateway API keys
-2. Add Lambda authorizer for custom auth
-3. Update IAM policies accordingly
-
-## Troubleshooting
-
-### `sam build` fails
-- Ensure Docker is running
-- Check Python 3.12 is available
-- Try `sam build` without `--use-container` if local Python matches
-
-### `sam local start-api` can't connect to DynamoDB
-- Use `--docker-network host` on Linux
-- On Windows/Mac, use `host.docker.internal:8000` as endpoint
-- Or deploy to AWS and test against real DynamoDB
-
-### Unit tests fail with import errors
-- Run from `policy-assistant` directory: `python -m pytest tests/unit -v`
-- Ensure test dependencies installed: `pip install -r tests/requirements.txt`
-
-### Deployment fails with IAM errors
-- Ensure `CAPABILITY_IAM` is enabled (default in `samconfig.toml`)
-- Check AWS credentials have CloudFormation/IAM/Lambda/APIGateway/DynamoDB permissions
-- Replace CORS localhost origins with your production domain in `template.yaml` before deploying
-
-## License
-
-MIT License - Feel free to use for learning or production.
-
-## Verification Status
-
-| Item | Status | Evidence |
-|------|--------|----------|
-| Unit tests (62) | Locally tested, PASSED | `python -m pytest tests/unit -v --tb=short` |
-| Integration tests (9) | Live API tested, PASSED | `python -m pytest tests/integration -v` against deployed stack |
-| Cognito auth config | Template-tested, PASSED | `TestCognitoAuthorization` class in `tests/unit/test_handler.py` |
-| Lambda handler | Code reviewed | `policy_assistant/app.py` |
-| SAM template | Code reviewed | `template.yaml` |
-| SAM CLI validation | Available as `sam.cmd` | `sam.cmd validate --lint` has a pre-existing transform error with JWT authorizer (SAM CLI 1.168.0); `sam.cmd build` succeeds |
-| SAM CLI build | Available as `sam.cmd` | `sam.cmd build` succeeded |
-| AWS deployment | Deployed to `ap-southeast-1` | Stack `policy-assistant`, status `UPDATE_COMPLETE` (verified 2026-10-19) |
-| Production cost | Not estimated | Usage inputs unavailable |
-| Production cost | Not estimated | Usage inputs unavailable |
+Creates `dist/handover/policy-assistant-source.zip`, `policy-assistant-frontend.zip` and a SHA-256 manifest. The builder selects directories/extensions and excludes Git history; it is not a security scanner or an exact per-file Git allowlist. It does not honor every Gitignore rule. Inspect its manifest/ZIP contents before sharing; D1 does not build or certify a release ZIP. Credential rotation is still required.
+
+- [FCAJ gap analysis](docs/fcaj-gap-analysis.md)
+- [Dated official AWS COST](docs/cost-estimate.md)
+- [Student architecture worksheet](docs/architecture-self-draw.md)
+- [Technical internship report](docs/internship-report.md)
+- [FCAJ demo script](docs/demo-script.md)
+- [Current handover](docs/final-handover.md)
+- [Operations/deployment](docs/operations.md)
+
+## Practical limits
+
+A complete MVP is not a production certification. Search uses Scan (at most 1,000 evaluated items per request) and is not a stable snapshot under concurrent writes. Document/library and recovery indexes are eventually consistent. Recovery processes at most 20 due items per scheduled invocation; sustained overload/database outages require operator intervention. Signed POST constrains key, MIME and 5 bytes–10 MiB at S3; deployment enforcement remains a live acceptance check. PDF checks are byte/header verification only. S3 current expiry is 365 days plus noncurrent expiry 365 days after becoming noncurrent; versions can remain roughly 730 days. User self-registration/password reset, production custom domains, production load/cost targets are not delivered; live acceptance is limited to dated B4/R7 evidence.

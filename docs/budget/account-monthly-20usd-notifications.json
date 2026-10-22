@@ -1,0 +1,20 @@
+[
+  {
+    "NotificationType": "ACTUAL",
+    "ComparisonOperator": "GREATER_THAN",
+    "Threshold": 80,
+    "ThresholdType": "PERCENTAGE"
+  },
+  {
+    "NotificationType": "ACTUAL",
+    "ComparisonOperator": "GREATER_THAN",
+    "Threshold": 100,
+    "ThresholdType": "PERCENTAGE"
+  },
+  {
+    "NotificationType": "FORECASTED",
+    "ComparisonOperator": "GREATER_THAN",
+    "Threshold": 100,
+    "ThresholdType": "PERCENTAGE"
+  }
+]

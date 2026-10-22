@@ -1,0 +1,120 @@
+{
+  "started_at_utc": "2026-10-21T09:36:31.303625+00:00",
+  "aws_writes": 0,
+  "account_masked": "********0098",
+  "region": "ap-southeast-1",
+  "status": "VERIFIED",
+  "checks": {
+    "identity": {
+      "status": "VERIFIED",
+      "account_masked": "********0098",
+      "application_region": "ap-southeast-1"
+    },
+    "existing_stack": {
+      "status": "VERIFIED",
+      "stack_status": "UPDATE_COMPLETE",
+      "last_updated": "2026-10-19 11:10:29.038000+00:00",
+      "matches_previous_status_and_update_time": true,
+      "limitation": "No drift detection initiated; unchanged metadata does not prove absence of out-of-band resource changes"
+    },
+    "test_stack": {
+      "status": "VERIFIED",
+      "stack_status": "REVIEW_IN_PROGRESS",
+      "note": "Pending CREATE stack placeholder; CREATE_COMPLETE is change-set status, not deployed-stack status"
+    },
+    "budget": {
+      "status": "VERIFIED",
+      "name": "policy-assistant-account-monthly",
+      "type": "COST",
+      "period": "MONTHLY",
+      "amount": {
+        "Amount": "20.0",
+        "Unit": "USD"
+      },
+      "metrics": [
+        "UnblendedCost"
+      ],
+      "filter": {
+        "Not": {
+          "Dimensions": {
+            "Key": "RECORD_TYPE",
+            "Values": [
+              "Refund",
+              "Credit"
+            ]
+          }
+        }
+      },
+      "scope": "Whole account; no service/region/tag filter; standalone identity verified in prior evidence",
+      "notifications": [
+        {
+          "NotificationType": "ACTUAL",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 100.0,
+          "NotificationState": "OK"
+        },
+        {
+          "NotificationType": "ACTUAL",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 80.0,
+          "NotificationState": "OK"
+        },
+        {
+          "NotificationType": "FORECASTED",
+          "ComparisonOperator": "GREATER_THAN",
+          "Threshold": 100.0,
+          "NotificationState": "OK"
+        }
+      ],
+      "percentage_semantics": "Historical CloudTrail explicit PERCENTAGE; current ThresholdType omitted if not present above",
+      "budget_actions": 0,
+      "calculated_spend": {
+        "ActualSpend": {
+          "Amount": "5.422",
+          "Unit": "USD"
+        },
+        "ForecastedSpend": {
+          "Amount": "8.539",
+          "Unit": "USD"
+        }
+      },
+      "recipient": "ACTIVE_LEGACY_USER_REPORTED_PREVIOUSLY_NOT_REQUERIED",
+      "email_verification": "0/1_USER_REPORTED_PREVIOUSLY_NOT_REQUERIED",
+      "email_delivery": "DELIVERY_NOT_VERIFIED"
+    },
+    "cost_actual": {
+      "status": "VERIFIED",
+      "queried_at_utc": "2026-10-21T09:36:36.695114+00:00",
+      "start": "2026-10-01",
+      "end_exclusive": "2026-10-21",
+      "amount_usd": "5.4222749168",
+      "metric": "UnblendedCost",
+      "excluded": [
+        "Credit",
+        "Refund"
+      ],
+      "estimated": true,
+      "scope": "Whole verified account; current UTC day excluded; billing may lag; no stack attribution"
+    },
+    "forecast": {
+      "status": "VERIFIED",
+      "queried_at_utc": "2026-10-21T09:36:37.088611+00:00",
+      "start": "2026-10-21",
+      "end_exclusive": "2026-11-01",
+      "aws_remaining_period_usd": "3.1167914980116933",
+      "derived_full_month_baseline_usd": "8.5390664148116933",
+      "test_model_full_month_usd": "6.630595096500",
+      "planning_combined_usd": "15.1696615113116933",
+      "note": "Combined planning value is NOT an AWS forecast for new test workload"
+    },
+    "source_manifest": {
+      "status": "VERIFIED",
+      "files_compared": 8,
+      "changed_files": []
+    }
+  },
+  "cloudformation_deployment": "NOT_EXECUTED",
+  "aws_e2e": "NOT_RUN",
+  "ce_requests_attempted": 2,
+  "completed_at_utc": "2026-10-21T09:36:37.090711+00:00"
+}
