@@ -157,3 +157,29 @@ test('terminal failed processing stops polling immediately', async () => {
     await assert.rejects(app.run('waitForProcessed("doc-a")'),/PDF không hợp lệ/);
     assert.equal(app.calls.length,1);
 });
+
+test('exclusive auth modes hide advanced and signup; clear restores collapsed sections', () => {
+    const app=setup();
+    assert.equal(app.get('connection-title').dataset.authMode,'manual');
+    for(const id of ['advanced-connection','signup-information'])assert.equal(app.get(id).hidden,true);
+    assert.equal(app.get('login-form').hidden,true);
+    app.run('clearSession()');
+    assert.equal(app.get('connection-title').dataset.authMode,'unauthenticated');
+    for(const id of ['advanced-connection','signup-information']){assert.equal(app.get(id).hidden,false);assert.equal(app.get(id).open,false);}
+    app.run('acceptLogin({AuthenticationResult:{IdToken:"inert.fixture.only"}}, {region:"ap-southeast-1"}, "operator@example.test")');
+    assert.equal(app.get('connection-title').dataset.authMode,'cognito');
+    for(const id of ['advanced-connection','signup-information'])assert.equal(app.get(id).hidden,true);
+    app.get('jwt-input').value='inert.manual.only';app.run('connect()');
+    assert.equal(app.get('connection-title').dataset.authMode,'cognito');
+    assert.equal(app.run('authHeader'),'Bearer inert.fixture.only');
+    assert.equal(app.calls.length,0);
+});
+
+test('challenge cancellation restores logged out mode without signup or manual requests', () => {
+    const app=setup();app.run('clearSession(); authChallenge={name:"SMS_MFA"}; renderAuthUI()');
+    assert.equal(app.get('connection-title').dataset.authMode,'challenge');
+    assert.equal(app.get('login-form').hidden,false);assert.equal(app.get('signout').hidden,true);
+    assert.equal(app.get('advanced-connection').hidden,true);assert.equal(app.get('signup-information').hidden,true);
+    app.run('clearSession()');assert.equal(app.get('connection-title').dataset.authMode,'unauthenticated');
+    assert.equal(app.get('mfa-field').hidden,true);assert.equal(app.calls.length,0);
+});

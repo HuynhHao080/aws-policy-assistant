@@ -54,7 +54,7 @@ test('browser: upload/download integrity, errors, responsive layout and no page 
             await route.fulfill({status:200,headers,contentType:'application/pdf',body:PDF});
         });
         await page.goto(`http://127.0.0.1:${server.address().port}`);
-        await page.locator('summary').click();
+        await page.locator('#advanced-connection summary').click();
         await page.locator('#api-base').fill('https://policy.test/Prod');
         await page.locator('#jwt-input').fill('fixture.token.only');
         await page.locator('#connect').click();
@@ -77,6 +77,7 @@ test('browser: upload/download integrity, errors, responsive layout and no page 
         await page.waitForFunction(() => document.getElementById('policy-result').dataset.state === 'error');
         assert.match(await page.locator('#policy-result').innerText(),/HTTP 401/);
         unauthorized = false; failStatus = true;
+        await page.locator('#advanced-connection summary').click();
         await page.locator('#jwt-input').fill('fixture.token.only');
         await page.locator('#connect').click();
         await page.locator('#file-input').setInputFiles({name:'synthetic.pdf',mimeType:'application/pdf',buffer:PDF});
@@ -170,8 +171,19 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
             await page.goto(origin);
             await page.waitForFunction(()=>document.getElementById('environment-status').textContent.startsWith('AWS · Đăng nhập'));
             const login=async()=>{await page.locator('#username').fill('operator@example.test');await page.locator('#password').fill(fixture.password);await page.locator('#login').click();};
-            const authenticated=async()=>{await page.waitForFunction(()=>document.getElementById('login-form').hidden);assert.equal(await page.locator('#signout').isVisible(),true);};
-            await run(page,state,{login,authenticated,fixture});
+            const expectMode=async mode=>{
+                assert.equal(await page.locator('#connection-title').getAttribute('data-auth-mode'),mode);
+                const idle=mode==='unauthenticated';
+                assert.equal(await page.locator('#advanced-connection').isVisible(),idle);
+                assert.equal(await page.locator('#signup-information').isVisible(),idle);
+                assert.equal(await page.locator('#login-form').isVisible(),idle||mode==='challenge');
+                assert.equal(await page.locator('#signout').isVisible(),mode==='cognito');
+                assert.equal(await page.locator('#session-panel').isVisible(),mode==='cognito'||mode==='manual');
+                if(!idle){assert.equal(await page.locator('#advanced-connection').evaluate(el=>el.open),false);assert.equal(await page.locator('#signup-information').evaluate(el=>el.open),false);}
+            };
+            const authenticated=async()=>{await page.waitForFunction(()=>document.getElementById('login-form').hidden);assert.equal(await page.locator('#signout').isVisible(),true);await expectMode('cognito');};
+            await run(page,state,{login,authenticated,expectMode,fixture});
+            await expectMode(await page.locator('#connection-title').getAttribute('data-auth-mode'));
             assert.equal(state.external,0,'external network was blocked');
             assert.equal(state.pageErrors,0,'no page exceptions');
             assert.equal(state.sensitiveConsole,0,'no fixture secrets logged');
@@ -180,13 +192,37 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
     }
     try{
         browser=await chromium.launch(process.platform==='win32'?{channel:'msedge',headless:true}:{headless:true});
+        await t.test('signup is information only while registration is blocked',()=>scenario({},async(page,state,{expectMode})=>{
+            await expectMode('unauthenticated');
+            assert.equal(await page.locator('#signup-information').evaluate(el=>el.open),false);
+            await page.locator('#signup-information summary').click();
+            assert.match(await page.locator('#signup-information').innerText(),/Tự đăng ký chưa được mở/);
+            assert.equal(await page.locator('#signup-information input, #signup-information button, #signup-information form').count(),0);
+            assert.equal(state.operations.length+state.api.length,0);
+            await capture(page,'signup-blocked');
+        }));
+        await t.test('manual clear then Cognito logout restores the collapsed logged-out UI',()=>scenario({},async(page,state,{login,authenticated,expectMode,fixture})=>{
+            await page.locator('#signup-information summary').click();
+            await page.locator('#advanced-connection summary').click();
+            await page.locator('#jwt-input').fill(fixture.manual);await page.locator('#connect').click();
+            await expectMode('manual');
+            await page.setViewportSize({width:390,height:844});await capture(page,'mobile-manual');
+            assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+            await page.locator('#clear-token').click();await expectMode('unauthenticated');
+            for(const id of ['advanced-connection','signup-information'])assert.equal(await page.locator('#'+id).evaluate(el=>el.open),false);
+            await login();await authenticated();await page.locator('#signout').click();
+            await page.waitForFunction(()=>!document.getElementById('login-form').hidden);await expectMode('unauthenticated');
+            for(const id of ['advanced-connection','signup-information'])assert.equal(await page.locator('#'+id).evaluate(el=>el.open),false);
+            assert.equal(state.operations.filter(x=>x==='GlobalSignOut').length,1);
+            assert.equal(state.api.length,0);
+        }));
         await t.test('logged out: login only, advanced closed, apply disabled until valid input',()=>scenario({},async(page,state,{fixture})=>{
             assert.equal(await page.locator('#login-form').isVisible(),true);
             assert.equal(await page.locator('#signout').isVisible(),false);
             assert.equal(await page.locator('#clear-token').isVisible(),false);
             assert.equal(await page.locator('#advanced-connection').evaluate(el=>el.open),false);
             await capture(page,'logged-out');
-            await page.locator('summary').click();
+            await page.locator('#advanced-connection summary').click();
             assert.equal(await page.locator('#connect').isDisabled(),true);
             await page.locator('#jwt-input').fill(fixture.manual);
             await page.locator('#api-base').fill('http://policy.test/Prod');
@@ -223,7 +259,7 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
             assert.doesNotMatch(await page.locator('body').innerText(),/private-error-fixture/);
         }));
         await t.test('manual session and clear are local, not verified login or GlobalSignOut',()=>scenario({},async(page,state,{fixture})=>{
-            await page.locator('summary').click();await page.locator('#jwt-input').fill(fixture.manual);await page.locator('#connect').click();
+            await page.locator('#advanced-connection summary').click();await page.locator('#jwt-input').fill(fixture.manual);await page.locator('#connect').click();
             assert.equal(await page.locator('#login-form').isVisible(),false);
             assert.equal(await page.locator('#signout').isVisible(),false);
             assert.equal(await page.locator('#clear-token').isVisible(),true);
@@ -237,13 +273,16 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
             assert.match(await page.locator('#auth-status').innerText(),/không thu hồi token/);
         }));
         await t.test('Cognito to manual requires logout and preserves the existing session until then',()=>scenario({},async(page,state,{login,authenticated,fixture})=>{
-            await login();await authenticated();await page.locator('summary').click();await page.locator('#jwt-input').fill(fixture.manual);
+            await login();await authenticated();
+            assert.equal(await page.locator('#advanced-connection').isVisible(),false);
+            await page.evaluate(value=>{document.getElementById('jwt-input').value=value;},fixture.manual);
             assert.equal(await page.locator('#connect').isDisabled(),true);
-            assert.equal(await page.locator('#manual-switch-help').isVisible(),true);
+            assert.equal(await page.locator('#manual-switch-help').isVisible(),false);
             await page.evaluate(()=>connect());
             assert.equal(await page.locator('#signout').isVisible(),true);
             assert.match(await page.locator('#account-name').innerText(),/operator@example.test/);
             await page.locator('#signout').click();
+            await page.locator('#advanced-connection summary').click();
             await page.locator('#jwt-input').fill(fixture.manual);await page.locator('#connect').click();
             assert.match(await page.locator('#session-kind').innerText(),/Token thủ công/i);
             assert.equal(state.operations.filter(x=>x==='GlobalSignOut').length,1);
@@ -251,6 +290,8 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
         for(const challenge of ['NEW_PASSWORD_REQUIRED','SMS_MFA','SOFTWARE_TOKEN_MFA','EMAIL_OTP']){
             await t.test('challenge '+challenge+': not logged in before completion',()=>scenario({challenge},async(page,state,{login,authenticated,fixture})=>{
                 await login();await page.waitForFunction(()=>!document.getElementById('cancel-login').hidden);
+                assert.equal(await page.locator('#advanced-connection').isVisible(),false);
+                assert.equal(await page.locator('#signup-information').isVisible(),false);
                 assert.equal(await page.locator('#signout').isVisible(),false);
                 assert.equal(await page.locator('#password-field').isVisible(),false);
                 assert.equal(await page.locator('#username').getAttribute('readonly'),'');

@@ -23,6 +23,12 @@ function renderAuthUI() {
     const signedIn = !!authHeader && !!authSession;
     const manual = !!authHeader && !authSession;
     const challenge = !!authChallenge && !signedIn && !manual;
+    const mode = signedIn ? "cognito" : manual ? "manual" : challenge ? "challenge" : "unauthenticated";
+    $("connection-title").dataset.authMode = mode;
+    for (const id of ["advanced-connection", "signup-information"]) {
+        $(id).hidden = mode !== "unauthenticated";
+        if ($(id).hidden) $(id).open = false;
+    }
     if (configLoaded && config.mode !== "local") {
         show("environment-status", signedIn ? "AWS · Phiên Cognito đang hoạt động." : manual ? "AWS · Token thủ công · Danh tính chưa được xác minh." : challenge ? "AWS · Đang hoàn tất xác thực; chưa đăng nhập." : config.apiBase && config.clientId ? "AWS · Đăng nhập bằng tài khoản được cấp để bắt đầu." : "AWS · Cần cấu hình API URL và Cognito Client ID trong phần cấu hình kết nối.");
     }
@@ -58,6 +64,8 @@ function renderAuthUI() {
 }
 function clearSession() {
     authHeader = null; authSession = null; authChallenge = null;
+    $("advanced-connection").open = false;
+    $("signup-information").open = false;
     documentCursor = null; searchCursor = null; activeKeyword = "";
     for (const id of ["jwt-input", "password", "new-password", "mfa-code", "doc-id", "file-input"]) $(id).value = "";
     for (const id of ["document-list", "document-result", "upload-result"]) $(id).textContent = "";
