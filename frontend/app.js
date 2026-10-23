@@ -2,39 +2,90 @@
 let apiBase = "";
 let authHeader = null;
 let config = { mode: "aws" };
+let configLoaded = false;
 let authSession = null;
 let authChallenge = null;
 let refreshInFlight = null;
 let documentCursor = null;
 let searchCursor = null;
 let activeKeyword = "";
+let authBusy = false;
 const MAX_BYTES = 10 * 1024 * 1024;
 const $ = id => document.getElementById(id);
 function show(id, message, state = "info") { $(id).textContent = message; $(id).dataset.state = state; }
+function manualInputValid() {
+    try {
+        validateApi($("api-base").value.trim());
+        return /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test($("jwt-input").value.trim());
+    } catch { return false; }
+}
+function renderAuthUI() {
+    const signedIn = !!authHeader && !!authSession;
+    const manual = !!authHeader && !authSession;
+    const challenge = !!authChallenge && !signedIn && !manual;
+    if (configLoaded && config.mode !== "local") {
+        show("environment-status", signedIn ? "AWS · Phiên Cognito đang hoạt động." : manual ? "AWS · Token thủ công · Danh tính chưa được xác minh." : challenge ? "AWS · Đang hoàn tất xác thực; chưa đăng nhập." : config.apiBase && config.clientId ? "AWS · Đăng nhập bằng tài khoản được cấp để bắt đầu." : "AWS · Cần cấu hình API URL và Cognito Client ID trong phần cấu hình kết nối.");
+    }
+    $("login-form").hidden = signedIn || manual;
+    $("login-form").ariaBusy = String(authBusy);
+    $("session-panel").hidden = !signedIn && !manual;
+    $("session-panel").dataset.mode = manual ? "manual" : "cognito";
+    $("signout").hidden = !signedIn;
+    $("signout").disabled = authBusy;
+    $("cancel-login").hidden = !challenge;
+    $("cancel-login").disabled = authBusy;
+    $("password-field").hidden = challenge;
+    $("password").disabled = authBusy || challenge || config.mode === "local";
+    $("new-password-field").hidden = !challenge || authChallenge.name !== "NEW_PASSWORD_REQUIRED";
+    $("mfa-field").hidden = !challenge || authChallenge.name === "NEW_PASSWORD_REQUIRED";
+    $("username").readOnly = authBusy || challenge;
+    for (const id of ["api-base", "region", "client-id"]) $(id).readOnly = authBusy || signedIn || challenge;
+    $("new-password").disabled = authBusy;
+    $("mfa-code").disabled = authBusy;
+    $("jwt-input").disabled = authBusy;
+    $("login").disabled = authBusy;
+    $("login").textContent = authBusy ? "Đang xác thực…" : challenge ? (authChallenge.name === "NEW_PASSWORD_REQUIRED" ? "Đặt mật khẩu mới" : "Xác nhận mã") : "Đăng nhập";
+    $("connect").disabled = authBusy || signedIn || challenge || !manualInputValid();
+    $("manual-switch-help").hidden = !signedIn && !challenge;
+    $("clear-token").hidden = signedIn || challenge || (!manual && !$("jwt-input").value);
+    $("clear-token").disabled = authBusy;
+    $("clear-token").textContent = manual ? "Xóa phiên giao diện" : "Xóa token đã nhập";
+    $("connection-title").textContent = signedIn ? "Phiên làm việc của bạn" : manual ? "Kết nối thủ công" : challenge ? "Hoàn tất xác thực" : "Đăng nhập vào bàn làm việc";
+    $("connection-help").textContent = signedIn ? (config.mode === "local" ? "Phiên demo offline đang hoạt động trên máy này. Đăng xuất để kết thúc phiên mô phỏng." : "Phiên Cognito đang được sử dụng. Đăng xuất để thu hồi phiên qua Cognito và xóa dữ liệu trên giao diện.") : manual ? "Token chỉ được giữ trong bộ nhớ. Xóa phiên giao diện không thu hồi token phía máy chủ." : "Dùng tài khoản được cấp để tra cứu chính sách và quản lý tài liệu riêng. Thông tin phiên chỉ giữ trong bộ nhớ.";
+    $("session-kind").textContent = signedIn ? (config.mode === "local" ? "Phiên demo offline" : "Phiên Cognito") : "Token thủ công · chưa xác minh danh tính";
+    $("account-name").textContent = signedIn ? authSession.username : manual ? "Đã áp dụng token thủ công" : "";
+    $("session-help").textContent = manual ? "API sẽ xác thực chữ ký, thời hạn và quyền khi nhận yêu cầu. Phiên này không tự gia hạn hoặc GlobalSignOut." : "Bạn có thể tra cứu chính sách và sử dụng thư viện tài liệu riêng.";
+}
 function clearSession() {
     authHeader = null; authSession = null; authChallenge = null;
     documentCursor = null; searchCursor = null; activeKeyword = "";
     for (const id of ["jwt-input", "password", "new-password", "mfa-code", "doc-id", "file-input"]) $(id).value = "";
     for (const id of ["document-list", "document-result", "upload-result"]) $(id).textContent = "";
+    for (const item of document.querySelectorAll("#steps li")) item.className = "";
     show("policy-result", "Kết quả sẽ xuất hiện tại đây.");
     $("documents-next").hidden = true; $("search-next").hidden = true;
     $("new-password-field").hidden = true; $("mfa-field").hidden = true;
     show("library-status", "Đăng nhập rồi chọn Làm mới danh sách.");
-    show("auth-status", "Đã xóa token khỏi phiên.");
+    show("auth-status", "Đã xóa phiên trên giao diện. Chưa đăng nhập; thao tác này không thu hồi token phía máy chủ.");
+    renderAuthUI();
 }
 function connect() {
+    if (authBusy) return;
+    if (authSession || authChallenge) {
+        show("auth-status", "Hãy Đăng xuất Cognito hoặc Hủy xác thực trước khi áp dụng token thủ công.");
+        return;
+    }
     try {
-        const url = new URL($("api-base").value.trim());
-        if (url.username || url.password || url.search || url.hash ||
-            (url.protocol !== "https:" && !(url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname)))) throw new Error();
+        const url = validateApi($("api-base").value.trim());
         const token = $("jwt-input").value.trim();
-        if (token.split(".").length !== 3) throw new Error();
+        if (!manualInputValid()) throw new Error();
         clearSession();
-        apiBase = url.href.replace(/\/$/, "");
+        apiBase = url;
         authHeader = "Bearer " + token;
         $("jwt-input").value = "";
-        show("auth-status", "Đã nhận token. API sẽ xác thực chữ ký, thời hạn và quyền truy cập khi gửi yêu cầu.", "ok");
-    } catch { authHeader = null; show("auth-status", "Kiểm tra API URL và định dạng token (3 phần).", "error"); }
+        show("auth-status", "Phiên thủ công. API sẽ xác thực chữ ký, thời hạn và quyền truy cập khi gửi yêu cầu.", "ok");
+    } catch { show("auth-status", "Kiểm tra API URL và định dạng token (3 phần). Phiên hiện có chưa bị thay đổi.", "error"); }
+    renderAuthUI();
 }
 async function api(path, options = {}) {
     if (!apiBase || !authHeader) throw new Error("Hãy áp dụng API URL và token trước.");
@@ -45,7 +96,7 @@ async function api(path, options = {}) {
     let body;
     try { body = await response.json(); } catch { throw new Error("API không trả JSON hợp lệ."); }
     if (!response.ok) {
-        if (response.status === 401) clearSession();
+        if (response.status === 401) { clearSession(); show("auth-status", "Phiên không hợp lệ hoặc đã hết hạn. Hãy đăng nhập lại.", "error"); }
         const hints = { 400: "Dữ liệu không hợp lệ.", 401: "Token không hợp lệ hoặc đã hết hạn.", 403: "Không được phép truy cập.", 404: "Không tìm thấy tài nguyên thuộc phiên này.", 409: "Tài liệu chưa sẵn sàng. Hãy kiểm tra trạng thái hoặc gửi lại.", 429: "Quá nhiều yêu cầu. Vui lòng đợi rồi thử lại.", 503: "Dịch vụ tạm chưa sẵn sàng. Có thể gửi xử lý lại cùng Document ID." };
         throw new Error(`HTTP ${response.status}: ${hints[response.status] || "Yêu cầu thất bại. Thử lại sau."}`);
     }
@@ -118,14 +169,19 @@ async function uploadDocument() {
     step(5); show("upload-result", `Hoàn tất · ${session.doc_id}\nSHA-256 khớp file gốc, worker và bản tải về:\n${hash}`, "ok");
 }
 async function action(target, fn) {
+    if (authBusy) return;
+    authBusy = true;
     const buttons = [...document.querySelectorAll("button")];
     buttons.forEach(button => { button.disabled = true; });
+    renderAuthUI();
     try { await fn(); } catch (error) { show(target, error.message, "error"); }
-    finally { buttons.forEach(button => { button.disabled = false; }); }
+    finally { authBusy = false; buttons.forEach(button => { button.disabled = false; }); renderAuthUI(); }
 }
 function documentId() { const id = $("doc-id").value.trim(); if (!id) throw new Error("Nhập Document ID trước."); return id; }
 $("connect").addEventListener("click", connect);
 $("clear-token").addEventListener("click", clearSession);
+$("cancel-login").addEventListener("click", () => { clearSession(); show("auth-status", "Đã hủy xác thực. Bạn có thể đăng nhập lại."); });
+for (const id of ["api-base", "jwt-input"]) $(id).addEventListener("input", renderAuthUI);
 $("lookup").addEventListener("click", () => action("policy-result", async () => {
     const id = $("policy-id").value.trim(); if (!id) throw new Error("Nhập Policy ID.");
     show("policy-result", JSON.stringify(await api(`/policies/${encodeURIComponent(id)}`), null, 2), "ok");
@@ -150,6 +206,7 @@ async function loadConfig() {
         const loaded = await response.json();
         if (loaded.mode === "local" && !["localhost", "127.0.0.1"].includes(window.location.hostname)) throw new Error();
         config = loaded;
+        configLoaded = true;
         $("api-base").value = loaded.apiBase || "";
         $("region").value = loaded.region || "ap-southeast-1";
         $("client-id").value = loaded.clientId || "";
@@ -159,6 +216,7 @@ async function loadConfig() {
             show("environment-status", "DEMO OFFLINE · AWS và đăng nhập được giả lập · Dữ liệu chỉ trong bộ nhớ · alice@demo.local / bob@demo.local");
         } else show("environment-status", loaded.apiBase && loaded.clientId ? "AWS · Đăng nhập bằng tài khoản được cấp để bắt đầu." : "AWS · Cần cấu hình API URL và Cognito Client ID trong phần cấu hình kết nối.");
     } catch { show("environment-status", "Chưa đọc được config.json. Có thể cấu hình kết nối thủ công."); }
+    renderAuthUI();
 }
 async function cognito(operation, body, settings) {
     const region = settings.region;
@@ -188,6 +246,7 @@ function acceptLogin(result, settings, username) {
         expiresAt: Date.now() + Number(tokens.ExpiresIn || 3600) * 1000 };
     show("auth-status", `Đã đăng nhập: ${username}${config.mode === "local" ? " (demo offline)" : ""}.`, "ok");
     show("library-status", "Chọn Làm mới danh sách để xem tài liệu của bạn.");
+    renderAuthUI();
 }
 async function login() {
     const username = $("username").value.trim();
@@ -231,9 +290,8 @@ async function login() {
         authChallenge = { name: result.ChallengeName, session: result.Session, username: result.ChallengeParameters?.USER_ID_FOR_SRP || username, settings };
         // Cognito can return an internal username; retain the email separately for form comparisons.
         authChallenge.formUsername = username;
-        $("new-password-field").hidden = result.ChallengeName !== "NEW_PASSWORD_REQUIRED";
-        $("mfa-field").hidden = result.ChallengeName === "NEW_PASSWORD_REQUIRED";
-        show("auth-status", result.ChallengeName === "NEW_PASSWORD_REQUIRED" ? "Cần đặt mật khẩu mới. Nhập bên dưới rồi chọn Đăng nhập." : "Nhập mã xác thực rồi chọn Đăng nhập.");
+        renderAuthUI();
+        show("auth-status", result.ChallengeName === "NEW_PASSWORD_REQUIRED" ? "Cần đặt mật khẩu mới. Nhập bên dưới rồi xác nhận." : "Nhập mã xác thực rồi xác nhận.");
         return;
     }
     acceptLogin(result, settings, username);
@@ -256,6 +314,7 @@ async function refreshIfNeeded() {
         })();
     }
     await refreshInFlight;
+    renderAuthUI();
 }
 async function signout() {
     const previous = authSession, header = authHeader;
@@ -299,4 +358,5 @@ $("login-form").addEventListener("submit", event => { event.preventDefault(); ac
 $("signout").addEventListener("click", () => action("auth-status", signout));
 $("refresh-documents").addEventListener("click", () => action("library-status", () => listDocuments(false)));
 $("documents-next").addEventListener("click", () => action("library-status", () => listDocuments(true)));
+renderAuthUI();
 if (typeof window !== "undefined") loadConfig();
