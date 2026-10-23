@@ -187,11 +187,47 @@ test('auth UX: real browser state transitions with all services mocked', {timeou
             assert.equal(state.external,0,'external network was blocked');
             assert.equal(state.pageErrors,0,'no page exceptions');
             assert.equal(state.sensitiveConsole,0,'no fixture secrets logged');
-            assert.equal(await page.evaluate(()=>localStorage.length+sessionStorage.length),0,'no auth storage');
+            assert.equal(await page.evaluate(()=>localStorage.length),0,'never use localStorage for auth');
+            if(!options.allowTabPersistence)assert.equal(await page.evaluate(()=>sessionStorage.length),0,'memory-only is the default');
         }finally{await context.close();}
     }
     try{
         browser=await chromium.launch(process.platform==='win32'?{channel:'msedge',headless:true}:{headless:true});
+        await t.test('opt-in survives F5 using one server refresh; logout prevents restoration',()=>scenario({allowTabPersistence:true},async(page,state,{login,authenticated,expectMode,fixture})=>{
+            assert.equal(await page.locator('#remember-session').isChecked(),false);
+            await page.locator('#remember-session').check();await login();await authenticated();
+            const record=await page.evaluate(()=>{const x=JSON.parse(sessionStorage.getItem('policy-assistant.cognito.tab.v1'));return {keys:Object.keys(x).sort(),until:x.until};});
+            assert.deepEqual(record.keys,['apiBase','clientId','refreshToken','region','until','version']);
+            assert.equal(await page.locator('#password').inputValue(),'');
+            await page.reload();await page.waitForFunction(()=>document.getElementById('connection-title').dataset.authMode==='cognito');
+            await authenticated();assert.equal(state.refreshes,1);
+            assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('policy-assistant.cognito.tab.v1')).until),record.until);
+            await page.locator('#search').click();await page.waitForFunction(()=>document.getElementById('policy-result').dataset.state==='ok');
+            await capture(page,'restored');await page.setViewportSize({width:390,height:844});await capture(page,'mobile-restored');
+            assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+            await page.locator('#signout').click();await page.waitForFunction(()=>document.getElementById('auth-status').textContent.includes('Đã đăng xuất'));
+            assert.equal(await page.evaluate(()=>sessionStorage.length),0);await page.reload();await expectMode('unauthenticated');
+            assert.equal(state.refreshes,1);assert.equal(state.operations.filter(x=>x==='GlobalSignOut').length,1);
+        }));
+        await t.test('without opt-in Cognito and manual sessions are not restored on reload',()=>scenario({},async(page,state,{login,authenticated,expectMode,fixture})=>{
+            await login();await authenticated();await page.reload();await expectMode('unauthenticated');assert.equal(state.refreshes,undefined);
+            await page.locator('#advanced-connection summary').click();await page.locator('#jwt-input').fill(fixture.manual);await page.locator('#connect').click();await expectMode('manual');
+            await page.reload();await expectMode('unauthenticated');assert.equal(state.refreshes,undefined);
+        }));
+        await t.test('revoked or expired saved session returns to login without a false authenticated state',()=>scenario({allowTabPersistence:true},async(page,state,{login,authenticated,expectMode})=>{
+            await page.locator('#remember-session').check();await login();await authenticated();state.refreshFailure=true;
+            await page.reload();await page.waitForFunction(()=>document.getElementById('auth-status').dataset.state==='error');await expectMode('unauthenticated');assert.equal(await page.evaluate(()=>sessionStorage.length),0);
+            state.refreshFailure=false;await page.locator('#remember-session').check();await login();await authenticated();
+            await page.evaluate(()=>{const key='policy-assistant.cognito.tab.v1';const x=JSON.parse(sessionStorage.getItem(key));x.until=Date.now()-1;sessionStorage.setItem(key,JSON.stringify(x));});
+            const refreshes=state.refreshes;await page.reload();await expectMode('unauthenticated');assert.equal(state.refreshes,refreshes);assert.equal(await page.evaluate(()=>sessionStorage.length),0);
+        }));
+        await t.test('MFA challenge never persists before completion; logout failure still removes the local restore record',()=>scenario({challenge:'SMS_MFA',allowTabPersistence:true,signoutFailure:true},async(page,state,{login,authenticated,expectMode})=>{
+            await page.locator('#remember-session').check();await login();await page.waitForFunction(()=>!document.getElementById('cancel-login').hidden);
+            assert.equal(await page.evaluate(()=>sessionStorage.length),0);assert.equal(await page.locator('#remember-field').isVisible(),false);
+            await page.locator('#mfa-code').fill('123456');await page.locator('#login').click();await authenticated();assert.equal(await page.evaluate(()=>sessionStorage.length),1);
+            await page.locator('#signout').click();await page.waitForFunction(()=>document.getElementById('auth-status').dataset.state==='error');assert.equal(await page.evaluate(()=>sessionStorage.length),0);
+            await page.reload();await expectMode('unauthenticated');assert.equal(state.refreshes,undefined);
+        }));
         await t.test('signup is information only while registration is blocked',()=>scenario({},async(page,state,{expectMode})=>{
             await expectMode('unauthenticated');
             assert.equal(await page.locator('#signup-information').evaluate(el=>el.open),false);

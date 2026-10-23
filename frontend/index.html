@@ -13,13 +13,14 @@
 <p id="environment-status" class="environment" role="status">Đang đọc cấu hình ứng dụng…</p>
 <section class="intro"><p class="eyebrow">AWS · FIRST CLOUD AI JOURNEY</p><h1>Chính sách rõ ràng.<br>Tài liệu có kiểm chứng.</h1><p>Tra cứu chính sách và theo dõi tài liệu từ lúc tải lên đến khi xác minh toàn vẹn.</p></section>
 <section class="connection" aria-labelledby="connection-title">
-<div><p class="eyebrow">01 / KẾT NỐI</p><h2 id="connection-title">Đăng nhập vào bàn làm việc</h2><p class="muted" id="connection-help">Dùng tài khoản được cấp để tra cứu chính sách và quản lý tài liệu riêng. Thông tin phiên chỉ giữ trong bộ nhớ.</p></div>
+<div><p class="eyebrow">01 / KẾT NỐI</p><h2 id="connection-title">Đăng nhập vào bàn làm việc</h2><p class="muted" id="connection-help">Dùng tài khoản được cấp để tra cứu chính sách và quản lý tài liệu riêng. Chỉ lưu phiên trong tab khi bạn chọn duy trì đăng nhập.</p></div>
 <div class="fields">
 <form id="login-form">
 <label for="username">Email / tài khoản</label><input id="username" type="email" autocomplete="username" required placeholder="ban@example.com">
 <div id="password-field"><label for="password" id="password-label">Mật khẩu</label><input id="password" type="password" autocomplete="current-password"></div>
 <div id="new-password-field" hidden><label for="new-password">Mật khẩu mới</label><input id="new-password" type="password" autocomplete="new-password"></div>
 <div id="mfa-field" hidden><label for="mfa-code">Mã xác thực</label><input id="mfa-code" inputmode="numeric" autocomplete="one-time-code"></div>
+<label id="remember-field" class="remember"><input id="remember-session" type="checkbox">Giữ đăng nhập khi tải lại trong tab này (tối đa 8 giờ). Chỉ chọn trên máy riêng.</label>
 <div class="actions"><button id="login" type="submit">Đăng nhập</button><button id="cancel-login" type="button" class="secondary" hidden>Hủy xác thực</button></div>
 </form>
 <details id="signup-information" class="advanced"><summary>Đăng ký tài khoản</summary><p>Tự đăng ký chưa được mở trong môi trường demo này. Liên hệ quản trị viên dự án để được cấp tài khoản.</p></details>

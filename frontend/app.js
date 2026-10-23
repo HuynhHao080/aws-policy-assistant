@@ -10,9 +10,64 @@ let documentCursor = null;
 let searchCursor = null;
 let activeKeyword = "";
 let authBusy = false;
+let sessionGeneration = 0;
+const TAB_SESSION_KEY = "policy-assistant.cognito.tab.v1";
+const TAB_SESSION_MS = 8 * 60 * 60 * 1000;
 const MAX_BYTES = 10 * 1024 * 1024;
 const $ = id => document.getElementById(id);
 function show(id, message, state = "info") { $(id).textContent = message; $(id).dataset.state = state; }
+function dropTabSession() {
+    try {
+        const storage = globalThis.sessionStorage;
+        if (!storage) return true;
+        storage.removeItem(TAB_SESSION_KEY);
+        return storage.getItem(TAB_SESSION_KEY) === null;
+    } catch { return false; }
+}
+function configuredSession(settings) {
+    try {
+        return configLoaded && config.mode === "aws" && settings.region === config.region &&
+            settings.clientId === config.clientId && validateApi(settings.apiBase) === validateApi(config.apiBase);
+    } catch { return false; }
+}
+function saveTabSession() {
+    if (!authSession?.persistUntil || !authSession.refreshToken || !configuredSession(authSession) || authSession.persistUntil <= Date.now()) {
+        dropTabSession(); return false;
+    }
+    try {
+        globalThis.sessionStorage.setItem(TAB_SESSION_KEY, JSON.stringify({ version: 1,
+            refreshToken: authSession.refreshToken, until: authSession.persistUntil,
+            apiBase: authSession.apiBase, region: authSession.region, clientId: authSession.clientId }));
+        return true;
+    } catch { dropTabSession(); authSession.persistUntil = null; return false; }
+}
+async function restoreTabSession() {
+    let saved;
+    try {
+        const raw = globalThis.sessionStorage?.getItem(TAB_SESSION_KEY);
+        if (!raw) return;
+        saved = JSON.parse(raw);
+        if (!saved || saved.version !== 1 || !configuredSession(saved) ||
+            !Number.isFinite(saved.until) || saved.until <= Date.now() || saved.until > Date.now() + TAB_SESSION_MS ||
+            typeof saved.refreshToken !== "string" || !/^[\x21-\x7e]{1,8192}$/.test(saved.refreshToken)) {
+            dropTabSession(); return;
+        }
+    } catch { dropTabSession(); return; }
+    const generation = sessionGeneration;
+    authBusy = true; renderAuthUI(); show("auth-status", "Đang khôi phục phiên trong tab…");
+    try {
+        const settings = { apiBase: config.apiBase, region: config.region, clientId: config.clientId };
+        const result = await cognito("InitiateAuth", { ClientId: settings.clientId,
+            AuthFlow: "REFRESH_TOKEN_AUTH", AuthParameters: { REFRESH_TOKEN: saved.refreshToken } }, settings);
+        if (generation !== sessionGeneration || authHeader || authChallenge) return;
+        if (saved.until <= Date.now() || !result.AuthenticationResult?.IdToken || !result.AuthenticationResult.AccessToken) throw new Error();
+        result.AuthenticationResult.RefreshToken ||= saved.refreshToken;
+        acceptLogin(result, settings, "Tài khoản Cognito", saved.until);
+        show("auth-status", "Đã khôi phục phiên Cognito trong tab này.", "ok");
+    } catch {
+        if (generation === sessionGeneration) { clearSession(); show("auth-status", "Không khôi phục được phiên. Hãy đăng nhập lại.", "error"); }
+    } finally { authBusy = false; renderAuthUI(); }
+}
 function manualInputValid() {
     try {
         validateApi($("api-base").value.trim());
@@ -44,6 +99,8 @@ function renderAuthUI() {
     $("password").disabled = authBusy || challenge || config.mode === "local";
     $("new-password-field").hidden = !challenge || authChallenge.name !== "NEW_PASSWORD_REQUIRED";
     $("mfa-field").hidden = !challenge || authChallenge.name === "NEW_PASSWORD_REQUIRED";
+    $("remember-field").hidden = challenge;
+    $("remember-session").disabled = authBusy || challenge;
     $("username").readOnly = authBusy || challenge;
     for (const id of ["api-base", "region", "client-id"]) $(id).readOnly = authBusy || signedIn || challenge;
     $("new-password").disabled = authBusy;
@@ -57,12 +114,15 @@ function renderAuthUI() {
     $("clear-token").disabled = authBusy;
     $("clear-token").textContent = manual ? "Xóa phiên giao diện" : "Xóa token đã nhập";
     $("connection-title").textContent = signedIn ? "Phiên làm việc của bạn" : manual ? "Kết nối thủ công" : challenge ? "Hoàn tất xác thực" : "Đăng nhập vào bàn làm việc";
-    $("connection-help").textContent = signedIn ? (config.mode === "local" ? "Phiên demo offline đang hoạt động trên máy này. Đăng xuất để kết thúc phiên mô phỏng." : "Phiên Cognito đang được sử dụng. Đăng xuất để thu hồi phiên qua Cognito và xóa dữ liệu trên giao diện.") : manual ? "Token chỉ được giữ trong bộ nhớ. Xóa phiên giao diện không thu hồi token phía máy chủ." : "Dùng tài khoản được cấp để tra cứu chính sách và quản lý tài liệu riêng. Thông tin phiên chỉ giữ trong bộ nhớ.";
+    $("connection-help").textContent = signedIn ? (config.mode === "local" ? "Phiên demo offline đang hoạt động trên máy này. Đăng xuất để kết thúc phiên mô phỏng." : "Phiên Cognito đang được sử dụng. Đăng xuất để thu hồi phiên qua Cognito và xóa dữ liệu trên giao diện.") : manual ? "Token chỉ được giữ trong bộ nhớ. Xóa phiên giao diện không thu hồi token phía máy chủ." : "Dùng tài khoản được cấp để tra cứu chính sách và quản lý tài liệu riêng. Chỉ lưu phiên trong tab khi bạn chọn duy trì đăng nhập.";
     $("session-kind").textContent = signedIn ? (config.mode === "local" ? "Phiên demo offline" : "Phiên Cognito") : "Token thủ công · chưa xác minh danh tính";
     $("account-name").textContent = signedIn ? authSession.username : manual ? "Đã áp dụng token thủ công" : "";
-    $("session-help").textContent = manual ? "API sẽ xác thực chữ ký, thời hạn và quyền khi nhận yêu cầu. Phiên này không tự gia hạn hoặc GlobalSignOut." : "Bạn có thể tra cứu chính sách và sử dụng thư viện tài liệu riêng.";
+    $("session-help").textContent = manual ? "API sẽ xác thực chữ ký, thời hạn và quyền khi nhận yêu cầu. Phiên này không tự gia hạn hoặc GlobalSignOut." : authSession?.persistUntil ? "Có thể khôi phục phiên khi tải lại tab trong tối đa 8 giờ kể từ lúc đăng nhập. Đăng xuất để kết thúc phiên." : "Bạn có thể tra cứu chính sách và sử dụng thư viện tài liệu riêng. Tải lại trang sẽ cần đăng nhập lại.";
 }
 function clearSession() {
+    sessionGeneration++;
+    const removed = dropTabSession();
+    $("remember-session").checked = false;
     authHeader = null; authSession = null; authChallenge = null;
     $("advanced-connection").open = false;
     $("signup-information").open = false;
@@ -76,6 +136,7 @@ function clearSession() {
     show("library-status", "Đăng nhập rồi chọn Làm mới danh sách.");
     show("auth-status", "Đã xóa phiên trên giao diện. Chưa đăng nhập; thao tác này không thu hồi token phía máy chủ.");
     renderAuthUI();
+    return removed;
 }
 function connect() {
     if (authBusy) return;
@@ -225,6 +286,7 @@ async function loadConfig() {
         } else show("environment-status", loaded.apiBase && loaded.clientId ? "AWS · Đăng nhập bằng tài khoản được cấp để bắt đầu." : "AWS · Cần cấu hình API URL và Cognito Client ID trong phần cấu hình kết nối.");
     } catch { show("environment-status", "Chưa đọc được config.json. Có thể cấu hình kết nối thủ công."); }
     renderAuthUI();
+    if (configLoaded) await restoreTabSession();
 }
 async function cognito(operation, body, settings) {
     const region = settings.region;
@@ -244,25 +306,31 @@ async function cognito(operation, body, settings) {
     }
     return result;
 }
-function acceptLogin(result, settings, username) {
+function acceptLogin(result, settings, username, persistUntil = null) {
     const tokens = result.AuthenticationResult;
     if (!tokens || !tokens.IdToken) throw new Error("Chưa nhận được phiên đăng nhập hợp lệ.");
+    const keepInTab = persistUntil !== null || $("remember-session").checked;
     clearSession();
     apiBase = settings.apiBase;
     authHeader = "Bearer " + tokens.IdToken;
     authSession = { ...settings, username, refreshToken: tokens.RefreshToken, accessToken: tokens.AccessToken,
-        expiresAt: Date.now() + Number(tokens.ExpiresIn || 3600) * 1000 };
+        expiresAt: Date.now() + Number(tokens.ExpiresIn || 3600) * 1000,
+        persistUntil: keepInTab && configuredSession(settings) ? (persistUntil || Date.now() + TAB_SESSION_MS) : null };
+    const persisted = saveTabSession();
     show("auth-status", `Đã đăng nhập: ${username}${config.mode === "local" ? " (demo offline)" : ""}.`, "ok");
+    if (keepInTab && !persisted) show("auth-status", "Đã đăng nhập. Không lưu được phiên trong tab; tải lại trang sẽ cần đăng nhập lại.", "ok");
     show("library-status", "Chọn Làm mới danh sách để xem tài liệu của bạn.");
     renderAuthUI();
 }
 async function login() {
+    const keepInTab = $("remember-session").checked;
     const username = $("username").value.trim();
     const password = $("password").value;
     const newPassword = $("new-password").value;
     const code = $("mfa-code").value.trim();
     $("password").value = ""; $("new-password").value = ""; $("mfa-code").value = "";
     if (!authChallenge) clearSession();
+    $("remember-session").checked = keepInTab;
     if (!username) throw new Error("Nhập tài khoản đăng nhập.");
     const settings = { apiBase: validateApi($("api-base").value.trim()), region: $("region").value.trim(), clientId: $("client-id").value.trim() };
     let result;
@@ -287,7 +355,6 @@ async function login() {
             result = await cognito("RespondToAuthChallenge", { ClientId: settings.clientId, ChallengeName: authChallenge.name, Session: authChallenge.session, ChallengeResponses: responses }, settings);
         } else {
             if (!password) throw new Error("Nhập mật khẩu.");
-            clearSession();
             result = await cognito("InitiateAuth", { ClientId: settings.clientId, AuthFlow: "USER_PASSWORD_AUTH", AuthParameters: { USERNAME: username, PASSWORD: password } }, settings);
         }
     }
@@ -317,6 +384,8 @@ async function refreshIfNeeded() {
                 authHeader = "Bearer " + result.AuthenticationResult.IdToken;
                 authSession = { ...current, accessToken: result.AuthenticationResult.AccessToken,
                     expiresAt: Date.now() + Number(result.AuthenticationResult.ExpiresIn || 3600) * 1000 };
+                if (result.AuthenticationResult.RefreshToken) authSession.refreshToken = result.AuthenticationResult.RefreshToken;
+                saveTabSession();
             } catch { if (authSession === current) clearSession(); throw new Error("Phiên đã hết hạn. Hãy đăng nhập lại."); }
             finally { refreshInFlight = null; }
         })();
@@ -326,7 +395,7 @@ async function refreshIfNeeded() {
 }
 async function signout() {
     const previous = authSession, header = authHeader;
-    clearSession();
+    const locallyCleared = clearSession();
     if (config.mode === "local" && header) {
         const response = await fetch("/local-auth/logout", { method: "POST", headers: { Authorization: header } });
         if (!response.ok) throw new Error("Đã xóa phiên local; chưa xác nhận thu hồi phiên trên máy chủ demo.");
@@ -334,6 +403,7 @@ async function signout() {
         try { await cognito("GlobalSignOut", { AccessToken: previous.accessToken }, previous); }
         catch { throw new Error("Đã xóa phiên trên giao diện; chưa xác nhận thu hồi phiên Cognito. Hãy đăng nhập lại để thử đăng xuất toàn cục."); }
     }
+    if (!locallyCleared) throw new Error("Đã xóa phiên trong bộ nhớ nhưng chưa xác nhận xóa phiên lưu trong tab. Hãy đóng tab và kiểm tra cài đặt trình duyệt.");
     show("auth-status", "Đã đăng xuất và xóa dữ liệu phiên trên giao diện.", "ok");
 }
 async function searchPolicies(next) {

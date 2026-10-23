@@ -11,6 +11,8 @@ function setup(responses = []) {
     const elements = new Map();
     const calls = [];
     const state = { downloads: 0 };
+    const stored = new Map();
+    const sessionStorage = { getItem: key => stored.get(key) ?? null, setItem: (key,value) => stored.set(key,String(value)), removeItem: key => stored.delete(key) };
     const get = id => {
         if (!elements.has(id)) elements.set(id, { value: '', textContent: '', dataset: {}, files: [], addEventListener() {} });
         return elements.get(id);
@@ -20,13 +22,13 @@ function setup(responses = []) {
             createElement: () => ({ click() { state.downloads++; }, remove() {} }) },
         fetch: async (url, options) => { calls.push({url, options}); if (!responses.length) throw Error('unexpected request'); const next = responses.shift(); if (next instanceof Error) throw next; return { ok: next.status < 400, status: next.status, json: async () => next.body, arrayBuffer: async () => Uint8Array.from(next.bytes || PDF).buffer }; },
         URL: class extends URL { static createObjectURL() { return 'blob:test'; } static revokeObjectURL() {} },
-        AbortSignal, TextDecoder, Blob, FormData, Uint8Array, crypto: webcrypto,
+        AbortSignal, TextDecoder, Blob, FormData, Uint8Array, crypto: webcrypto, sessionStorage,
         setTimeout: callback => { callback(); return 0; },
     });
     get('api-base').value = 'https://api.example/Prod'; get('jwt-input').value = 'demo.token.fixture';
     vm.runInContext(source, context); vm.runInContext('connect()', context);
     const run = code => vm.runInContext(code, context);
-    return { get, run, calls, state };
+    return { get, run, calls, state, sessionStorage };
 }
 const ok = body => ({status:200, body});
 test('JWT format is not presented as verified authentication and input is cleared', () => {
@@ -182,4 +184,60 @@ test('challenge cancellation restores logged out mode without signup or manual r
     assert.equal(app.get('advanced-connection').hidden,true);assert.equal(app.get('signup-information').hidden,true);
     app.run('clearSession()');assert.equal(app.get('connection-title').dataset.authMode,'unauthenticated');
     assert.equal(app.get('mfa-field').hidden,true);assert.equal(app.calls.length,0);
+});
+
+function persistable(app) {
+    app.run('clearSession();config={mode:"aws",apiBase:"https://api.example/Prod",region:"ap-southeast-1",clientId:"fixtureclient123"};configLoaded=true');
+    app.get('remember-session').checked=true;
+}
+function acceptFixture(app) {
+    app.run('acceptLogin({AuthenticationResult:{IdToken:"inert.identity.fixture",AccessToken:"inert-access",RefreshToken:"inert-refresh",ExpiresIn:3600}},config,"operator@example.test")');
+}
+test('opt-in persists only the refresh credential and fixed binding, never ID/access/password/manual', () => {
+    const app=setup();persistable(app);acceptFixture(app);
+    const record=JSON.parse(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'));
+    assert.deepEqual(Object.keys(record).sort(),['apiBase','clientId','refreshToken','region','until','version']);
+    assert.equal(record.refreshToken,'inert-refresh');assert.ok(record.until<=Date.now()+8*3600000);
+    app.run('clearSession()');assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);
+    app.get('jwt-input').value='inert.manual.fixture';app.run('connect()');
+    assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);
+});
+test('restoration obtains fresh server tokens before showing Cognito and preserves the absolute deadline', async () => {
+    const app=setup([ok({AuthenticationResult:{IdToken:'inert.renewed.fixture',AccessToken:'inert-access',ExpiresIn:3600}})]);
+    persistable(app);acceptFixture(app);const saved=app.sessionStorage.getItem('policy-assistant.cognito.tab.v1');const until=JSON.parse(saved).until;
+    app.run('clearSession()');app.sessionStorage.setItem('policy-assistant.cognito.tab.v1',saved);
+    await app.run('restoreTabSession()');assert.equal(app.get('connection-title').dataset.authMode,'cognito');
+    assert.equal(app.run('authHeader'),'Bearer inert.renewed.fixture');assert.equal(JSON.parse(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1')).until,until);
+    assert.equal(JSON.parse(app.calls[0].options.body).AuthFlow,'REFRESH_TOKEN_AUTH');assert.equal(app.calls.length,1);
+});
+test('expired, malformed and wrong-client saved sessions never call Cognito', async () => {
+    for(const change of [r=>{r.until=Date.now()-1;},r=>{r.clientId='wrongclient';},r=>{r.until=Date.now()+9*3600000;},r=>{r.apiBase='https://untrusted.example.test';}]){
+        const app=setup();persistable(app);acceptFixture(app);const rec=JSON.parse(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'));app.run('clearSession()');change(rec);app.sessionStorage.setItem('policy-assistant.cognito.tab.v1',JSON.stringify(rec));
+        await app.run('restoreTabSession()');assert.equal(app.calls.length,0);assert.equal(app.run('authHeader'),null);assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);
+    }
+    const app=setup();persistable(app);app.sessionStorage.setItem('policy-assistant.cognito.tab.v1','{broken');await app.run('restoreTabSession()');assert.equal(app.calls.length,0);
+});
+test('revoked refresh token clears stored session and does not claim authentication', async () => {
+    const app=setup([{status:400,body:{__type:'NotAuthorizedException'}}]);persistable(app);acceptFixture(app);const saved=app.sessionStorage.getItem('policy-assistant.cognito.tab.v1');app.run('clearSession()');app.sessionStorage.setItem('policy-assistant.cognito.tab.v1',saved);
+    await app.run('restoreTabSession()');assert.equal(app.get('connection-title').dataset.authMode,'unauthenticated');assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);assert.equal(app.get('auth-status').dataset.state,'error');
+});
+test('late refresh response after Clear cannot resurrect a stored or active session', async () => {
+    const app=setup([ok({AuthenticationResult:{IdToken:'inert.late.fixture',AccessToken:'inert-access'}})]);persistable(app);acceptFixture(app);const saved=app.sessionStorage.getItem('policy-assistant.cognito.tab.v1');app.run('clearSession()');app.sessionStorage.setItem('policy-assistant.cognito.tab.v1',saved);
+    const pending=app.run('restoreTabSession()');app.run('clearSession()');await pending;
+    assert.equal(app.run('authHeader'),null);assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);
+});
+test('storage errors degrade to memory-only login instead of failing authentication', () => {
+    const app=setup();persistable(app);app.run('sessionStorage.setItem=()=>{throw new Error("storage unavailable")};');acceptFixture(app);
+    assert.equal(app.get('connection-title').dataset.authMode,'cognito');assert.equal(app.run('authSession.persistUntil'),null);assert.match(app.get('auth-status').textContent,/Không lưu được/);
+});
+
+test('restore timeout or missing authentication tokens fails closed and removes saved refresh', async () => {
+    for(const response of [new Error('synthetic network timeout'),ok({AuthenticationResult:{IdToken:'inert.partial.fixture'}})]){
+        const app=setup([response]);persistable(app);acceptFixture(app);const saved=app.sessionStorage.getItem('policy-assistant.cognito.tab.v1');app.run('clearSession()');app.sessionStorage.setItem('policy-assistant.cognito.tab.v1',saved);
+        await app.run('restoreTabSession()');assert.equal(app.run('authHeader'),null);assert.equal(app.sessionStorage.getItem('policy-assistant.cognito.tab.v1'),null);assert.equal(app.get('login').disabled,false);
+    }
+});
+test('logout reports a cleanup failure instead of promising saved session removal', async () => {
+    const app=setup([ok({})]);persistable(app);acceptFixture(app);app.run('sessionStorage.removeItem=()=>{throw new Error("synthetic denied")};');
+    await assert.rejects(app.run('signout()'),/chưa xác nhận xóa phiên lưu/);assert.equal(app.run('authSession'),null);assert.equal(app.calls.length,1);
 });
