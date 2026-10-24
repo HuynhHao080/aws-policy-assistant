@@ -305,3 +305,15 @@ def test_bedrock_sdk_wire_contract_without_network(setup, monkeypatch):
         monkeypatch.setattr(ai, "_clients", lambda: (table, ledger, client, client))
         assert value(ai.lambda_handler(event(), None))["status"] == "answered"
         stub.assert_no_pending_responses()
+
+
+def test_model_failure_emits_safe_metrics_without_question_or_exception(setup, capsys):
+    setup[4].converse.side_effect = RuntimeError("synthetic-private-exception")
+    request = event(body={"question": "synthetic-private-question", "policy_ids": ["POL-001"]})
+    assert value(ai.lambda_handler(request, None))["reason"] == "AI_UNAVAILABLE"
+    output = capsys.readouterr().out
+    assert "synthetic-private" not in output
+    logs = [json.loads(line) for line in output.splitlines()]
+    assert sum(x["ModelAttempts"] for x in logs) == 1
+    assert sum(x["Fallbacks"] for x in logs) == 1
+    assert any(x["event"] == "dependency_or_model_failure" and x["stage"] == "MODEL" for x in logs)

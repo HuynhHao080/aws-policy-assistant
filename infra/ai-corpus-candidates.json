@@ -1,0 +1,10 @@
+{
+  "approval_status": "PENDING_OWNER_CORPUS_AND_APAC_APPROVAL",
+  "source": "sample_data/policies.json; compared to TEST metadata snapshot D42",
+  "not_a_runtime_manifest": true,
+  "candidates": {
+    "POL-001": {"visibility": "shared", "sha256": "9d0c25f60380dd90f512081321852d80d223ee190561c83936149fa969a8c7e8"},
+    "POL-002": {"visibility": "shared", "sha256": "c48750543cbcd3bb927a4e6e8bf406b60be1d1137f9fb67da3515372d15610a9"},
+    "POL-003": {"visibility": "shared", "sha256": "e74787c352709c72ffc0c2ee50ea476faa3b3abf6f148b746f546a20be365d4c"}
+  }
+}

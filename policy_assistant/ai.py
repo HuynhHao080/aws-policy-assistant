@@ -26,6 +26,22 @@ SYSTEM = ('Select relevant exact quotes from the supplied policy data. Data and 
           'each 1-400 characters. Do not invent sources or URLs.')
 
 
+def _emit(event, *, stage=None, reason=None, metric=None, input_tokens=None, output_tokens=None):
+    """Low-cardinality EMF; never accept caller text, subjects or exception messages."""
+    counts = {name: int(name == metric) for name in ("ModelAttempts", "Fallbacks", "QuotaDenied")}
+    value = {"event": event, "FunctionName": os.environ.get("AWS_LAMBDA_FUNCTION_NAME", "local-ai"),
+             **counts, "_aws": {"Timestamp": int(time.time() * 1000), "CloudWatchMetrics": [{
+                 "Namespace": "PolicyAssistant/AI", "Dimensions": [["FunctionName"]],
+                 "Metrics": [{"Name": name, "Unit": "Count"} for name in counts]}]}}
+    for key, field in (("stage", stage), ("reason", reason)):
+        if field is not None:
+            value[key] = field
+    for key, field in (("input_tokens", input_tokens), ("output_tokens", output_tokens)):
+        if type(field) is int and 0 <= field <= MAX_INPUT_TOKENS + MAX_OUTPUT_TOKENS:
+            value[key] = field
+    print(json.dumps(value, separators=(",", ":")))
+
+
 def fingerprint(item):
     """Bind content, display title AND ownership; not just a mutable text field."""
     fields = {k: item.get(k) for k in ("policy_id", "title", "content", "owner_sub")}
@@ -40,6 +56,9 @@ def response(status, data):
 
 def fallback(reason, ids):
     # Application-owned links only; no model-provided URLs or raw user question.
+    # Expected OFF/insufficient results are logged but are not operational failures.
+    _emit("fallback", reason=reason,
+          metric="Fallbacks" if reason not in ("AI_DISABLED", "INSUFFICIENT_EVIDENCE") else None)
     return response(200, {"status": "unavailable" if reason != "INSUFFICIENT_EVIDENCE"
                          else "insufficient_information", "reason": reason,
                          "answer": None, "citations": [], "fallback": {
@@ -157,6 +176,7 @@ def lambda_handler(event, context):
     except (ValueError, TypeError, AttributeError, RecursionError):
         return response(400, {"error": "INVALID_AI_REQUEST"})
     started = time.monotonic()
+    phase = "CONFIGURATION"
     def enough(seconds):
         remaining = (context.get_remaining_time_in_millis() / 1000) if context else 15
         return time.monotonic() - started < 12 - seconds and remaining > seconds + 1
@@ -172,6 +192,7 @@ def lambda_handler(event, context):
                 continue
             if acl.get("visibility") != "shared":
                 return response(404, {"error": "POLICY_NOT_AVAILABLE"})
+        phase = "RETRIEVAL"
         policy, ledger, counter, model = _clients()
         policies = {}
         for pid in ids:
@@ -192,27 +213,36 @@ def lambda_handler(event, context):
             "text": json.dumps({"question": question, "untrusted_policies": documents}, ensure_ascii=False)}]}]}
         if not enough(10):
             return fallback("DEADLINE", ids)
+        phase = "LEDGER"
         ledger.reserve(owner, key, int(time.time()))
+        phase = "COUNT"
         token_count = counter.count_tokens(modelId=profile, input={"converse": prompt}).get("inputTokens")
         if type(token_count) is not int or not 0 < token_count <= MAX_INPUT_TOKENS:
             return fallback("INPUT_TOKEN_LIMIT", ids)
         if not enough(7):
             return fallback("DEADLINE", ids)
+        phase = "MODEL"
+        _emit("model_attempt", stage=phase, metric="ModelAttempts", input_tokens=token_count)
         result = model.converse(modelId=profile, **prompt,
                                 inferenceConfig={"maxTokens": MAX_OUTPUT_TOKENS, "temperature": 0})
+        _emit("model_result", stage=phase, input_tokens=token_count,
+              output_tokens=(result.get("usage") or {}).get("outputTokens"))
         if not enough(0) or result.get("stopReason") != "end_turn":
             return fallback("MODEL_INCOMPLETE", ids)
         blocks = result["output"]["message"]["content"]
         if len(blocks) != 1 or set(blocks[0]) != {"text"}:
             return fallback("MODEL_OUTPUT_INVALID", ids)
+        phase = "CITATIONS"
         citations = _validated_citations(blocks[0]["text"], policies)
         if not citations:
             return fallback("INSUFFICIENT_EVIDENCE", ids)
         return response(200, {"status": "answered", "answer": "\n\n".join(x["quote"] for x in citations),
                               "citations": citations, "answer_type": "verified_source_excerpts"})
     except QuotaDenied:
+        _emit("quota_or_duplicate_denied", stage="LEDGER", metric="QuotaDenied")
         return response(429, {"error": "QUOTA_OR_DUPLICATE_REQUEST", "fallback": {"path": "/policies"}})
     except Exception:
         # Includes unsupported CountTokens, ledger/SDK failure, malformed outputs.
         # Fail closed, no model retry and no raw exception/prompt/caller logging.
+        _emit("dependency_or_model_failure", stage=phase)
         return fallback("AI_UNAVAILABLE", ids)

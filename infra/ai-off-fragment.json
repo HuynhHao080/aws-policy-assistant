@@ -1,0 +1,90 @@
+{
+  "Parameters": {
+    "AIArtifactBucket": {"Type": "String", "Description": "Future approved AI-only deployment artifact bucket; no upload in local preparation"},
+    "AIArtifactKey": {"Type": "String", "Description": "Future unique AI-only ZIP key; checksum verification required"},
+    "AIFeatureEnabled": {"Type": "String", "Default": "false", "AllowedValues": ["false"], "Description": "D43 OFF-only draft. Enabling requires a separately reviewed patch and approval."},
+    "AIApprovedSubjects": {"Type": "String", "Default": "", "AllowedValues": [""], "NoEcho": true, "Description": "PENDING owner approval; never infer or fill Cognito subjects"},
+    "AIApprovedPolicyManifest": {"Type": "String", "Default": "{}", "AllowedValues": ["{}"], "Description": "PENDING corpus approval; candidate hashes are not active authorization"},
+    "AIBedrockPermissionApproval": {"Type": "String", "Default": "PENDING", "AllowedValues": ["PENDING"], "Description": "No active model permissions in OFF candidate"}
+  },
+  "Conditions": {
+    "AIBedrockPermissionApproved": {"Fn::Equals": [{"Ref": "AIBedrockPermissionApproval"}, "APPROVED"]}
+  },
+  "Resources": {
+    "AIQuotaTable": {
+      "Type": "AWS::DynamoDB::Table", "DeletionPolicy": "Retain", "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "BillingMode": "PAY_PER_REQUEST",
+        "AttributeDefinitions": [{"AttributeName": "pk", "AttributeType": "S"}],
+        "KeySchema": [{"AttributeName": "pk", "KeyType": "HASH"}],
+        "TimeToLiveSpecification": {"AttributeName": "expires", "Enabled": true},
+        "Tags": [{"Key": "Environment", "Value": "fcaj-test"}, {"Key": "Project", "Value": "PolicyAssistant"}]
+      }
+    },
+    "AILogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {"LogGroupName": {"Fn::Sub": "/aws/lambda/${AWS::StackName}-ai"}, "RetentionInDays": 7}
+    },
+    "AIRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]},
+        "Policies": [{"PolicyName": "AIExactDataAndLogAccess", "PolicyDocument": {"Version": "2012-10-17", "Statement": [
+          {"Effect": "Allow", "Action": ["logs:CreateLogStream", "logs:PutLogEvents"], "Resource": {"Fn::GetAtt": ["AILogGroup", "Arn"]}},
+          {"Effect": "Allow", "Action": ["dynamodb:GetItem"], "Resource": {"Fn::GetAtt": ["PoliciesTable", "Arn"]}, "Condition": {"ForAllValues:StringEquals": {"dynamodb:LeadingKeys": ["POL-001", "POL-002", "POL-003"]}}},
+          {"Effect": "Allow", "Action": ["dynamodb:PutItem", "dynamodb:UpdateItem"], "Resource": {"Fn::GetAtt": ["AIQuotaTable", "Arn"]}, "Condition": {"ForAnyValue:StringEquals": {"dynamodb:EnclosingOperation": ["TransactWriteItems"]}}}
+        ]}}]
+      }
+    },
+    "AIFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": {"Fn::Sub": "${AWS::StackName}-ai"}, "Runtime": "python3.12", "Handler": "ai.lambda_handler",
+        "Architectures": ["x86_64"], "MemorySize": 256, "Timeout": 15,
+        "Code": {"S3Bucket": {"Ref": "AIArtifactBucket"}, "S3Key": {"Ref": "AIArtifactKey"}},
+        "Role": {"Fn::GetAtt": ["AIRole", "Arn"]},
+        "LoggingConfig": {"LogGroup": {"Ref": "AILogGroup"}, "LogFormat": "Text"},
+        "Environment": {"Variables": {
+          "AI_ENABLED": {"Ref": "AIFeatureEnabled"}, "AI_ALLOWED_SUBS": {"Ref": "AIApprovedSubjects"},
+          "AI_POLICY_MANIFEST": {"Ref": "AIApprovedPolicyManifest"}, "AI_QUOTA_TABLE": {"Ref": "AIQuotaTable"},
+          "POLICIES_TABLE_NAME": {"Ref": "PoliciesTable"}, "AI_MODEL_PROFILE": "apac.amazon.nova-lite-v1:0"
+        }}
+      }
+    },
+    "AIInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction", "FunctionName": {"Ref": "AIFunction"}, "Principal": "apigateway.amazonaws.com",
+        "SourceAccount": {"Ref": "AWS::AccountId"},
+        "SourceArn": {"Fn::Sub": "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${PolicyAssistantApi}/Prod/POST/ai/ask"}
+      }
+    },
+    "AIBedrockPolicy": {
+      "Type": "AWS::IAM::Policy", "Condition": "AIBedrockPermissionApproved",
+      "Properties": {"PolicyName": "AIExactModelAccessPendingApproval", "Roles": [{"Ref": "AIRole"}], "PolicyDocument": {"Version": "2012-10-17", "Statement": [
+        {"Effect": "Allow", "Action": "bedrock:InvokeModel", "Resource": {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-southeast-1:${AWS::AccountId}:inference-profile/apac.amazon.nova-lite-v1:0"}},
+        {"Effect": "Allow", "Action": "bedrock:InvokeModel", "Resource": [
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-southeast-1::foundation-model/amazon.nova-lite-v1:0"},
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-southeast-2::foundation-model/amazon.nova-lite-v1:0"},
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-northeast-1::foundation-model/amazon.nova-lite-v1:0"},
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-northeast-2::foundation-model/amazon.nova-lite-v1:0"},
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-northeast-3::foundation-model/amazon.nova-lite-v1:0"},
+          {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-south-1::foundation-model/amazon.nova-lite-v1:0"}
+        ], "Condition": {"StringEquals": {"bedrock:InferenceProfileArn": {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-southeast-1:${AWS::AccountId}:inference-profile/apac.amazon.nova-lite-v1:0"}}}},
+        {"Effect": "Allow", "Action": "bedrock:CountTokens", "Resource": {"Fn::Sub": "arn:${AWS::Partition}:bedrock:ap-southeast-1::foundation-model/amazon.nova-lite-v1:0"}}
+      ]}}
+    },
+    "AIFallbackAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {"Namespace": "PolicyAssistant/AI", "MetricName": "Fallbacks", "Dimensions": [{"Name": "FunctionName", "Value": {"Ref": "AIFunction"}}], "Statistic": "Sum", "Period": 300, "EvaluationPeriods": 1, "Threshold": 1, "ComparisonOperator": "GreaterThanOrEqualToThreshold", "TreatMissingData": "notBreaching", "AlarmActions": [{"Ref": "AlertTopic"}]}
+    },
+    "AIErrorAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {"Namespace": "AWS/Lambda", "MetricName": "Errors", "Dimensions": [{"Name": "FunctionName", "Value": {"Ref": "AIFunction"}}], "Statistic": "Sum", "Period": 300, "EvaluationPeriods": 1, "Threshold": 1, "ComparisonOperator": "GreaterThanOrEqualToThreshold", "TreatMissingData": "notBreaching", "AlarmActions": [{"Ref": "AlertTopic"}]}
+    },
+    "AIThrottleAlarm": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {"Namespace": "AWS/Lambda", "MetricName": "Throttles", "Dimensions": [{"Name": "FunctionName", "Value": {"Ref": "AIFunction"}}], "Statistic": "Sum", "Period": 300, "EvaluationPeriods": 1, "Threshold": 1, "ComparisonOperator": "GreaterThanOrEqualToThreshold", "TreatMissingData": "notBreaching", "AlarmActions": [{"Ref": "AlertTopic"}]}
+    }
+  }
+}
