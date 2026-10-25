@@ -1,12 +1,22 @@
+> **Security status clarification — 25 October 2026:** The historical containment/publication prerequisite is **CLOSED_WITH_EVIDENCE**: approved D3-A containment was verified, D9 produced validated sanitized history, and D11 verified its authorized publication. This does not establish password rotation, absence of unauthorized access, removal of cached/cloned copies, or elimination of all security risks. New publication, deployment and cleanup still require their own approval.
+>
+> The D2/D4 notices below are preserved historical snapshots from before that remediation; their pending/NO-GO statements describe that earlier stage, not an unresolved current containment prerequisite.
+
 > D4 local-only review: [final readiness](docs/d4-final-readiness-review.md), [internship report summary](docs/d4-internship-project-summary.md). D3-A remains **BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION**; [owner checklist](docs/d3a2-owner-operational-confirmation.md) is prepared, not answered. Public push/Pages and cleanup remain NO-GO. No fresh AWS health check or E2E is claimed.
 >
 > D2 update: public credential-candidate exposure confirmed in commit80c4eef (four auth scripts plus PROJECT_SUMMARY.md). Metadata maps one legacy policy-assistant Cognito identity, not TestA/TestB; validity/rotation/unauthorized access UNKNOWN. [D2 review](docs/d2-secret-exposure-review.md), [D3 proposal](docs/d3-credential-containment-approval.md) (D3-A conditional approval is blocked; other actions need separate approval). Public push remains NO-GO.
 
 # AWS Policy Assistant — verified test demo
 
+## Bounded AI pilot — 25 October 2026
+
+The deployed TEST frontend has reached **LIVE_UI_ACCEPTANCE_PASS_BY_OWNER** for the TestA-only / POL-001 / fixed-question pilot. [Pilot completion and limitations](docs/ai-pilot-completion.md) records the architecture, acceptance provenance, quota/usage, retained deviations and next steps. TestA/TestB are role labels, not login identifiers.
+
+This dated deployment summary updates the older runtime-status statements below; it does not erase historical failures or waive repository security/publication gates. The deployed pilot includes reviewed local integration that has not yet been published to main. A documentation-only update does not make the current source branch reproduce that deployment. This is not production certification or approval for additional inference.
+
 A working policy lookup and owner-isolated PDF document application for the First Cloud AI Journey internship. Includes a browser UI, API/worker/recovery backend, offline full-stack demo, AWS SAM infrastructure, automated tests, deployment/runbook documentation and a handover packager.
 
-**Scope:** keyword search and PDF byte verification. No Bedrock/RAG, OCR, semantic search, malware scanning or policy text extraction is claimed. Local acceptance is complete only when `scripts.verify` passes; dated AWS evidence is summarized below; future execution requires separate authorization.
+**Historical scope (22 October 2026, before the AI pilot):** keyword search and PDF byte verification. No Bedrock/RAG, OCR, semantic search, malware scanning or policy text extraction is claimed. Local acceptance is complete only when `scripts.verify` passes; dated AWS evidence is summarized below; future execution requires separate authorization.
 
 ## Current verified status — 2026-10-22
 
