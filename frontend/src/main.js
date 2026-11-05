@@ -4,7 +4,7 @@ import {LatestTask,pollDocument} from './ui-flow.js';
 import {ShopEditor,shopFields} from './shop-editor.js';
 import { UserManager, WebStorageStateStore, Log } from 'oidc-client-ts';
 import { createApi, uploadPdf, statusText } from './api.js';
-import { PolicyEditor, policyStates } from './policy-editor.js';
+import { PolicyEditor, policyStates, validityStates, validityText } from './policy-editor.js';
 import { SupportClient, supportStates, supportCategories, supportPriorities, questionPayload } from './support-client.js';
 
 Log.setLevel(Log.NONE);
@@ -128,7 +128,7 @@ async function loadQuality(){
 }
 $('quality-month').onchange=()=>guard($('quality-month'),loadQuality);$('refresh-quality').onclick=()=>guard($('refresh-quality'),loadQuality);
 $('export-quality').onclick=()=>guard($('export-quality'),()=>{if(!qualityReport)throw new Error('Tải báo cáo trước khi xuất.');const url=URL.createObjectURL(new Blob([JSON.stringify(qualityReport,null,2)],{type:'application/json'}));const link=node('a');link.href=url;link.download=`policy-assistant-quality-${qualityReport.month}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-function showPolicy(policy,target) {const card=node('article',undefined,'policy-card');card.append(node('div',`${policy.policy_id} / ${policy.category||'Chính sách'}`,'policy-meta'),node('h2',policy.title),node('p',policy.content));target.append(card);}
+function showPolicy(policy,target) {const card=node('article',undefined,'policy-card');card.append(node('div',`${policy.policy_id} / ${policy.category||'Chính sách'}`,'policy-meta'),node('h2',policy.title));if(policy.effective_from||policy.effective_until)card.append(node('p',validityText(policy),'small muted'));card.append(node('p',policy.content));target.append(card);}
 async function searchPolicies(more=false){needApi();const isCurrent=latestTasks.begin('policies');if(!more){state.policyKeyword=$('policy-keyword').value.trim();state.policyToken=null;$('policy-results').replaceChildren();}const result=await api(`/policies?keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${state.policyToken?`&next_token=${encodeURIComponent(state.policyToken)}`:''}`);if(!isCurrent())return;for(const item of result.policies)showPolicy(item,$('policy-results'));state.policyToken=result.next_token;$('more-policies').classList.toggle('hidden',!state.policyToken);if(!result.policies.length&&!state.policyToken)$('policy-results').append(node('p','Không còn kết quả phù hợp.','empty-small'));}
 async function loadHistory(more=false){needApi();const isCurrent=latestTasks.begin('history');const result=await api(`/conversations${more&&state.historyToken?`?next_token=${encodeURIComponent(state.historyToken)}`:''}`);if(!isCurrent())return;if(!more)$('history-list').replaceChildren();for(const item of result.conversations){const card=node('article',undefined,'history-card');card.append(node('small',new Date(item.created_at).toLocaleString('vi-VN'),'small'));renderAnswer(item.question,item,card,true);card.append(button('Xóa cuộc hỏi đáp',async()=>{if(!confirm('Xóa cuộc hỏi đáp này?'))return;await api(`/conversations/${encodeURIComponent(item.conversation_id)}`,{method:'DELETE'});card.remove();}));$('history-list').append(card);}state.historyToken=result.next_token;$('more-history').classList.toggle('hidden',!state.historyToken);if(!more&&!result.conversations.length&&!state.historyToken)$('history-list').append(node('p','Chưa có cuộc hỏi đáp nào.','empty-small'));}
 async function loadAudit(more=false){const isCurrent=latestTasks.begin('audit');const result=await api(`/admin/audit${more&&state.auditToken?`?next_token=${encodeURIComponent(state.auditToken)}`:''}`);if(!isCurrent())return;if(!more)$('audit-list').replaceChildren();for(const item of result.events){const action=({'policy.put':'Công bố chính sách','policy.draft':'Lưu bản nháp','policy.publish':'Công bố chính sách','policy.archive':'Ngừng công bố','policy.archive.demo':'Ngừng công bố DEMO','policy.discard_draft':'Bỏ bản nháp','policy.delete':'Xóa chính sách','shop.save_draft':'Lưu nháp thông tin shop','shop.publish':'Công bố thông tin shop','shop.unpublish':'Ngừng công bố thông tin shop','shop.discard_draft':'Bỏ nháp thông tin shop','ticket.update':'Cập nhật hỗ trợ','ticket.delete':'Xóa yêu cầu hỗ trợ'})[item.action]||item.action;const row=node('div',`${action} · ${item.resource}`,'audit-event');row.append(node('small',`${new Date(item.event_id.split('#')[0]).toLocaleString('vi-VN')} · ${item.actor}`));$('audit-list').append(row);}state.auditToken=result.next_token;$('more-audit').classList.toggle('hidden',!state.auditToken);}
@@ -140,30 +140,38 @@ function renderPolicyEditorStatus(){
   $('admin-policy-form').elements.policy_id.readOnly=Boolean(r);
   $('policy-editor-heading').textContent=r?`Chỉnh sửa ${r.policy_id}`:'Soạn chính sách mới';
   $('policy-editor-badge').textContent=r?(policyStates[r.publication_state]||'Chưa công bố'):'Bản nháp';
-  $('policy-editor-status').textContent=busy?'Đang xử lý…':dirty?'Có thay đổi chưa lưu. Lưu bản nháp để có thể công bố.':r?.draft?(r.publication_state==='published'?'Có bản nháp riêng. Khách vẫn sử dụng bản đang công bố.':'Bản nháp đã lưu. Xem lại nội dung trước khi công bố.'):r?.publication_state==='published'?'Khách đang sử dụng bản công bố. Mọi chỉnh sửa sẽ được lưu riêng thành bản nháp.':r?'Chính sách chưa được dùng để trả lời khách hàng.':'Lưu bản nháp trước khi xem lại và công bố.';
+  $('policy-editor-status').textContent=busy?'Đang xử lý…':dirty?'Có thay đổi chưa lưu. Lưu bản nháp để có thể công bố.':r?.draft?(r.publication_state==='published'?'Có bản nháp riêng. Thời hạn bản đã công bố được giữ nguyên.':'Bản nháp đã lưu. Xem lại nội dung trước khi công bố.'):r?.publication_state==='published'?`Bản đã công bố: ${validityStates[r.validity_state||'active']}. Mọi chỉnh sửa được lưu riêng thành bản nháp.`:r?'Chính sách chưa được dùng để trả lời khách hàng.':'Lưu bản nháp trước khi xem lại và công bố.';
   $('publish-policy').disabled=busy||dirty||!r||(!r.draft&&!(r.publication_state==='archived'&&r.current));
   $('publish-policy').textContent=r?.publication_state==='archived'&&!r.draft?'Công bố lại bản đã lưu':'Công bố bản nháp';
   $('archive-policy').disabled=busy||dirty||r?.publication_state!=='published';
   $('discard-policy-draft').disabled=busy||dirty||!r?.draft;
 }
+function renderPolicyValidityPreview(){
+  const form=$('admin-policy-form');
+  try{$('policy-window-preview').textContent=validityText({effective_from:form.elements.effective_from.value,effective_until:form.elements.effective_until.value});}
+  catch(error){$('policy-window-preview').textContent=error.message;}
+}
 function fillPolicyEditor(record){
   const form=$('admin-policy-form');form.reset();const fields=record?.draft||record?.current;
   form.elements.policy_id.value=record?.policy_id||'';
-  for(const key of ['title','category','content'])form.elements[key].value=fields?.[key]||'';
+  for(const key of ['title','category','content','effective_from','effective_until'])form.elements[key].value=fields?.[key]||'';
   form.elements.keywords.value=(fields?.keywords||[]).join(', ');
   $('policy-live-preview').classList.toggle('hidden',!record?.current);
-  $('policy-live-caption').textContent=record?.publication_state==='published'?'Xem bản đang công bố':'Xem bản đã ngừng công bố';
+  $('policy-live-caption').textContent=record?.publication_state==='published'?`Bản đã công bố · ${validityStates[record.validity_state||'active']}`:'Xem bản đã ngừng công bố';
+  try{$('policy-live-validity').textContent=record?.current?validityText(record.current):'';}
+  catch{$('policy-live-validity').textContent='Thời hạn đã lưu không hợp lệ. Sửa ngày và lưu bản nháp để khắc phục.';}
   $('policy-live-title').textContent=record?.current?.title||'';$('policy-live-content').textContent=record?.current?.content||'';
-  renderPolicyEditorStatus();
+  renderPolicyEditorStatus();renderPolicyValidityPreview();
 }
 async function loadAdminPolicies(more=false){
   needApi();const epoch=++adminListEpoch;const keyword=adminPolicyKeyword;
-  const result=await api(`/admin/policies?limit=20&keyword=${encodeURIComponent(keyword)}${more&&adminPolicyToken?`&next_token=${encodeURIComponent(adminPolicyToken)}`:''}`);
+  const result=await api(`/admin/policies?limit=20&keyword=${encodeURIComponent(keyword)}&validity=${encodeURIComponent($('admin-policy-validity').value)}${more&&adminPolicyToken?`&next_token=${encodeURIComponent(adminPolicyToken)}`:''}`);
   if(epoch!==adminListEpoch)return;if(!more)$('admin-policy-list').replaceChildren();
   for(const policy of result.policies){
     const row=node('article',undefined,'admin-policy-row'),info=node('div'),meta=node('div',undefined,'policy-row-meta');
     info.append(node('strong',policy.title),node('small',`${policy.policy_id} · ${policy.category||'Chưa phân nhóm'}`));
     meta.append(node('span',policyStates[policy.publication_state]||'Chưa công bố',`policy-badge ${policy.publication_state}`));
+    if(policy.publication_state==='published')meta.append(node('span',validityStates[policy.validity_state||'active']||'Cần kiểm tra ngày',`validity-badge ${policy.validity_state||'active'}`));
     if(policy.has_draft)meta.append(node('span','Có bản nháp','policy-draft-flag'));
     const edit=button('Mở để sửa',async()=>{if(policyEditor.dirty&&!confirm('Bỏ thay đổi chưa lưu để mở chính sách khác?'))return;const record=await policyEditor.open(policy.policy_id);fillPolicyEditor(record);$('admin-policy-form').scrollIntoView({block:'start'});},'secondary');edit.setAttribute('aria-label',`Mở để sửa ${policy.policy_id}`);
     row.append(info,meta,edit);$('admin-policy-list').append(row);
@@ -274,7 +282,7 @@ $('upload-form').addEventListener('submit',event=>{event.preventDefault();guard(
 $('refresh-documents').onclick=()=>guard($('refresh-documents'),()=>loadDocs());$('more-documents').onclick=()=>guard($('more-documents'),()=>loadDocs(true));$('more-sources').onclick=()=>guard($('more-sources'),()=>loadDocs(true));
 $('policy-form').onsubmit=event=>{event.preventDefault();guard(event.submitter,()=>searchPolicies());};$('more-policies').onclick=()=>guard($('more-policies'),()=>searchPolicies(true));
 $('refresh-history').onclick=()=>guard($('refresh-history'),()=>loadHistory());$('more-history').onclick=()=>guard($('more-history'),()=>loadHistory(true));$('refresh-admin').onclick=()=>guard($('refresh-admin'),loadAdmin);$('more-audit').onclick=()=>guard($('more-audit'),()=>loadAudit(true));
-$('admin-policy-form').addEventListener('input',()=>policyEditor.markDirty());
+$('admin-policy-form').addEventListener('input',()=>{policyEditor.markDirty();renderPolicyValidityPreview();});
 $('admin-policy-form').onsubmit=event=>{event.preventDefault();guard(event.submitter,async()=>{
   const raw=Object.fromEntries(new FormData(event.target));const record=await policyEditor.save(raw.policy_id.trim(),raw);fillPolicyEditor(record);notify(record.publication_state==='published'?'Đã lưu bản nháp. Bản đang công bố được giữ nguyên.':'Đã lưu bản nháp. Nội dung chưa được công bố.');await Promise.all([loadAdminPolicies(),loadAudit()]);
 });};
@@ -282,7 +290,7 @@ $('new-policy').onclick=()=>guard($('new-policy'),()=>{if(policyEditor.dirty&&!c
 $('admin-policy-search').onsubmit=event=>{event.preventDefault();guard(event.submitter,()=>{adminPolicyKeyword=$('admin-policy-keyword').value.trim();return loadAdminPolicies();});};
 $('more-admin-policies').onclick=()=>guard($('more-admin-policies'),()=>loadAdminPolicies(true));
 for(const [id,action,message]of [['publish-policy','publish','Công bố nội dung đã lưu cho tất cả tài khoản?'],['archive-policy','archive','Ngừng công bố chính sách này? Nội dung được giữ lại để có thể công bố lại.'],['discard-policy-draft','discard_draft','Bỏ bản nháp đã lưu? Bản đang công bố được giữ nguyên.']]){
-  $(id).onclick=()=>guard($(id),async()=>{if(!confirm(message))return;const record=await policyEditor.transition(action);fillPolicyEditor(record);notify(action==='publish'?'Đã công bố chính sách.':action==='archive'?'Đã ngừng công bố. Bạn có thể công bố lại bản đã lưu.':'Đã bỏ bản nháp; bản công bố được giữ nguyên.');await Promise.all([loadAdminPolicies(),loadAudit()]);});
+  $(id).onclick=()=>guard($(id),async()=>{if(!confirm(action==='publish'?`${message}\n${validityText(policyEditor.record?.draft||policyEditor.record?.current||{})}`:message))return;const record=await policyEditor.transition(action);fillPolicyEditor(record);notify(action==='publish'?'Đã công bố chính sách.':action==='archive'?'Đã ngừng công bố. Bạn có thể công bố lại bản đã lưu.':'Đã bỏ bản nháp; bản công bố được giữ nguyên.');await Promise.all([loadAdminPolicies(),loadAudit()]);});
 }
 function hasUnsavedWork(){return Boolean($('question').value.trim()||policyEditor.dirty||shopEditor.dirty||supportUnsaved());}
 window.addEventListener('beforeunload',event=>{if(hasUnsavedWork()){event.preventDefault();event.returnValue='';}});

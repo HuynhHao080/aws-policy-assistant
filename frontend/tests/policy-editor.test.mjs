@@ -1,8 +1,19 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {PolicyEditor,draftPayload} from '../src/policy-editor.js';
+import {PolicyEditor,draftPayload,validityBounds,validityText} from '../src/policy-editor.js';
 const fields={title:'Refund',category:'Support',content:'DEMO only',keywords:['refund']};
 const record=(overrides={})=>({policy_id:'POL-1',revision:'revision-1',publication_state:'published',current:fields,draft:null,...overrides});
+
+test('business dates support inclusive same-day windows, leap days and explicit clearing',()=>{
+  const values={effective_from:'2028-02-29',effective_until:'2028-02-29'};
+  assert.deepEqual(draftPayload({...fields,...values}),{...fields,...values});
+  assert.deepEqual(validityBounds({effective_from:'',effective_until:''}),{effective_from:'',effective_until:''});
+  assert.deepEqual(validityBounds({}),{});
+  assert.match(validityText(values),/29\/02\/2028/);assert.match(validityText(values),/UTC\+7/);
+});
+test('bad calendar dates and inverted windows fail before a draft request',()=>{
+  for(const values of [{effective_from:'2026-02-29'},{effective_until:'0000-01-01'},{effective_from:'2026-2-01'},{effective_until:20261105},{effective_from:'2026-11-06',effective_until:'2026-11-05'}])assert.throws(()=>draftPayload({...fields,...values}));
+});
 
 test('draft payload only contains supported fields, trims text and parses keywords',()=>{
   assert.deepEqual(draftPayload({...fields,title:' Refund ',keywords:' refund, , warranty ',action:'publish'}),{...fields,keywords:['refund','warranty']});

@@ -15,10 +15,12 @@ try:
     from .service import Problem, now, text
     from .embeddings import embed, model_id, similarity
     from .policy_chunks import policy_chunks
+    from .policy_validity import active as policy_active, signature as policy_signature, DATE_FIELDS
 except ImportError:
     from service import Problem, now, text
     from embeddings import embed, model_id, similarity
     from policy_chunks import policy_chunks
+    from policy_validity import active as policy_active, signature as policy_signature, DATE_FIELDS
 
 
 def words(value):
@@ -59,16 +61,19 @@ def retrieve(service, owner, question, doc_ids, source_scope="all"):
             score = similarity(query_vector, chunk["vector"]) if query_vector and chunk.get("vector") and parsed.get("embedding_model") == model_id() else 0
             candidates.append({"doc_id": doc["doc_id"], "title": doc.get("title", doc.get("filename", "Document")), "page": chunk["page"], "excerpt": chunk["text"][:1400], "semantic_score": score})
     # Shared policies are deliberately global. Private PDFs are never scanned globally.
-    scan = {"Limit": 1000, "ConsistentRead": True, "ProjectionExpression": "#id,#title,#content,#chunks,#embedding", "ExpressionAttributeNames": {"#id": "policy_id", "#title": "title", "#content": "content", "#chunks": "search_chunks", "#embedding": "embedding_model"}}
+    scan = {"Limit": 1000, "ConsistentRead": True, "ProjectionExpression": "#id,#title,#content,#chunks,#embedding,effective_from,effective_until", "ExpressionAttributeNames": {"#id": "policy_id", "#title": "title", "#content": "content", "#chunks": "search_chunks", "#embedding": "embedding_model"}}
     if os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true":
         scan["FilterExpression"] = Attr("publication_state").eq("published")
     result = service.policies.scan(**scan) if source_scope != "documents" else {"Items": []}
     for policy in result.get("Items", []):
+        if not policy_active(policy):
+            continue
         content = policy.get("content", "")[:20000]
         chunks = policy.get("search_chunks") or policy_chunks(content)
         for chunk in chunks:
             score = similarity(query_vector, chunk["vector"]) if query_vector and chunk.get("vector") and policy.get("embedding_model") == model_id() else 0
-            candidates.append({"policy_id": policy["policy_id"], "title": policy.get("title", "Policy"), "page": None, "excerpt": chunk["text"], "semantic_score": score})
+            candidates.append({"policy_id": policy["policy_id"], "title": policy.get("title", "Policy"), "page": None, "excerpt": chunk["text"], "semantic_score": score,
+                               "_policy_signature": policy_signature(policy), **{k: policy[k] for k in DATE_FIELDS if k in policy}})
     query = set(words(question))
     docs_tokens = [Counter(words(c["title"] + " " + c["excerpt"])) for c in candidates]
     frequencies = Counter(token for tokens in docs_tokens for token in tokens)
@@ -80,6 +85,25 @@ def retrieve(service, owner, question, doc_ids, source_scope="all"):
             scores.append((semantic + min(score, 4) * 0.08, index))
     selected = [dict(candidates[i], source_id=f"S{number}") for number, (_, i) in enumerate(sorted(scores, reverse=True)[:5], 1)]
     return selected
+
+
+def public_source(source):
+    return {key: value for key, value in source.items() if not key.startswith('_')}
+
+
+def check_policy_sources(service, citations):
+    checked = {}
+    for source in citations:
+        policy_id = source.get('policy_id')
+        if not policy_id:
+            continue
+        if policy_id not in checked:
+            checked[policy_id] = service.policies.get_item(Key={'policy_id': policy_id}, ConsistentRead=True).get('Item')
+        current = checked[policy_id]
+        if (not current or not policy_active(current)
+                or (os.environ.get('REQUIRE_PUBLISHED_POLICIES') == 'true' and current.get('publication_state') != 'published')
+                or source.get('_policy_signature') != policy_signature(current)):
+            raise Problem(409, 'Chính sách đã thay đổi hoặc không còn hiệu lực trong lúc xử lý. Vui lòng gửi lại câu hỏi để lấy nguồn mới.')
 
 
 def answer(service, owner, data):
@@ -107,7 +131,7 @@ def answer(service, owner, data):
         structured = model == "jp.amazon.nova-2-lite-v1:0"
         if structured:
             system += " Submit the final answer using emit_policy_answer with answer and sources. This is only an output format, not a transaction or an external action. Do not output another tool or free-form JSON."
-        prompt = json.dumps({"question": question, "source_data": sources}, ensure_ascii=False)
+        prompt = json.dumps({"question": question, "source_data": [public_source(source) for source in sources]}, ensure_ascii=False)
         try:
             options = {"modelId": model, "system": [{"text": system}], "messages": [{"role": "user", "content": [{"text": prompt}]}], "inferenceConfig": {"maxTokens": 700, "temperature": 0.0}}
             if os.environ.get("BEDROCK_REASONING_EFFORT") == "low":
@@ -160,6 +184,8 @@ def answer(service, owner, data):
         if not citations:
             answer_text = "Tôi không có đủ bằng chứng trong tài liệu để trả lời câu hỏi này."
         result = {"answer": answer_text, "citations": citations, "grounded": bool(citations), "model_id": model}
+    check_policy_sources(service, result["citations"])
+    result["citations"] = [public_source(source) for source in result["citations"]]
     result["source_scope"] = scope
     stamp = now()
     conversation_id = stamp + "#" + uuid4().hex

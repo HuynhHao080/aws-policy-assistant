@@ -57,3 +57,31 @@ test('unsaved administrator edits cancel page navigation without losing the form
 
 test('answer feedback sends only structured fields and preserves revision across changes',async t=>{const id='2026-11-04T00:00:00+00:00#feedback';const sent=[];const f=await fixture(t,{override:(key,o)=>key==='/ask'?json({conversation_id:id,quality_version:1,quality_month:'2026-11',answer:'Synthetic answer',grounded:false,citations:[]}):key.endsWith('/feedback')?(sent.push(JSON.parse(o.body)),json({conversation_id:id,quality_month:'2026-11',feedback:{...JSON.parse(o.body),revision:'v'+sent.length,updated_at:'2026-11-04T00:00:0'+sent.length+'Z'}})):undefined});f.$('question').value='PRIVATE SYNTHETIC QUESTION';f.submit('question-form');await until(()=>f.$('answer-area').querySelector('.answer-feedback'));const box=f.$('answer-area').querySelector('.answer-feedback');box.querySelector('button').click();await until(()=>box.textContent.includes('Đã ghi nhận: hữu ích'));const buttons=box.querySelectorAll('button');buttons[1].click();box.querySelector('select').value='unclear';buttons[3].click();await until(()=>sent.length===2);assert.deepEqual(sent[0],{rating:'helpful',reason:null,expected_revision:null});assert.equal(sent[1].expected_revision,'v1');assert.equal(JSON.stringify(sent).includes('PRIVATE'),false);});
 test('quality dashboard shows measured counts and changes the cohort month',async t=>{const f=await fixture(t,{admin:true,view:'admin',override:(key,o,w,u)=>key==='/admin/quality'?json({month:u.searchParams.get('month')||'2026-11',available_months:['2026-11','2026-10'],started_at:'2026-11-04T00:00:00Z',counts:{answers:4,grounded:3,refused:1,helpful:2,not_helpful:1,scope_all:2,scope_policies:1,scope_documents:1},citation_rate:75,helpful_rate:66.7,average_response_ms:1200}):undefined});await until(()=>f.$('quality-overview').textContent.includes('75%'));f.click('admin-tab-quality');assert.equal(f.$('admin-panel-quality').classList.contains('hidden'),false);assert.equal(f.$('export-quality').disabled,false);f.$('quality-month').value='2026-10';f.$('quality-month').dispatchEvent(new f.w.Event('change'));await until(()=>f.calls.some(c=>c.url.endsWith('?month=2026-10')));assert.equal(f.$('quality-month').value,'2026-10');});
+test('policy validity fields load the saved window and reject an inverted draft locally',async t=>{
+ const fields={title:'Synthetic refund',category:'Support',content:'DEMO refund policy',keywords:[],effective_from:'2026-11-06',effective_until:'2026-11-10'};
+ const record={policy_id:'SYNTHETIC',revision:'rev-1',publication_state:'published',validity_state:'upcoming',current:fields,draft:null};
+ const f=await fixture(t,{admin:true,view:'admin',override:(key,options)=>key==='/admin/policies'?json({policies:[{...record,...fields}],next_token:null}):key==='/admin/policies/SYNTHETIC'?json(record):undefined});
+ await until(()=>f.$('admin-policy-list').querySelector('button'));
+ assert.match(f.$('admin-policy-list').textContent,/Chưa tới ngày/);
+ f.$('admin-policy-list').querySelector('button').click();await until(()=>f.$('policy-effective-from').value==='2026-11-06');
+ assert.match(f.$('policy-window-preview').textContent,/UTC\+7/);
+ f.$('policy-effective-until').value='2026-11-05';f.$('policy-effective-until').dispatchEvent(new f.w.Event('input',{bubbles:true}));
+ assert.match(f.$('policy-window-preview').textContent,/không được trước/);
+ f.submit('admin-policy-form');await until(()=>f.$('notice').textContent.includes('không được trước'));
+ assert.equal(f.calls.some(c=>c.options.method==='PATCH'),false);assert.deepEqual(f.errors,[]);
+});
+test('admin validity filter is sent explicitly without discarding the open draft',async t=>{
+ const f=await fixture(t,{admin:true,view:'admin'});await until(()=>f.calls.some(c=>c.key==='/admin/policies'));
+ f.$('admin-policy-form').elements.title.value='Unsent policy';f.$('admin-policy-form').elements.title.dispatchEvent(new f.w.Event('input',{bubbles:true}));
+ f.$('admin-policy-validity').value='expired';f.submit('admin-policy-search');
+ await until(()=>f.calls.some(c=>c.url.includes('validity=expired')));
+ assert.equal(f.$('admin-policy-form').elements.title.value,'Unsent policy');assert.deepEqual(f.errors,[]);
+});
+test('a corrupt imported policy window remains editable for repair',async t=>{
+ const fields={title:'Synthetic legacy import',category:'Support',content:'DEMO policy',keywords:[],effective_until:'invalid'};
+ const record={policy_id:'SYNTHETIC',revision:'rev-1',publication_state:'published',validity_state:'invalid',current:fields,draft:null};
+ const f=await fixture(t,{admin:true,view:'admin',override:key=>key==='/admin/policies'?json({policies:[{...record,...fields}],next_token:null}):key==='/admin/policies/SYNTHETIC'?json(record):undefined});
+ await until(()=>f.$('admin-policy-list').querySelector('button'));f.$('admin-policy-list').querySelector('button').click();
+ await until(()=>f.$('admin-policy-form').elements.title.value===fields.title);
+ assert.match(f.$('policy-live-validity').textContent,/không hợp lệ/);assert.equal(f.$('policy-effective-until').value,'');assert.deepEqual(f.errors,[]);
+});

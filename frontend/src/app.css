@@ -26,3 +26,14 @@ body{line-height:1.6}h1{line-height:1.28}h2,h3{line-height:1.45}input,textarea,s
 header{font-size:12px;color:var(--muted)}thead{color:#52634f}.policy-meta,.answer-label{font-size:11px;color:#52634f}.history-card .small{color:var(--muted)}.policy-badge,.support-status{font-size:11px}#question-count{font-size:11px}
 
 .answer-feedback{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;margin:20px 0}.answer-feedback>strong{font-size:13px}.answer-feedback .actions{margin-top:12px;flex-wrap:wrap}.answer-feedback [aria-pressed=true]{background:#dfead7;border-color:#7f9b6a;color:#244c33}.feedback-reason{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}.feedback-reason select{flex:1;min-width:160px}.quality-heading{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:24px}.quality-heading>div{flex:1 0 100%}.quality-heading label{display:grid;gap:6px}#quality-feedback meter{width:100%;height:20px;accent-color:var(--green)}.answer-feedback .small{margin:12px 0 0}
+/* Explicit business-date controls share the existing editorial palette. */
+.policy-validity-fields{margin:1rem 0;padding:1rem;border:1px solid var(--line,#d9ded5);border-radius:12px;background:var(--paper,#f7f6ef)}
+.policy-validity-fields h3{margin:0 0 .5rem;font-size:1rem}
+.policy-validity-fields input[type=date]{min-width:0;width:100%;font:inherit}
+.validity-badge{display:inline-block;border:1px solid #cbd5c4;border-radius:999px;padding:.25rem .55rem;font-size:.78rem;line-height:1.4;background:#eef4e9;color:#264234}
+.validity-badge.upcoming{background:#f8f0dd;color:#675020;border-color:#e7d6ab}
+.validity-badge.expired,.validity-badge.invalid{background:#f6e9e4;color:#783e32;border-color:#e4c8bf}
+#admin-policy-search{flex-wrap:wrap}
+#admin-policy-search #admin-policy-keyword{flex:1 1 220px}
+#admin-policy-validity{min-width:0;max-width:100%;padding:.65rem;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--white)}
+.policy-validity-fields .form-grid label{min-width:0}

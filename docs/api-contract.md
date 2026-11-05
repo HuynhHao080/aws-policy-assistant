@@ -116,3 +116,10 @@ Successful answer persistence atomically writes history and aggregates: answers,
 DynamoDB transaction-conflict persistence retries are bounded to3 attempts using one ClientRequestToken. Conditional conflicts are never automatically retried and no retrieval/model invocation is repeated by this persistence retry. Existing request quotas/model retry behavior remain. Customer history now hides expired records immediately; filtered pages can be empty with continuation tokens.
 
 Quality report includes available_months, started_at, counters, citation_rate, helpful_rate, average_response_ms and feedback limits. Empty denominators return null, not a perfect score. Citation presence is not factual correctness; feedback is opinion. Export is client-side JSON from the same aggregate-only response.
+## Policy business-date extension
+
+Policy drafts accept optional `effective_from` and `effective_until` as real `YYYY-MM-DD` dates, inclusive in Vietnam UTC+07. Missing fields on edits preserve the saved draft/current bounds; explicit empty strings/null clear a bound. End before start is400. Existing no-date rows remain unbounded. Draft isolation, explicit publication and revision/audit behavior remain unchanged.
+
+Administrator detail/list DTOs include computed `validity_state`: `active`, `upcoming`, `expired`, `invalid` or `unpublished`. `GET /admin/policies?validity=all|active|upcoming|expired|invalid` filters the current published snapshot while preserving the bounded scan cursor. Empty pages can still have continuation tokens.
+
+Public exact lookup/search and AI retrieval omit non-current or invalid-date policies. Before persistence, `/ask` consistently rechecks cited published facts/date bounds; a changed/deleted/hidden/expired source produces409 without saving history or retrying generation. New public citations may contain date bounds; internal source fingerprints are not exported. Old history remains its original snapshot.

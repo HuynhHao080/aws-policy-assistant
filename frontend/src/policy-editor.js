@@ -1,5 +1,25 @@
 // The editor keeps a saved revision separate from local, unsaved changes.
-export const policyStates = {published:'Đang công bố',draft:'Chưa công bố',archived:'Đã ngừng công bố',unpublished:'Chưa công bố'};
+export const policyStates = {published:'Đã công bố',draft:'Chưa công bố',archived:'Đã ngừng công bố',unpublished:'Chưa công bố'};
+export const validityStates = {active:'Đang có hiệu lực',upcoming:'Chưa tới ngày hiệu lực',expired:'Đã hết hiệu lực',invalid:'Cần kiểm tra ngày',unpublished:'Chưa công bố'};
+export function validityBounds(raw) {
+  const result={};
+  for(const key of ['effective_from','effective_until']){
+    if(!Object.hasOwn(raw,key))continue;
+    const value=raw[key];
+    if(value===''){result[key]='';continue;}
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)||Number(value.slice(0,4))<1)throw new Error('Nhập ngày hợp lệ theo định dạng năm-tháng-ngày.');
+    const date=new Date(`${value}T00:00:00Z`);
+    if(Number.isNaN(date.getTime())||date.toISOString().slice(0,10)!==value)throw new Error('Ngày hiệu lực không tồn tại trên lịch.');
+    result[key]=value;
+  }
+  if(result.effective_from&&result.effective_until&&result.effective_until<result.effective_from)throw new Error('Ngày kết thúc không được trước ngày bắt đầu.');
+  return result;
+}
+export function validityText(raw) {
+  const value=validityBounds(raw);
+  const format=date=>date.split('-').reverse().join('/');
+  return `${value.effective_from?`Từ ${format(value.effective_from)}`:'Không giới hạn ngày bắt đầu'} · ${value.effective_until?`Đến hết ${format(value.effective_until)}`:'Không giới hạn ngày kết thúc'} · Giờ Việt Nam (UTC+7)`;
+}
 export function draftPayload(raw) {
   const draft = {};
   for (const [key,max] of [['title',180],['category',80],['content',20000]]) {
@@ -8,6 +28,7 @@ export function draftPayload(raw) {
   }
   draft.keywords = Array.isArray(raw.keywords) ? raw.keywords.map(k=>typeof k==='string'?k.trim():k) : String(raw.keywords||'').split(',').map(k=>k.trim()).filter(Boolean);
   if (draft.keywords.length>30 || draft.keywords.some(k=>typeof k!=='string'||k.length>80)) throw new Error('Nhập tối đa 30 từ khóa, mỗi từ khóa tối đa 80 ký tự.');
+  Object.assign(draft,validityBounds(raw));
   return draft;
 }
 export class PolicyEditor {

@@ -7,6 +7,10 @@ from typing import Any, Dict, List, Optional
 
 import boto3
 from botocore.exceptions import ClientError
+try:
+    from .policy_validity import active as policy_active
+except ImportError:
+    from policy_validity import active as policy_active
 
 # Configure logging
 logger = logging.getLogger()
@@ -188,10 +192,10 @@ def _get_policy_by_id(policy_id: str, request_id: str = "unknown") -> Dict[str, 
         return _error_response(400, "Bad request", "policy_id is required")
 
     try:
-        response = table.get_item(Key={"policy_id": policy_id.strip()})
+        response = table.get_item(Key={"policy_id": policy_id.strip()}, ConsistentRead=True)
         item = response.get("Item")
 
-        if not item or (os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true" and item.get("publication_state") != "published"):
+        if not item or not policy_active(item) or (os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true" and item.get("publication_state") != "published"):
             return _error_response(404, "Not found", f"Policy with ID '{policy_id}' not found")
 
         logger.info("Policy found: %s requestId=%s", policy_id, request_id)
@@ -291,7 +295,7 @@ def _search_policies(keyword: Optional[str], query_parameters: Optional[Dict[str
 
             response = table.scan(**scan_kwargs)
             scanned_count += response.get("ScannedCount", 0)
-            items.extend(response.get("Items", []))
+            items.extend(item for item in response.get("Items", []) if policy_active(item))
             last_evaluated_key = response.get("LastEvaluatedKey")
 
             # Stop if we've reached the requested limit

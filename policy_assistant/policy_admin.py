@@ -12,12 +12,14 @@ try:
     from .service import Problem, now, text, encode
     from .embeddings import embed, model_id
     from .policy_chunks import policy_chunks
+    from .policy_validity import bounds, state as validity_state, DATE_FIELDS
 except ImportError:
     from service import Problem, now, text, encode
     from embeddings import embed, model_id
     from policy_chunks import policy_chunks
+    from policy_validity import bounds, state as validity_state, DATE_FIELDS
 
-FIELDS = ("title", "category", "content", "keywords")
+FIELDS = ("title", "category", "content", "keywords", *DATE_FIELDS)
 
 
 def revision(item):
@@ -31,12 +33,13 @@ def snapshot(item):
 def detail(item):
     return {"policy_id": item["policy_id"], "revision": revision(item),
             "publication_state": item.get("publication_state", "unpublished"),
+            "validity_state": validity_state(item) if item.get("publication_state") == "published" else "unpublished",
             "current": snapshot(item) if item.get("content") else None,
             "draft": snapshot(item["draft_data"]) if item.get("draft_data") else None,
             "updated_at": item.get("edited_at", item.get("updated_at")), "published_at": item.get("published_at")}
 
 
-def content(data):
+def content(data, previous=None):
     if not isinstance(data, dict):
         raise Problem(400, "draft must be an object")
     item = {"title": text(data.get("title"), "title", 180),
@@ -46,6 +49,10 @@ def content(data):
     if not isinstance(keywords, list) or len(keywords) > 30 or any(not isinstance(k, str) or len(k) > 80 for k in keywords):
         raise Problem(400, "keywords must be a list of at most 30 short strings")
     item["keywords"] = keywords
+    try:
+        item.update(bounds(data, previous))
+    except ValueError as exc:
+        raise Problem(400, str(exc)) from None
     return item
 
 
@@ -77,6 +84,9 @@ def indexed(service, fields):
 
 
 def listing(service, params):
+    validity = params.get("validity", "all")
+    if not isinstance(validity, str) or validity not in {"all", "active", "upcoming", "expired", "invalid"}:
+        raise Problem(400, "validity must be all, active, upcoming, expired or invalid")
     try:
         limit = int(params.get("limit", "20"))
         if not 1 <= limit <= 50:
@@ -87,7 +97,7 @@ def listing(service, params):
     if not isinstance(keyword, str) or len(keyword) > 200:
         raise Problem(400, "keyword must be at most 200 characters")
     args = {"Limit": limit, "ConsistentRead": True,
-            "ProjectionExpression": "policy_id, #title, category, publication_state, updated_at, edited_at, #rev, draft_data.#title, draft_data.category",
+            "ProjectionExpression": "policy_id, #title, category, publication_state, updated_at, edited_at, #rev, effective_from, effective_until, draft_data.#title, draft_data.category",
             "ExpressionAttributeNames": {"#title": "title", "#rev": "revision"}}
     token = params.get("next_token")
     if token:
@@ -103,6 +113,9 @@ def listing(service, params):
     result = service.policies.scan(**args)
     rows = []
     for item in result.get("Items", []):
+        status = validity_state(item) if item.get("publication_state") == "published" else "unpublished"
+        if validity != "all" and status != validity:
+            continue
         draft = item.get("draft_data", {})
         title = draft.get("title") or item.get("title") or item["policy_id"]
         category = draft.get("category") or item.get("category", "")
@@ -110,6 +123,8 @@ def listing(service, params):
             continue
         rows.append({"policy_id": item["policy_id"], "title": title, "category": category,
                      "publication_state": item.get("publication_state", "unpublished"),
+                     "validity_state": status,
+                     **{k: item[k] for k in DATE_FIELDS if k in item},
                      "has_draft": bool(draft), "updated_at": item.get("edited_at", item.get("updated_at"))})
     return {"policies": rows, "next_token": encode(result["LastEvaluatedKey"]) if result.get("LastEvaluatedKey") else None}
 
@@ -143,13 +158,17 @@ def handle(service, method, path, owner, data, params, request_id):
         raise Problem(404, "Policy not found")
     item = dict(current or {"policy_id": policy_id, "publication_state": "draft"})
     if action == "save_draft":
-        item["draft_data"] = content(data.get("draft"))
+        item["draft_data"] = content(data.get("draft"), item.get("draft_data") or item)
     elif action in {"publish", "legacy_publish"}:
-        fields = content(data) if action == "legacy_publish" else item.get("draft_data")
+        fields = content(data, item) if action == "legacy_publish" else item.get("draft_data")
         if fields is None and item.get("publication_state") == "archived" and item.get("content"):
             fields = snapshot(item)
         if fields is None:
             raise Problem(409, "Save a draft before publishing")
+        # Revalidate even stored drafts before indexing; clear removed bounds.
+        fields = content(fields)
+        for field in DATE_FIELDS:
+            item.pop(field, None)
         for field in ("search_chunks", "embedding_model"):
             item.pop(field, None)
         item.update(indexed(service, fields))
