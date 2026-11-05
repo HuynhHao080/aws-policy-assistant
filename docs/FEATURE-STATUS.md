@@ -15,10 +15,13 @@ Phạm vi sản phẩm là trợ lý chính sách và hỗ trợ khách hàng ch
 | Chính sách | Tìm kiếm nội dung công bố; quản trị danh mục, bản nháp, chỉnh sửa, công bố, ẩn/khôi phục, bỏ nháp, chống ghi đè và nhật ký |
 | Hiệu lực chính sách | Ngày áp dụng UTC+7, lọc bản chưa/hết hiệu lực, sửa ngày hỏng, kiểm tra lại dữ kiện nguồn trước lưu câu trả lời; giới hạn point-in-time được nêu rõ |
 | Hỗ trợ | Đồng ý chia sẻ, tạo/theo dõi/phản hồi/đóng/xóa yêu cầu; nhân viên xử lý theo trạng thái/ưu tiên, lọc theo loại và mã đơn khách tự cung cấp; xuất JSON; lưu tối đa 90 ngày |
+| Phối hợp hỗ trợ | Tự nhận/bỏ nhận/tiếp quản có lý do; lọc người nhận; ghi chú nội bộ tách hội thoại khách; revision chung và lịch sử phân công giới hạn |
 | Quyền riêng tư | Không tự chia sẻ PDF/lịch sử với nhân viên; không dùng yêu cầu hỗ trợ làm nguồn AI; xóa tài khoản kèm dọn dữ liệu |
 | Vận hành | HTTPS, S3 riêng, hàng đợi và thử lại, phục hồi việc treo, DLQ/cảnh báo, quota, ngân sách AWS, quy trình triển khai và phục hồi |
 
 ## Bằng chứng
+
+Bản phối hợp hỗ trợ đã triển khai: **322 Python đạt, 11 live bỏ qua; 67 frontend đạt; 20 kiểm tra HTTP thực tế đạt**. Ba tài khoản QA và yêu cầu thử đã dọn. 40 tệp frontend, 6 Lambda khớp artifact. [Báo cáo mới nhất](support-team-verification.md). Không gọi model/PDF/OCR hoặc gửi email trong lượt này. Các số liệu sau là snapshot lịch sử.
 
 Mở rộng hiệu lực chính sách đã triển khai ngày05/11: **298Python đạt,11live bỏ qua;59frontend đạt;16kiểm tra API thực tế đạt và dọn fixture/tài khoản thành công**. Không gọi model/publish/OCR/PDF trong lượt nghiệm thu API này. [Báo cáo và giới hạn](policy-validity-verification.md). Các số liệu quality bên dưới là snapshot của bản trước, không thay kết quả lịch sử.
 

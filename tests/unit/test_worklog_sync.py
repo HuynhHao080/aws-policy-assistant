@@ -61,9 +61,11 @@ def test_export_contains_no_operator_identifiers_or_private_text(tmp_path):
     assert exported['verified_lambda_artifacts'] == 6
     validity = sync.validity_evidence(sync.ROOT)
     assert len(validity['checks']) == 16 and validity['cleanup']['policies_cleaned']
-    for result in (exported, validity):
+    support = sync.support_evidence(sync.ROOT)
+    assert len(support['checks']) == 20 and support['cleanup']['support_purged']
+    for result in (exported, validity, support):
         serialized = json.dumps(result)
-        for forbidden in ('change_set_id', 'arn:aws:', '629380420098', 'huynhhao080@', 'conversation_id', 'owner_id', 'validity-qa-'):
+        for forbidden in ('change_set_id', 'arn:aws:', '629380420098', 'huynhhao080@', 'conversation_id', 'owner_id', 'validity-qa-', 'support-team-qa-'):
             assert forbidden not in serialized
     first, second = tmp_path / 'windows.json', tmp_path / 'github.json'
     first.write_bytes(b'{\r\n  "a": 1, "b": 2\r\n}\r\n')

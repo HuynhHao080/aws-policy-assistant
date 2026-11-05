@@ -97,3 +97,12 @@ Before saving a cited policy answer the API consistently rechecks current publis
 Do not roll back to a pre-validity API once bounded published policies exist: that handler ignores the bounds. Preserve validity-aware read/revalidation code or use a separately reviewed maintenance plan; never silently clear dates/reset the table to make old code work.
 
 The guarded `check_policy_validity_live.py` checks the exact deployed artifact before writes and uses one suppressed-invitation identity plus three non-current synthetic rows. It never calls generation, embedding, OCR, PDF upload or publish. Review both acceptance/cleanup flags. Operator-seeded non-current rows and draft API tests are not live publication/model acceptance. Existing quality counters are not seeded; HTTP request quotas/audit and normal cloud operations still apply.
+
+
+## Support staff coordination
+
+Use the [staff guide](HUONG-DAN-PHOI-HOP-HO-TRO.md) and [release evidence](support-team-verification.md). Assignment coordinates trusted administrators; it is not a separate restricted role. Claim only assigns the authenticated staff identity. Another assignee must explicitly take over with a reason before a public update. All administrators may collaborate through internal notes. Never paste secrets into notes; audit metadata omits note/reason bodies.
+
+Limits: 20 internal notes × 1,000 characters, rolling last 10 assignment events, independent public message limit. Notes do not extend the original 90-day ticket expiry or alter its public update timestamp. Deleting the customer purges the ticket; deleting staff does not erase contributions on customer-owned records. Revision conflicts are expected across public and internal activity: reload and review before retrying. Filtering uses bounded scans and cursors; an empty page is not a global queue count.
+
+The live helper `scripts/check_support_team_live.py` is opt-in and writes synthetic fixtures. Review its primary-account/artifact guards and private cleanup manifest before running; never substitute real customers. Acceptance verified three suppressed QA identities and one ticket removed through the account-deletion workflow. Audit metadata and retained logs/backups follow their lifecycle; an empty Support partition is not proof that every historical copy is erased. No extra IAM/table/index/service was required.

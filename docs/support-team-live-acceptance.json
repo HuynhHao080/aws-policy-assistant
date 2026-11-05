@@ -1,0 +1,37 @@
+{
+  "checked_at": "2026-11-05T17:01:54.833457+00:00",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793897543",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793897543/0d85f4fb-ff2a-43dd-bf83-a8d19688d268",
+    "phase": "final",
+    "code_sha256": "5528dd1d91ab278545472fdb861f7e2678df2a3fdce47bdc5745f851f1a1a359",
+    "template_sha256": "95666c09c6a7e849bc36f4730ceea31930bea2bbf07a0d587fc7e8a5b0e3a8fa"
+  },
+  "scope": "One synthetic consented support ticket and three invitation-suppressed identities (customer/two staff). Real HTTP privacy, assignment, note, revision and cleanup checks; no real customer, model, embedding, PDF/OCR or email operation.",
+  "checks": [
+    "Anonymous staff queue rejected",
+    "Customer cannot inspect staff queue",
+    "Customer cannot call private-note action",
+    "First staff claim uses its authenticated identity",
+    "Second staff sees another assignee",
+    "Second staff cannot double claim",
+    "Other assignee cannot send a public reply",
+    "Collaborator can add an internal note",
+    "Customer detail/list export data excludes internal metadata",
+    "Internal action preserves public timestamps, message count and retention",
+    "Opaque revision prevents stale overwrite after an internal note",
+    "Handover requires a meaningful reason",
+    "Explicit handover changes assignee and retains internal reason",
+    "Former assignee cannot release another staff member",
+    "Mine/other queue filters follow authenticated staff",
+    "Assigned staff can reply without exposing notes",
+    "Customer receives public reply only",
+    "Customer follow-up preserves private notes and assignment",
+    "Current assignee can release to unassigned queue",
+    "Audit stores actions rather than note or reason text"
+  ],
+  "http_passed": true,
+  "accounts_cleaned": true,
+  "support_purged": true
+}

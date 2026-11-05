@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — primary release, 4 November 2026
 
+**Latest — support collaboration:** [Assignment, handover and internal notes]({{< relref "/5-Workshop/5.7-PolicyAssistant/SupportTeam" >}}) is deployed: **322 Python / 67 frontend / 20 HTTP checks passed**, three QA accounts and the test ticket cleaned; 40 frontend files and six Lambda hashes matched. No model, PDF/OCR or email calls. Sections below preserve evidence from earlier releases.
+
 **New5November extension:** [Time-bounded policies and AI source checks]({{< relref "/5-Workshop/5.7-PolicyAssistant/PolicyValidity" >}}) is deployed:298Python/59frontend passes,16API checks and successful cleanup. The reproducible demo covers UTC+07dates, draft isolation, pagination and changes before final source checking. No new AWS service or live model call was required. The31file/251test figures below remain earlier snapshots.
 
 > Publication follow-up,5November2026, after explicit owner approval: application commit`82f37d2` was pushed and [CI passed](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42050386735); worklog commit`a48cd06` [deployed to GitHub Pages successfully](https://github.com/HuynhHao080/aws-internship-worklog/actions/runs/42049972955). The primary AWS frontend was republished and invalidated;31frontend files and6Lambda hashes match the release artifact. CloudFormation reported no backend updates to perform. No service, budget/quota or model increase occurred. This is not new model, visual-browser, load or restore acceptance. Earlier local/unpublished statements describe the pre-publication snapshot. [Publication report](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/PUBLICATION-2026-11-05.md).

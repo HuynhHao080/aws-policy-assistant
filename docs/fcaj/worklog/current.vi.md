@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — bản chính ngày 04/11/2026
 
+**Mới nhất — phối hợp hỗ trợ:** [Nhận việc, bàn giao và ghi chú nội bộ]({{< relref "/5-Workshop/5.7-PolicyAssistant/SupportTeam" >}}) đã lên bản chính: **322 Python / 67 frontend / 20 kiểm tra HTTP đạt**, 3 tài khoản QA và yêu cầu thử đã dọn; 40 tệp frontend và 6 Lambda khớp artifact. Không gọi model, PDF/OCR hay email. Các đoạn bên dưới giữ bằng chứng của các bản trước.
+
 **Mở rộng mới ngày05/11:** [Chính sách có thời hạn và kiểm soát nguồn AI]({{< relref "/5-Workshop/5.7-PolicyAssistant/PolicyValidity" >}}) đã triển khai:298Python/59frontend đạt,16API checks và cleanup đạt. Phần mới có demo tái lập về ngàyUTC+7, draft isolation, pagination và thay nguồn trước lưu; không thêm dịch vụ AWS hay gọi model trong lượt nghiệm thu live. Các số liệu31files/251tests dưới đây là snapshot trước mở rộng này.
 
 > Công bố 05/11/2026 sau khi chủ dự án cho phép push/deploy: mã ứng dụng `82f37d2` đã lên GitHub và [CI đạt](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42050386735); worklog `a48cd06` đã [deploy GitHub Pages thành công](https://github.com/HuynhHao080/aws-internship-worklog/actions/runs/42049972955). Frontend bản chính AWS đã xuất bản lại, invalidation hoàn tất; 31 file frontend và 6 Lambda khớp hash artifact. CloudFormation báo không có cập nhật backend cần thực hiện; không tạo thêm dịch vụ hoặc tăng budget/quota/model. Đây không phải lượt kiểm thử model, visual browser, tải hoặc phục hồi mới. Các nhận định “chưa push/local” trong phần lịch sử mô tả thời điểm trước công bố. [Báo cáo công bố](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/PUBLICATION-2026-11-05.md).
@@ -70,7 +72,7 @@ python scripts/sync_fcaj_worklog.py --worklog C:/Users/accli/Documents/Project/a
 hugo --minify
 ```
 
-Công cụ chỉ sửa block có marker trong danh sách trang được phép, hai trang hướng dẫn và JSON đã lọc. Không sửa nhật ký daily, ảnh, thông tin cá nhân hay tự đăng blog; không push/deploy. Backup/manifest nằm ở `.deployment/worklog-sync-*` trong repo ứng dụng. Dùng Hugo extended **0.167.0** theo workflow; kiểm checksum bản tải chính thức trước khi chạy.
+Công cụ chỉ sửa block có marker trong danh sách trang được phép, các trang hướng dẫn có quản lý và JSON đã lọc. Không sửa nhật ký daily, ảnh, thông tin cá nhân hay tự đăng blog; không push/deploy. Backup/manifest nằm ở `.deployment/worklog-sync-*` trong repo ứng dụng. Dùng Hugo extended **0.167.0** theo workflow; kiểm checksum bản tải chính thức trước khi chạy.
 
 ## Demo 7 phút — sinh viên chưa quay/thực hiện bản này
 
