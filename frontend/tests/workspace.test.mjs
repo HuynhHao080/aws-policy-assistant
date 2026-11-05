@@ -85,3 +85,38 @@ test('a corrupt imported policy window remains editable for repair',async t=>{
  await until(()=>f.$('admin-policy-form').elements.title.value===fields.title);
  assert.match(f.$('policy-live-validity').textContent,/không hợp lệ/);assert.equal(f.$('policy-effective-until').value,'');assert.deepEqual(f.errors,[]);
 });
+test('staff note save preserves a public draft and public reply preserves a private note draft',async t=>{
+ const id='t-'+'0'.repeat(20)+'-'+'b'.repeat(32),route='/admin/tickets/customer/'+id;
+ let record={ticket_id:id,owner_id:'customer',subject:'Synthetic case',status:'open',revision:'v1',updated_at:'2026-11-05T00:00:00Z',expires_at:2000000000,message_count:1,messages:[{role:'customer',body:'Shared request',created_at:'2026-11-05T00:00:00Z'}],assignment:'mine',assigned_to:'synthetic-user',internal_notes:[],internal_note_count:0,assignment_events:[]};
+ const f=await fixture(t,{admin:true,view:'admin',override:(key,o)=>{
+  if(key==='/admin/tickets')return json({tickets:[record],next_token:null});
+  if(key===route){if(o.method==='PATCH'){const body=JSON.parse(o.body);if(body.action==='note')record={...record,revision:'v2',internal_notes:[{author:'synthetic-user',body:body.note,created_at:record.updated_at}],internal_note_count:1};else record={...record,revision:'v3',status:body.status};}return json(record);}
+ }});
+ await until(()=>f.$('admin-ticket-list').querySelector('button'));f.$('admin-ticket-list').querySelector('button').click();await until(()=>f.$('ticket-dialog').open);
+ f.$('ticket-reply-message').value='Unsent public reply';f.$('ticket-note-text').value='PRIVATE INTERNAL NOTE';f.submit('ticket-note-form');
+ await until(()=>f.$('ticket-internal-notes').textContent.includes('PRIVATE INTERNAL NOTE'));
+ assert.equal(f.$('ticket-reply-message').value,'Unsent public reply');assert.equal(f.$('ticket-note-text').value,'');assert.equal(f.$('ticket-thread').textContent.includes('PRIVATE INTERNAL NOTE'),false);
+ f.$('ticket-note-text').value='Unsent second internal note';f.submit('ticket-reply-form');await until(()=>f.calls.filter(c=>c.key===route&&c.options.method==='PATCH').length===2&&!f.$('send-ticket-reply').disabled);
+ assert.equal(f.$('ticket-note-text').value,'Unsent second internal note');assert.equal(f.$('ticket-reply-message').value,'');assert.deepEqual(f.errors,[]);
+});
+test('private ticket drafts guard close/reload and session expiry clears internal content',async t=>{
+ const id='t-'+'0'.repeat(20)+'-'+'c'.repeat(32),record={ticket_id:id,owner_id:'customer',subject:'Synthetic case',status:'open',revision:'v1',updated_at:'2026-11-05T00:00:00Z',expires_at:2000000000,message_count:1,messages:[],assignment:'mine',assigned_to:'synthetic-user',internal_notes:[{author:'synthetic-user',body:'PRIVATE STORED NOTE',created_at:'2026-11-05T00:00:00Z'}],internal_note_count:1,assignment_events:[]};
+ const f=await fixture(t,{admin:true,view:'admin',override:key=>key==='/admin/tickets'?json({tickets:[record],next_token:null}):key==='/admin/tickets/customer/'+id?json(record):undefined});
+ await until(()=>f.$('admin-ticket-list').querySelector('button'));f.$('admin-ticket-list').querySelector('button').click();await until(()=>f.$('ticket-dialog').open);
+ f.$('ticket-note-text').value='UNSENT PRIVATE NOTE';f.click('close-ticket-dialog');assert.equal(f.$('ticket-dialog').open,true);
+ const before=f.calls.length;f.click('reload-ticket');await new Promise(r=>setTimeout(r,5));assert.equal(f.calls.length,before);
+ f.w.__expire();await until(()=>!f.$('ticket-dialog').open);
+ assert.equal(f.$('ticket-note-text').value,'');assert.equal(f.$('ticket-internal-notes').textContent,'');assert.equal(f.$('ticket-assignment-label').textContent,'');assert.deepEqual(f.errors,[]);
+});
+test('assignment queue filter is explicit and does not discard an unsent internal note',async t=>{
+ const f=await fixture(t,{admin:true,view:'admin'});await until(()=>f.calls.some(c=>c.key==='/admin/tickets'));
+ f.$('ticket-note-text').value='Unsent staff draft';f.$('admin-ticket-assignee').value='mine';f.$('admin-ticket-assignee').dispatchEvent(new f.w.Event('change',{bubbles:true}));
+ await until(()=>f.calls.some(c=>c.key==='/admin/tickets'&&c.url.includes('assignee=mine')));
+ assert.equal(f.$('ticket-note-text').value,'Unsent staff draft');assert.deepEqual(f.errors,[]);
+});
+test('customer dialog has no staff note or assignment controls',async t=>{
+ const id='t-'+'0'.repeat(20)+'-'+'d'.repeat(32),record={ticket_id:id,subject:'Customer request',status:'open',revision:'v1',updated_at:'2026-11-05T00:00:00Z',expires_at:2000000000,message_count:1,messages:[]};
+ const f=await fixture(t,{view:'support',override:key=>key==='/tickets'?json({tickets:[record],next_token:null}):key==='/tickets/'+id?json(record):undefined});
+ await until(()=>f.$('ticket-list').querySelector('button'));f.$('ticket-list').querySelector('button').click();await until(()=>f.$('ticket-dialog').open);
+ assert.equal(f.$('ticket-staff-controls').classList.contains('hidden'),true);assert.equal(f.$('ticket-note-fields').disabled,true);assert.equal(f.$('claim-ticket').disabled,true);assert.equal(f.$('ticket-internal-notes').textContent,'');assert.deepEqual(f.errors,[]);
+});

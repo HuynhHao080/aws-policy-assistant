@@ -30,6 +30,11 @@ export class SupportClient{
   }
   accept(record,staff,owner,expectedId){
     if(!record||typeof record!=='object'||!validId(record.ticket_id)||typeof record.revision!=='string'||!record.revision||!Array.isArray(record.messages)||record.messages.length>20||!supportStates[record.status]||(expectedId&&record.ticket_id!==expectedId)||(staff&&record.owner_id!==owner))throw new Error('Phản hồi hỗ trợ không hợp lệ. Hãy tải lại.');
+    const privateKeys=['assigned_to','assigned_at','assignment','assignment_events','internal_notes','internal_note_count','staff_updated_at'];
+    if(!staff&&privateKeys.some(key=>Object.hasOwn(record,key)))throw new Error('Phản hồi hỗ trợ chứa dữ liệu ngoài phạm vi khách hàng.');
+    if(staff&&((record.assignment!==undefined&&!['mine','other','unassigned'].includes(record.assignment))||
+      (record.internal_notes!==undefined&&(!Array.isArray(record.internal_notes)||record.internal_notes.length>20||record.internal_notes.some(n=>!n||typeof n.body!=='string'||n.body.length>1000||typeof n.author!=='string'||typeof n.created_at!=='string')))||
+      (record.assignment_events!==undefined&&(!Array.isArray(record.assignment_events)||record.assignment_events.length>10))))throw new Error('Dữ liệu nội bộ không hợp lệ. Hãy tải lại.');
     this.record=record;this.staff=staff;this.route=staff?`/admin/tickets/${encodeURIComponent(owner)}/${record.ticket_id}`:`/tickets/${record.ticket_id}`;
     return record;
   }
@@ -44,10 +49,22 @@ export class SupportClient{
     if(typeof message!=='string'||message.trim().length>1500)throw new Error('Nội dung tối đa 1.500 ký tự.');
     if(!this.staff&&!['reply','close'].includes(action))throw new Error('Thao tác không hợp lệ.');
     if(this.staff&&!supportStates[status])throw new Error('Trạng thái không hợp lệ.');
+    if(this.staff&&this.record.assignment==='other')throw new Error('Nhân viên khác đang phụ trách. Nhận bàn giao trước khi phản hồi.');
     const body={expected_revision:this.record.revision,action:this.staff?'update':action,message:message.trim()};if(this.staff)body.status=status;
     if(priority!==undefined){if(!this.staff||typeof priority!=='string'||!Object.hasOwn(supportPriorities,priority))throw new Error('Chỉ nhân viên được chọn mức ưu tiên hợp lệ.');body.priority=priority;}
     const route=this.route,staff=this.staff,owner=this.record.owner_id,id=this.record.ticket_id,epoch=this.epoch;
     return this.perform(async()=>{const r=await this.api(route,{method:'PATCH',body});if(epoch!==this.epoch)throw new Error('Phiên đăng nhập đã thay đổi.');return this.accept(r,staff,owner,id);});
+  }
+  async staffAction(action,value=''){
+    if(!this.record||!this.staff)throw new Error('Chỉ nhân viên đã mở yêu cầu mới được dùng thao tác nội bộ.');
+    if(!['claim','release','takeover','note'].includes(action))throw new Error('Thao tác nội bộ không hợp lệ.');
+    const body={action,expected_revision:this.record.revision};
+    if(action==='note'||action==='takeover'){
+      if(typeof value!=='string'||!value.trim()||value.trim().length>(action==='note'?1000:300)||(action==='takeover'&&value.trim().length<10))throw new Error(action==='note'?'Ghi chú cần có nội dung, tối đa 1.000 ký tự.':'Ghi lý do nhận bàn giao từ 10 đến 300 ký tự.');
+      body[action==='note'?'note':'reason']=value.trim();
+    }
+    const route=this.route,owner=this.record.owner_id,id=this.record.ticket_id,epoch=this.epoch;
+    return this.perform(async()=>{const r=await this.api(route,{method:'PATCH',body});if(epoch!==this.epoch)throw new Error('Phiên đăng nhập đã thay đổi.');return this.accept(r,true,owner,id);});
   }
   async remove(){
     if(!this.record||this.staff)throw new Error('Chỉ chủ yêu cầu mới có thể xóa yêu cầu của mình.');

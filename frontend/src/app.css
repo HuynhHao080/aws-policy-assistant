@@ -37,3 +37,9 @@ header{font-size:12px;color:var(--muted)}thead{color:#52634f}.policy-meta,.answe
 #admin-policy-search #admin-policy-keyword{flex:1 1 220px}
 #admin-policy-validity{min-width:0;max-width:100%;padding:.65rem;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--white)}
 .policy-validity-fields .form-grid label{min-width:0}
+.staff-only-panel{margin:1rem 0;padding:1rem;border:1px solid #d9c99e;border-left:4px solid #927038;border-radius:8px;background:#faf5e8}
+.staff-only-panel h3{margin:0;font-size:1rem}.internal-badge{font-size:.72rem;font-weight:700;color:#654b1f;background:#eee1bf;border-radius:999px;padding:.3rem .6rem}
+.staff-only-panel details{margin:1rem 0}.staff-only-panel summary{cursor:pointer;font-size:.9rem;font-weight:650;line-height:1.6}
+.staff-only-panel textarea{width:100%;min-width:0}.staff-only-panel fieldset{padding:0;margin:.75rem 0;border:0;min-width:0}
+.internal-note,.assignment-event{padding:.75rem 0;border-bottom:1px solid #e4d9bc;overflow-wrap:anywhere}.internal-note small,.assignment-event small{display:block;color:#625e50;font-size:.75rem}
+.internal-note p,.assignment-event p{white-space:pre-wrap;margin:.4rem 0;font-size:.85rem}.assignment-label{font-weight:650;color:var(--green)}

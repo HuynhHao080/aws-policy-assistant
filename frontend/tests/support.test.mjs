@@ -70,3 +70,29 @@ test('staff priority updates retain revision and never grant customer controls',
  await assert.rejects(client.update('','open','reply','urgent'));await assert.rejects(client.update('','open','reply',['high']));
  await client.open({ticket_id:id});await assert.rejects(client.update('Text',null,'reply','high'));
 });
+test('staff actions use the loaded revision and never put notes in a public message',async()=>{
+ const calls=[];const client=new SupportClient(async(path,options)=>{calls.push({path,options});return record({owner_id:'alice',assignment:'mine',revision:options?'v2':'v1',internal_notes:[],assignment_events:[]});});
+ await client.open({ticket_id:id,owner_id:'alice'},true);await client.staffAction('note',' Internal only ');
+ assert.deepEqual(calls[1].options.body,{action:'note',expected_revision:'v1',note:'Internal only'});
+ await client.staffAction('takeover','Taking over the next shift.');
+ assert.deepEqual(calls[2].options.body,{action:'takeover',expected_revision:'v2',reason:'Taking over the next shift.'});
+ await client.staffAction('release');assert.deepEqual(calls[3].options.body,{action:'release',expected_revision:'v2'});
+});
+test('customer clients reject staff metadata and cannot request internal actions',async()=>{
+ const leaked=new SupportClient(async()=>record({internal_notes:[{body:'PRIVATE'}]}));
+ await assert.rejects(leaked.open({ticket_id:id}));assert.equal(leaked.record,null);
+ const customer=new SupportClient(async()=>record());await customer.open({ticket_id:id});
+ await assert.rejects(customer.staffAction('claim'));await assert.rejects(customer.staffAction('note','Private'));
+});
+test('another assignee blocks public reply while bounded internal collaboration remains possible',async()=>{
+ const calls=[];const client=new SupportClient(async(path,options)=>{calls.push({path,options});return record({owner_id:'alice',assignment:'other'});});
+ await client.open({ticket_id:id,owner_id:'alice'},true);await assert.rejects(client.update('Public','open'));
+ await client.staffAction('note','Collaboration only');assert.equal(calls.length,2);
+ for(const [action,value] of [['note',''],['note','x'.repeat(1001)],['takeover','short'],['takeover','x'.repeat(301)],['publish','x']])await assert.rejects(client.staffAction(action,value));
+ assert.equal(calls.length,2);
+});
+test('late internal-note responses cannot restore a cleared staff session',async()=>{
+ let finish;const client=new SupportClient(async(path,options)=>options?new Promise(resolve=>finish=resolve):record({owner_id:'alice',assignment:'mine'}));
+ await client.open({ticket_id:id,owner_id:'alice'},true);const pending=client.staffAction('note','PRIVATE');client.clear();finish(record({owner_id:'alice',assignment:'mine',internal_notes:[{author:'staff',body:'PRIVATE',created_at:'2026-11-05T00:00:00Z'}]}));
+ await assert.rejects(pending);assert.equal(client.record,null);assert.equal(client.staff,false);assert.equal(client.route,null);
+});

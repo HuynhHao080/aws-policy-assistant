@@ -6,6 +6,8 @@ Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/)
 
 Current handover: [feature inventory](docs/FEATURE-STATUS.md), [support guide](docs/HUONG-DAN-HO-TRO.md) and [policy validity release verification](docs/policy-validity-verification.md). Support is consented and in-app; administrators cannot access private customer PDFs. AI questions can use shared policies, selected PDFs or both.
 
+Support collaboration: self-claim/release, explicit handover reasons, bounded staff-only notes and assignment filters. Customer DTOs/exports and AI retrieval exclude the internal workspace. [Workflow and privacy boundaries](docs/HUONG-DAN-PHOI-HOP-HO-TRO.md).
+
 Policy validity: inclusive Vietnam business dates, administrator filters and final cited-source revalidation prevent scheduled/expired/changed policy snapshots from being saved as current answers. [Operator guide and reproducible demo](docs/HUONG-DAN-HIEU-LUC-CHINH-SACH.md). No scheduler or additional AWS service is required.
 
 - Practical support triage: customer category/order reference, staff-only priority, combined exact filters, revision checks and monthly usage. References are unverified input; no automatic refund/order integration.

@@ -32,6 +32,10 @@ STATES = {"open", "in_progress", "resolved", "closed"}
 ID = r"t-[0-9]{20}-[a-f0-9]{32}"
 MAX_MESSAGES = 20
 RETENTION_DAYS = 90
+MAX_INTERNAL_NOTES = 20
+MAX_ASSIGNMENT_EVENTS = 10
+STAFF_ACTIONS = {"claim", "release", "takeover", "note"}
+STAFF_FIELDS = {"assigned_to", "assigned_at", "assignment", "assignment_events", "internal_notes", "internal_note_count", "staff_updated_at", "note", "reason"}
 
 
 def table(service):
@@ -52,16 +56,25 @@ def get(service, owner, ticket_id):
     return item
 
 
-def public(item, summary=False, admin=False):
+def public(item, summary=False, admin=False, viewer=None):
     keys = {"ticket_id", "subject", "status", "category", "priority", "order_ref", "created_at", "updated_at", "expires_at", "message_count"}
     if not summary:
         keys |= {"messages", "revision"}
     if admin:
-        keys.add("owner_id")
-    return {**{"category": "general", "priority": "normal", "order_ref": ""}, **{k: v for k, v in item.items() if k in keys}}
+        keys |= {"owner_id", "assigned_to", "assigned_at", "staff_updated_at", "internal_note_count"}
+        if not summary:
+            keys |= {"internal_notes", "assignment_events"}
+    result = {**{"category": "general", "priority": "normal", "order_ref": ""}, **{k: v for k, v in item.items() if k in keys}}
+    if admin:
+        result["assignment"] = "mine" if item.get("assigned_to") == viewer and viewer else "other" if item.get("assigned_to") else "unassigned"
+        result.setdefault("internal_note_count", 0)
+        if not summary:
+            result.setdefault("internal_notes", [])
+            result.setdefault("assignment_events", [])
+    return result
 
 
-def transact(service, item, previous=None, admin=None, delete=False, request_id="unknown"):
+def transact(service, item, previous=None, admin=None, delete=False, request_id="unknown", audit_action=None):
     serialize = TypeSerializer().serialize
     owner = item["owner_id"]
     write = {"TableName": table(service).name}
@@ -78,7 +91,7 @@ def transact(service, item, previous=None, admin=None, delete=False, request_id=
         "ConditionExpression": "attribute_not_exists(#state) OR #state<>:deleting", "ExpressionAttributeNames": {"#state": "state"}, "ExpressionAttributeValues": {":deleting": {"S": "deleting"}},
     }}]
     if admin:
-        audit = {"scope": "admin", "event_id": now() + "#" + uuid4().hex, "actor": admin, "action": "ticket.delete" if delete else "ticket.update", "resource": item["ticket_id"], "request_id": request_id, "expires_at": int(time.time()) + 90 * 86400}
+        audit = {"scope": "admin", "event_id": now() + "#" + uuid4().hex, "actor": admin, "action": audit_action or ("ticket.delete" if delete else "ticket.update"), "resource": item["ticket_id"], "request_id": request_id, "expires_at": int(time.time()) + 90 * 86400}
         operations.append({"Put": {"TableName": service.table("AUDIT_TABLE_NAME").name, "Item": {k: serialize(v) for k, v in audit.items()}}})
     try:
         service.client("dynamodb").transact_write_items(TransactItems=operations)
@@ -89,6 +102,10 @@ def transact(service, item, previous=None, admin=None, delete=False, request_id=
 
 
 def page(service, owner, params, admin=False):
+    assignee = params.get("assignee", "all")
+    if not admin and "assignee" in params:
+        raise Problem(400, "Assignment filters are for staff only")
+    choice(assignee, {"all", "mine", "unassigned", "other"}, "assignee filter")
     try:
         limit = int(params.get("limit", "20"))
         if not 1 <= limit <= 50:
@@ -115,6 +132,13 @@ def page(service, owner, params, admin=False):
         if reference:
             args["FilterExpression"] &= Attr("order_ref").eq(reference)
     if admin:
+        args["ProjectionExpression"] += ",assigned_to,assigned_at,staff_updated_at,internal_note_count"
+        if assignee == "mine":
+            args["FilterExpression"] &= Attr("assigned_to").eq(owner)
+        elif assignee == "unassigned":
+            args["FilterExpression"] &= Attr("assigned_to").not_exists() | Attr("assigned_to").eq("") | Attr("assigned_to").eq(None)
+        elif assignee == "other":
+            args["FilterExpression"] &= Attr("assigned_to").exists() & Attr("assigned_to").ne(owner) & Attr("assigned_to").ne("") & Attr("assigned_to").ne(None)
         # A bounded one-shop queue; no global scan of private PDFs/history is involved.
         token = params.get("next_token")
         if token:
@@ -150,7 +174,49 @@ def page(service, owner, params, admin=False):
     last = result.get("LastEvaluatedKey")
     if last and admin:
         last = {**last, "queue_scope": "support"}
-    return {"tickets": [public(r, summary=True, admin=admin) for r in rows], "next_token": encode(last) if last else None}
+    return {"tickets": [public(r, summary=True, admin=admin, viewer=owner) for r in rows], "next_token": encode(last) if last else None}
+
+
+def staff_action(service, item, actor, data, previous, request_id):
+    action = data["action"]
+    allowed = {"action", "expected_revision"} | ({"note"} if action == "note" else {"reason"} if action == "takeover" else set())
+    if set(data) - allowed:
+        raise Problem(400, "Unexpected staff action fields")
+    stamp = now()
+    assigned = item.get("assigned_to")
+    if action == "note":
+        note = text(data.get("note"), "internal note", 1000)
+        notes = item.get("internal_notes", [])
+        if len(notes) >= MAX_INTERNAL_NOTES:
+            raise Problem(409, "This request reached 20 internal notes")
+        item["internal_notes"] = notes + [{"note_id": uuid4().hex, "author": actor, "body": note, "created_at": stamp}]
+        item["internal_note_count"] = len(item["internal_notes"])
+    else:
+        reason = None
+        if action == "claim":
+            if assigned:
+                raise Problem(409, "Yêu cầu đã có người phụ trách. Tải lại trước khi nhận bàn giao.")
+            item.update(assigned_to=actor, assigned_at=stamp)
+        elif action == "release":
+            if assigned != actor:
+                raise Problem(409, "Chỉ người đang phụ trách có thể trả yêu cầu về hàng đợi.")
+            item.pop("assigned_to", None)
+            item.pop("assigned_at", None)
+        elif action == "takeover":
+            reason = text(data.get("reason"), "handover reason", 300)
+            if len(reason) < 10:
+                raise Problem(400, "Ghi lý do nhận bàn giao từ 10 đến 300 ký tự.")
+            if not assigned or assigned == actor:
+                raise Problem(409, "Tải lại yêu cầu trước khi nhận bàn giao từ nhân viên khác.")
+            item.update(assigned_to=actor, assigned_at=stamp)
+        event = {"action": action, "actor": actor, "created_at": stamp, "from": assigned, "to": item.get("assigned_to")}
+        if reason is not None:
+            event["reason"] = reason
+        item["assignment_events"] = (item.get("assignment_events", []) + [event])[-MAX_ASSIGNMENT_EVENTS:]
+    # Internal operations do not fabricate a customer reply or extend retention.
+    item.update(staff_updated_at=stamp, revision=uuid4().hex)
+    transact(service, item, previous, admin=actor, request_id=request_id, audit_action="ticket." + action)
+    return public(item, admin=True, viewer=actor)
 
 
 def handle(service, method, path, owner, data, params, request_id, admin=False):
@@ -158,6 +224,8 @@ def handle(service, method, path, owner, data, params, request_id, admin=False):
     if path == root and method == "GET":
         return page(service, owner, params, admin)
     if path == root and method == "POST" and not admin:
+        if STAFF_FIELDS & set(data):
+            raise Problem(400, "Staff-only support metadata is not accepted from customers")
         if data.get("consent") is not True:
             raise Problem(400, "Confirm sharing this message with support staff")
         subject = text(data.get("subject"), "subject", 180)
@@ -181,7 +249,7 @@ def handle(service, method, path, owner, data, params, request_id, admin=False):
     target, ticket_id = match.groups() if admin else (owner, match[1])
     item = get(service, target, ticket_id)
     if method == "GET":
-        return public(item, admin=admin)
+        return public(item, admin=admin, viewer=owner)
     if method not in ("PATCH", "DELETE"):
         raise Problem(405, "Method not allowed")
     expected = data.get("expected_revision")
@@ -195,10 +263,16 @@ def handle(service, method, path, owner, data, params, request_id, admin=False):
         transact(service, item, expected, delete=True)
         return {"deleted": True}
     action = data.get("action", "reply")
+    if admin and isinstance(action, str) and action in STAFF_ACTIONS:
+        return staff_action(service, item, owner, data, expected, request_id)
+    if STAFF_FIELDS & set(data):
+        raise Problem(400, "Use an explicit staff action for internal metadata")
     if admin and (not isinstance(action, str) or action not in {"reply", "update"}):
         raise Problem(400, "Invalid staff support action")
     if not admin and (not isinstance(action, str) or action not in {"reply", "close"}):
         raise Problem(400, "Customers can reply or close their request")
+    if admin and item.get("assigned_to") and item["assigned_to"] != owner:
+        raise Problem(409, "Nhân viên khác đang phụ trách. Nhận bàn giao với lý do trước khi phản hồi hoặc đổi trạng thái.")
     state = data.get("status", item["status"]) if admin else ("closed" if action == "close" else "open")
     if not isinstance(state, str) or state not in STATES:
         raise Problem(400, "Invalid support status")
@@ -220,4 +294,4 @@ def handle(service, method, path, owner, data, params, request_id, admin=False):
         item["messages"] = item["messages"] + [{"role": "staff" if admin else "customer", "body": message, "created_at": now()}]
     item.update(status=state, priority=priority, updated_at=now(), revision=uuid4().hex, message_count=len(item["messages"]))
     transact(service, item, expected, admin=owner if admin else None, request_id=request_id)
-    return public(item, admin=admin)
+    return public(item, admin=admin, viewer=owner)
