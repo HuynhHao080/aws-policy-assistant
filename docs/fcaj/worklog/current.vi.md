@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — bản chính ngày 04/11/2026
 
+> Công bố 05/11/2026 sau khi chủ dự án cho phép push/deploy: mã ứng dụng `82f37d2` đã lên GitHub và [CI đạt](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42050386735); worklog `a48cd06` đã [deploy GitHub Pages thành công](https://github.com/HuynhHao080/aws-internship-worklog/actions/runs/42049972955). Frontend bản chính AWS đã xuất bản lại, invalidation hoàn tất; 31 file frontend và 6 Lambda khớp hash artifact. CloudFormation báo không có cập nhật backend cần thực hiện; không tạo thêm dịch vụ hoặc tăng budget/quota/model. Đây không phải lượt kiểm thử model, visual browser, tải hoặc phục hồi mới. Các nhận định “chưa push/local” trong phần lịch sử mô tả thời điểm trước công bố. [Báo cáo công bố](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/PUBLICATION-2026-11-05.md).
+
 Ứng dụng: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Repo ứng dụng: `HuynhHao080/aws-policy-assistant`, thư mục làm việc `C:\Users\accli\Documents\Project\policy-assistant`. Repo worklog riêng: `HuynhHao080/aws-internship-worklog`. Mã local chưa push không tự xuất hiện trong source public. Hướng dẫn này có AI hỗ trợ; không phải nhật ký sinh viên đã tự thực hiện hoặc quyết định nghiệm thu của FCAJ.
 
 Ngày 05/11, người dùng yêu cầu đồng bộ checkout `C:\Users\accli\Documents\Project\policy-assistant-github` từ mã nguồn ứng dụng chính. Đây là thư mục checkout thứ hai của cùng repo GitHub, không phải worklog hoặc đích AWS mới. Đồng bộ local không tự commit/push hay công bố site; các tài liệu lịch sử và config riêng được giữ/sao lưu theo báo cáo đồng bộ.

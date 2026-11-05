@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — primary release, 4 November 2026
 
+> Publication follow-up,5November2026, after explicit owner approval: application commit`82f37d2` was pushed and [CI passed](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42050386735); worklog commit`a48cd06` [deployed to GitHub Pages successfully](https://github.com/HuynhHao080/aws-internship-worklog/actions/runs/42049972955). The primary AWS frontend was republished and invalidated;31frontend files and6Lambda hashes match the release artifact. CloudFormation reported no backend updates to perform. No service, budget/quota or model increase occurred. This is not new model, visual-browser, load or restore acceptance. Earlier local/unpublished statements describe the pre-publication snapshot. [Publication report](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/PUBLICATION-2026-11-05.md).
+
 Application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Application repository: `HuynhHao080/aws-policy-assistant`, canonical folder `C:\Users\accli\Documents\Project\policy-assistant`. Separate worklog: `HuynhHao080/aws-internship-worklog`. Unpushed local source is not automatically available in the public repository. This guide is AI-assisted review material, not a record of the student's personal execution or FCAJ approval.
 
 On5November the student requested local synchronization into `C:\Users\accli\Documents\Project\policy-assistant-github`. This is a second checkout of the same application GitHub repository, not the worklog or a new AWS target. Local synchronization does not commit/push or publish a website; historical evidence and environment-specific configuration are retained/backed up as recorded in the synchronization report.
