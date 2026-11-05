@@ -1,0 +1,22 @@
+{
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793788043",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793788043/312f2b3b-1893-438f-8b54-a3e2ce301742",
+    "phase": "final",
+    "code_sha256": "974197f606822d42a51a922694a30de95be06ac57a5a4ff30c1837089ab94273",
+    "template_sha256": "81b292927bff436f13e2b08861997f2b312d1b89b37e628029d65aa9158adfed"
+  },
+  "paths": [
+    "/Resources/DocumentDispatcher/Properties/CodeUri/Key",
+    "/Resources/DocumentRecovery/Properties/CodeUri/Key",
+    "/Resources/PdfParser/Properties/CodeUri/Key",
+    "/Resources/PolicyAssistantFunction/Properties/CodeUri/Key",
+    "/Resources/PolicyAssistantFunction/Properties/Events/AdminQuality",
+    "/Resources/PolicyAssistantFunction/Properties/Events/AnswerFeedback",
+    "/Resources/PolicyAssistantWorker/Properties/CodeUri/Key",
+    "/Resources/SignupGuard/Properties/CodeUri/Key"
+  ],
+  "two_explicit_jwt_routes": true,
+  "existing_iam_model_budget_and_data_resources_unchanged": true
+}

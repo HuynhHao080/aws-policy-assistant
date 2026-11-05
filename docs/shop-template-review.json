@@ -1,0 +1,23 @@
+{
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793782175",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793782175/d1fe70ff-aa75-4bba-8aaf-9d784bc1ae8e",
+    "phase": "final",
+    "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+    "template_sha256": "65ad846dc07f66f366cd01ac39dc7d934ca310391c455e2b8bb5c721552ee066"
+  },
+  "changed_paths": [
+    "/Resources/DocumentDispatcher/Properties/CodeUri/Key",
+    "/Resources/DocumentRecovery/Properties/CodeUri/Key",
+    "/Resources/PdfParser/Properties/CodeUri/Key",
+    "/Resources/PolicyAssistantFunction/Properties/CodeUri/Key",
+    "/Resources/PolicyAssistantFunction/Properties/Events/AdminEditShopProfile",
+    "/Resources/PolicyAssistantFunction/Properties/Events/AdminShopProfile",
+    "/Resources/PolicyAssistantFunction/Properties/Events/ShopProfile",
+    "/Resources/PolicyAssistantWorker/Properties/CodeUri/Key",
+    "/Resources/SignupGuard/Properties/CodeUri/Key"
+  ],
+  "three_explicitly_authenticated_routes": true,
+  "no_iam_or_data_resource_changes": true
+}

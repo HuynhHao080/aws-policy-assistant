@@ -1,0 +1,86 @@
+{
+  "review_date": "2026-11-04",
+  "observed_at": "2026-11-04T07:58:46.636108+00:00",
+  "stack_status": "UPDATE_COMPLETE",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793350855",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793350855/804da746-133e-4131-8395-7ae94b34bf5f",
+    "phase": "final",
+    "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+    "template_sha256": "3fb19ef3066ab2fa614cf23b4905b98529819dd497ca4fd6a304ac6d8e3ca4e4"
+  },
+  "invalidation_id": "I8M5R7G09H957925OWIEM6MHOR",
+  "invalidation_status": "Completed",
+  "files": [
+    {
+      "key": "index.html",
+      "bytes": 15150,
+      "sha256": "e3d5e6af48dd3e4716216492ef5908aa29bba0308545e4ebfab0f14ecabc4a6d",
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "key": "config.json",
+      "bytes": 301,
+      "sha256": "489311eeb8d978063743917b2c647b361c961ae48971067b395d90577b2a9fb6",
+      "content_type": "application/json"
+    },
+    {
+      "key": "privacy.html",
+      "bytes": 3182,
+      "sha256": "f201fd843bfaf3ad45048bb2b6840a7dc01e222c51c5766f816073a6356246eb",
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "key": "terms.html",
+      "bytes": 1900,
+      "sha256": "2cc4360486eda26786f53e08408d8bddb583e47f53bf063318e4a98b930b3704",
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "key": "assets/app-MLQO6QVJ.css",
+      "bytes": 18598,
+      "sha256": "a50bd58550741f2c7a41bfad5ba5c4093da0d1db625cd6cf2d3152bf4979599e",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-KQGCZQB5.js",
+      "bytes": 110564,
+      "sha256": "001e256b090438cbd7ac0f0d21da0d7bff94873149ebab246d3b9773f65ce25d",
+      "content_type": "text/javascript; charset=utf-8"
+    }
+  ],
+  "method": "AWS deployment artifact metadata and byte hashes; no live browser/session access",
+  "deployed_functions": [
+    {
+      "logical_id": "DocumentDispatcher",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "DocumentRecovery",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PdfParser",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PolicyAssistantFunction",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PolicyAssistantWorker",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "SignupGuard",
+      "code_sha256": "34358298ca99b859430600d21a01efac12dc0872ca74a391a99053e10e823500",
+      "update_status": "Successful"
+    }
+  ]
+}

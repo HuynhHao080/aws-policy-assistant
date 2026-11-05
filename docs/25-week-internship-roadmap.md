@@ -1,3 +1,5 @@
+> Historical snapshot: this document predates the 2026-10-29 completion revision. Features, test counts, deployment claims, and plans below may be outdated. See `final-verification.md`, `final-handover.md`, and `api-contract.md` for the current source and verification scope.
+
 # Policy Assistant — 25-Week Internship Roadmap
 
 **Project:** `C:\Users\accli\Documents\Project\policy-assistant`

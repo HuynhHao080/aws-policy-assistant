@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-11-04T08:53:06.514484+00:00",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793782175",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793782175/d1fe70ff-aa75-4bba-8aaf-9d784bc1ae8e",
+    "phase": "final",
+    "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+    "template_sha256": "65ad846dc07f66f366cd01ac39dc7d934ca310391c455e2b8bb5c721552ee066"
+  },
+  "scope": "One disposable identity; private nonce-guarded incomplete shop draft only. No fake public profile, owner identity, policies/PDFs, model invocation or email sends.",
+  "checks": [
+    "All three deployed shop routes explicitly enforce JWT",
+    "Shop endpoint requires gateway authorization",
+    "Customer receives only published profile fields",
+    "Customer cannot inspect shop drafts",
+    "Customer cannot change shared shop settings",
+    "Malformed contact input is rejected",
+    "Saving a shop draft leaves customer profile unchanged",
+    "Old customer JWT still cannot read a shop draft",
+    "Stale shared revision cannot overwrite a draft",
+    "Publication requires explicit confirmation",
+    "Incomplete live shop information cannot be published",
+    "Failed publication preserves the customer snapshot",
+    "Discard removes only the synthetic draft",
+    "Shop writes record audit metadata without contact or draft content"
+  ],
+  "profile_cleaned": true,
+  "account_cleaned": true,
+  "http_passed": true
+}

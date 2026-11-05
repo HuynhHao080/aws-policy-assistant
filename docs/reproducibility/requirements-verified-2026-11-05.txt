@@ -1,0 +1,31 @@
+# Versions installed in the isolated Python 3.12 handover environment.
+# A dated compatibility snapshot, not a hash-locked cross-platform environment.
+boto3==1.43.123
+botocore==1.43.123
+certifi==2026.10.23
+cffi==2.1.1
+charset-normalizer==3.5.2
+colorama==0.4.6
+cryptography==50.0.2
+idna==3.20
+iniconfig==2.3.1
+jmespath==1.1.0
+joserfc==1.8.0
+MarkupSafe==3.0.4
+moto==5.2.5
+packaging==26.3
+pillow==12.3.0
+pluggy==1.7.0
+pycparser==3.12
+Pygments==2.21.0
+pypdf==6.21.4
+pytest==9.2.0
+python-dateutil==2.9.0.post0
+PyYAML==6.0.3
+requests==2.34.2
+responses==0.26.3
+s3transfer==0.19.3
+six==1.17.0
+urllib3==2.8.0
+Werkzeug==3.1.9
+xmltodict==1.0.4

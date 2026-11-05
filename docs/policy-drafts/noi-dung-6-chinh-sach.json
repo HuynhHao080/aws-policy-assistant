@@ -1,0 +1,85 @@
+[
+  {
+    "policy_id": "DRAFT-PA-TERMS-001",
+    "title": "Dự thảo — Điều khoản sử dụng và tài khoản Policy Assistant",
+    "category": "Dự thảo — Sử dụng dịch vụ",
+    "keywords": [
+      "điều khoản",
+      "tài khoản",
+      "đăng ký",
+      "mật khẩu",
+      "phí dịch vụ"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Phạm vi dịch vụ\nPolicy Assistant hỗ trợ quản lý PDF riêng, tìm kiếm chính sách chung và hỏi đáp AI có nguồn tham khảo. Người dùng cần kiểm tra tài liệu gốc trước khi sử dụng kết quả cho quyết định quan trọng.\n\n2. Tài khoản\nĐăng ký bằng email có quyền sử dụng và hoàn tất xác nhận email. Giữ bí mật mật khẩu, không chia sẻ phiên đăng nhập, đăng xuất khi dùng thiết bị chung. Khi nghi ngờ truy cập trái phép, thực hiện khôi phục mật khẩu và liên hệ bộ phận hỗ trợ.\n\n3. Sử dụng có trách nhiệm\nChỉ cung cấp nội dung mà bạn có quyền cho phép dịch vụ và các bên xử lý liên quan sử dụng. Không tải mã độc, mật khẩu, khóa truy cập hoặc nội dung xâm phạm quyền của người khác. Không thử truy cập dữ liệu không thuộc quyền của mình, gây gián đoạn hoặc dùng nhiều tài khoản để né hạn mức.\n\n4. Dữ liệu riêng và chính sách chung\nPDF và lịch sử hỏi đáp được phân quyền theo tài khoản. Chính sách chung do quản trị viên công bố được cung cấp cho các tài khoản sử dụng và có thể được dùng làm nguồn trả lời. Không đưa dữ liệu khách hàng hoặc tài liệu cần bảo mật vào chính sách chung.\n\n5. Giới hạn dịch vụ\nChất lượng và thời gian xử lý phụ thuộc tài liệu, kết nối, hạn mức và hạ tầng. Chưa có cam kết hoạt động liên tục, thời gian xử lý cố định hoặc độ chính xác tuyệt đối. Thay đổi ảnh hưởng đến cách sử dụng cần được công bố cùng phiên bản và ngày áp dụng.\n\n6. Phí và quyền của người dùng\nBản nháp chưa thiết lập giá bán, gói trả phí hoặc điều kiện hoàn tiền. Ngân sách AWS của đơn vị vận hành không phải giá bán cho khách hàng. Trước khi thu phí phải có chính sách giá, thanh toán và hoàn tiền được duyệt. Nội dung này không loại trừ quyền hoặc trách nhiệm bắt buộc theo pháp luật áp dụng.\n\n7. Liên hệ và hiệu lực\nLiên hệ [EMAIL_HO_TRO]. Cơ chế thông báo và ghi nhận chấp thuận điều khoản phải được hoàn tất trước khi ban hành. Chỉ đăng nội dung trong Chính sách chung chưa chứng minh người dùng đã chấp thuận."
+  },
+  {
+    "policy_id": "DRAFT-PA-DOCUMENTS-001",
+    "title": "Dự thảo — Tải lên, xử lý và quản lý tài liệu PDF",
+    "category": "Dự thảo — Tài liệu",
+    "keywords": [
+      "PDF",
+      "tải lên",
+      "OCR",
+      "scan",
+      "tài liệu riêng",
+      "quyền sở hữu"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Tệp được hỗ trợ\nMỗi tệp là PDF không mã hóa, tối đa 10 MiB. Giới hạn là 100 trang với PDF có văn bản hoặc 10 trang với PDF cần nhận dạng chữ từ ảnh bằng OCR. Tổng văn bản trích xuất bị giới hạn ở 300.000 ký tự. Tệp hỏng, mã hóa, quá giới hạn hoặc không đọc được có thể bị từ chối.\n\n2. Quyền đối với tài liệu\nTải lên không tự chuyển quyền sở hữu tài liệu cho đơn vị vận hành. Người tải cần có quyền cho phép lưu, trích xuất, tìm kiếm và xử lý qua các dịch vụ AWS nêu trong chính sách quyền riêng tư. Tài liệu có dữ liệu của người khác cần có căn cứ xử lý phù hợp trước khi tải.\n\n3. Nội dung cần loại bỏ\nKhông tải mật khẩu, khóa API, thông tin thanh toán bí mật hoặc tài liệu không được phép đưa lên dịch vụ đám mây. Với dữ liệu nhạy cảm hoặc dữ liệu trẻ em, chỉ tải khi đơn vị vận hành đã xác nhận phạm vi và điều kiện pháp lý cần thiết. Người dùng tự kiểm tra và che dữ liệu không cần thiết; hệ thống chưa cam kết tự nhận diện hay tự che mọi dữ liệu cá nhân.\n\n4. Xử lý và chất lượng\nSau khi bấm Tải lên và xử lý, tài liệu được đưa vào hàng đợi để trích xuất văn bản hoặc OCR và tạo dữ liệu tìm kiếm. Chỉ tài liệu xử lý xong được dùng làm nguồn trả lời. PDF scan mờ, chữ viết tay, bảng biểu và cách dàn trang phức tạp có thể được đọc thiếu hoặc sai. Kiểm tra đoạn trích với bản gốc.\n\n5. Quản lý tài liệu\nTrong Tài liệu của tôi, chủ tài khoản có thể đổi tên, tải xuống và yêu cầu xóa. PDF riêng không tự trở thành chính sách chung. Trang quản trị chính sách không cung cấp chức năng xem PDF riêng của khách hàng; quyền kỹ thuật của người vận hành hạ tầng là phạm vi riêng.\n\n6. Xóa và lỗi xử lý\nKhi tác vụ xóa thành công, các phiên bản tệp nguồn và nội dung trích xuất của tài liệu được xóa. Tác vụ đang xử lý có thể cần hoàn tất trước khi xóa. Việc xóa lịch sử và thời hạn bản sao lưu được nêu riêng trong chính sách quyền riêng tư. Nếu gặp lỗi, ghi lại thời điểm và thông báo lỗi để hỗ trợ, tránh tải lại nhiều lần liên tục."
+  },
+  {
+    "policy_id": "DRAFT-PA-PRIVACY-001",
+    "title": "Dự thảo — Quyền riêng tư, lưu giữ và xóa dữ liệu",
+    "category": "Dự thảo — Quyền riêng tư",
+    "keywords": [
+      "quyền riêng tư",
+      "dữ liệu cá nhân",
+      "AWS",
+      "lưu giữ",
+      "xóa tài khoản",
+      "sao lưu"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Đầu mối phụ trách\n[TEN_DON_VI_VAN_HANH], địa chỉ [DIA_CHI_LIEN_HE], email [EMAIL_HO_TRO], tiếp nhận yêu cầu liên quan đến dữ liệu của dịch vụ. Vai trò và trách nhiệm pháp lý của đơn vị cùng các bên xử lý phải được chốt trước khi ban hành.\n\n2. Dữ liệu và mục đích\nEmail, mã tài khoản và thông tin xác thực cần thiết phục vụ đăng nhập. PDF, tên tệp, văn bản trích xuất và dữ liệu tìm kiếm phục vụ quản lý tài liệu và truy xuất nguồn. Câu hỏi, câu trả lời và đoạn trích phục vụ hỏi đáp và lịch sử. Bộ đếm phục vụ hạn mức; nhật ký và bản ghi quản trị phục vụ xử lý lỗi, an toàn và kiểm tra thay đổi chính sách.\n\n3. Nhà cung cấp và nơi xử lý\nDịch vụ sử dụng AWS: Cognito cho xác thực, S3/DynamoDB cho lưu trữ, Textract cho OCR và Bedrock cho tìm kiếm ngữ nghĩa, tạo câu trả lời. Cấu hình chính tại Singapore. Khi lập chỉ mục, văn bản được gửi tới mô hình nhúng. Khi hỏi đáp, câu hỏi và tối đa năm đoạn liên quan được gửi tới mô hình tạo câu trả lời. Suy luận APAC có thể xử lý tại các vùng AWS ngoài Singapore và ngoài Việt Nam. Không dùng dịch vụ cho tài liệu bắt buộc chỉ lưu hoặc xử lý tại Việt Nam khi chưa có phương án được duyệt. Đơn vị vận hành cần xác định căn cứ xử lý, thông báo/đồng ý và nghĩa vụ chuyển dữ liệu ra nước ngoài áp dụng cho mình trước khi ban hành.\n\n4. Phạm vi truy cập\nỨng dụng phân quyền PDF và lịch sử theo tài khoản sở hữu. Quản trị viên ứng dụng quản lý chính sách chung, không mặc nhiên xem PDF riêng qua trang quản trị. Người vận hành hạ tầng AWS có quyền kỹ thuật theo phân quyền vận hành. Người có liên kết tải tạm có thể sử dụng trong thời gian liên kết còn hiệu lực; không chia sẻ liên kết đó.\n\n5. Thời hạn lưu giữ\nPDF đã xử lý và dữ liệu tìm kiếm được giữ tới khi yêu cầu xóa được xử lý thành công. Lịch sử hỏi đáp có thời hạn 30 ngày. Tệp tải tạm trong luồng mới được cấu hình dọn sau hai ngày. Dấu vết xóa tài liệu có thời hạn 30 ngày; bộ đếm/trạng thái phục vụ vận hành khoảng 65 ngày; nhật ký quản trị 90 ngày. Các nhóm nhật ký ứng dụng được quản lý trong cấu hình lưu 14–30 ngày tùy loại. Cơ chế dọn tự động có độ trễ; không bảo đảm mọi dữ liệu biến mất đúng thời điểm hết hạn. Nhật ký lịch sử và các hệ thống sao lưu có phạm vi riêng cần được kiểm kê trước khi ban hành.\n\n6. Xóa PDF không tự xóa mọi đoạn trích đã lưu\nSau khi xóa PDF thành công, các phiên bản nguồn và dữ liệu trích xuất được xóa. Câu trả lời và đoạn trích đã lưu trong lịch sử có thể vẫn còn đến khi xóa cuộc hỏi đáp, hết thời hạn lưu hoặc xóa tài khoản. Bạn có thể xóa từng cuộc hỏi đáp trong Lịch sử hỏi đáp và xuất lịch sử ở mục Tài khoản. Tệp đã tải hoặc xuất ra thiết bị của bạn nằm ngoài phạm vi xóa của ứng dụng.\n\n7. Xóa tài khoản và sao lưu\nTại mục Tài khoản, nhập DELETE rồi xác nhận xóa. Hệ thống chặn truy cập trước, xử lý xóa PDF/lịch sử rồi xóa danh tính đăng nhập. Đây là tác vụ nền, có thể cần thử lại khi lỗi; chưa cam kết xong trong số phút cố định. Không thể hoàn tác từ ứng dụng. Bản ghi vận hành còn theo thời hạn nêu trên. Sao lưu khôi phục DynamoDB có thể còn dữ liệu đã xóa trong cửa sổ tới 35 ngày; bản sao lưu không hiển thị như dữ liệu hoạt động và không phải tính năng khôi phục tài khoản cho khách hàng.\n\n8. Yêu cầu về dữ liệu cá nhân\nBạn có thể gửi yêu cầu được biết, truy cập, chỉnh sửa, cung cấp, xóa, hạn chế hoặc phản đối xử lý dữ liệu; rút lại đồng ý khi việc xử lý dựa trên đồng ý; và phản ánh, khiếu nại theo quy định áp dụng. Gửi yêu cầu tới [EMAIL_HO_TRO]. Đơn vị vận hành có thể cần xác minh người yêu cầu bằng thông tin phù hợp; không gửi mật khẩu hoặc OTP. Thời hạn và cách giải quyết phải theo quy định áp dụng, không tự đặt một thời hạn cố định trong bản nháp.\n\n9. Bảo mật và sự cố\nHệ thống sử dụng HTTPS, lưu trữ riêng và phân quyền tài khoản; không có bảo đảm tuyệt đối loại bỏ mọi sự cố. Nếu nghi lộ dữ liệu, bảo vệ tài khoản, ngừng chia sẻ liên kết và báo đầu mối hỗ trợ. Quy trình đánh giá, xử lý, thông báo sự cố và người chịu trách nhiệm phải được phê duyệt trước khi công bố."
+  },
+  {
+    "policy_id": "DRAFT-PA-AI-001",
+    "title": "Dự thảo — Sử dụng AI, trích dẫn và giới hạn câu trả lời",
+    "category": "Dự thảo — Hỏi đáp AI",
+    "keywords": [
+      "AI",
+      "trích dẫn",
+      "nguồn",
+      "độ chính xác",
+      "câu trả lời",
+      "tài liệu"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Nguồn được sử dụng\nAI tìm các đoạn liên quan trong chính sách chung đã công bố và PDF riêng mà tài khoản có quyền truy cập. Có thể chọn tối đa 10 PDF đã xử lý. Nếu không chọn, hệ thống xem xét tối đa 20 bản ghi tài liệu gần nhất của tài khoản và dùng tài liệu đủ điều kiện cùng chính sách chung. Chọn PDF riêng không loại chính sách chung khỏi tìm kiếm.\n\n2. Phạm vi trả lời\nTối đa năm đoạn liên quan được chọn để tạo câu trả lời. Tìm kiếm có giới hạn; không bảo đảm đọc toàn bộ kho trong mỗi câu hỏi. Khi thiếu cơ sở, hệ thống có thể báo chưa đủ thông tin thay vì đưa ra kết luận.\n\n3. Kiểm chứng nguồn\nNguồn hiển thị tên tài liệu/chính sách, đoạn trích và số trang PDF nếu có. Mở nguồn và so với bản gốc trước khi áp dụng. Có trích dẫn không bảo đảm mọi diễn giải đều đúng, đầy đủ hoặc còn hiệu lực.\n\n4. Giới hạn của AI\nAI có thể hiểu sai, bỏ sót điều kiện, nhầm phạm vi hoặc dùng đoạn OCR chưa chính xác. Không dùng câu trả lời làm căn cứ duy nhất cho quyết định pháp lý, tài chính, y tế, nhân sự hoặc quyết định ảnh hưởng lớn. Khi cần, tham khảo người có chuyên môn và văn bản có hiệu lực.\n\n5. Nguồn mâu thuẫn và bản nháp\nKhi nguồn mâu thuẫn, kiểm tra phiên bản, ngày hiệu lực và phạm vi; không coi AI là bên quyết định hiệu lực pháp lý của tài liệu. Nội dung DEMO và DỰ THẢO chỉ phục vụ thử nghiệm/rà soát, chưa phải chính sách chính thức.\n\n6. Dữ liệu câu hỏi và phản ánh\nCâu hỏi và đoạn nguồn được xử lý qua AWS như mô tả trong chính sách quyền riêng tư. Chỉ nhập dữ liệu cần thiết; không nhập mật khẩu, OTP hay khóa truy cập. Báo lỗi tới [EMAIL_HO_TRO] với câu hỏi, thời điểm, tên nguồn và điểm cần sửa. Chỉ chia sẻ nội dung được phép. Sửa chính sách chung không tự viết lại câu trả lời đã lưu trong lịch sử."
+  },
+  {
+    "policy_id": "DRAFT-PA-LIMITS-001",
+    "title": "Dự thảo — Hạn mức sử dụng và vận hành dịch vụ",
+    "category": "Dự thảo — Hạn mức",
+    "keywords": [
+      "hạn mức",
+      "lượt tải",
+      "câu hỏi",
+      "UTC",
+      "vận hành",
+      "ngân sách"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Hạn mức cấu hình hiện tại\nMỗi tài khoản tối đa 5 lượt tải PDF và 20 lượt hỏi đáp mỗi ngày. Toàn hệ thống tối đa 300 lượt tải PDF và 2.000 lượt hỏi đáp mỗi tháng. Các thao tác ứng dụng còn chịu giới hạn 1.000 yêu cầu mỗi tài khoản/ngày và 100.000 yêu cầu toàn hệ thống/tháng. Đối chiếu các con số với cấu hình triển khai trước ngày chính sách có hiệu lực.\n\n2. Cách tính lượt\nLượt được đặt tại bước kiểm tra hạn mức, không chỉ khi yêu cầu hoàn tất thành công. Yêu cầu đã nhận xử lý có thể vẫn tính lượt khi lỗi ở bước sau; không tự động hoàn lại mọi lượt lỗi. Tránh gửi lặp liên tục khi chưa biết kết quả lượt trước.\n\n3. Thời điểm đặt lại\nBộ đếm ngày và tháng dùng UTC. Tại Việt Nam, ngày mới bắt đầu lúc 07:00; tháng mới bắt đầu lúc 07:00 ngày đầu tháng theo giờ Việt Nam. Đây là ngày/tháng lịch, không phải cửa sổ trượt 24 giờ hoặc 30 ngày.\n\n4. Hạn mức chung và đăng ký\nNếu toàn hệ thống đã hết hạn mức tháng, yêu cầu có thể bị từ chối dù tài khoản còn lượt riêng. Giới hạn đăng ký và bảo vệ vận hành cũng có thể làm đăng ký mới bị từ chối. Không tạo nhiều tài khoản để né giới hạn.\n\n5. Tác vụ nền và khả dụng\nTải lên, OCR và xóa dữ liệu có thể cần xử lý nền hoặc thử lại. Bấm gửi không đồng nghĩa tác vụ đã xong; theo dõi trạng thái và liên hệ hỗ trợ nếu lỗi kéo dài. Chưa có SLA, cam kết hỗ trợ 24/7 hoặc thời gian xử lý cố định.\n\n6. Phí và ngân sách\nHạn mức không tự tạo thành gói trả phí. Ngân sách AWS nội bộ và email cảnh báo không phải biểu giá khách hàng, bảo đảm chi phí tối đa hay cơ chế tự ngắt mọi khoản chi. Chính sách thu phí/hoàn tiền, nếu có, phải được công bố riêng trước khi áp dụng.\n\n7. Thay đổi hạn mức\nKhi thay đổi, đơn vị vận hành cần đồng bộ cấu hình, tài liệu và thông báo liên quan. Không dùng số liệu từ phiên bản cũ để khẳng định hạn mức hiện tại sau khi chính sách đã thay thế."
+  },
+  {
+    "policy_id": "DRAFT-PA-SUPPORT-001",
+    "title": "Dự thảo — Hỗ trợ, phản ánh và công bố chính sách",
+    "category": "Dự thảo — Hỗ trợ và quản trị",
+    "keywords": [
+      "hỗ trợ",
+      "liên hệ",
+      "khiếu nại",
+      "quản trị",
+      "cập nhật",
+      "chính sách chung"
+    ],
+    "content": "DỰ THẢO — CHƯA BAN HÀNH\nPhiên bản 0.1 · Ngày soạn 30/10/2026\nĐơn vị vận hành: [TEN_DON_VI_VAN_HANH]\nĐịa chỉ liên hệ: [DIA_CHI_LIEN_HE]\nEmail hỗ trợ công khai: [EMAIL_HO_TRO]\nNgày có hiệu lực: [NGAY_HIEU_LUC]\nNội dung cần được chủ dự án duyệt trước khi có hiệu lực.\n\n1. Kênh tiếp nhận\nĐơn vị phụ trách: [TEN_DON_VI_VAN_HANH]. Địa chỉ: [DIA_CHI_LIEN_HE]. Email: [EMAIL_HO_TRO]. Cần xác nhận đầu mối có người tiếp nhận thực tế trước khi ban hành. Chưa công bố lịch trực hay thời gian phản hồi cố định; không hiểu là hỗ trợ tức thời hoặc 24/7. Yêu cầu thuộc diện pháp luật quy định vẫn phải được giải quyết trong thời hạn áp dụng.\n\n2. Gửi yêu cầu hỗ trợ\nNêu vấn đề, thời điểm, thao tác đã thực hiện, tên tài liệu nếu cần và thông báo lỗi. Với AI, nêu câu hỏi, nguồn và điểm cần kiểm tra. Chỉ gửi dữ liệu tối thiểu; không gửi mật khẩu, OTP, khóa AWS/API hoặc liên kết tải tài liệu còn hiệu lực.\n\n3. Sự cố tài khoản hoặc dữ liệu\nNếu nghi tài khoản bị chiếm quyền, khôi phục mật khẩu và báo hỗ trợ. Khi báo dấu hiệu lộ dữ liệu, mô tả phạm vi đã quan sát; tránh chuyển tiếp tài liệu của người khác. Người vận hành đánh giá và xử lý theo quy trình sự cố được duyệt.\n\n4. Công bố chính sách chung\nChỉ quản trị viên được công bố, cập nhật hoặc xóa chính sách chung. Trước khi lưu cần kiểm tra nguồn nội dung, người duyệt, phạm vi, ngày hiệu lực và dữ liệu cần che. Không dùng chính sách chung để lưu hồ sơ cá nhân hoặc tài liệu nội bộ cần giới hạn người xem.\n\n5. Phiên bản và nhật ký\nChính sách chính thức cần có mã, phiên bản, ngày hiệu lực và người phụ trách. Nhật ký quản trị ghi thao tác, không thay thế kho lưu nội dung cũ và hồ sơ phê duyệt. Khi cập nhật, lưu bản trước đó ở nơi quản lý tài liệu riêng để đối chiếu.\n\n6. Bản nháp và các trang thông tin\nNội dung DEMO hoặc DỰ THẢO không phải cam kết chính thức. Đăng vào kho hỏi đáp không tự sửa trang Quyền riêng tư, Điều khoản hoặc màn hình đăng ký. Khi ban hành phải đồng bộ các nơi đó và cơ chế thông báo/chấp thuận phù hợp.\n\n7. Phản ánh và quyền người dùng\nGửi yêu cầu tới [EMAIL_HO_TRO]. Đơn vị vận hành xác minh khi cần và trả lời theo quy định áp dụng. Chính sách nội bộ không được dùng để tước bỏ quyền khiếu nại hoặc các quyền hợp pháp khác."
+  }
+]

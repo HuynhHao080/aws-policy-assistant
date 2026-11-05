@@ -1,37 +1,22 @@
-# Current handover — D1, 2026-10-22
+# Bàn giao Policy Assistant — chất lượng AI và nguồn worklog
 
-D4 local follow-up: [final readiness](d4-final-readiness-review.md), [report summary](d4-internship-project-summary.md), [owner operational checklist](d3a2-owner-operational-confirmation.md). D3-A remains **BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION**; no disable/sign-out/reset occurred. Public push, Pages and cleanup remain NO-GO. Historical D1/AWS snapshots below are retained; D4 is not a live health check.
+Ứng dụng chính: https://djreo5eptvwk5.cloudfront.net/ — stack policy-assistant.
 
-B4 API/SDK19PASS; historical B5 browserFAIL; API-only B5-R6 UPDATE_COMPLETE; B5-R7 browser10PASS. C0:45resources/4Retain. GO bounded test demo; NO-GO production. D1 does not rerun AWS.
+Mã ứng dụng: `C:\Users\accli\Documents\Project\policy-assistant`.
+Worklog chính do người dùng xác nhận: `C:\Users\accli\Documents\Project\aws-internship-worklog` (HuynhHao080/aws-internship-worklog). Repo worklog được đọc để đối chiếu, không sửa/commit/push. Bộ fcj-workshop cũ trong ứng dụng không đại diện cho hồ sơ đó.
 
-Open: DLQ1/ALARM; SNS0subscriptions; Budget20USD email delivery unverified; no cleanup/commit/push. **Environment end date not set by owner.** Prior password literals remain in Git HEAD; rotation/revocation proof is required before public push. DPAPI/private artifacts stay ignored.
+## Chức năng mới
 
-[Authoritative D1 review](d1-handover-review.md), [demo script](demo-script.md), [R7](aws-browser-b5r7-result.md), [C0](cleanup-c0-inventory-and-acceptance.md). Local129unit/17frontend/3fixtures/1fullstack and private R4 extra case are separate from AWS evidence.
+Khách đánh giá câu trả lời hữu ích/chưa hữu ích kèm lý do, đổi hoặc rút đánh giá. Quản trị mở **Chất lượng AI** để xem thống kê tổng hợp theo tháng và xuất JSON. Không đưa câu hỏi, PDF hoặc định danh người đánh giá lên dashboard. Có trích dẫn/đánh giá tích cực không phải chứng nhận câu trả lời đúng.
 
-## Historical snapshots — superseded current-state statements
+Giữ các chức năng tài khoản, PDF/OCR, hỏi đáp có nguồn, bản nháp/công bố chính sách, hỗ trợ có đồng ý, cấu hình shop, lịch sử/xuất/xóa và vận hành đã có. Quản trị hiện có sáu mục: Tổng quan, Chính sách, Hỗ trợ, Thông tin shop, Chất lượng AI, Nhật ký.
 
-The earlier local-only dates/counts and pending/live-skipped statements below are retained as history, not current status.
+## Kiểm chứng hiện tại
 
-> C0 hiện tại: read-only inventory VERIFIED;45resources/4Retain, browserR7PASS; SNS0subscriptions, DLQALARM. Chưa cleanup. Xem [C0 inventory và acceptance](cleanup-c0-inventory-and-acceptance.md). Các mốc cũ bên dưới là lịch sử.
+**251 kiểm thử Python đạt, 11 bài tích hợp trực tiếp bỏ qua theo cấu hình;54 frontend đạt;15 kiểm tra API/cleanup thực tế đạt.** Tài khoản, lịch sử và cohort giả đã dọn. Test trực tiếp dùng cohort2000 ẩn khỏi dashboard và không gọi mô hình AI; không ghi dữ liệu giả vào tháng thật. Frontend được đối chiếu bytes, sáu Lambda khớp artifact và CloudFront đã cập nhật.
 
-# Policy Assistant — current handover
+[Báo cáo/giới hạn](quality-release-verification.md) · [Hướng dẫn sử dụng](HUONG-DAN-CHAT-LUONG-AI.md) · [Đối chiếu FCAJ](fcaj/READINESS.md) · [Handoff worklog riêng](fcaj/WORKLOG-HANDOFF.md).
 
-Updated 2026-10-21. Local implementation prepared for review and subsequent authorized AWS acceptance. This is not a production-readiness declaration.
+Các kết quả B4/B5/B5-R7/CI ở worklog là bằng chứng riêng theo thời điểm, không bị thay hoặc cộng thành điểm số mới. Chưa có nghiệm thu trình duyệt/hình ảnh, model accuracy, tải, khôi phục backup hoặc email thực trong lượt này. Code/cloud đã được cập nhật không đồng nghĩa GitHub/worklog đã được publish lại.
 
-## Delivered locally
-
-Owner-bound sessions and document routes; immutable S3 version submissions/downloads; retry-safe worker with byte hashing; corrected Scan cursor; browser polling/error handling and hash-checked downloads; secure interactive verification scripts; backend/frontend/browser regression tests; SAM monitoring fixes; updated README, API contract, evidence index, deployment checklist and demo script.
-
-Worklog updates reconcile the Proposal with current scope, add a bilingual Policy Assistant evidence section, correct the site URL/Hugo version and distinguish separate IoT/workshop activities. Personal ratings and duplicate blog content still require the student's factual confirmation.
-
-## Verified
-
-See `final-verification.md` for actual results and limitations. Backend tests passed on Python 3.12.10. Frontend and a real headless browser passed against mocks. Live tests were skipped. No AWS modifications or push were performed.
-
-## Before reporting full completion
-
-Rotate previously committed credentials, review source/change set, obtain deployment authorization and complete the live acceptance matrix in `deployment-review.md`. Retain source/evidence commit and execution dates. Do not claim AI/RAG, OCR, live isolation, real DLQ redrive or production readiness without evidence.
-
-## Complete MVP v1 additions
-
-Native Cognito login/challenges/refresh/logout; named private document library; terminal failure states and new-attempt retries; indexed scheduled pending recovery; complete loopback-only demo with real Lambda handlers/moto services; offline verifier and release ZIP builder; private S3/CloudFront HTTPS/OAC/security headers, SNS alarms and public configuration exporter. Backend 120 tests, frontend 17 tests and two browser scenarios passed locally. Runbook: operations.md. No AWS deployment or publication was performed.
+Sơ đồ kiến trúc cuối, bản Calculator và minh chứng cá nhân cần được chủ dự án thực hiện/rà soát theo quy định. Mã nguồn AI hỗ trợ và bản nháp kỹ thuật không thay thế phần tự hiểu, tự thiết kế và trình bày. Giữ DEMO cho tới khi có nội dung kinh doanh được phê duyệt.

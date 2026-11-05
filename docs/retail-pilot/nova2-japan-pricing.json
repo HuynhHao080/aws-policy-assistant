@@ -1,0 +1,21 @@
+{
+  "model": "jp.amazon.nova-2-lite-v1:0",
+  "regions": [
+    "ap-northeast-1",
+    "ap-northeast-3"
+  ],
+  "rates": [
+    {
+      "type": "Input tokens",
+      "unit": "1K tokens",
+      "usd": "0.0003960000",
+      "description": "$0.000396 per 1K tokens for APN1-Nova2.0Lite-input-tokens in Asia Pacific (Tokyo)"
+    },
+    {
+      "type": "Output tokens",
+      "unit": "1K tokens",
+      "usd": "0.0033110000",
+      "description": "$0.003311 per 1K tokens for APN1-Nova2.0Lite-output-tokens in Asia Pacific (Tokyo)"
+    }
+  ]
+}

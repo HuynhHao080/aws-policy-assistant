@@ -1,3 +1,5 @@
+> Historical snapshot: this document predates the 2026-10-29 completion revision. Features, test counts, deployment claims, and plans below may be outdated. See `final-verification.md`, `final-handover.md`, and `api-contract.md` for the current source and verification scope.
+
 # Policy Assistant — AWS Upgrade Roadmap
 
 This document outlines a prioritized, incremental upgrade path for the Policy Assistant serverless MVP, based on the AWS Cloud Journey learning materials (https://cloudjourney.awsstudygroup.com/). Every proposed change addresses a real requirement, integrates with the existing application, includes tests, and is documented.

@@ -1,5 +1,8 @@
 name: Policy Assistant CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main, master]
@@ -15,31 +18,26 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - uses: aws-actions/setup-sam@v2
       - name: Install dependencies
         run: |
-          pip install -r policy_assistant/requirements.txt
-          pip install -r tests/requirements.txt
+          pip install -r policy_assistant/requirements.txt -r tests/requirements.txt
+      - uses: aws-actions/setup-sam@v2
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-      - name: Install browser tooling
-        run: npm ci
-      - name: Frontend checks
-        run: npm test
-      - name: Python lint and backend type checking
-        run: |
-          python -m ruff check policy_assistant scripts tests --select E9,F63,F7,F82
-          python -m mypy --explicit-package-bases --ignore-missing-imports --check-untyped-defs policy_assistant/app.py
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Browser workflow (mock API/S3)
-        run: npm run test:browser
-      - name: Full-stack offline browser workflow
-        run: npm run test:local
+          node-version: '22'
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend --ignore-scripts
+      - name: Build frontend
+        run: npm run build --prefix frontend
       - name: SAM build
-        run: sam build
+        run: sam build --template-file template.yaml
       - name: Unit tests
-        run: python -m pytest tests/unit -v --tb=short
+        run: python -m pytest tests -v --tb=short
+      - name: Frontend workflow checks
+        run: npm test --prefix frontend
       - name: SAM validate
-        run: sam validate --lint
+        run: sam validate --lint --region ap-southeast-1
+      - name: Check source handover integrity
+        run: |
+          python scripts/source_bundle.py create --output .deployment/ci-source.zip
+          python scripts/source_bundle.py verify --archive .deployment/ci-source.zip

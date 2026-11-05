@@ -1,0 +1,48 @@
+{
+  "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosans/NotoSans%5Bwdth,wght%5D.ttf",
+  "source_sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+  "woff2_sha256": "96430ee91ca9cb0088cbce4dc87a9d630249df642aa544bde335afc316977f04",
+  "woff2_bytes": 206952,
+  "axes": {
+    "wght": [
+      100.0,
+      400.0,
+      900.0
+    ],
+    "wdth": [
+      62.5,
+      100.0,
+      100.0
+    ]
+  },
+  "vietnamese_sample_coverage": true,
+  "previous_trebuchet_missing_glyph_count": 69,
+  "previous_missing_sample": "ƯảẤấẦầẨẩẪẫẬậẮắẰằẲẳẴẵẶặẾếỀềỂểỄễỆệỐốỒồỔổỖỗỘộỚớỜờỞởỠỡỢợỨứỪừỬửỮữỰựỴỵỶỷỸỹ₫",
+  "nfc_and_decomposed_vietnamese_coverage": true,
+  "unicode_ranges_exclusive": [
+    [
+      32,
+      592
+    ],
+    [
+      768,
+      880
+    ],
+    [
+      7680,
+      7936
+    ],
+    [
+      8192,
+      8304
+    ],
+    [
+      8352,
+      8400
+    ],
+    [
+      8448,
+      8528
+    ]
+  ]
+}

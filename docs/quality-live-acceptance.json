@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-11-04T10:37:51.178980+00:00",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793788043",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793788043/312f2b3b-1893-438f-8b54-a3e2ce301742",
+    "phase": "final",
+    "code_sha256": "974197f606822d42a51a922694a30de95be06ac57a5a4ff30c1837089ab94273",
+    "template_sha256": "81b292927bff436f13e2b08861997f2b312d1b89b37e628029d65aa9158adfed"
+  },
+  "scope": "Two disposable identities; synthetic private answer stored through actual save_answer using operator CLI transport, isolated unavailable year-2000 cohort. Real feedback APIs and aggregate-only authorization. No model/PDF/email or real current/previous-month metric writes.",
+  "checks": [
+    "Both deployed quality routes enforce JWT",
+    "Quality API rejects anonymous requests",
+    "Customer cannot view global quality analytics",
+    "Actual save_answer transaction records one answer in isolated cohort",
+    "Another customer cannot rate a known private conversation",
+    "Owned feedback records a helpful vote",
+    "Same-target network retry does not double count",
+    "Stale conflicting feedback is rejected",
+    "Changing a vote moves counters atomically",
+    "Withdrawing a vote restores feedback totals",
+    "Controlled reason validation rejects invalid feedback",
+    "Admin report exposes only anonymous aggregate measurements",
+    "Synthetic year-2000 fixture cannot appear in normal dashboard",
+    "Admin role still cannot rate another customer private answer",
+    "Disposable history partitions are empty after account purge"
+  ],
+  "http_passed": true,
+  "accounts_cleaned": true,
+  "fixture_cleaned": true,
+  "history_purged": true
+}

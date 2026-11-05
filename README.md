@@ -1,168 +1,117 @@
-> **Security status clarification — 25 October 2026:** The historical containment/publication prerequisite is **CLOSED_WITH_EVIDENCE**: approved D3-A containment was verified, D9 produced validated sanitized history, and D11 verified its authorized publication. This does not establish password rotation, absence of unauthorized access, removal of cached/cloned copies, or elimination of all security risks. New publication, deployment and cleanup still require their own approval.
->
-> The D2/D4 notices below are preserved historical snapshots from before that remediation; their pending/NO-GO statements describe that earlier stage, not an unresolved current containment prerequisite.
+# Policy Assistant
 
-> D4 local-only review: [final readiness](docs/d4-final-readiness-review.md), [internship report summary](docs/d4-internship-project-summary.md). D3-A remains **BLOCKED_PENDING_OWNER_OPERATIONAL_CONFIRMATION**; [owner checklist](docs/d3a2-owner-operational-confirmation.md) is prepared, not answered. Public push/Pages and cleanup remain NO-GO. No fresh AWS health check or E2E is claimed.
->
-> D2 update: public credential-candidate exposure confirmed in commit80c4eef (four auth scripts plus PROJECT_SUMMARY.md). Metadata maps one legacy policy-assistant Cognito identity, not TestA/TestB; validity/rotation/unauthorized access UNKNOWN. [D2 review](docs/d2-secret-exposure-review.md), [D3 proposal](docs/d3-credential-containment-approval.md) (D3-A conditional approval is blocked; other actions need separate approval). Public push remains NO-GO.
+A public, self-service AWS application for private PDF libraries, multilingual semantic retrieval, source-cited AI answers, conversation history, and administration of shared policies. The interface is in Vietnamese. Runtime: Python 3.12; deployment: AWS SAM; browser authentication: Cognito authorization code + PKCE.
 
-# AWS Policy Assistant — verified test demo
+Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Deployment and acceptance evidence: [verification report](docs/final-verification.md). The owner has confirmed registration and administrator access; the SNS subscription was confirmed.
 
-## Bounded AI pilot — 25 October 2026
+Current handover: [feature inventory](docs/FEATURE-STATUS.md), [support guide](docs/HUONG-DAN-HO-TRO.md) and [current quality extension verification](docs/quality-release-verification.md). Support is consented and in-app; administrators cannot access private customer PDFs. AI questions can use shared policies, selected PDFs or both.
 
-The deployed TEST frontend has reached **LIVE_UI_ACCEPTANCE_PASS_BY_OWNER** for the TestA-only / POL-001 / fixed-question pilot. [Pilot completion and limitations](docs/ai-pilot-completion.md) records the architecture, acceptance provenance, quota/usage, retained deviations and next steps. TestA/TestB are role labels, not login identifiers.
+- Practical support triage: customer category/order reference, staff-only priority, combined exact filters, revision checks and monthly usage. References are unverified input; no automatic refund/order integration.
 
-This dated deployment summary updates the older runtime-status statements below; it does not erase historical failures or waive repository security/publication gates. The deployed pilot includes reviewed local integration that has not yet been published to main. A documentation-only update does not make the current source branch reproduce that deployment. This is not production certification or approval for additional inference.
+- Shop contact configuration: separate administrator drafts, explicit publication/withdrawal, customer contact page and revision/audit protection. [Operator guide](docs/HUONG-DAN-CAU-HINH-SHOP.md).
 
-A working policy lookup and owner-isolated PDF document application for the First Cloud AI Journey internship. Includes a browser UI, API/worker/recovery backend, offline full-stack demo, AWS SAM infrastructure, automated tests, deployment/runbook documentation and a handover packager.
+V1 handover and operating boundaries: [RELEASE-V1.md](docs/RELEASE-V1.md). Administrator tabs: overview, policies, support, shop information, quality and audit.
 
-**Historical scope (22 October 2026, before the AI pilot):** keyword search and PDF byte verification. No Bedrock/RAG, OCR, semantic search, malware scanning or policy text extraction is claimed. Local acceptance is complete only when `scripts.verify` passes; dated AWS evidence is summarized below; future execution requires separate authorization.
+New quality extension: structured private feedback, aggregate-only quality dashboard and JSON report. [FCAJ readiness and actual worklog handoff](docs/fcaj/READINESS.md).
 
-## Current verified status — 2026-10-22
+The separate internship worklog now has a dated bilingual primary-release guide, demo plan, cost inputs and sanitized evidence. [Local synchronization and build verification](docs/fcaj/WORKLOG-VERIFICATION.md). These updates preserve historical results and do not establish personal attendance, published blogs or FCAJ eligibility.
 
-Test stack `policy-assistant-fcaj-test`, ap-southeast-1, account …0098 reached **UPDATE_COMPLETE** after the approved API-only presigner update. Frontend: https://d3ataim7dfsl7t.cloudfront.net/ . D1 uses dated evidence, not a fresh AWS health check.
+## Functional scope
 
-| Evidence | Result |
-|---|---|
-| B4 AWS API/SDK |19 PASS; browser NOT_RUN at that stage |
-| Original B5 browser |FAIL upload; retained as history |
-| B5-R7 real Edge browser |10 PASS after fix: login/search/upload/process/download/hash/ownership/logout |
-| C0 inventory |45 resources/4 Retain; GO bounded test demo, NO-GO production |
+- Cognito self-registration, email confirmation, sign-in, password recovery and sign-out through hosted login. The frontend never asks users to paste JWTs.
+- Owner-scoped document upload, pagination, renaming, processing status, download and permanent deletion of all source/extraction versions.
+- PDF text extraction, with asynchronous Textract OCR for scanned PDFs. Limits: 10 MiB, 100 text pages or 10 scanned pages per file; encrypted and malformed PDFs fail explicitly.
+- Multilingual semantic retrieval using Cohere Embed Multilingual v3; compact int8 vectors live in S3, avoiding an always-running vector database. Selected document IDs are re-authorized before content is read.
+- Nova 2 Lite (Japan profile, low reasoning) answers only from retrieved excerpts, returning server-validated source IDs, document/page references and excerpts. Unsupported questions can return insufficient evidence. AI answers still require human verification.
+- Owner-scoped history with 30-day expiry, per-entry deletion and JSON export.
+- Confirmed account deletion blocks access first, purges private object versions/history/support requests, then removes the Cognito identity asynchronously.
+- An `administrators` Cognito group controls shared-policy publication/deletion and a transactionally recorded audit log. The admin UI does not expose customer PDF contents.
+- PDF parsing runs in an isolated Lambda with logging-only IAM permissions; it receives a short-lived URL to the current input and returns a validated bounded text result.
+- Durable processing: a DynamoDB stream dispatches persisted work to SQS; duplicate delivery is safe; worker failures retry; scheduled recovery repairs stalled work; dead-letter and HTTP 5xx alarms are configured.
+- Private S3 origins, CloudFront HTTPS hosting, content security headers, versioned documents, DynamoDB recovery, bounded log retention, usage quotas and a monthly AWS budget notification.
 
-**Environment end date has not been set by the owner.** DLQ has approximately one diagnostic message/ALARM; alarm SNS topic has **0 subscriptions**. Budget20USD/month is account-wide, not a cap; email delivery is unverified. Cleanup and Git commit/push are not authorized.
+The deployed generation profile is `jp.amazon.nova-2-lite-v1:0` with low reasoning. Its Japan destinations may process retrieved excerpts in Tokyo/Osaka. Cohere embedding and Textract calls use Singapore. See the published privacy notice before uploading sensitive material.
 
-Presigner `addressing_style="virtual"` fits regional S3 CSP without broadening IAM/CSP/CORS. Deployed API has the new ZIP; Worker/Recovery retain the old verified ZIP. Source SAM still shares CodeUri: a future generic package/deploy can update all three, unlike the reviewed API-only update.
+## Budget and limits
 
-See [D1 Git/handover review](docs/d1-handover-review.md), [R7 result](docs/aws-browser-b5r7-result.md), [C0 cleanup options](docs/cleanup-c0-inventory-and-acceptance.md) and [demo script](docs/demo-script.md). No production readiness or AI/RAG/OCR is claimed.
+The requested operating budget is USD 30–50/month. Defaults intentionally target a small public launch:
 
-## Start the complete demo (no AWS account required)
-
-On this Windows checkout:
-
-```powershell
-.venv/Scripts/python.exe -m scripts.demo_server
-```
-
-For a fresh Windows environment:
-
-```powershell
-pwsh -File scripts/start-demo.ps1
-```
-
-Open the printed loopback URL. Sign in as **alice@demo.local** without a password. Look up `POL-001`, search `refund`, upload a synthetic PDF (up to 10 MiB), wait for the worker, download with SHA-256 verification and refresh **Tài liệu của bạn**. Sign out, sign in as **bob@demo.local**, and verify that Alice's ID returns 404.
-
-The offline server runs the **real Lambda handlers** with moto-simulated S3/DynamoDB/SQS; authentication and the signed-URL adapter are explicitly local substitutes. It binds only 127.0.0.1. All demo data disappears on shutdown. It does not contact AWS or validate real Cognito tokens. Ctrl+C stops the demo.
-
-## Setup on other environments
-
-Python 3.12 and Node.js 22+ are recommended:
-
-```bash
-python3.12 -m venv .venv
-# Activate the environment using your shell's activation script.
-python -m pip install -r policy_assistant/requirements.txt -r tests/requirements.txt
-npm ci
-npx playwright install chromium
-python -m scripts.demo_server
-```
-
-Windows browser tests use system Edge; other platforms use Playwright Chromium. AWS SAM CLI is needed for infrastructure checks. Dependency manifests include the test/simulation dependencies separately from Lambda runtime dependencies.
-
-## Capabilities
-
-- Native Cognito login, initial password-change/MFA challenges, in-memory refresh and logout. Manual token mode remains an advanced diagnostic option. The current pool defaults to MFA OFF; accounts are administrator-provisioned.
-- Exact policy lookup and bounded keyword search with next-page navigation.
-- Owned upload sessions, named document library, processing status, retry and verified downloads.
-- Private S3 versioning: submissions and downloads use the same immutable version.
-- Worker success is idempotent; stale delivery attempts cannot affect newer retries.
-- Explicit failed states for invalid PDFs and exhausted transient processing. Scheduled indexed recovery covers metadata/queue-send gaps.
-- Private S3 frontend hosting through CloudFront OAC/HTTPS with security headers and matching API/document CORS, defined in SAM.
-- CloudWatch alarms/logs, SNS notification topic and optional confirmed email subscription.
-
-## Architecture
-
-The Mermaid below is an assistant reference, not a student-authored FCAJ diagram. Use [the self-drawing worksheet](docs/architecture-self-draw.md) to create and explain your own official-icon diagram.
-
-```mermaid
-flowchart LR
-  UI[Browser / CloudFront HTTPS] -->|JWT| API[HTTP API + Cognito]
-  API --> Handler[API Lambda]
-  Handler --> Policies[(Policies DynamoDB)]
-  Handler --> Metadata[(Document Metadata + owner/due indexes)]
-  UI -->|Bounded signed POST / versioned GET| S3[(Private versioned S3)]
-  Handler --> Queue[SQS]
-  Recovery[Scheduled recovery Lambda] --> Metadata
-  Recovery --> Queue
-  Queue --> Worker[PDF byte verification worker]
-  Worker --> S3
-  Worker --> Metadata
-  Queue -->|Exhausted retries| DLQ[DLQ]
-  Worker --> CW[CloudWatch / SNS]
-```
-
-Each document's owner comes from the API Gateway JWT authorizer `sub`. Unknown, unowned legacy and other users' records are not exposed. Metadata listing uses an owner index. Submit freezes the S3 version and a processing attempt ID; the worker verifies bytes/hash for that attempt. A bounded two-minute recovery task re-enqueues due pending work. Invalid PDFs become terminal failures; the owner can retry transient failures as a new attempt without changing bytes. See [operations](docs/operations.md).
-
-## Verify everything offline
-
-```powershell
-.venv/Scripts/python.exe -m scripts.verify
-```
-
-This runs selected fatal Python lint checks, backend mypy, JS syntax, backend tests, skipped-by-default live tests, frontend tests, mocked-service browser tests, a full-stack browser scenario, SAM lint and SAM build. It removes live-test opt-in variables from its child environment and writes a sanitized result to `docs/evidence/offline-acceptance.json`. CI config runs the same functional layers and never deploys.
-
-Individual commands:
-
-```powershell
-.venv/Scripts/python.exe -m pytest tests/unit -q
-npm test
-npm run test:browser
-npm run test:local
-$env:PATH = "$((Resolve-Path .venv/Scripts).Path);$env:PATH"
-sam.cmd validate --lint
-sam.cmd build
-```
-
-See [verification record](docs/final-verification.md) and [evidence index](docs/evidence-index.md). Local/mocked screenshots are not AWS proof; R7 screenshots accompany the real AWS browser evidence.
-
-## API
-
-| Route | Access | Purpose |
+| Operation | Per account | Whole application |
 |---|---|---|
-| `GET /health` | Public | Handler liveness |
-| `GET /policies/{policy_id}` | JWT | Lookup |
-| `GET /policies?keyword=...&limit=...&next_token=...` | JWT | Bounded search |
-| `GET /documents?limit=...&next_token=...` | JWT + owner | Private paginated library |
-| `POST /documents/upload-session` | JWT + sub | Named owned session |
-| `POST /documents/submit` | JWT + owner | Freeze bytes, enqueue or retry |
-| `GET /documents/{doc_id}/status` | JWT + owner | State, timestamps, failure code and hash |
-| `GET /documents/{doc_id}/download` | JWT + owner | Processed version URL |
+| Support request creation | 5/day | 200/month |
+| PDF upload attempts | 5/day | 300/month |
+| AI question attempts | 20/day | 2,000/month |
+| Authenticated application requests | 1,000/day | 100,000/month |
+| Public registration attempts | — | 100/month, 1,000 lifetime |
 
-Details: [API contract](docs/api-contract.md).
+Reservations are atomic. Retries and failed attempts may consume a reservation. Daily/monthly periods use UTC; signup lifetime counters do not expire. These limits are starting settings, not paid subscription tiers. Administrators can inspect monthly totals; changing limits is an operator deployment decision.
 
-## AWS deployment boundary
+AWS Budgets notifications fire at 50%, 80% and 100% of USD 50. The budget covers the AWS account, not only this stack. SNS email subscriptions require confirmation. Alerts are not an automatic billing cap: traffic, stored data, other account resources, tax and regional pricing can still affect the bill. Consult [AWS Bedrock pricing](https://aws.amazon.com/bedrock/pricing/), [Textract pricing](https://aws.amazon.com/textract/pricing/) and [Cognito pricing](https://aws.amazon.com/cognito/pricing/).
 
-No deployment or publication is performed automatically. `samconfig.toml` defaults to the old `policy-assistant` stack: never run default deploy/sync as a test-demo step. **Previously committed passwords require rotation/revocation evidence before public push**; D1 does not change credentials or history. Follow [operations](docs/operations.md) only with separate authorization. Preserve existing data and never guess an owner for legacy records.
+## Development and verification
 
-For a future separately authorized operation, export public outputs with `python -m scripts.export_frontend_config --stack policy-assistant-fcaj-test --output .aws-sam/test-review/public-config.json`; review them before any upload. Do not overwrite the blank portable frontend config for handover. Local `python -m http.server 8080 --directory frontend` needs the intended public configuration; the complete offline server supplies its own local configuration.
-
-`tests/integration` requires both `AWS_SAM_STACK_NAME` and `POLICY_ASSISTANT_ID_TOKEN`; only run directly after choosing the intended account. `scripts/check_live.py --help` describes an explicit live policy/document verifier. Neither is part of an automatic AWS deployment.
-
-## Handover and report
+For a clean source review ZIP and Windows Python3.12/SAM setup, see [source handover and local reproduction](docs/reproducibility/README.md). The export excludes actual frontend configuration, authentication artifacts, generated dependencies and Git history.
 
 ```powershell
-.venv/Scripts/python.exe -m scripts.build_release
+python -m pip install -r policy_assistant/requirements.txt -r tests/requirements.txt
+npm ci --prefix frontend --ignore-scripts
+npm run build --prefix frontend
+npm test --prefix frontend
+python -m pytest tests -q
+sam validate --lint --region ap-southeast-1
+sam build
+python -m http.server 8080 --bind 127.0.0.1 --directory frontend/dist
 ```
 
-Creates `dist/handover/policy-assistant-source.zip`, `policy-assistant-frontend.zip` and a SHA-256 manifest. The builder selects directories/extensions and excludes Git history; it is not a security scanner or an exact per-file Git allowlist. It does not honor every Gitignore rule. Inspect its manifest/ZIP contents before sharing; D1 does not build or certify a release ZIP. Credential rotation is still required.
+Use Python 3.12 for the Lambda-runtime test pass. Tests use mocked AWS services; deployed integration tests skip unless `AWS_SAM_STACK_NAME` is explicitly set. Protected policy tests also require `POLICY_ASSISTANT_ID_TOKEN` to be set privately. Data-specific read-only tests use explicit `POLICY_ASSISTANT_TEST_POLICY_ID` and `POLICY_ASSISTANT_TEST_KEYWORD`; production does not auto-publish demo samples. Run `scripts/smoke_live.py --ocr` for disposable full acceptance. A skipped live test is not deployment evidence.
 
-- [FCAJ gap analysis](docs/fcaj-gap-analysis.md)
-- [Dated official AWS COST](docs/cost-estimate.md)
-- [Student architecture worksheet](docs/architecture-self-draw.md)
-- [Technical internship report](docs/internship-report.md)
-- [FCAJ demo script](docs/demo-script.md)
-- [Current handover](docs/final-handover.md)
-- [Operations/deployment](docs/operations.md)
+The compiled frontend reads public configuration from `config.json`; `frontend/config.example.json` is deliberately unconfigured. An unconfigured preview shows a connection notice and disables sign-in. Real authentication requires a deployed user pool and a registered callback URL. Local callback: `http://localhost:8080/`, not a nested source path.
 
-## Practical limits
+`frontend/package-lock.json` locks browser dependencies. Fonts are self-hosted with their OFL license. The production browser has no CDN script or remote-font dependency. Tokens are held in browser session storage by oidc-client-ts and sent only to the configured API; a strict CSP and plain-text rendering reduce injection exposure. Do not add untrusted scripts to this origin.
 
-A complete MVP is not a production certification. Search uses Scan (at most 1,000 evaluated items per request) and is not a stable snapshot under concurrent writes. Document/library and recovery indexes are eventually consistent. Recovery processes at most 20 due items per scheduled invocation; sustained overload/database outages require operator intervention. Signed POST constrains key, MIME and 5 bytes–10 MiB at S3; deployment enforcement remains a live acceptance check. PDF checks are byte/header verification only. S3 current expiry is 365 days plus noncurrent expiry 365 days after becoming noncurrent; versions can remain roughly 730 days. User self-registration/password reset, production custom domains, production load/cost targets are not delivered; live acceptance is limited to dated B4/R7 evidence.
+## Update the existing AWS project
+
+The current stack is `policy-assistant` in `ap-southeast-1`. Review `docs/production-runbook.md` before executing a release. Build before preparing a change set.
+
+```powershell
+python scripts/deploy_release.py prepare --notification-email YOUR_ALERT_EMAIL
+python scripts/deploy_release.py inspect
+# Execute only the reviewed immutable change set:
+python scripts/deploy_release.py execute
+python scripts/deploy_release.py status
+```
+
+When the existing metadata table has neither new index, preparation generates an `index-migration` phase adding only `OwnerCreatedAt`, with recovery scheduling disabled. After it completes, prepare/inspect/execute again: the `final` phase adds `StatusUpdatedAt` and enables recovery. DynamoDB permits one GSI addition per table update. Only publish the frontend after both indexes are active:
+
+```powershell
+python scripts/deploy_release.py publish
+```
+
+The release helper packages the verified build, rejects stale runtime modules, records artifact hashes and refuses removal/replacement of data-bearing tables, buckets, user pools or queues. It assumes this project's existing SAM managed artifact bucket. A fresh environment can use `sam deploy --guided`; existing fixed table names assume one copy per account/region. Do not execute a fresh stack against those names without reviewing conflicts.
+
+The rollout does not guess owners for historical metadata. Existing objects under `uploads/` are retained; only the new `quarantine/` prefix has two-day temporary cleanup. Old metadata without a verifiable owner stays inaccessible. Legacy policy rows are hidden until an administrator explicitly publishes actual customer content. Do not present the original sample policies as real business rules.
+
+## First administrator
+
+Register and confirm the chosen owner email on the deployed website. Then an AWS operator runs:
+
+```powershell
+python scripts/bootstrap_admin.py --email OWNER_EMAIL
+```
+
+The helper refuses absent, disabled or unconfirmed accounts. Sign out and in again after the group grant. The public API never lets a customer grant themselves an administrative role.
+
+## Main files
+
+- `policy_assistant/app.py`: gateway routing and existing policy search.
+- `service.py`, `pipeline.py`, `pdf_parser.py`, `assistant.py`, `embeddings.py`, `signup.py` inside `policy_assistant/`: application, processing, grounded generation, vectors, signup limits.
+- `frontend/src/`: production interface and authenticated API client.
+- `template.yaml`: AWS infrastructure and role permissions.
+- `scripts/deploy_release.py`, `scripts/bootstrap_admin.py`: repeatable release and owner setup.
+- `docs/api-contract.md`, `docs/production-runbook.md`, `docs/final-verification.md`: current behavior, operations and actual evidence.
+
+Older internship reports and roadmaps describe historical snapshots. The current verification report is authoritative for what has actually been tested; it does not equate a local test pass with successful public operation.
+
+Canonical working repository: `C:\Users\accli\Documents\Project\policy-assistant`. See [working location](docs/WORKING-LOCATION.md) and [latest retail verification and limitations](docs/retail-pilot-verification.md). Vietnamese usage guide: [Hướng dẫn vận hành](docs/HUONG-DAN-VAN-HANH.md).
+
+Administrator workflow: [Vietnamese guide](docs/HUONG-DAN-QUAN-TRI.md), [current release evidence](docs/admin-verification.md). Drafts are separate from published policies; publication is explicit, archive is reversible, and revision checks prevent stale writes. Production frontend builds use fingerprinted assets to keep previous HTML compatible during deployment.

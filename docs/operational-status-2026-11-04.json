@@ -1,0 +1,96 @@
+{
+  "checked_at": "2026-11-04T08:15:17.812954+00:00",
+  "stack": "UPDATE_COMPLETE",
+  "frontend": "https://djreo5eptvwk5.cloudfront.net/",
+  "distribution": "Deployed",
+  "alert_subscriptions": [
+    {
+      "protocol": "email",
+      "confirmed": true
+    }
+  ],
+  "selected_admin_account": "verified",
+  "selected_account_is_admin": true,
+  "alarms": [
+    {
+      "name": "policy-assistant-Api5xxAlarm-OOVEzoIF1EN9",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-DispatchDeadLettersAlarm-tqJD9GC8R5ML",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-DispatchErrorsAlarm-gIpA7ogRRhtl",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-DocumentDeadLettersAlarm-VPBrC2u6Zr0V",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-Duration",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-Errors",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-QueueAgeAlarm-y2zQYvL21Kz5",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-WorkerErrorsAlarm-lTGtxfgUjm1G",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    },
+    {
+      "name": "policy-assistant-WorkerThrottlesAlarm-sIk3j2GDTiA8",
+      "state": "OK",
+      "actions_enabled": true,
+      "has_alarm_action": true
+    }
+  ],
+  "queues": [
+    {
+      "logical_id": "DispatchDLQ",
+      "ApproximateNumberOfMessages": 0,
+      "ApproximateNumberOfMessagesNotVisible": 0,
+      "ApproximateNumberOfMessagesDelayed": 0
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentDLQ",
+      "ApproximateNumberOfMessages": 0,
+      "ApproximateNumberOfMessagesNotVisible": 0,
+      "ApproximateNumberOfMessagesDelayed": 0
+    },
+    {
+      "logical_id": "PolicyAssistantDocumentQueue",
+      "ApproximateNumberOfMessages": 0,
+      "ApproximateNumberOfMessagesNotVisible": 0,
+      "ApproximateNumberOfMessagesDelayed": 0
+    }
+  ],
+  "support_table": {
+    "ttl_status": "ENABLED",
+    "ttl_attribute": "expires_at",
+    "pitr_status": "ENABLED"
+  },
+  "limits": "Metadata snapshot only; does not prove alert delivery, restore success, current billing or an availability SLA."
+}

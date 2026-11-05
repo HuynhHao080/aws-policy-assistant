@@ -1,0 +1,23 @@
+{
+  "release": "V1 UI 2026-11-04",
+  "frontend": {
+    "passed": 48,
+    "failed": 0,
+    "scope": "API/editor/build, lifecycle and isolated synthetic DOM interaction tests; not browser visual acceptance"
+  },
+  "backend": {
+    "passed": 231,
+    "skipped_opt_in": 11,
+    "scope": "Last verified immutable backend, unchanged in UI-only release; not rerun this pass"
+  },
+  "dependency_audit": {
+    "runtime_reported_vulnerabilities": 0,
+    "all_dependencies_reported_vulnerabilities": 0
+  },
+  "color_pair_contrast": {
+    "foreground": "#58695c",
+    "background": "#f7f5ed",
+    "ratio": 5.36,
+    "complete_wcag_audit": false
+  }
+}

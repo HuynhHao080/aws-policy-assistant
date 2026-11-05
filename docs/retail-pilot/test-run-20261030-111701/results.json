@@ -1,0 +1,256 @@
+{
+  "run_id": "20261030-111701",
+  "started_at": "2026-10-30T04:17:01.329688+00:00",
+  "code_sha256": "e7ab4b0584e8e98075d49b19d9e99b88dfef18caf22b3b9342da1f24c6fd1c19",
+  "fixture_sha256": "89b62450a1a68d39bff61b9d68dd569475e85b089dcc3f431785d27dd11173cf",
+  "scope": "Operator regression harness using byte-matched deployed Python code, live DynamoDB public policies, live Bedrock embeddings and generation. Isolated owner with no private documents; quota and history replaced in memory. Not a browser, authenticated HTTP, or customer-session test. Candidate section-based shared-policy indexing substituted in memory; no policy writes. Candidate system prompt substituted before the model call; this candidate is not yet deployed.",
+  "results": [
+    {
+      "id": 6,
+      "group": "Vận chuyển",
+      "question": "Shop có giao sang Singapore không?",
+      "expected": "Kịch bản chỉ giao trong Việt Nam, chưa hỗ trợ quốc tế.",
+      "expected_policy_codes": [
+        "SHIPPING"
+      ],
+      "check": "Không hứa giao quốc tế.",
+      "review_status": "PENDING",
+      "answer": "Theo chính sách DEMO cung cấp, cửa hàng chỉ giao trong lãnh thổ Việt Nam và chưa hỗ trợ giao quốc tế. Do đó, giao hàng sang Singapore không được áp dụng trong kịch bản mẫu này.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-SHIPPING-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-SHIPPING-001",
+          "excerpt": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.\n2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1398,
+        "outputTokens": 327,
+        "totalTokens": 1725
+      },
+      "duration_seconds": 5.66
+    },
+    {
+      "id": 13,
+      "group": "Đổi trả",
+      "question": "Hàng lỗi lúc nhận, mở hộp rồi thì mất quyền đổi trả không?",
+      "expected": "Không dùng điều kiện đổi ý chưa mở hộp để loại trường hợp lỗi/giao sai; xem xét trong 7 ngày.",
+      "expected_policy_codes": [
+        "RETURNS"
+      ],
+      "check": "Phân biệt lỗi/giao sai với đổi ý.",
+      "review_status": "PENDING",
+      "answer": "Theo chính sách DEMO, nếu hàng có lỗi khi nhận dù đã mở hộp, bạn vẫn có quyền đổi trả. Điều này được quy định tại mục 2: hàng giao sai hoặc lỗi khi nhận được tiếp nhận trong vòng 7 ngày kể từ ngày nhận, cần cung cấp mã đơn và mô tả/ảnh lỗi. Sau khi kiểm tra và xác nhận lỗi, bạn có thể chọn đổi hàng hoặc hoàn tiền. Tuy nhiên, điều này chỉ áp dụng cho lỗi thực tế, không phải đổi ý. Điều kiện đổi ý (mục 3) yêu cầu hàng chưa mở hộp, nhưng trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2 dù đã mở hộp.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-RETURNS-001",
+        "DEMO-SHOP-RETURNS-001",
+        "DEMO-SHOP-RETURNS-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2."
+        },
+        {
+          "source_id": "S2",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể."
+        },
+        {
+          "source_id": "S3",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1388,
+        "outputTokens": 622,
+        "totalTokens": 2010
+      },
+      "duration_seconds": 3.84
+    },
+    {
+      "id": 14,
+      "group": "Đổi trả",
+      "question": "Tôi đổi ý sau 2 ngày, hộp còn nguyên có đề nghị trả được không?",
+      "expected": "Có thể đề nghị trong 3 ngày nếu chưa mở/dùng, còn nguyên tem và bao bì.",
+      "expected_policy_codes": [
+        "RETURNS"
+      ],
+      "check": "Nêu đủ điều kiện.",
+      "review_status": "PENDING",
+      "answer": "Bạn có thể đề nghị trả hàng do đổi ý sau 2 ngày nếu hàng chưa mở, chưa dùng và còn nguyên tem, bao bì. Điều này tuân thủ quy định trong chính sách: chỉ tiếp nhận đề nghị đổi ý trong 3 ngày lịch từ ngày nhận hàng khi đủ điều kiện về bao bì và tình trạng sản phẩm. Trong trường hợp này, bạn sẽ chịu phí gửi trả hàng (chưa quy định cụ thể số tiền). Vui lòng liên hệ nhân viên để xác nhận và thực hiện thủ tục.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-RETURNS-001",
+        "DEMO-SHOP-RETURNS-001",
+        "DEMO-SHOP-RETURNS-001",
+        "DEMO-SHOP-RETURNS-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể."
+        },
+        {
+          "source_id": "S2",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2."
+        },
+        {
+          "source_id": "S3",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. Không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả."
+        },
+        {
+          "source_id": "S4",
+          "policy_id": "DEMO-SHOP-RETURNS-001",
+          "excerpt": "3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1429,
+        "outputTokens": 744,
+        "totalTokens": 2173
+      },
+      "duration_seconds": 4.29
+    },
+    {
+      "id": 24,
+      "group": "Bảo hành",
+      "question": "Bảo hành cần giấy tờ gì?",
+      "expected": "Mã đơn hoặc chứng từ mua để xác minh.",
+      "expected_policy_codes": [
+        "WARRANTY"
+      ],
+      "check": "Không yêu cầu giấy tờ cá nhân ngoài nguồn.",
+      "review_status": "PENDING",
+      "answer": "Để bảo hành, khách cần cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn bảo hành. Đây là yêu cầu bắt buộc theo chính sách DEMO.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-WARRANTY-001",
+        "DEMO-SHOP-WARRANTY-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-WARRANTY-001",
+          "excerpt": "1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế."
+        },
+        {
+          "source_id": "S5",
+          "policy_id": "DEMO-SHOP-WARRANTY-001",
+          "excerpt": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1316,
+        "outputTokens": 381,
+        "totalTokens": 1697
+      },
+      "duration_seconds": 2.42
+    },
+    {
+      "id": 25,
+      "group": "Bảo hành",
+      "question": "Nhắn hỏi hôm nay thì 7 ngày nữa bảo hành xong chứ?",
+      "expected": "Dự kiến 7–15 ngày làm việc từ lúc bộ phận bảo hành nhận sản phẩm, không từ ngày hỏi.",
+      "expected_policy_codes": [
+        "WARRANTY"
+      ],
+      "check": "Không biến dự kiến thành cam kết.",
+      "review_status": "PENDING",
+      "answer": "Theo chính sách DEMO, thời gian kiểm tra/sửa chữa bảo hành được dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải từ ngày khách hàng gửi tin nhắn hỏi. Điều này có nghĩa thời gian xử lý bắt đầu từ khi sản phẩm được gửi đến bộ phận bảo hành, không phải từ ngày bạn liên hệ hôm nay. Ngoài ra, các thông tin trong chính sách này là dữ liệu DEMO chỉ để kiểm thử, không áp dụng cho giao dịch thực tế.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-WARRANTY-001",
+        "DEMO-SHOP-WARRANTY-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-WARRANTY-001",
+          "excerpt": "3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng."
+        },
+        {
+          "source_id": "S2",
+          "policy_id": "DEMO-SHOP-WARRANTY-001",
+          "excerpt": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1358,
+        "outputTokens": 575,
+        "totalTokens": 1933
+      },
+      "duration_seconds": 3.75
+    },
+    {
+      "id": 27,
+      "group": "Hỗ trợ",
+      "question": "Nhân viên có trực tối Chủ nhật không?",
+      "expected": "Giờ mẫu 09:00–17:00 thứ Hai–thứ Sáu, trừ lễ; không có trực tối Chủ nhật.",
+      "expected_policy_codes": [
+        "SUPPORT"
+      ],
+      "check": "Không hứa hỗ trợ 24/7.",
+      "review_status": "PENDING",
+      "answer": "Theo chính sách DEMO, nhân viên hỗ trợ làm việc từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Chưa có thông tin về nhân viên trực vào Chủ nhật.",
+      "grounded": true,
+      "policy_ids": [
+        "DEMO-SHOP-SUPPORT-001"
+      ],
+      "citations": [
+        {
+          "source_id": "S1",
+          "policy_id": "DEMO-SHOP-SUPPORT-001",
+          "excerpt": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ."
+        }
+      ],
+      "model_id": "jp.amazon.nova-2-lite-v1:0",
+      "flags": [],
+      "model_usage": {
+        "inputTokens": 1385,
+        "outputTokens": 1230,
+        "totalTokens": 2615
+      },
+      "duration_seconds": 8.12
+    }
+  ],
+  "prompt_override_sha256": "a294941c76bbc6ff3b60ce9ac09caacd933ed6b13583de636c6978ccb7aac9d5",
+  "candidate_prompt_test": true,
+  "candidate_model_id": "jp.amazon.nova-2-lite-v1:0",
+  "candidate_generation_region": "ap-northeast-1",
+  "candidate_section_chunking": true,
+  "candidate_context_windows": true,
+  "thinking_low": true,
+  "deployed_model_id": "apac.amazon.nova-micro-v1:0",
+  "selected_cases": [
+    6,
+    13,
+    14,
+    24,
+    25,
+    27
+  ],
+  "completed_at": "2026-10-30T04:17:29.422016+00:00",
+  "completed_cases": 6,
+  "request_errors": 0
+}

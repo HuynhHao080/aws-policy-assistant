@@ -1,0 +1,218 @@
+{
+  "checked_at": "2026-11-04T09:26:42.760061+00:00",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793782175",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793782175/d1fe70ff-aa75-4bba-8aaf-9d784bc1ae8e",
+    "phase": "final",
+    "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+    "template_sha256": "65ad846dc07f66f366cd01ac39dc7d934ca310391c455e2b8bb5c721552ee066"
+  },
+  "stack_status": "UPDATE_COMPLETE",
+  "invalidation_id": "I191OE55MQIRCBDRENFKEYBGEG",
+  "invalidation_status": "Completed",
+  "distribution_status": "Deployed",
+  "files": [
+    {
+      "key": "assets/app-37V2KVY4.js",
+      "bytes": 127488,
+      "sha256": "bb0eab619a989b091f35bae0de0f4a519179f8d16d0e4d69e72a450e1beebdd8",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-4FYOF34V.css",
+      "bytes": 19617,
+      "sha256": "5582da40bdc19fea881ce40109701d8737137031053f0377f28354c8848c023a",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-4QM6J3VO.css",
+      "bytes": 15526,
+      "sha256": "cfcb5179a6a72692b85f7d289cc53912374ff700a1f8eaa03ebc92644cb62c64",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-AC5SBFDH.js",
+      "bytes": 97129,
+      "sha256": "39c9c6897f7b5077259f82f1a57b8d15fef298ec134f8e2d5728ad3f173e67e1",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-ACG7Q3OL.js",
+      "bytes": 113791,
+      "sha256": "d6e06835c4bcfe6f883935d7cc614d2485045c08cdda1badf8e3db1ee573933c",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-BWQGM47L.js",
+      "bytes": 121405,
+      "sha256": "92330baa3b91c1b6c84d133a28f7f635d888b9e23f19b5d081c7aa13231896f7",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-BYVZKV23.js",
+      "bytes": 127482,
+      "sha256": "2f2a40d622b75acf257d0f242a3bc3577bf9f4b75093f7a87066a4538d49267b",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-CR7EEYHU.js",
+      "bytes": 121171,
+      "sha256": "ac610ca4d4874b704c47e31c616a361b0f880827dda45378afe987dd897ee49a",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-FYHZGEMM.css",
+      "bytes": 26085,
+      "sha256": "2344c901eb64bf2d9e424acb5025437c117f59fed0aace3387e8affad613c0fa",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-KQGCZQB5.js",
+      "bytes": 110564,
+      "sha256": "001e256b090438cbd7ac0f0d21da0d7bff94873149ebab246d3b9773f65ce25d",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-LZ4RGL5W.css",
+      "bytes": 20269,
+      "sha256": "a9774eba3ca081b81cba33d4d14d9140e1f0835b68a923f0c68aa1b10fc599e6",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-MLQO6QVJ.css",
+      "bytes": 18598,
+      "sha256": "a50bd58550741f2c7a41bfad5ba5c4093da0d1db625cd6cf2d3152bf4979599e",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-OFZZGQ2R.js",
+      "bytes": 127970,
+      "sha256": "5fc61ac7a79021033b9f8e7881f70390fa709a7e8548165d5aac2c9e226a7993",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-PSDZKCHG.css",
+      "bytes": 19617,
+      "sha256": "b31457747c172f146e3395e234b0a47c4ec2fab0272af22a8e581073c5b81f2c",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/app-Q2E6FICR.js",
+      "bytes": 110088,
+      "sha256": "3913f6a142cef88f2caa61113df0a9d3f4a25e87aa744a10bc8d2645db0139fb",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-QISVZDID.js",
+      "bytes": 110627,
+      "sha256": "73e58477377371d078ce330ef4c5061116d0c523e4dd639f9f8f786289089f6c",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-U3BVXR3R.js",
+      "bytes": 113762,
+      "sha256": "60b987e2b21866979206ba26811f66c38e492081a46d19b26b646d7d5b941690",
+      "content_type": "text/javascript; charset=utf-8"
+    },
+    {
+      "key": "assets/app-X25FOZBW.css",
+      "bytes": 19240,
+      "sha256": "db28b879b56b498cd61fd4c54ae6d85621269657e48d3270e784a6639e8fde01",
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "key": "assets/noto-sans-OFL.txt",
+      "bytes": 4489,
+      "sha256": "bf51547e7634b219e85d0391a5836850696497e0cef079857978f286b5d9377f",
+      "content_type": "text/plain; charset=utf-8"
+    },
+    {
+      "key": "assets/noto-sans-vietnamese-4JTSFVC6.woff2",
+      "bytes": 188048,
+      "sha256": "d1f66a51490d0e53c34ddaae4f4b3629e89e5e3045eecd132fd07d497359a512",
+      "content_type": "font/woff2"
+    },
+    {
+      "key": "assets/noto-sans-vietnamese-WEXKOLBY.woff2",
+      "bytes": 206952,
+      "sha256": "96430ee91ca9cb0088cbce4dc87a9d630249df642aa544bde335afc316977f04",
+      "content_type": "font/woff2"
+    },
+    {
+      "key": "assets/noto-serif-italic-2ZDTFCBJ.ttf",
+      "bytes": 476400,
+      "sha256": "f06cb5f088620048826b520a145b0410065bfef099113c4e8898b3fab48d506d",
+      "content_type": "font/ttf"
+    },
+    {
+      "key": "assets/noto-serif-normal-STRNWILC.ttf",
+      "bytes": 444064,
+      "sha256": "5473d2e43bdd018ee124a4addba8091fd0a29894b121cbb741023af6549662b6",
+      "content_type": "font/ttf"
+    },
+    {
+      "key": "assets/OFL.txt",
+      "bytes": 4489,
+      "sha256": "bf51547e7634b219e85d0391a5836850696497e0cef079857978f286b5d9377f",
+      "content_type": "text/plain; charset=utf-8"
+    },
+    {
+      "key": "config.json",
+      "bytes": 301,
+      "sha256": "489311eeb8d978063743917b2c647b361c961ae48971067b395d90577b2a9fb6",
+      "content_type": "application/json"
+    },
+    {
+      "key": "index.html",
+      "bytes": 24147,
+      "sha256": "09d30a71bc23887f679bdea252c45052f5613c6d990cd8b3a9d7ee5f267ef285",
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "key": "privacy.html",
+      "bytes": 3930,
+      "sha256": "50029580953eb85773962e0c4fea602a2efb0ac4c1320e460c1bbc276fa30875",
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "key": "terms.html",
+      "bytes": 1900,
+      "sha256": "0fd396f37e9be8d1aea0577bb332701e9952316362492a9bcf59c63c3cbebaf5",
+      "content_type": "text/html; charset=utf-8"
+    }
+  ],
+  "deployed_functions": [
+    {
+      "logical_id": "DocumentDispatcher",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "DocumentRecovery",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PdfParser",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PolicyAssistantFunction",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "PolicyAssistantWorker",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    },
+    {
+      "logical_id": "SignupGuard",
+      "code_sha256": "6c70b4b5b5281d16931e1f54ffdd94ae9881eaeb25517b44ccc658d6eedfb101",
+      "update_status": "Successful"
+    }
+  ],
+  "method": "AWS artifact metadata and content checksums only; no live-browser/session or model access"
+}

@@ -1,0 +1,620 @@
+{
+  "chunker_sha256": "7df761fc51d7e150ca86a2c73c9142198859cd4696afc3529a879563aaa72078",
+  "embedding_model": "cohere.embed-multilingual-v3",
+  "table": "PolicyAssistantPolicies",
+  "audit_table": "policy-assistant-AuditTable-HM7JBTHK9EH6",
+  "request_id": "retail-reindex-2d5c66e7bc77427887e3c2bd5a882b16",
+  "items": [
+    {
+      "policy_id": "DEMO-SHOP-ORDER-001",
+      "expected_updated_at": "2026-10-30T03:22:56.676100+00:00",
+      "original_typed_item": {
+        "updated_by": {
+          "S": "aws-operator:arn:aws:iam::629380420098:user/huynhhao"
+        },
+        "title_lower": {
+          "S": "demo — đặt hàng và hủy đơn"
+        },
+        "title": {
+          "S": "DEMO — Đặt hàng và hủy đơn"
+        },
+        "content_lower": {
+          "S": "dữ liệu demo hư cấu — chỉ để kiểm thử, không áp dụng cho giao dịch thật. các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.\n2. đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.\n3. khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.\n4. trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. không có số tài khoản thanh toán thật trong bộ dữ liệu.\n5. không có dữ liệu giá bán, tồn kho trực tiếp, mã giảm giá hoặc trạng thái đơn hàng trong bộ chính sách. khi được hỏi các thông tin đó, cần báo chưa có dữ liệu và đề nghị liên hệ nhân viên. không tự suy đoán sản phẩm còn hàng hoặc giá hiện tại."
+        },
+        "embedding_model": {
+          "S": "cohere.embed-multilingual-v3"
+        },
+        "publication_state": {
+          "S": "published"
+        },
+        "content": {
+          "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. Đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.\n2. Đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.\n3. Khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. Đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.\n4. Trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. Không có số tài khoản thanh toán thật trong bộ dữ liệu.\n5. Không có dữ liệu giá bán, tồn kho trực tiếp, mã giảm giá hoặc trạng thái đơn hàng trong bộ chính sách. Khi được hỏi các thông tin đó, cần báo chưa có dữ liệu và đề nghị liên hệ nhân viên. Không tự suy đoán sản phẩm còn hàng hoặc giá hiện tại."
+        },
+        "search_chunks": {
+          "L": [
+            {
+              "M": {
+                "text": {
+                  "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. Đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.\n2. Đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.\n3. Khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. Đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.\n4. Trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. Không có số tài khoản thanh toán thật trong bộ dữ liệu.\n5. Không có dữ liệu giá bán, tồn kho trực tiếp, mã giảm giá hoặc trạng thái đơn hàng trong bộ chính sách. Khi được hỏi các thông tin đó, cần báo chưa có dữ liệu và đề nghị liên hệ nhân viên. Không tự suy đoán sản phẩm còn hàng hoặc giá hiện tại."
+                },
+                "vector": {
+                  "S": "Ez4H4v8a16ofBR3nBNH+DcQEq+ArLQF/ys/wQDpCRPLYPA4iNiAu1Qf0zDkH/Q8xOUjiIBAA+/AFJP4BHBHQNyAZAgD4CgjqKO/J1AfQKDjxER43/uXDIgOoWB/PGvTs4+1aHBLo3/gAIBfvChn9DRLgwewM5df8CBjXC/kwCsbz/8Du3Q5C2AEfYSsWFQAm671xGgMU1v0g0dcp8vAEov/SDPgHyiIDEuzwPigD5/31FkkXKOrs7y8J6vENNvfY7yvIT0PmCjoW2zy1sAdO1MlS4u0jDdXs1echBlbDSAEG3xD3//UR5VHf8ebO3v/WEQkbFCYyAhKw9y/qy70RE6oeAhUu6gAE0fnYJzDb8QEQLT9RH1fyGxMmANLLV9Yh2ydW294SyhHw/Q/WwRLf0Dwl9/xGDgj3keig8eusFykQuRvS20z36gDjLPsh9SH7EBoP6fYh4e0q8PLj25UOD9Te6gcMGPP7+9zXTuXc8/no/BgDPzrY+/btGPQPAfokHyQE6Af7J/oa/gCqwAzuzDfkyuEG7AMGBvURDpk029rrCfD58MIOIQ02E9BqCwDxAP4H8c0Q4/PDMBTpPwDTGc0Z8QJFDQcVA3/tDdLyHbUf3EgP+Ei1UuTkKgkdx7m/0R3DwPHqVvoSzygkAyAk6Ofnm8PEDfwj9fj8IPcZvAH6LwreDfxBuQ5m3Aw1AcnZ2e8F9BEpyuVDDThCIgEtDfHo//m0ACvxANVCbOW+8PcMiOZnGdzPABPcOe0Z5vz5HL/Zx+APJ/Xh7fXqQw9S9geti0XMKBf6shHp+QRKGRXuIS8X20Av9Psl9ufi8SD5BeTc+c7rv/HN4PvU6yHn6Bz0JMctDBsD1x0EDCe+4EEfNPFCJf32HQTM6OgA1CsBBy060fkaAOsEP+zuGebX+Dgk/CHxJegcA+G6QuoOMEPr+EfNCQ78GPwE8A3x5McF5+T85BbqJBLf/8vqAAvq5t0Jws3jNd3Q5uXiHbMVETwXL/IP5A0Pr/r5LAMpKwvJFwo05Rz7DvnqLAYDIRAKKM7O7ecmKOX55h/OBArO66xO5+IF3+rDHjAIMwo/IOLNLC22YS4AAf7PAf7kpdLc7wkBDvTdFA4iLjU4Eyr68WsoNAwtMN/9Cr3qMBfR4/3sCvTcASTV9wPrC/7dBgHf1fXTAvky+Ng75SEb3h/x/M/2zATKBymn/8pH/wDw9BLi7fkEFDnIJy/iNfAC3tMcHtYm8eIM59nrAOvwqvH+7eon99IAIgIl6/bl2AP+DSALCRAUoqLMMfPtNUD5yefZ7Lb4CeTlJ/kB+B7r5fq23/mkgD91wh0+PPP2+RwBIhgICwT3BvUEAO/zBgIg8mbf7Q=="
+                }
+              }
+            }
+          ]
+        },
+        "category_lower": {
+          "S": "demo — shop phụ kiện mẫu"
+        },
+        "keywords_lower": {
+          "L": [
+            {
+              "S": "đặt hàng"
+            },
+            {
+              "S": "hủy đơn"
+            },
+            {
+              "S": "thanh toán"
+            }
+          ]
+        },
+        "category": {
+          "S": "DEMO — Shop phụ kiện mẫu"
+        },
+        "policy_id": {
+          "S": "DEMO-SHOP-ORDER-001"
+        },
+        "updated_at": {
+          "S": "2026-10-30T03:22:56.676100+00:00"
+        },
+        "keywords": {
+          "L": [
+            {
+              "S": "đặt hàng"
+            },
+            {
+              "S": "hủy đơn"
+            },
+            {
+              "S": "thanh toán"
+            }
+          ]
+        }
+      },
+      "search_chunks": [
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. Đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.",
+          "vector": "Gjbk/NoL38wX9wXoEQbrEgI2EvcV9gDstNnpJyA+LAUDMf8AJwIS+fjs30kX3iA9Eh4KDAb/AQoVHg0YGOrYFgL71if8EQbyLvfA5yIPLkD/9T8W6+X99u3RNwr4I+Dx8Ac7GQv0AOs4Qg764P0UCADFuMon/O/6LRfkIPoZIsjyBbrumgYp4yAGPTAkIQA33bpF+B4YsiQW5tkU9tcAqh3N7+7zvjP+Agb+CAb+7fgCADD2A/zC0CsA6wwNE//l7HDxUFTiGl4P/Ez+1hVk+NRL8dYyCcrYB+8ECmXhJhb4zx/tAdYJ2xr13w+p9MsI9f0fGD8tFEPR4hrtseTiDeoe1hpAxvAIsdPTOFUJ+Of/SiUyCzzsORwXAe6pMNwO8RM6yNsW0w0V5fXgy+7GzDr6AOY4KPjszADh6gOiBlkFxBne2h722f3JKfsr3yLnPSwy8PUd0Ok75fWTt5ccI8P5APbmBfDbC53rKfYUBw/n9SApWS3ozwnWABQN/PnwGzvx+DTW+uIC8AHJvgjL1x8A3wUF8Bf9++QS77YT6PzNMN70v7H4Exf3Jxc1CgD68c/J2bsx/TDv7y3dOAfhF+AY5w8oCe0/91YA/uUADdI+tSUMBTqwUt7wFSMnzq6hw/XT6ffsPN0p8zEL4gYa3RLGltcNFdoG3gYvLztCvP/hORPcJTg7rgxu9gce+OT12/jx+AcqmqwtBipdUyBFNQ3T2ujfI/z7zLkeWaHBGa4EgM55M9fjACLnHfsf6+nv7+bMv/gaJPLXSOzcRv5C6CXjvzbaNCMD1w/qBPwbMucIKwIJNyBC+9o6JQCz8Q4U0wI756rkucbM+Qfg1iIC4QYHOq8v2AEI0w84+Q/P2jYXPgcyHf7p+AP80+gFvyUAJA0I8Pzu9//eUPEBJM7H5z0s6i/iSxQIEvHKO/MMDy/c+T/S/Qz3FPry4SP69sYU3tP46Dj6LATt+dcDFfHZ3M0aJNMXF/rB89HkErL+Ikf3IPYX9vE9zPobFvomIgjfAAci7BEP6wEZGv0F7uAcBb3SAtlFO+z+EQoBBwfSIrhV1M4OLerrACwVHBM1CwD3MyavZAMPDQnD3xnppO4H/g4h//PoDRY+OTotKBfuAEc7VAA+EtX9AcwLPB8F3wr3HAXq/lbcEBTaKhLd8/3i2QXQ3v807PtW6hki8i31FcAItA7o61G2ttQiKe3AAg7kAgf4HCPhBw7kSOH457lDD8RE3+kS2uUTAdjor/T20+Q2AvMLKBw64ecH+Onu/iz59yAS0rbJHeXsU1bRl/DlC7zU/9vyMADt+yr4yezJyvPQtBFH0xoqI/wSFv8FSDUlCfjk9uIRGd3x+AMHJDnyzA=="
+        },
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. Đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.\n2. Đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.",
+          "vector": "CikeEuAH1NQl+xzgIPfwLNcU1fcwIP1bqM3vPCphNPtJQRYIHQwW9fvl3UUg3Bo0Ex4MDQz1DhYXNvoaEPrLLTIh9/T4CAPQQe65Ai4jEE38AEAk/eHNEeXVWSvn6+/38epPMhH7/9z3Hx0VMhcNAQXi1d4Q+P0GAi7g/O5RGdrwIr0Avv9qvvXvQiMPFQEl47ZPBgoSwAggt70h7wIHtvvm+Pkl4Pr9AN3OPCTrxPjsF0jqJe/lJB8d7+8LQfnduyePV0b7MlPy7SvkwBke9dFP4u4hFc/a8PkfGkjXNQcO5B3LJAEO5jf22PSu4N0J9uoMBywCCTvTzhftwMz68tgS+Rgs2QEA3vPwIh/q2xgYIDluEGP2OhMRBvTAKssPAwAr7AAb4QzwEBckwS/9/A0ZRfFvNAX5g+qhCeKbGSQEyQbs1UHm7ATs/yMxGScEIyIo2eMG6/NHAfi11q0g/uj2CQcPFfzq/r3dQ+8G9wrwCxcFSTfZCAv4MyYO++8J/y4i7wHWFdgD2Au7x/wA2CQU9Rr9+SP4HgT8ArkO8+HrD+v94NEOGRxMF7JnDPHyEAn//8EL0gS5LxvdTgfbJ9EWAuhIBBcL5H0AGdT0FsITsDv7AD2yTdPcLh4fz7/N1CPTpvX1VApD+ScN6fYr8gPp1tnh+AoK+f0ZNh5Yy8wAMu/XBRFEshMnAB4w7+Hg3AL/5Qwf09lCDTtNPPA47Qrk6/nPEPIJ/OchTdnSCPztoetVKtrg9hfxNPAP8vAR++W35/8NNevFNNjab/948xqggFzIVUDoyhPh4gcuMu38MhspFTRL8+ktC/ja5usD8+n0++cE0f/m/wLq0Qr22CMYIt4q7M8D+uEJCCXr5CkYI/8fGPrr8hbn4AsHyigEDxAn5vQf7PQCLu/gOOjuLzsV6kfySP4rBOS9VvbzSGPhCzjo9gnt8vPZERQU9sopwuQOEhTrIw/g4doTHf75vN0w++AKJeiw4+LsBbcK/CkfKPX2FgcLv/oXFwMRGRirGzcsEiUADAnTItc3A/4jE9jhEu0yCa758gbMDATk7KJT9t4L4O62IDId+kE36fr+OiXTbiEA8yHO+hztucjq9x7/BwnSBxc8AExOEBTIvXT9OgUcCez8CMkCKyjd5/3YFRXWATTW/DLPIfvq/v3vxOKo/xFE9CZl7AAO7BTp7ewnwOPa5w/MGr05E/HI+QnN4gD9MjXANzvoFv8D8+AgAdE7xOMN1+0bAdzokeoHBfX6Fgn2HR4b+x322x3x7QsLDRwgqIC59hr0JjHi0ebe9OQCAOjUEPcB+BT4+PLq0fKwmBhO4AM+Otr/Aw0IOQgaCwwT+AAEAOPtFPEg/17I9Q=="
+        },
+        {
+          "text": "1. Trong tình huống mẫu, cửa hàng bán cáp sạc, củ sạc, ốp điện thoại và tai nghe. Đây là cửa hàng hư cấu, không nhận đơn hoặc thanh toán thực tế.\n2. Đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.\n3. Khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. Đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.",
+          "vector": "/R7CG/4KCdrzHhLQKeYgAO44D/cZAQEqmMjlOP8zGxojUQsZEQsPAPXj/z0fxRwlYCMX+gUK+fk1Ad79ANzZJPXoywn4G/3zQfO4BTIFKlcF/m8vzd/YE9jORx/1B+f55/gsBgro4gjrERMTAO8GABvUwtwCAc767BHd/90zB80ODq/5sglL0/sGQPMg8ggU6b4wACIgqDob7+4mA+MEpPXTHfAWyDEKCejcHhznq9Hj7zQRJOfVAyX78AcTJuTW4FLqNE3uKjkB/kQAxwNNC+E07vQEGc7u+tkaJU7wJCXo/QnKGvT7+gnT9RPCFszgGAwAEkYfEib47AcF2+UIAdVUEiAu2v/4zNffKkf43g4ZLztIE1vaHP4EEeHgQ8wYEgck7eoi6QwM8A4YmjX59hjyMvFSKAQAmui26OitIkILzOfp6yT4+P7IIRQl1SbZMfgXHhTx4ABGudWk/6kY/fUAAAQZD/PeA6ruFOwy/hXoAh4CP0HOAfbf4xX4AegBDjQC90Dc+dIT+fnExBfZ0hcA8RQTzSMR8e/9/MAa1ADzNeIA1roYLyAUHyBKAQDU+/Dj8dky8CDDNRLmGP3tH8wf6eYzIQcl+38LHu3yAdUB4yIG8BzONODwFAIC5M3b4QzW0er1PezuHCb4EQE3HQne0ej3Cvck8vQQORJLwe0ILRXUABQ1vwBZzg8x/r7PyvgDCPoYvMcn2T5dHw4QOer19OrdKwkN7uQ1aQfh1fjqgMR/R8TA9xDsNgcd7PXT+sXyu94oE/fySNS+WwZpBiv9k1P0Ui7rBRPDCMJFSbgGDDQtFzts+MUDJhu63tcX6OTu0d3yyOzLJRTxxwIF3hEQJ8wI09oFvBllLvPjzjYD+g0UGwD0/O3h3gEOyi8EAOv/K+cczx4BN+IdHwDD8yk13yb+OxgIIu6+Oe0aMUnf8EbVCfbZ/wAC8CUR38M8yP0iFQD88hja2sggE9/a1+AiBNYwKQW2AOrhLMH0/l8YIvYWG+5MzPY2ARIgGAq2DxT5DA/qNiDlLecf6+coBxziBBg/7tf7+S/29fbN7sks69Qb1fXcEE8bGF8exQDtSDLNZggZADfy+TTs2/P39yH/IfDSDRooCiYdHuzrxSIvcAUL8O0N+NYRHx7m6+/ZIhXJ7W/+3CHKDgb4CfgB2xDd5g4i4/My1CwvwxomKcEUrBva1FfKwLZtAPPh3gavxv4UKkvUQF7XRuvx4q8t+RU45Q4ExxYMBeTfq+Puw9YbSzIB9AcsAeUYAPHj8SfmHAL/y9ej9vP3SE8FvPXo8tLO6NPfJgjo+ioE7AjL9QLFoyo50Q84QPgM+hAAKBQUJewA2N8PKeIC7vIKEzcL4Q=="
+        },
+        {
+          "text": "2. Đơn hàng chỉ được coi là xác nhận sau khi nhân viên kiểm tra tồn kho và gửi xác nhận cho khách.\n3. Khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. Đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.\n4. Trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. Không có số tài khoản thanh toán thật trong bộ dữ liệu.",
+          "vector": "+xq2IfrvBtMn8zX6HhPpRuAk7/kaEPYxv8YAQQYzCgI0QfzqEwEQ/Bnm5iP54SUwYCf+GQ/17/Q3G/b/AOj9Ff4m+xEHEAL2Ufa/4R8VE0cEB1gp+e/oC+q3PgDSO9LuyQlFJfva5/b3LgMED/QvAC7XwPfz+sjtAyfh/dgvD9j1JM7ypwU32fXrLwIB9vj17bs/BCMtpEYaBvwd9ND4u/TH9vIf8iLqA/G1MBjfoez33QsB9Ouy2jTu7ikG9t3Hz1HzQhcJEATy/RoFzhYj+eEk9OY1+uH1FckeMHT+I0EO7g/TJfsI2xDwCh7P/NDfEeP1I0gbEFHv3Qv7uPjzE9U0ASco0Qj3qt7jKXMOHNEVMDRRJE/7LdwaCPIXdI87CQQT8PAl9wUn5RMjiyrO8y4IFek3Qu/yu/XZ19HFEkIVvyLD5EL+5wHTPyAa5zT9JPw0DPv86vEk79quA8stELvw0QLOAfHkBqLpOAMYABf09CT/YD/S9hvjFCX85QXoCToV8CDj/dID8BHEyQnn0TMX1zgF2Cv36uP/NsErxgHOOe724/oS+i3zJUYR+/riFcrM/uQs/h7CJRfrKgPgDMIt0d4cLhAbOm0A9eIG/9Lv1yPp8C7SLtfwHBAlvr6+3xTey+UGS/zcAvEIDwweIAvo3MH1+w0h7OogMQEjxiAHOQfTB01PrRJn1Q4sAMbs1Q3n+vEbxME+3FFEIecVDBXi6NfL9O0A49oueefg5tvplcp/P7606wnOMBIi7+cYHtvz3ugYLPTTXuXMOgBB5hgLpEUKHQXj5AnU7OgiQM0T9iD6ESwu8+FEJA/I5tIGzd4h5bnf1eDKHy7eztvrGhr5NswO3/PyA/IRChXv6iER/wUKIg4ACfP9v/8OrC/wG/Pp/xcK1v4TPd4BK+7q8Q8d7FEPPhIdFvXNNQ4MKyf75kHMDPLtFcoYBhMS8L1C6fAXAwDyASfYucQyHtnZvuY0KOA6CQWe+en3B7f/LiYeO/oLEegsmfZEAeEXECnj/Qn48wEE6QT/PwQQ/+cC7fj3OA4MNykfAAXsBBO+C7I/5NIk7fPs62EQEkJS0RD3JSqnfzn29iHW6Djzxc7w7hkPI/LuDA4TFCInG+j6vDQQYAkN7u79AOMmIyb+4QvkIhP24VjlF/jQGdznHgrpAALG2AEp7BlP4S0ssh8OH7oMzwfH5V7Yy+ZgAwroDwTG8PkVGiLSJx7fcMjW1bI/+OEz1usUzwcTD/zVoM7p59stKjMAAAcV8fIODxXn5Q4KGhYD1+OzFd3aO3rwyAbQ2t7o9eDZHgII6Sfo9fzP6wXDmS9IvR8oMBEHAAfsDhPzE/wfAPQIHeMB8+8XEzf89A=="
+        },
+        {
+          "text": "3. Khách có thể đề nghị hủy khi đơn chưa bàn giao cho đơn vị vận chuyển. Đơn đã bàn giao được xử lý theo chính sách đổi trả, không tự động được hủy.\n4. Trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. Không có số tài khoản thanh toán thật trong bộ dữ liệu.\n5. Không có dữ liệu giá bán, tồn kho trực tiếp, mã giảm giá hoặc trạng thái đơn hàng trong bộ chính sách. Khi được hỏi các thông tin đó, cần báo chưa có dữ liệu và đề nghị liên hệ nhân viên. Không tự suy đoán sản phẩm còn hàng hoặc giá hiện tại.",
+          "vector": "GRzrM87+6/AF+yrpAeH4/QEyAtMCByIjt8wNL/lC/BRGQP77DwAW+g/t1UQI+BpDQwouEvX05w0cFAYGAvHtIAgX4gUFDQXNSgfW9SczIUUXCHElKvDeLOnJPCLrHeb1BBo4ItvX+dAlIBEN+fgkAP/r6tUOAfj//SrhEe8eFNUF8KfpoxpJ0CT0KywPEusJ6MJCCRMD1hIb2PIj/Pf4y/TT7PIa+v3tB/HLHRzcpOD6AywJDfjB5gPh+CoW2frOxUG2RjX4HzjnEEUIpA0yIthI8eoIEb32794ZOksFEif36xbUCO395hf48R+X6bzn7vQaBiQLDikIog7xqQHs9c0Y9xkkzAQDtd3VJnnyBur8Jj1TCyX2C/0NDt7VQcwSEfv+5+op7w427uoWkQXP+xISK/NEIwD2n/rL49urF0Lyugfc1TgN3wj7PQgS+xsBYRQkJgDevwAw8erC05IhCvAHAAECC//ZEbvoJgsZ/Brz/hwfSzbN3hjqETTz5QPNDSkF9ULT/M0W1P2puAzsvQUq/Tb5+Df29MgLIcA34tjbOOT8y9cAACsDJEI68+q+7vXK750z/R3APxLmKgbqKuIn7PQZGgwAIGDh89MKEuXn3zPsAyrTL+HwExED6rnV6gvo8fMIK/QH+CAZ5/wj6Qq/gMn3FdwK8PsRMEVk17sKPOzR+jBIxQJ05Rof8NbK4/b3/AcouNEo5DtEA/r5GBDcAOC58+zy2NMlctTTBLoXgNd/LtvI9yLSAfwXzdv3H+Xn5b3jHwjydsvEOO9G0BjMh2zkTTH2EBvEyuIdVLQWEi0jGkBO4PIrC/Xq4gT/5OwH473mt93jGBfu2dft/vz8QbQM4/r64ukw+wrozz4PRiE1UQrt8Bz32eQCyh/9DhMr7PEK/P0FOOvrFv++/BwU6k3sRRoKEOHeIwYbDAnr8kTZCPjQ6fHk6CoF/rgy6d8DAAvxIyXn4NwWHe/qxOMGFuQbLgC6Euf0/9vfHTMRL/0SA/YrsPJWJgJEDjK9DBsZBiHm//rpKucvAvoTEuXcNfEZJvsK/gbuBy757sVT5dIQEeblEzsu4kgy1SUiQjLfRxIDAhD98RTv0fwj+xMT+P7sCx4g8FI0JyLX3WEPVAUn8ujzAdIhHiX/2f7nIQS04Cfx3PLkKfHgDvvpuO/J/QVA7vBG5yYN3RPP/dwbugTU20rF2NlSCf7JARS54/QdICzSJDn0atT9yrYAG9Y3xfEO1PUN/93Ri+MJGwgiKCDyDhsZ+e4KA/7x/S33AAgE1c7XEOLxPzy/sPXeANT09/W599nt8CY5zBAE/P+4mhVT1/wuKc7/EQMVWCI1DPP12vQFKOXxA/kRD1LN9w=="
+        },
+        {
+          "text": "4. Trong kịch bản mẫu, khách có thể chọn chuyển khoản hoặc thanh toán khi nhận hàng. Không có số tài khoản thanh toán thật trong bộ dữ liệu.\n5. Không có dữ liệu giá bán, tồn kho trực tiếp, mã giảm giá hoặc trạng thái đơn hàng trong bộ chính sách. Khi được hỏi các thông tin đó, cần báo chưa có dữ liệu và đề nghị liên hệ nhân viên. Không tự suy đoán sản phẩm còn hàng hoặc giá hiện tại.",
+          "vector": "4xrl+fPw8swKFRXvJPT/F9Qf5u4gHvhexdP5Ow4tDwzxOwUbLhQn3QjdxVou7BxHGwkuCvH7+CQ1L+z6B+7YKwgV/iEFDQn3M/rR3Qr0BiYA8lwx9dTmGuXDTCfX/uznwho4G9Ky7t/+FgLw4gEBCO/w+NsL/hD1EDPeEPcUL9b6Dr/t8QZKpAUOLwIVAPsVC8slHhkI0z4TvNwp+QMHvv20E+D+1kv2/dj0Hgn1vvHf4yoNG87hEQ746ussNfsM41bxRij/GyX1ETwHtQkyKeYtAO4W9LwADc4ND2TtITHTJAHRDun0+EPa7P/D7unb9x0GASQgCA0D5QL62uv/9N44ACQc1Br7r+jfKFP4GPQECCNH5CvZEfYXENTdUcgdQ+Ed2d4ftxwo8N31wwDZ5BIdH+w8Ifz6rPi568iwEkgYvO243lXzCwPkP9guBw/sRCwp/8/wsvs09emW0dIeIfn18fsM/fL6DI/HBscfGiIA5hDzP0Xc0Bjh41cFBcrvGT/+6zPkDOQF+/fquw2zzCjU5u0B8QYODP33NLYjwO+eCubd5c7+CykRFCFLCAXaA7LJAM0y+vSsGx7XGg7YI6o60+YVOwXf7X/8Ec31JqpJwSMRByS+SPfqDxsE9MHy6Rvav/sENwbRDToH9vAT9v/Ck9XVFd0i7AcCExcqzhQUPjXYAVZIqOFm9xQp69/DzPvq+fctoJwjLyQcLQ0d9gzJ3LvjFfX84+opYNLQBtz/gN9bH+fqAwjfMhwh8vu+LLqb394GPfzfMNLcT/RX4R0OgEf7Je3i1Szv7g4iMAHq/yUYLD1L398SDvnW3OgL/OrE777eneDSEgXO0Qn37Oj9TawA0BcC5wwFIhTG6TsyGPMaHBr8CiTf6v3+xSD1GBQo4/jzCQHvGdv6GOaqClYhAzXWPvghMw7BO+dbHQr3u1Xc9NbfCBX87jcFt8BByv4k5w7i7jHz/vQr/uPh7N0MHd0gHwG4D83u/cTqLlUaKvIAFe4Gwe0BEBkrIe3q/SUs8Csh1/PiE/oK9gAZCMDVMNgIKeoK4BTpCh/P+bpa6eMG3PTPKCwcAEIO6BD7TTbbXBED/xzgEhPf9AHN5i7tFf/OIClM5SMWJwft1zwwXvI9ENfwAO8EKvzv4cIIGwGawzjn4hDo8dTeAefuzRHW5hg16vBN2gZKzSosNKAlswXe1kPd1qo/I/XZ8OzP4hH4LzTpIjbZO/zjzscUC8Qg5ugf2fgTAuHpwujrxOs9KDQgBhkm0hEA3APnCjnJDgkaxMHUCeLkN03Ovujk5L378d/bAAfnAArc/+Tfw/Svvf4l5O4fKvP6BPsGIiUHGQD7DuQKINgY4/QLIwD0IQ=="
+        }
+      ],
+      "audit_event_id": "2026-10-30T04:56:48.869857+00:00#e9f5575691124f449a42b5bd4da6ce8a"
+    },
+    {
+      "policy_id": "DEMO-SHOP-SHIPPING-001",
+      "expected_updated_at": "2026-10-30T03:22:56.676100+00:00",
+      "original_typed_item": {
+        "title": {
+          "S": "DEMO — Giao hàng và phí vận chuyển"
+        },
+        "policy_id": {
+          "S": "DEMO-SHOP-SHIPPING-001"
+        },
+        "updated_at": {
+          "S": "2026-10-30T03:22:56.676100+00:00"
+        },
+        "updated_by": {
+          "S": "aws-operator:arn:aws:iam::629380420098:user/huynhhao"
+        },
+        "publication_state": {
+          "S": "published"
+        },
+        "title_lower": {
+          "S": "demo — giao hàng và phí vận chuyển"
+        },
+        "category": {
+          "S": "DEMO — Shop phụ kiện mẫu"
+        },
+        "keywords": {
+          "L": [
+            {
+              "S": "giao hàng"
+            },
+            {
+              "S": "vận chuyển"
+            },
+            {
+              "S": "phí ship"
+            },
+            {
+              "S": "chậm giao"
+            }
+          ]
+        },
+        "embedding_model": {
+          "S": "cohere.embed-multilingual-v3"
+        },
+        "category_lower": {
+          "S": "demo — shop phụ kiện mẫu"
+        },
+        "content": {
+          "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.\n2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.\n3. Ngày làm việc trong bộ DEMO là thứ Hai đến thứ Sáu, không tính ngày lễ.\n4. Phí giao mẫu là 25.000 đồng mỗi đơn. Đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. Chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.\n5. Chưa có dịch vụ giao hẹn giờ hay giao trong ngày. Nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.\n6. Khách nên kiểm tra tình trạng bao gói khi nhận và báo nhân viên khi thấy dấu hiệu bất thường."
+        },
+        "content_lower": {
+          "S": "dữ liệu demo hư cấu — chỉ để kiểm thử, không áp dụng cho giao dịch thật. các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. trong kịch bản mẫu, cửa hàng giao trong lãnh thổ việt nam; chưa hỗ trợ giao quốc tế.\n2. dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.\n3. ngày làm việc trong bộ demo là thứ hai đến thứ sáu, không tính ngày lễ.\n4. phí giao mẫu là 25.000 đồng mỗi đơn. đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.\n5. chưa có dịch vụ giao hẹn giờ hay giao trong ngày. nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.\n6. khách nên kiểm tra tình trạng bao gói khi nhận và báo nhân viên khi thấy dấu hiệu bất thường."
+        },
+        "search_chunks": {
+          "L": [
+            {
+              "M": {
+                "text": {
+                  "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.\n2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.\n3. Ngày làm việc trong bộ DEMO là thứ Hai đến thứ Sáu, không tính ngày lễ.\n4. Phí giao mẫu là 25.000 đồng mỗi đơn. Đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. Chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.\n5. Chưa có dịch vụ giao hẹn giờ hay giao trong ngày. Nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.\n6. Khách nên kiểm tra tình trạng bao gói khi nhận và báo nhân viên khi thấy dấu hiệu bất thường."
+                },
+                "vector": {
+                  "S": "K0EDE/Ql5MciARsBBwn0I9U02/oP/e0vytH9NypOMvX6AiX3RRkwxjQA7Rfp1RwgKDL5GgvxAQMn9+r4ANzMIAX/AgbzBgYFBfWm1P/fLg39DyknBefdE/LNRP3aP9H3yvgjCBrt8wwFEu7a7hsbMgrks8gH4t7tFR3dAe8vENPwAs/v8Akb7Sf9RRX09eno7tFNIAkA4iYQ8/0RBsUOuQXrDAgyvi0H8+LiIQPpvAIH9jtLJfTQog8cDScCAOi87CHbRDUAACcl/zrbwt8uKuA9+AcL9tX+/w4oGGjLQPUSwSAM4/Qq+j/S5OLz9QHrARMoCBA7Ch+3+y3vsNzyOvwj6AYJzO4Y1evCJDPm5vElJC1sGmv3OSgl+eOZMOoKrzIP2c0Y6Af48Q7guhjS0isHIQNL9wcAmdeu++jJERHsuwvh0T4e1wbVJhMs+xndEeBKAD0oBNwE2tnS+qwhJrDaC++03PAAIOsROjwf0Qb49Q76Oyzh8yXhHB//6g/tKA/x7egNPRruBAvp1gjl6jPhu+bmBQIA9+4aDoUuxu3aT+Htu60CJycqFgJIAfzu7sXfzdYlBw7AGyPPPezQFu0+2fw/MQEHIFH9+OP8/scN51oi+yPUTsXfHTUzt9bXq/r70+zlYujy3hER8ggr+PfoqL7zDvcC3/wlKjoU2goYL+oTINlO0CVVABYb8+3r3ATl3xce18c1GS00HQ4t/+X//hrJKQ737dBCf8W89s3ko8d+M8beBBTiAAwS2d3dJ9LnpPr+BPn3ofjmNBNKDhbKoEPcMDP5yCDwAgotGwTsAzQmDTZG5dBFE/ux+u8O69rz+LTWx/Ku5eXXADDzARfbMsIsBiABuQVG7hbTw0kZNO5OD/0HMOre1tEH4CsHITRJy93YJvsCT/0ZHQDc5D00Cu3h+en7CdXWMBPqKAzX6jTa0QEt0v4I3u/cysy968zs8z7zVg7fANH9HOXC+OcbzczuMunPHe/vFtHqI0koHPcBAPoTtff7NPUXLAzV+uX76g35Bf8qQxjzGPrwG93U5+8pQhcL2wTXMCnZCaUC4vAT3O385DECKOtMH/nkPUnbZDj2+RXfEQXyx7bp+f8c89/vEgEGHDsYJjjvDUpURwAXVs328NLyHRbZ6vPy/fLz/VTrE+4DCQHZDQDa2/jO+PIx4OM65hANywEY+wDk2hPVIFu419Vq6QUICx/IzvQ3Ak3RCUHVQ/HvzrwgFvU51O8Izxj5FwMf4/0L5McdDwQEHhEN5fjW5PYFFiYB6BQAsLvWasLhHjzc1QXXAf3eHA/oHAL29E8ZyBmkDfq9gCFsyQopVkQb+Qf6HC/4Ac3qovT4B/XQBiviDT766Q=="
+                }
+              }
+            }
+          ]
+        },
+        "keywords_lower": {
+          "L": [
+            {
+              "S": "giao hàng"
+            },
+            {
+              "S": "vận chuyển"
+            },
+            {
+              "S": "phí ship"
+            },
+            {
+              "S": "chậm giao"
+            }
+          ]
+        }
+      },
+      "search_chunks": [
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.",
+          "vector": "ES4H9dgN3c4hAPzMEwXmGQlOHf4K4+zax9r4HwwsFwb7LAAPJfoWAdrw2EwZ4Ro5AC77Dg3+BQQDKg4hHfvEH+4A1T4CDxABLvLD6SQfMET6/i0Y8vL88ePdJQUQK9z07vA4/hnz8f8+QRDzyfoZBADSpuEY6N3iOSzmGgAfK8zlEcv4nwEc/iT9PTIZFfci2bpB+Q8WuQIWy9Ib7e8BhxLZ9+/4vyMCBgUMDAUB9/sNGzbyCgDc4zUG6BIBCP/J4HbqVE7XG24g+Tf64Q5Z+8pL5OQvDNfSEe8J9mnKRgoH0R3qE+EQ4RHi8BOg+L7m7fIfETEtFEep8jfuqeTpMvoc3RooxvIEr9jgN0sbC9oFTj0/GkPoLCEcAfyhJuUOvic3v+IF1RAP7PbJt/W+ySbwAfckBgD00P3k9wujAEL6vh7yyCED0/zGFfo16SPpLxot9QAc5Osy8vigw5ofF7D1IO/T/vLV/bTnR/Hy9f/g+CE5Syrg0BPmExEL9PvhDyTw+yHiA/AS8vvJyxLU3TQC1w/+9x316uIH8L4O1xDaRNvzsJ78Ewz5KQ4xBwH26s/AyMBKET/s5y3kSQXdGO4m5P00H/k/ECDi2tgIEdM3tiQMCia8T9TgKEAwzb+lsOXe9QfdP84O4S0d8BYW1RjBoOcVFtcO5P4bIEovzwjwLA/oLgwrxhF0BQEd9f8I1OD/ARktoMcoJxBYXS9aM+vp/gbYKQf+v7EeU6K5E7EOqc1qHcvzBBvUE/0Z29/s+9O/pfclHvjYGQTlPP068xzsyi7bJh0D1RPxA/8dJf34EgYAKB4u9+VKG/O16w4b1gQz8LDwtMnH7gHt3inz7hLrNbwn6hMC0uBNx/3uwkMlMQAiJxP2CBbq07L3yin7KBQJ7P/v/gznYu4JJM/ZxzUx/B38Lv4IHP7CI/EABDTRHzzB7CX2Hu0Q5Q3x5NT57M7v4UkDPgbjBdD2BfvU7cgHQ94xIA/G+8zlAbnzHkH0E/kb6eUk0+4gJfo6Hv359Owj1gkRyvAaIfYE684Y/rveGNwlNOURCw3sAfnCIacp19wTCurh+zgOLf1EGPvwMy+qbxoKEAPB1Bfyi98VBOod/vH6Aw8NMh4QGBr3DTpJWAZBAtoC/ckZIiHq5P/kEPH2DjPcAfL2Dwrj9/Pb1u7A6QBCAf5S8wMW9Rvq++0FuQHl+jLAxd8jFfjNADTq8gweAhLkBwvZXOLy4p8+I+VP5NME0w4KAd/0xfT13eMhC/INHgo65PwC6fbm/STw7yYQyqnNR9fyTT/wm+XfDc7aBO7rH/v19znpzOfFyPPHnShnzRRGLCQXD/IKNEQgAu7O6N0NHOHr/Bz6Jzrk3A=="
+        },
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.\n2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.",
+          "vector": "FiASJrD32e0Y5QnOBQ/SDgBPPxwd5trgwtQCKwI8BgwNNv8EE/UX9f4E60IF5w80/xUIDQbtEh/zIwkkEQCzIeUG6RwCEQkFKADJ7A32IzAGFkISLAnyGdXKRgz5GcX69vEf/Qfd2vwkHgf80u4SAfnevOAO6OvkKSztEvhJLMXn/8nmqwwf9eoCRh8aAewd38VB/xQFyf0c1sQS7ev2zO3a/eUN0hsMBun2GCz2yP8IJjv+FwTd6iTx8iYM8vbRv0KlUUX+J1AZGSIk6wMlQ9Re4gEkFMPDBOIsJmnVQxjy6TLiF+kK/STx3wGZ38Ty8/kqBwYjAyDI1CPxsef7IOch7yQ1ygH+sNfmOVoTGuUJRVp8CWTYGzcTBtaMPt35zRMT0usJ3xYT5Q4imS3Y/A0NMgY6+v74tgPD8uOnDEvcyBYO1RQVzf/ICQ06Fh/zHQJK3xURCuQwE/Ky1ssjDartId622/Lk+LXcP/MU6RLfFiJHXx7j7CHlBjYMAOrtAg33+P8HIP4B6P7k0Avb6gUw4yj5DCTv9+ER+LEU3/rXXdrwzMX4DhYUJhhV/vbYBdrL3M1FACnZ6zbMWvCzA9Qo3vc1JgULKyHU09UJENo8sigjEgfBSdHZMFUo29jYufn51/PtSOjx9xoU9AMp/RnPxfgaD+sT6PQBHUZG0ecEKATqGAcwzxhIBhkl8+v/0f7x7Qwqx8EpOxkyMQw38+rqHgLKIf//zMQbVcjU/LoAgNBxFeX3CirX8xAezdDkCMzBlwEZKe/41O3UQvZOBh/VmU3bNy/x5Rnu5/0WN+gEDgkSVylO784/Cvm2Au8V+QAF9sf6strd6PwB4R7x5yjdO8Qw9wD+47FO2tAdwUYoGPMvLhMDKRzJ6MYE3y35LA0Q8REMEjAARfTxLP729SEs9B8CNBEAJgW9HAr9Ei3VAjLP2Q8G8vT3FA4AydgHz8v690L6NxTG9tgbKvvb8+cTIOU2Nwi/E83jBs7d/1H9GwQTBt0gzOtQI/9CFRXW5+cl4iXnt87yBtsr4NQp9Lm5GsYeTvgL6gvOGgLMFZk16e8J/+3q5CgOChIj/wYBMUzffwoC4CLV6QTwkOII+/AZBevz+wjzDEEaGyHc+kktXPszFdns8MwVGCDr2//eGALuBRjaB+D2GP3aBfrVx9+uAB1h/gJY8/b5yvUA6zY2wO3b4UDn2uIgF+vc9lTm0/Y5DR/OFSvdac7q0qojBOxA0voGvxMYCO3+wt4BANwVMin9Awgd9xgH2C7eAwD53BH6wY/KR/P+QDEcuerN+t3rBQHX3gjC+Cgiwvfw0urYjB1W1QgrRDQz+Q/5OxMaFPv64OIUBOnx/RrWIxrsIg=="
+        },
+        {
+          "text": "1. Trong kịch bản mẫu, cửa hàng giao trong lãnh thổ Việt Nam; chưa hỗ trợ giao quốc tế.\n2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.\n3. Ngày làm việc trong bộ DEMO là thứ Hai đến thứ Sáu, không tính ngày lễ.",
+          "vector": "BzTf8hsh77Uh6y8KEzH0PO4nAAIRBesa2ugOHS4qI+kIEg4EDvwhCS7/4yf38hEwJT/wDxcECfA+BtYI/sqyJOkA8iX+EAMbLPen9h7ZIzwDDmAzzezlBuPPQwbnQdz49+UY8xgH5g8AEAsF9OgsBy/VmfH34LvaGCrgA+cqItEZ87UA7wseCxz4QA4A7/LzuLQi3wj4rhYA8B8I7NkDqf73EAgy2igL/PPNFfTZm9P78y4xFejCrQz6BD0MzPuhvEftLyvtMT4R9iz1y/M1Heob+gdM6vTmAyMeFGvGQOgx1S3+GxcvCwbLCQ33DeHRCeP1Cxz+CzLV5yIDxd8DIhgh9//1zfoHz9zgI0sK5+YFSEdNDlbkGRceCAPRIOkcnDIB9uYX/fUb2hkfuCTJ4vb/RwBkAQgPk9DRCfnFGfHwtQ7p3joc0PnNSSck6zzl9+g28yclBOUf2dq8CrgfDq3yMfe05/nlH/MAJC8Syf/u8x3xWkvKDSUSLQrX4SDZEgDy/O0WKh8iEf7N3hvz5j0bwCrx9Bre6gH9Bp0XtQ/qY+YEsMQYJAv3FigsDh8A9cPO2Nw2BRrORgHsCwQIIeVh0/g1T/YEPkIG2d0A+Lz46FkD6zjgPcbmJywhydfGrQDuze30ZejX7t0GHwscKgjhtLcmFeA10vgxKjYj4R4aMBHvCwQz2x1e2RE0CMns0fnm3ioby8YoBxtAKRkjMOcCEQbSJO71+Oc4bNnS7OrfnLx/U7HC6gfQFR4Z5fPEJ7bltPIrEPjz4+/aNA48BgLqqUP4GB/t9xfm3+oSPOAC/S0Z+i046ONhFwTF7s4L2/Yo0tb7z9ay+OzlAR7pEAH0QcgD0uwAz/BODQvlxj0XDfYwEvkCHvz1xtUFuin5KSAx09/tDvb/NN83J/3H2A8+9wQHChTqH/TDJQAKFhfg+EjG6/oBDNooAurz0drzCuv9/f0IFgnn2cMSJbqz2egXCdcaIfzNHRH6HPTbGikEQQsPC/ANlfQJLeYYIwjrBOv02OkXGiAPJf75DvgLEQXhNhH+GxEgHOm66ijh/aLt5uEzu/b07F/5LxBJ8P3mUEnScRsI+UTK/vjmws/q8wMSIQbu8xHyBBXkDgDz7w8+f/4m0OAY7esgBSjp9wLhAeHz+GT64+wK0Qn3AenwAinX0xcs3fMx2OcW4fwl+wIE3w/ZGE/Wv/F15BP1FSK00OoxDTfSGTPYQeb19r4vACVW4c/xvlv2GvYQ4O4HubYcKB7v+fkTANkGDffm8CAKDA/xyuClVcToNFQHyf3R3gDyCAHwBA/o+1ML2BuWHQi+pTxgzxJDNkQsCQD5GjH5A7/Xr+L8LeriBBDzBEIC3w=="
+        },
+        {
+          "text": "2. Dự kiến bàn giao đơn cho đơn vị vận chuyển trong 1–2 ngày làm việc kể từ khi xác nhận đơn. Thời gian vận chuyển dự kiến sau bàn giao là 2–5 ngày làm việc. Đây là hai giai đoạn khác nhau, không cam kết giao trong 1–2 ngày.\n3. Ngày làm việc trong bộ DEMO là thứ Hai đến thứ Sáu, không tính ngày lễ.\n4. Phí giao mẫu là 25.000 đồng mỗi đơn. Đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. Chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.",
+          "vector": "BRXfFAcfAtca+wgNFBb2K+QiFCAi/Nry4cL5PSAnKPcVQwYa/f0EBuT74zD88hYkCygLFwD0/QYbHL4JDuqQTNoU9/8B//0IHwy6EzE/ERXw7yEI3N/m7wHzAyEuHw3tyxQB+Rzl6xkSGwAKyd4Q/QvZw9MF9sfj6ibk+utVF9Xz5bfYsx0b9gDqPxgK/+sD0b1aAhIZxBoI7t8R7dL2pQIDIfoXuDwj+/nnFPrvzu73+zAN/xWuwSUB7BcBC+LPtj/BRyP6LUIh/CsS2/MoLtBI5fYpAdjfJxMYBmLLS/gXzyf1DQAsAyrEAfPIAOrN/gMbAA4g9x/00RD8xOrx+QI+1ylHuPf8vcjSJFoE8cYJLCE+/DDgKg4BGgPLCd4E4REp1vcM4wv+7xPsvQ2w1RvyKvozAAP+xPXRBNm3BzXryATt3SYO1/nMSSUi8C3pOuZKE0AR/vIw8OuUz7stLuQJJ9HXwvzhNL7fHQAOARLZ+icwRlLH2jTkNiz60yezBjb99wjmEwYQ8Pvs1Q7X7j7xygz16A7x69wP7K0N1RD9Q/YEr7gnKCYeL0xO/OjYBsW81bc0Bya3DxzlTg/QOOdB4vNAMwjiJAkFzfMG67wp2jkR+g/MSLDGNX8wxdmqi9r5xM3ddcvl4vQL6vsMABnD1O4qDPMX1voaDzwg3x/3LADhFg8j5Rcx8Bc38eL2ydD+60U1oL8kKxBQPjE9D+AA3w3yNxMHytEqbdXS8MoBucZoILnxBibVOAon0PS9H9y0qhIWHfXG8hTtPQQn+B/60DDuJxf/1hb16wUpLgoA4zAVDzJK3OE6FPfI3OER2QAc68rrvNjZBOot6/787vYaK8AI5Pwg4MlQ5f/7xT5QIu8S2woH/QHZyq780C0DHBEL8/3jAw3zJsgGHOuuzjxC/BkKL/0NEdnLL/3sKiDq/Di92/v7FNkKAgz208cG89rz+DgGK/i075HVBAG888oSO+cyHQvF/+bwC8L6IDb6NgcHF9j9q/UKNeohHQze++AHy+0t5AQiA//719UnAPvnPwoKBuMt1QPJISXf4bEU6uca0+v10UMCLPk2CQXvPkfjSfQN/RSp5AHng7D+9yUORfjY7RcMJikJI/fy7xYhYvsx8OsAAMo9Jyr94ffL/fjW/lTj6jfX/grzAQXx+O2xCQlN6gA57dsf9REZAvEUywHdBkTT0t1g9wDfESfC6gIn6TLy9RnENPr/5KEf8es87OkJzRUP79kl1ywUsNIYLhfvBgEc8STgyBPpASL6+hP92dy/WcLwRmXvuQrd7OD6APzv9RPj6VP2zfq3CAi+pS9X1flKRToqAfj/I0IQGdUUtuUVTNf0/goIETzv+w=="
+        },
+        {
+          "text": "3. Ngày làm việc trong bộ DEMO là thứ Hai đến thứ Sáu, không tính ngày lễ.\n4. Phí giao mẫu là 25.000 đồng mỗi đơn. Đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. Chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.\n5. Chưa có dịch vụ giao hẹn giờ hay giao trong ngày. Nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.",
+          "vector": "ESsjDesh688HFx+5Ef33HP1HBO0E8gAUwLfWVAoYMhP7EgreL/wW6Q4G9kAB7wwm/y0XFv/8+BcPIAYNEQnvICAe7TLxBx30Kfaq8RotEBz3CxcFIwH6De28ZPzgKa353AcmDxft8QYnC/zr0/YdJAf8D/f46+/rIzjj7OclJOkADtb80xANDxbNIgTw/vPpBucuJwLu7h8LyOIU9v4TjQAf8y5X+wz6+uMBDtzxu+v79RcGBgDB1v4NGisI9N3CwjO1Rzv5IkUW+yv41PUaFeJM3ycSHc3kLA0TAlTbMgcmxDPkDgUl/RXQDf4GAOXlAfArGyA2F0C95SzruNz/MCEX2hH9yQEEydbZKUH78+kdNDx2GWLtKx426/6oHf0dxQfu2eAY+QUM/PrkiyPa5hUHHAgs8AIAgOWWFPihEh7+wfXr5zID5vjOJCAoBSDwHcpREFIZEOX56c/EB84xLLD+HvGjwvXVHcgORyMS3wwEBgYMNQrz4zbwD0T78AnqDvcA9PweLA0YMP/j2SbT9CoV8CbtHyv09vgOH5UitfKhX+HtqsIRGjYrIQo1/fT0687KzLZBGiXP+SfXIOza+fYr7OIzKRf8FjTW78gFErIY+jES6izUSdDdISM7wNnTvhAA0wD6SfHq7RoQ/Age/PvUotvsFt8d6fQTIkQ/58s4Ke0QF8w24xxWFRD99AIQ0gDu0Ccc8dsxSSNRUxNu8gH43gH1LOMSw74zW9rX7evYt8RyPcbp+RTo9AcP1tvfJsTXluD+AQr0svXZORpTCvnSm2T7IT7p9iPq2PMmLv7qECE0KDRR4dRQKQip5eAdCOfR/NLTrenN+Pjp8u7mGibYOcwNABD1z/w29APW2jgeFe4tBvb/EAnl2dcG0yH7NQ8oAdTIEh39UQckJgrn60M6Fe0N8NgSD9/nGxz4BPLP+S3P0Pwiy+MF7ufZ5NS99sjvCTgBURHf49MWCtvV3+476toRNPzIGubx+dbfOj3wCv7sJQoF7/cYJNsPHR/h/PEI9RfT9ejXSuMIG/UaFO/nEfgkOg4NEu/tDRTJKZH54P0I3+sQzUbyHudVCBT3TUj1YyEG8C4CBwj50N/v9eE33OD7CfzyCiz5MR73CStKTwkTQ9Xx6cwwFiny2OLRB/cCDSrjC/MJE/HeFvPkyvHB/gdC7gNM9f8Jnvv65AHw2xDWFV3C3tAkEv3m+ivmyvcgFkXRCzvPb+HMuq8iE+Iyw98PyxIIGf8S+AXv7MkNKykuCxEczjnfyybuDxnr1BsHu5nkY87+GQvw1PDtBRLXIw/sH/MA8T0mngXj0OqvgBZ/xxkyWRIOEe8MPzYqCPD3wOQFBejn/w/SLgz7GA=="
+        },
+        {
+          "text": "4. Phí giao mẫu là 25.000 đồng mỗi đơn. Đơn có giá trị hàng hóa từ 500.000 đồng được miễn phí giao tiêu chuẩn. Chưa quy định phụ phí vùng xa hoặc dịch vụ hỏa tốc.\n5. Chưa có dịch vụ giao hẹn giờ hay giao trong ngày. Nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.\n6. Khách nên kiểm tra tình trạng bao gói khi nhận và báo nhân viên khi thấy dấu hiệu bất thường.",
+          "vector": "DCjyAAwg+cIaDSvPIwP6MQJRKv0E8fMOv+r4HSAnIvgSLvn9IQAb9AXx3jYO8wstBhcTCwD+ARUsFPAOAN7KIcsf6kAhIf4OHvKn2BXwEzcB908/1dXdCuPiFBP6I93v5P0pDPDM3fE6EBH5ywUdBQL16uv18cXqLSrbB/YfHcoI88vx5QYf+v38SR7+7uL468AUBA36xyEN3wkb2AfvpP/yDfgW5C/2D/TnFyr3ueT4FkIrLOHu4BsCCyUO+9XP2Wn0UDDyHTUGCR0w6g42L9RF7sLyDKwSBvMlD2DUPgr9AAT3+PkH6CDAFATVAOm57vgEACn0EjD12BH7xfH1/wMu9hgGygb2q9jcIXgND+0LMDdLAEXNDx8i8AGpQLEc/P8Lz94a4QUa7eznrxHh3CsAAwcq9wf9wPjY/NqmBzkBtwfU2z4H3f/lOfg1HCgBLgEnDCQZ4AQ0Auec2MUkCcT5MtHL2PTtAqHyPeMC5gvX3C8tT1XWvCsCJETn6gLl2RMQBSTp39sp7eTGwh+3wyvx1wzs8SD+FAEBDKgF2vHYLtHqvrzs/BrzMUEq/fjS7NCx2tFlIDLFACPhJQPVEvQz3PMPLgMLHT/g4s4IDdENwyEACA/HQcnbKzwpzNvCxO3lAP3rOdWw6BQj9hAV6g63oQXiEt4f7PUEEiIj0gAFNATtKSFJszN/8hE49PLe2+Hc3kE/orUmOgcnOyFBGQTp4/XiMPL9zMMpZ6CuDc/91tJcIbbqCxmuEycd0uHFGs2gudn+IA7rCvfuQO0+7gjbmE3rLxH64h3bANtPLfMC5iMQRC5A5NMABPXQ4foi0vgy+KjgucXNCAHJ8QbyEgbzOrMJ/h0Lzd1W+eT+wEseLvwtPQ0AER7H2735zzb0Dhsb5gAL9wD+T+U0IvLUzxgk9y8NMAkLJ/nMGuwwCQfeCUHC4grfFuMkBRECx8gkANb70DQGGA3a7MwMFuPZ6OMMRNtNISKeKczx693cI0AKL/8KDukgve0gOPI3HA3+8hgI7QIfu/Ml+/oj7eYI8O/XOP0QMxUW6/mzDgC6Eowf3d4fx/n8/T0aGyMlAA8JMD3pdh7w7BPC1jbzndsQ//cMEP7g8xz4+BkQEAzc5zYhPQ0s3/UAC9oZFhTz4OH3Ce3GA/7b3/n42ePoAPTg9eS4ABNP4QNR4hUQ6xD9AQsFvwfP9DzTz9lJ6w4C6xjj1P03/yXxECjoYNHdzMsm/fNR4Mf9xB0E+ukC0/rv2NYXLiAa8t0e6AX8BQ368SICARL9s8u/d7n8S2Tdp9ru0+Px+vLw/hfk4lPb1vu2Bweyok1jxQFdRS8nAvwCOjEVF9nk3NcHNOXj7CXrEyzx5w=="
+        },
+        {
+          "text": "5. Chưa có dịch vụ giao hẹn giờ hay giao trong ngày. Nếu quá khoảng dự kiến, khách cung cấp mã đơn hàng cho nhân viên kiểm tra; hệ thống hỏi đáp không tra cứu trực tiếp hãng vận chuyển.\n6. Khách nên kiểm tra tình trạng bao gói khi nhận và báo nhân viên khi thấy dấu hiệu bất thường.",
+          "vector": "DBICEwkgCNvxFPiuJQMNAvsz/OwH/f8XtfXwGw8SEQo6VvYUDQ4QAPD/0V749xheDScW9AQDCRElRgA2CvK8HPT/1ij9EwMEOPHD4g0bGDoM/0w0LuLQLt7fNSINBdfy3e8t9zL58SseAw79vvoMChTquQjnz7LDDiLfAPcuI9gA9MThsxYq2QnuVyD05u7X5bl3EQo2xAYH8RcRC+IIsAr8KdvtnkAoAAPjCwDw3Pf6F00AIwPkAC4A/wYIH7rS3jnHTiz5HCrs/igPyxUeFa1a3uEBLNHl/804BXa9ZxIL5C7iH/L/8hrmBgHA+dPMBOwJBhIhBSHd8BgHx+r0BSxG+yUGwg7mv83eJFUO8/T6LjI+CiTzICAT+vTBRbAS+AP7zt0g5wX7BR7VjTTV1ioH/hEx3woCnfKr+/OfDSoPriHP5jwD4fXFQAcyAinfD90NHi4l0PYcFeCAwcdNMrzzH+j1/vnWCL/ROfL1+wTS/ScpKzbL3hbH8DUTBNb2GQsNA0H7Is8sEvXJxCLK2lj3/xkN+DDu8+kKGsIQzRMKO+7948wiHBr0HSIZA/b2F9TB+dJI7TfS9S/mEhjpLQ1G2uL6QQ4NPSvXxqoEGLka1B8QAvzXP9n4CgMg2MS8xfT99fnzN+LhARQS5AEw9RLGoN//E94k8AEcHSQhzBMGIQzpEwouzjx/7xk6A+0Pur4KCTY7pdUtKhlCWA5aA+EGIP3hNN0KwMErXODb6cYam9tWDc3hAxC3DSAb2NXdJNjXruEb+wbwAevcQfVa9RP4uDDvIAP/ATTh4uMrPgEKExEENBsf88pOEQOrB/QAw/Y3ALfu19rFFBPr4NTlJgnMMdr63wDf3OUz6gn3zCEaD/YaTi78GhTb0cYIwTH5EfTzFxEa2A/8L9/zFwHf5xcAAkgLJu8VOBXJBhQhBQrl+THD8w0KJ+Aj+PYA0+AB/QUEE/YGIxTqAOAdA+fh88bnb+dMJRnDAvXfIsX1D0frFQATG+Mh4uQeHB0+G+bf6fL75AH97AD+KOUU9eIXDc7iS+vyMfUhG/jV8w3cCbAs6Moj1v3Y8TET+iES/SYNLC7NYhMJ8yq4zxzckwbs+f/lIgP7DyLq3gkACiv45kdUQxhB9NwL9N8jCBXw6PrqB/rl7h7WEQjLBhH2BhLxBPjDzAQ7+whW0xIUv/cqDSgDxhPJ5EDfyvkhBwTs/jH42DYnKwL2PzDDf8XX4IBc8fpL3tMAxBYJBPHj7OfS5d8+RBT438tKARoF4STf8grn8y0aA9b6McIHQU3yq9jZ3+r2+/nq9h3l20vP6/u+9AvFgD19vCJARiki9hbzJxgSKez919sYDeYA6RcA+ToF3g=="
+        }
+      ],
+      "audit_event_id": "2026-10-30T04:56:48.869857+00:00#749277aee1e143b7b9417773e053f7b6"
+    },
+    {
+      "policy_id": "DEMO-SHOP-RETURNS-001",
+      "expected_updated_at": "2026-10-30T03:22:56.676100+00:00",
+      "original_typed_item": {
+        "category_lower": {
+          "S": "demo — shop phụ kiện mẫu"
+        },
+        "search_chunks": {
+          "L": [
+            {
+              "M": {
+                "text": {
+                  "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. Không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả."
+                },
+                "vector": {
+                  "S": "CR3/CfIU9csM6yoX4/Hv6NAdtuEjFQVxyvkLEyouJu/3Bx8DPRAu2iUA5w719AkGLT3fPAjr4wAmK+4MEO/EIvbV4wH7FerbHPrC5QDmLSHuAvonBdjaBOPRP/nIWtr/B+0yFCkW//j/KfPo7QkLDBjYoMv/4szm6xLiB+9L/8/UzszN9xsO5iLwMhABEAkIAs5sLAkC9f4i9v8eGsgTsyjv/AMn2TMCCfUcEBII2/onDgwQ+gDSu0wW6P73Pt+t+Pn/Nijz3Akz/U3S0PRn8cg/8vcq+ur19PMTDljeMQv+qTjt9NoE3ljpzuHa2gb1/gg3GSE2DCDMGg33zdQJNdEu9hRD1QAF0hjINR+5CQgRGgw7E0z+OSwP+samVcQe7xg27eor7AQC6xS21/uzuFsD7f9EAgzxqOvJ2t/OFjTqrhnR4TAvygm5I/0kyw3SEvsHFvsU2/b11OHZB9YZV+HfwwLr7u/9TMkDOjTj+AXx/SUHWh716ATcKvwO3QzgPB305yoPJPEuSwKpzScB2EHbweP2+AcBCfjwDcMc4OHrNNzyy6MLKAEmIQhhAPj76w0F6tMf9/fcDCnpTAfdIu0p2wkuE/koDE8IBgju5fP75zcKCiLTNqfr/SMD09SjuPT1APXnTNcuyz8d7hcoyvrzjZYLC/vn4wgpGhQMwC0pMh0CEPZQsh116Pv6B9wHwdYJ6EI0zNMvADMaIf8ZLNj9Fga1GSvx88w4Sri8Bvfkl71/O7rzBw6c/iMRy9zZEeT2vA4gHOjuAvzaQg479xPDszLNNyMU5Dj8//YnDyIcAiMHCDAl6c4L+OjS5vQH9eLw/8Dmyuiw/ACX7CgY+v/PLdL9+j361SEX/DG34iMhR/9FMBEAJOfJ1Ascwi4GIAMZ7QT5Afz7QekWGfrA3yAj+CPtF/YTFtXYJgANLf7t2D7h8foN6dvo+PTeBavs++rv9wz+LRXX/8TpFvXTAdjq2cvmKNPe/+faNbkCGGkVJ/ML6RcYt+wZNAIxJhbpBuwL5xLmGwEHMT3XCfj079y73OgfVD4CvgXAJzDg57dSzOf0K+AEA1jtML5pJA/nRFbHVhUIAADr6Bfiz/v+BB8YJNzdIfcqMTQmHCEG9F1KJxkrWs//99PwEBDYBAX9PRrY9HH6+hjv9RH9Dvjz1wLiF/Ml6L8nz1EPzhUOC8rg5Q3GFUq71dFn4QsEABDS3AQjCCLQBxvgPffx1dUWLgIn5QoS0RP3AP0GywcW8OUQAdDvHwITDdz2/NT4+znl4xH6ycPxesrcFCgX+gXT+OPVIPQGPRQR+jbx9Q2aAPysgFB6thk/UhkY9xj4IxsFEfr24AAH7gDc/yLp808Nyw=="
+                }
+              }
+            },
+            {
+              "M": {
+                "text": {
+                  "S": " hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả."
+                },
+                "vector": {
+                  "S": "LB7XK9Pr6+Hb+kHMDfT39hk1E9b8AkENjv3hEAEBGxMUIA4lDfH6HBIG4jT6/xUvWN3yP+6wDSAeIf4gHOesGAoE9Qn3DgkCVA0bHDcvOV0JMkBu4eWOS+L1J+oBZuH+Qtct//8SGPP3IxEGAf8A//fVpvwS6AbNBh3nEO40F8/J1s/ctRkGCfoFMQItAhYmG/gwMPfgJeoR5xILHswQz/LD/8Xp5gn7FT0L/hEaA+HqFDjjLNsKPwrR/0Yluu3C8RbqTQ0G4AniEikBvA0ZCcEz+8vz6M8dCOIW5DvQSALz0THBK9/gvP0T5iis6KMGEN31FDX4DysznfgV8AAs3ag8TBoG9jHfAAzRBie84xAADiUZEAwQ+zce/tCeNOoC3yBA1NAX6w/EIhzX5BsG1RjnMw9N8AkB2AHk8ta9ETnbytro6AoW1PeWOeFJ9Q6pMgDsMdbfuA8Q7N2VtrQYWvPfAP0fK/IABu7eBOEg6gXmDAcNCRng7+XnAAYM+vQa1Mw6FyYsB+pA2/yc2Awnyy3u5/8B+hr6/wa3OhD++dod8/QKALYiLjgRGzAb7eXd8zIJB9Yv4/MK9Sb/LAXzD+3+8wwN7gYIHPm7yJsNNsPZDQ0LFQDwI6zaBFQE2ebO2wEFA/4PHusg3AQlACEs6AX9oIb4AAMB9AESC9kV7+EZNRr2BwUd9xBTyQg5CqEDtd//6D0puccq8i9jQRshXgfn6bfV6wDy//gmQu70/9bch/BVLf3r5xqV6VAZzMm2BN0G5cX9KvygIAPuRewy2gfRxynZNBcFDi8DAA39QeUn/SMjKj1W7fon9ujt7Azu/BEi4c7ro7rx9OcE4gfvuvWsSejXvPDM1xwJPx/G9Bn89g7zUCsFCt7z6i4b4xIuAPbgCCbn4P/YPN3/Gt+d0mYX/kjOagAh97rfKPj1OCsf20LdTPiKIbfUIu70N8b6EfYL7wAZ/g3VIvD2AQDk+8HKWMc8DAXLF/bdFtDl81kGIusQ8zVu4OVe9SY6B/3mAiMK+wAN4wLp6SDI6wAsA/vJO/AYTzcG4xj8HT8E1Nkj498V8uf2+RsD7UIm+QHqPTPvI+YP+O4E9zz+/Ojz+v72EfPoLw0fNA45GBU22GgUJicD6v8rAiUTvBcHIC75FAOixDbZ2THW/ewBEt8DvSnx4gAgALYa3vkbJhggE/U819zP3DkJz9739vHc3nwC2e8YC+vV8A/hQfDy190HC/oX4AMR2/MOFQ/fytj1H+4ONg7zEh4vCiUaLjLd2xH2+vfbAfzcScH3CxPAz+nl9ezqKv8YHSMSBC4D6wHL4wXIgBlSzAAWWzhE+P8LPhsWQ/XtAMQ57u37COoi8WjL6g=="
+                }
+              }
+            }
+          ]
+        },
+        "category": {
+          "S": "DEMO — Shop phụ kiện mẫu"
+        },
+        "embedding_model": {
+          "S": "cohere.embed-multilingual-v3"
+        },
+        "keywords_lower": {
+          "L": [
+            {
+              "S": "đổi trả"
+            },
+            {
+              "S": "hoàn tiền"
+            },
+            {
+              "S": "mở hộp"
+            },
+            {
+              "S": "giao sai"
+            },
+            {
+              "S": "lỗi sản phẩm"
+            }
+          ]
+        },
+        "title": {
+          "S": "DEMO — Đổi trả và hoàn tiền"
+        },
+        "updated_at": {
+          "S": "2026-10-30T03:22:56.676100+00:00"
+        },
+        "title_lower": {
+          "S": "demo — đổi trả và hoàn tiền"
+        },
+        "updated_by": {
+          "S": "aws-operator:arn:aws:iam::629380420098:user/huynhhao"
+        },
+        "keywords": {
+          "L": [
+            {
+              "S": "đổi trả"
+            },
+            {
+              "S": "hoàn tiền"
+            },
+            {
+              "S": "mở hộp"
+            },
+            {
+              "S": "giao sai"
+            },
+            {
+              "S": "lỗi sản phẩm"
+            }
+          ]
+        },
+        "content": {
+          "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. Không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả."
+        },
+        "publication_state": {
+          "S": "published"
+        },
+        "policy_id": {
+          "S": "DEMO-SHOP-RETURNS-001"
+        },
+        "content_lower": {
+          "S": "dữ liệu demo hư cấu — chỉ để kiểm thử, không áp dụng cho giao dịch thật. các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. chưa quy định số tiền phí gửi trả cụ thể.\n5. hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. không tính thời hạn này từ ngày khách vừa gửi yêu cầu. thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. nhân viên kiểm tra điều kiện và xác nhận kết quả."
+        }
+      },
+      "search_chunks": [
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.",
+          "vector": "EyjyEMX83NsW8xbTDf7lEv5UB/EU5OsD0eD0Ix4uIgLwKAkbHP0PFevq1ko19AsnCTQAHgn48wgNMQwdJfjEHQMC4CLx/gv2PQDk6SEmLzr9+TgT9PYC8+HiJQv+HeXyFOVHCwn9/+hLQRf5u/EXAwDNqvEl7OnfBB7kFfo9Hc/188DsrQ0W6Rr9OSkmHgM26b9MBhUhvQ8X6uwZ/doAmizg2vP/yyb7/Q0F/vn57/cIAyDgBvHT6UUK2wkCIvbU8lbmWFDoD04b+EP/8xx+48JG4cgoEuPg+uEYB2rITRDsxSXuBM0E2iPlzwyA9cT1+fofFlskIUe38Sjyr9f4Ndk5+Roq3PX8vNjNOEMC+N8OMSoyGzbtJiEMCvKeIuQF4ipNudUb2wkF7fHE0OvKxy72DPExD/zww/3n0BCmDGvssxzfxysWyPuxJu472RzXPB8u/PUTz/Mi3vCKt6EsQtHz7Qb+F+ngEbrkHvsACQXa/SM/Xx/w1PrUA/YM8/nyJjrw9iHmDfoQ+QiixAD92zEa4hcDBRzt/OcL7NH76QnYJPX6z6cRHBkFKA03DO324vzayKcu+yv85y7sOgPnENUR3wopDvdABzHp7d0JCuI4vSYSCy67VMPtCzMg0b2TouHj5ennWNYx3zoc8RofzCbBnOUgFdv+3wAoJDsx0wHuLSPjHQ0pzANe5v0J/9b62uoA+xosqc8l/itMPxUuOvri6/jZHA8AxbQSNpO5KLcPgsF5L8v1AzHUGf8h2Nv8+9vcuPUSKvO4Pv/mRv035TDw2Q/PLSAO0xHz7QkJJvX7KhALDyA3/Nc5CfGz8vcKzgdQ7q7vzcnX9PvT2CIM3fzlSqMkzxT53usw2xHb1z4iMQElJxDqDPnwz9L+yS8FHwT7+gvv9gzVWe38KLTAzEMpAh/iL/cMDu3ILdwh/TDhBTvKBhDiJQDp7SH/9r8S5tj7+TT7OAbc+9cN/wPi6cn9N90YDvTL/dnr/sD3HTT5IPIS5vAgxO4kKQBCJwDk/gUO7AUX4QQcKRnf89wR87fQA9A2MtkAGv/y8iTrBMVY380LG+fNBykPJvkxHwn4NzOtXewVDP/EzA3nivwZAQAwBuDvEv0pPjQrJBn7C0ZHSxBAANwKB9ojGC4A7BzkFPfKAVXg3h3WIBPk7/7k2frS4vo6/u5N6yAn4iH3DMIJugDj7UDEts8XLOnG+RbuDv8ADxDUAPPdVOLs1qY5EMg12egW4PkT9s/tsAkI3vYf/+3vMScq9vMSAfrb+yTo5SkU2pzpJ+LpO1Tpu/TZ/M7VAOLwMP/7AD770Pyj3vjRuB1KyxkzJgkcHPjyMS4UG/fs8eEeF+TY/RLvGT8BuA=="
+        },
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.",
+          "vector": "/Bz+Cc3jzeYU6P/0C/TqCf5PBvkZ4egJud/yIREyFQMiMgAN/ecMIujf0kcu9Q8jCCgKFAEB/QsRUwAuKAKsKfz26xvwAgIEQ/bZ5RgeE0L9BzUrAPPhE9jwMRDuA9P5L+M0DBL8//EzKf73xfcSCf/bvA4S19TM/DPqBO9FHd35+MDvwgsm3hDyOy8bEf0fA8JdGRwszAYo1uUrDN76sSLe7OcE1ygE+fv3A/rw5REODhazCe7cFjoA4QAFLeDd8V3iUk3uClkq9RcnEBlZALxZ0tI3Id3K8eEmGlXhRQoD2iHlB+UI0jXP2QiF8tPfBQocCV4eGjXb6BkK2NonPvA2/Bcd0fICttjeKlYJA+oNKD5eDkvfHxH8E+bFRbsK4ilG1u8b5wke8eLxwfjX8CMkF/pUFAHno/Hi3fywHkbYuxEHyCwcxAC0L/tB+h3eMR8d9dsD1wU95vOAvMguPOLk0g33FObvA6LfFt8QCQjfCRJaWxzk1AbVCAIF9Q3nGDEA+DPmCN8m+P2ozQn74A8q4yj7/yDwBOUC/e3v8/7YKvP05LUNIBERIP1LGfAD7gLezK4z+BzZ+SjhRA3UFs8P3+83EgctAET78eD6A+ZIyA4fCxvESMbrCTcZ4dHAtPbjz9n1WulJ3C4k7RIxxTzBvOZQD+Hw6f4aKy5GugbsJCffGgYmvxBO8Q4p+egOye728CAsuMoj/CxdNRseQ9/pGw7JQfX0w8gTJL7KAuX9gMV7KNj6AxC/CTUi4roq9eriuAkxIuy5TfrPcwtR+S791g/VKx8A8xbb1vUQQ9YDPRIgNBY7/8kOAuWw3dgo1ApBy9P6zNri9vnv2xYH3QLfO8kE3Av1yfgu8yTUzzUyKfsSJSvzEOb/vuMFwSsJLe7yCRP89yDhONYeHuqo5TEpAhPyIQP8FfXKNOIqECffACnbFRXaEv3QFiQF5Lgt7N3+Axn1JATh++8VB/vv5cjWWNo8HhLH+drmC7sC+j3yPP0GAPoIvOlKCRA/C/3p+vwM6gMT2v8OBwv+59Yc9LfOCs0TON4OEgXc7wri/rlj79r6Eu7NCS8aFQgpABQGQD68S+UaCQjX0BrzjwEI/QcjCPbi/wglI0MoIxTk7kNSWhNa5NgM+8wdLjTp3grOG/3A8zLizhLdEQLi/u/ZxAG29i5J+gxc1y8g4BwHEeQsxOTTzzT70bfzMdbN1jUE7AIHGAbKDfrpRtcA7MQnDMgp4eoc0wEM48LxrhoR5f4PIf3fIRouDAwYABzT9R/e5hAUxIf3JuPsL0ARz+rO6+Di9OrpHw748EXn4/O97grIhxdHvwEfVQYKDwH0GREDIwYIA+UkEOfKDAfzGErjvQ=="
+        },
+        {
+          "text": "1. Mọi nội dung sau là giả định kiểm thử, không phải quy định pháp luật hay cam kết của shop thật.\n2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.",
+          "vector": "FR7nO+MK9+Mb81IPBwUAE9Mp1/IqAehF1f0QERkeE/IQKSADHBUl9C334iUD+BImRkHcMgzh5foqPvIaEfO+Genm0gPrB/XuPgLM/BsQJT/uDRMq7ObNCM/wRhYAG84CAO09GwAABN77Au795vYjGCXrqPXZ27fSzhfi+OZO/tsfuabU5iMd9vHPJgX9BfMD9sdRHRkY0SIYBg8GCcwG4BoQHAEvxTcg+groAgDjqdMI6wcO+PG3uUQF7g/3KNKs1R/RVBYE8BYUDzkV8BNgEMco7so8+/XyCPgsImTZPAPlwUfaD9X58D/G9O/d+fvUCv8TE0kgGznsFP0JxeH8MBNRCS0jzxHhx+/XGjrz/PkeDBE8FEP8NRkL/+nDUaoh8AYN5QAv//4EARP1oRPL4z3jFP1aCwr6puy849G5FUXqneW8y0c62QW8LQ4p1SDnId0aHg0L6v8CzNSt8b46Y+Xu5wb6AufsPJAHFwEMDRTyCh4TWCHx4x3rJSH03fnPNhrs5xYWHQ4xQACQxhoK2nb67REH/ybcBgD1GdEKzQv7Sf0H7sw0Nx35LDQm+u/aChz999Y24x+yCiXyAwjRD+MiyeQBMgkrL0/s9tr0B88v1jgeCf/YQLH44SAVzL6VlPUX3evwXen+/TUM3vgg6RbovrA4AvoF2xQ4HigwwRQyLeoKAe5D2wlNyPr+Crv6ytcA6FM3xNYj6zc3GwAHMdcDEvXRIR4A0tkeNMzT/ujzpsB3OLToBSyeAjEgxsziIODZxvoXI+vmBe7jRPNM9SHRuhvJNhwGBiPl1/UBPNIUDCcfDzFS+cIu+PbA+cr20ekT8bLxzN/ODfm05xkg+frOT7jsuP3r8OIl2Bvt0isOLAoxMgr7F9bnuu0bvzwGK+PsCRwh5RD0JNL3JO646x0PAjP0EfELIu3PEu8sAwn12EHf9u3r+Nr0B/fz8br59gISGOf8EgvH5c4ZDBH349b6AdAKMvfc//zgINX3/EH/L/gU//84sewzKvgvIivJJAUb5AkBIxMWHhb79+oH9PPNEvswLwcJ5PO4BjXo6LZh7NMQD/LuzV/yHNJX/j0ERUndYQUJ7ha73RXfoOwG7hgHLuTgDwoaHCUJJwH87iJDRx4T/Ooe/gYz7SsAAAnlOA+w71b70Rjy9gTp+Pzk+fjJDQ9A5Og4yDoluxcsIMX10ga581zaz8R/3wP8/gCs5f0OIx3KEhHDT/nQw6ks+QAy4v4OwikU+PYh0BAn09EiHQPhDBEYFP0UAvTg+jLS6BkLxqj+U9D2HDEH6uzl4gXT9en9KBkA70vr7w+cEwnCpUVmwSxDLgce/Q76JwUCM+shy+8dGureACDy+0L34g=="
+        },
+        {
+          "text": "2. Với hàng giao sai hoặc sản phẩm có lỗi khi nhận, khách liên hệ trong 7 ngày lịch tính từ ngày nhận, cung cấp mã đơn và mô tả/ảnh lỗi để nhân viên kiểm tra. Đủ điều kiện sau kiểm tra thì đổi hàng hoặc hoàn tiền theo lựa chọn được hai bên xác nhận.\n3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.",
+          "vector": "5AIgDfQk/tkm4ykPBhzjKdlP+fww9+I9w+wKGB8xIPYvHRL5HhgX8zDs9hgU5g4ILjH7TQby0gU0RQlDFtq2BQUN9BIECfzsIwDFAwXzGh75EfscGfLSEOnzGx/gHffw++cwCgX77vABKx4A+gHv/BXcq/n559Td1STu6dRdC+kC1LHe3iIZ/vfoPwfx8Pbp+s1OGBcWyycsCPghE8oD0i8Q7BA67EEH+gX79AjktNYN+xYE+gC+zk8T6Qb0Lsuv5CLZURAI7gMiBUH84gVb/t4k8OVQ9fHlHfMbLmb1NA/80DXZHOYG70/a4tzT8gby6+sQFTwNHD74CPML0uIKPvUx/isr2BLs0AHOLzTRCOIZQSJLKl75UiP+/P27OpIi9wcW8uwt9AH6ChLbrgWz0k0F7/gyG//tu/m449G3DF/3rSLV3zUpwv62OPkwyyHsAeIpCwwX9+3r596z6tQ4c8DpzvO54OrtMbTwEBYSABPi5T8OZlLd1h7uEhfo3RbQRDHq5BwEGgU0MRi76xwd7GzuywwFAAvfGvbyIOH+8e7jUvf4z70rKisKFzIa++749Qzu9ss88BLeEw39XRXwL+Em5OAoIhX/Nj3x9wD86gYwtCkVABfLTMrvABYPytK4ufv56PD5SfL5+x0K/gYi/Q7nrZ0HAwrs0A01HzMbzi0WLwHuACxVrBRyzP78/9f+0dcE+Cg8t+Ej+S8uEQUMJewN//7YIAP8vrsgPMzN9PzQmLZ7PMH/Bx25HRYa0uD8Guzoyh8iMuLgEPDZSwpL+CvT1gS/Pgwa3A7r1QgPM+sV8TcI/Cwu7+pHFu/h1LDtx90r9a7W3+fDIgSm1wso9/SwTcLsxx/X6PIi4BrW0jszJgoCAADt5dTKtgIbu0T6NNzdIw4V3B/tJdgFKeG99gsK+z78JvwQFd7OPwIOOgvww0bT9OQID9LRI+fl+aD67/wPGfr6/gC98sEIHQvf8tkbCtAtLAvAB9TnEcX3CF4FKAANBO8Aq/AkIeIqFwv0+fDt8ggCICMTOxj/+N8B3PnSJAAROSsW4wnOBTT32NBd3twLDObv6Fz4CupE8j0GLTmobuUfAQq22gvTrAzy8QcSM+zlCgoOBRkAKRYP6zY8QxQcEuIQ8v4Y+Cj5/RnyMRLN+2Hw3DMIBAHmGAHfBgTRAwAh4Ps03BElxwUzF+AHyAHS/VDG2uJ/9RrqIN2v7xX9HyTa+fO/YeXdzoc+CtMm1Rs1xxRJ9vUTzhcWzNoZHxXE++0AIQIL+v/Z6iPd9xcA48bsPtDqIF0p8AHX3AjBGPb5KQ0KATMC8xid//mqkEZwuiFHN+DvGxbkFBAEGegpogf9HfHw9wgIAUX83g=="
+        },
+        {
+          "text": "3. Với lý do đổi ý, chỉ tiếp nhận đề nghị trong 3 ngày lịch từ ngày nhận khi hàng chưa mở, chưa dùng, còn nguyên tem và bao bì. Không áp dụng điều kiện đổi ý này cho hàng đã mở hộp; trường hợp lỗi hoặc giao sai vẫn được xem xét theo mục 2.\n4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.",
+          "vector": "AhgKH7v44OAEABrrAPr0A+hL7tsR9/VOxtHwNgcfHAcGMQXyEfkJ/wL+8DwzBPMISEEPHgT/5/4DIgoYFfbJFvb32CD/Gu7vO/6/8CI1DSfyADYRBu8ABte0cgDRNqD2/vkuJBoHAPYjHv7+1NcsARLvx/Pq0r7L3iL1CvJNENgN88XfxBUY8vvuI/L88wMD58ZJAwsA1O4YBQ8qANz6qCow9AkZ2BwTDP4YAgoBzeEUEgzvB/ze6ljt4hT3F9i02STnNT/+FAwqCCQV/g9GELNf3PsHH9Tt/swhBXfBWRkIyT3JIe364zrU7e7W9PLlCvEcKlE6Hk/Z+Bb1wNEGGeo+8x4o2PT1seDZQEb8CfQwCktTLFD7/x4PAAC2O7Ec+PsP2AId6wIP8/btswnY5Sr6Cwo94wL8gOC51d+rJ0Xlrf3i1j8b0fvKPAwh6hrvOvAmGhEC4vX78tSc+9tNTb7lz+7G3+L1NJTjPwbuCB3fFBosZRLl9x7mBCIB8PXrMCPt6xUJIwk+JfqdzRwF2Fod5iwC+zLm+ewRCrgLzQHURfT718MfIycOLEZN+eLOAgjs47447ifcxz7hFwbC/toUx+EcJAgzCj/e47sAKbMM8vgMAQXdNsPxBgwrxcCcrAALw+L6ZfMn6iUS/BUy8gnIkdQBC+IO5BckBikszAgaKhvs+AAq2Bd75u/iC+cl4+YD6EYo4PgzGioeMvo6Agvw8ezVCOEGwsMXKMvcBOv6oMNzLcXWACKiDBgdzsj0Nb7fqN4NHQDlJfLQRANG/A/YsDLkKR747y725e8oLBT5HB4jNDNL9rcD+fS49eEQ0+8X6MHpx97VA/TX9PgCCgrmQLz61wz39OEk8Qfq5TAgFfgmIAb2FwLSzs0LwTnyL9nZICUa7CwJSOAQG/vjvR0ZCRkZAOkTMQTIDvoy7A/o6j3gB/Xq+t7bGfvs5cHoCfT9FvcEPhbNx8k4D+La0NwSKtgmEva8A9/rANrs6h/5IvQBABACxelqJ+RCEjnlBgoI+xb+BAL3SgcEB+z/7tHCDuAtPgYKDevC+yngDpop2ewJCu0UzVX4MulP/BfoOEXbVAAQ8xXe5QDmlwUD+fo0/9D4E/kMBCUTKi4AEFBrSjEwANch/eo+ChgM6vDkNw/oEUn28uD2M/rjEfPkv+7AMw5V+NM08CsWqQTn/egTwfbX6lvO2MsPI+Hy5Q332PcnHC/KLDXPaN3kx5McCto83+0fuzUe9/r42w4M/OPuHAADFBQc8P4MABLiAhju7QkBwrHlWML4EyYV7+vX2vrEDPz2Iwn140fay/va2vy+gEtwrSpKRvYCEw3sJxQTFvPd1NoP+/Le7zXUCB8Y9A=="
+        },
+        {
+          "text": "4. Nếu xác nhận lỗi sản phẩm hoặc giao sai, cửa hàng chịu phí vận chuyển đổi trả tiêu chuẩn. Nếu đổi ý và đủ điều kiện, khách chịu phí gửi trả. Chưa quy định số tiền phí gửi trả cụ thể.\n5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. Không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả.",
+          "vector": "BSgbGPUf7N8P3kwIAg7pEMVE1vw08cxazuwAHxQkG/kBKCUlHR0f9xXz4yQU8Q0cHUIARQD00AVNNtsUC9rAH+ra4vrrA/f+IwKsBx4QGiL1/ycp2ePXAOHqIgLeQuj0GeFZGwkN990UBxwH2fIKCRjamNj048zRxiDS59t//scRxLDi3yQIBhnuKO0M8wgF6skfBAkLww0W+QQRFccLwC0M7Qks6CUL8/ntAgDkref36hAJCufA4TL79SEFAcy8yBnLRBv8BB0p+E/v0gBu+dAi5eA+9wfyABMkHGHJQ+32yDjNHuD76B7e6QDJ/dXl8/MACE/yIUP1APsJ4NIVIu9VIBz2zwAB3OTLF0ji3uUoFBY7LEUKMywAA9ypMbgBCA8h2f0yDvMF8SYJuCjQ4zgIAAxB6wL+ldjY3s/DHSroo/vFwjopyAOmX/Uy6x7AMeYsHQ327/kHzNSg7sw/WOcB6RP/9vfGQc/qCDEY9hXeChYdTjXW/CLmMyb23yDEKCUF7RsLI+svJQGJuwkJz1UA3hoQ8ibi/ej0IuIK2fcTW/EHwMo+Mg3cLzgs/vLY/Pjv1Nou8RvKNBL46wwDJNoyyOsbLPsiEUDeAfQG6A0e6yAW/xLZPrHw9ycH2tagpvkI1bYGau8I8yMNAgUh9BPguqY1CfYI2AA8ORc0sxARKP/0AQAx0/dAwAgMBbje0tX94V8p1/4n6DMpHv0NM8sGDPHZMSgA7e8UI8/jEeYOpst5PrHi+iqyAiwYytK5Od//xQIHHu7uKdPQTvlf+yjxxBncQCT87xvh3vkWM/AL8jgU+jZD7OA5DPfe0qn10fs4AcHr4du7EgHD5hkP+fPXSLvs3RLy5ug4/Prp2TkcHPI8Hv76KdvX1QUcyTYPHwMK5iED9wTuNt4KFQOr2kUiATHPOvgJD+LLMuMfEyT46EXeCffTDM3yDwUF/7Yb4PQMCfTjChPB6skaC/vh49399doAKfPfE/XzDdnrGTjsNQAU7RsTq+cST/VANh6+EADr9PMAHivqKCbj/OoR5fbOHP0JPD4ZAfjM/EkF19NI6ucM9Oji5l34NNpDDiT9PUPnR+IY9vrF2w7qnOIQ9BczIvXa9Q40MB0MMgAR/h8oWAYo894DAOsHAzPpBCXpLv+08GUKrw7hFwHsCAbm7//ZBe4s4+Ir2hkzqBQtHb7zwhTU/krBvud22RYDFhPD8PYjDQXKAgLQMgLqyLUSEOw06AEQyR0c/+r/wxIT+Ob5KyvmDBvtDw3+JA3m5C/u+hb2w87XWMrlFFhACBXP1vjLFfkALQ3+/0X/8xySEwG6m0xoxCBPPgI1Bx3YMfAICt4Nov37FvTN+grTDDAlxA=="
+        },
+        {
+          "text": "5. Hoàn tiền được xử lý trong 5 ngày làm việc từ khi nhân viên xác nhận đã nhận đủ hàng trả và chấp thuận hoàn tiền. Không tính thời hạn này từ ngày khách vừa gửi yêu cầu. Thời gian tiền hiển thị còn phụ thuộc bên thanh toán.\n6. Không có quyền tự động duyệt yêu cầu, hoàn tiền hoặc quyết định tranh chấp trong chatbot. Nhân viên kiểm tra điều kiện và xác nhận kết quả.",
+          "vector": "LhT0Va7P3/32BTClJPn0DfNDBuwS/gclrun2HgofEgT1HylBJAsiA/j79jgT7BgYUgYSMO7b9QwfPvMUGv2/LQYT9fADE/fkTvv56CUmHkn4ABJK9dOjKMn6FuXoXNgKCfhHJvYBGNQSGQQJFxI2E+rYwfYb5hjJ6iTj/ORpC+LO/c7ftxUc7/74KPkfAhgcKORRQB0R/zgf3u4kENQEzgLx6OkZDwD3/wj3AAT57ADzBS0KIsQCDhLY+iYh3r3v/CbmWxsS4//+ChwM5RIq+L4w5KneAtMg/8ca8EPFYAj6zgfVEgDyvSj61AOl6c//9Af2AknuGyYjov4I6PIv3ptnViIV9iPh8BO6Gja69QoD+xAe+gEKCAYHFd7YOc8S5Bc0zAAZBA7fEQy55w/1wUXmA/UuHfzwr8oWyevVNTTYuOTk0iEkzQKiVv09BRS0LBYhAM3l4QAK3NCEybdEcvTm0fIOBe7yFKbj8PhHBSYB/wIdPCbsywbvESoF8vT+7+46AxkJGN5A0QOU1g8pxxQs4jcQzST6GhG/MSjn/+Dp/uUAzKsRIjANPjgh4sfI+RsP5uII8Pfo7Sb+cxnNKekl6P0hCgj3IQbj3tIIBeTz7PH9GPHwHcHlFTkPzMjF3gP06fQAJvIk6jId/hQg2R/Ip9EJEu/+7f8mH+YUyxIuMT7u8REk7RhSzgcQ/rTts9ESASsxrcUf+S9AIgsZPyjhvbD9+NUT+fYvVvDy/skEiMl3JdPs9iGiAkAizMbo/+j94fb1MfGzIQL1TfhJ6xPYwCrsJhED5R763wgUIgkoBygGGjQw6eQd6+Lf4cfs7QAf8c/xu9vvBfzQ0w0GzuPCUMLjyBLm5PwOEwjb6C0O6QT5Px4DA+vZ4yAhzSoH//fm8jLx4QLrM9oFH+Gt3Fgr+zrTXwwY56fWJePqKioJ203gLt+NIOXUHRMOGbc3u9wRHyrnKBe9+NwMHg3g78LpKc0uGgzPBuXtAb71Gj4FGOf68TQO6OBxEBZbBwjv8iHx+wAbwP3aHjDE2dAhw9+/JN0bTBsH4wngF0YB1dU84OUY7OvjAhcU+D0dBPv6RTjdUhYC+BTd7TH6y9bt+C3xJ+zkOAZGGRAzFBkX0WcLR/QzFdz3BP4x6SIK+QriDfyR1EnvuCDNGN/0AOLrqBTz1NsdCL0r6Asv+iL6DsIf1PjG2S8C170IGOW37UjhAvcFFyDN/wTcPfnRucQe7tcnxPUg3QAgAPTqntcK9vIzJiXQCxIOEvw+LyDR6xTc+gzu4L7PReDqD0Gp2Pjm5ezpAucfKjQX/zHf4+/Jw/+5mCA9z/kuSiktDvf0JBj6QAkQCNc1++fm9AgD8lT5xA=="
+        }
+      ],
+      "audit_event_id": "2026-10-30T04:56:48.869857+00:00#9a291e459dfa41ffa58765611017e339"
+    },
+    {
+      "policy_id": "DEMO-SHOP-WARRANTY-001",
+      "expected_updated_at": "2026-10-30T03:22:56.676100+00:00",
+      "original_typed_item": {
+        "search_chunks": {
+          "L": [
+            {
+              "M": {
+                "text": {
+                  "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.\n6. Quy trình đổi trả hàng mới nhận và bảo hành sau mua là hai quy trình khác nhau."
+                },
+                "vector": {
+                  "S": "ICYRDO8T88sPBhIKCe4XEdUdlc8RGgRw1QIIEmRIPNztGBYSRxxEw/7nzRvx9h0gHFb3AxANDe8eHN7tDgHbPQMDCPEA/v/9Fe6h8Br5PUXuJvg28gy6FvfZPiLE9Pbm1wNhKyD29/fyFf/l/SgFKR3evRAN2cbXvxjyB/l2DsoIz8ve/BkFA9sGQgshAQooyrJo/PEB0L4V9tcZ39MFkBoCFwckyjcR+tzxJBH57x8CGzr8Fvbs+RoOBfQHPMT8HPTgN10A3hEv2CPb1AI54shG2/0yEwbF8B0nGy/NStj/qksF8doR8mrE583C0CjJBAEaFxsvBBa/+RTm1qb+Bfcr8hUU0/b95O7ZHh/k4fgfLxZeF17xQyQWAtGkP9cBrzo/2fgJ4grIBx/p+REK1zcIBgJDBAX+puPC9MfPGBbpsyDi4D4O2fK0c/M7/R/r6fcM7NIY8QEH6Ob1+6whFtTeBvH5B/H1Gt36ORgJ3vnx9xXzITHi1wr/OvgL9AoCLx/38P8AMRItGRCT0AoX12vlzvAIBA75//0H+tUH0w3kPfT03cMPLRIwEvVeFwX39xYY4Mzr2Pam5znVShC5Juwk1gAmGQAyLVzrANn+DMwrx1QhAx7IUsvXHlMqxs7XwBLq0AHeXvgR5BgMAxI8/vDkkKPoFu4i5gMVFhQVsyYDLvH1GvNSuyFe2hgu+cbTz88bBy46wvY1+0crJOwgEt4IAh3XOCUA5cQ9Wr6zBvfi1gUU7wEbABjcGwAe2tAeOt7R1QvwMe3MoRkFMRIvAgfA2x/TLjgXswIR+0r8H/zvFRb8BCIuBekPAerR8DEN+dnZArvqxvLa8NjS4kgLuQzPN70e1fzmCv/bHUfLBQUTXPlJMPz+FeLn8fsF8CwiCgwa3yg1+wEKOuMbFwfk71YtACXVMOMf7MXOMObsJC7pAEbR9gTuJcsU6NvYAc7DB/DuCwgNFNrV7+AbSu7Y8N0cyM3+OvvK2ujmHbAd/zH5LvoS5xwUvPX/GSMuI9vpGykgABj0Efv+OBbmBPAP+N7uH/gNLvUO/CLWDAzr6bxc9tEA6ei8ASb4Od9SSPLUMUDgSAz/+PK++AnXrf7B8Q3uGOToMgUQGjseKDXu90tFFBsvNd4QDOj1+x3ZAR/0HwjZA0P26hMA+wDc8vbZ7v/PFAQv5e048vA+yQcLCc3i3wDLJyjA+skhDvDw6xr5/BDsDifRAPzJChwUCbk5Eu8z4vsK0RQD6Nf9sR0H2fk2+MrsIAUpAMzjCOMJAzoe4C0w2pUpMt7hBSjO9fnW8t0DGegRHzMJ9Uj20QfE8v2kgF5/qCE7WwIA5jHtF/P37DcUEhT23eDiAwoeAV7kzQ=="
+                }
+              }
+            }
+          ]
+        },
+        "category_lower": {
+          "S": "demo — shop phụ kiện mẫu"
+        },
+        "category": {
+          "S": "DEMO — Shop phụ kiện mẫu"
+        },
+        "embedding_model": {
+          "S": "cohere.embed-multilingual-v3"
+        },
+        "content_lower": {
+          "S": "dữ liệu demo hư cấu — chỉ để kiểm thử, không áp dụng cho giao dịch thật. các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. bộ demo chưa quy định phí vận chuyển bảo hành. nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.\n6. quy trình đổi trả hàng mới nhận và bảo hành sau mua là hai quy trình khác nhau."
+        },
+        "keywords_lower": {
+          "L": [
+            {
+              "S": "bảo hành"
+            },
+            {
+              "S": "tai nghe"
+            },
+            {
+              "S": "củ sạc"
+            },
+            {
+              "S": "cáp sạc"
+            },
+            {
+              "S": "rơi vỡ"
+            }
+          ]
+        },
+        "updated_at": {
+          "S": "2026-10-30T03:22:56.676100+00:00"
+        },
+        "updated_by": {
+          "S": "aws-operator:arn:aws:iam::629380420098:user/huynhhao"
+        },
+        "keywords": {
+          "L": [
+            {
+              "S": "bảo hành"
+            },
+            {
+              "S": "tai nghe"
+            },
+            {
+              "S": "củ sạc"
+            },
+            {
+              "S": "cáp sạc"
+            },
+            {
+              "S": "rơi vỡ"
+            }
+          ]
+        },
+        "policy_id": {
+          "S": "DEMO-SHOP-WARRANTY-001"
+        },
+        "title_lower": {
+          "S": "demo — bảo hành phụ kiện"
+        },
+        "publication_state": {
+          "S": "published"
+        },
+        "content": {
+          "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.\n6. Quy trình đổi trả hàng mới nhận và bảo hành sau mua là hai quy trình khác nhau."
+        },
+        "title": {
+          "S": "DEMO — Bảo hành phụ kiện"
+        }
+      },
+      "search_chunks": [
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.",
+          "vector": "DS7YCuYF6colAAfnEQnkJAJM/eYO6P4D3d74ISMxIvzoIuv3Kf4W8tnyylca9xg8AE/9DBUI/AAaLRcoEuLFGObYxibe/AsFKPe9BjwkUVPxEzwO7Q0E++vnGBoACQTn8AA6ERYAB/Q7QxP7z/cUBwXbyxcj3NrM5CLmGwZqIMT/+cXytQYZ+hPbMTEbJ/kpy7tP8hUMuw0U2bUYzfD5ji7i6/wPxjUBB+kJHBwF8v//CzvXH/TyEiMg6vAMPgD07Uz4Rz7f9j8E9zIF9y1r0sVH3NAhIebKC+IPAE/QRgn5vzT6Bdwb9xjr2weJ9Mj58/opGD42DUOp/SbgodPbRuYz9Rcjz/D+sOfNLWP+/+ISRRs4BkjmPSUc//uiHuUR7x9SyvwW4gTy5fbr6PXjzQvmFfcUAv8HterS6P2sCE32wBTp0in82vu4Q+kx1hfgLyMc+O4Qx/kh+ffU0pIbCM/XHPD9KOn4FMXnNAn++gTq5hwiLTrYsO7d/+0O8wD1BxwCAQz9B/r+Cw+pvfj/5Er+0wQHABPu8eYM4M720SvAPOz0tp7/EyAHJiJACPvi6s/R160s/xXyvkbdWwrDIcgV4RErDfErBjPO7+IJHehIuDQY+jC4WeDcK0ka27/FtfHL3+fhS9gV7C4T/BgT0xPEl+wTH+AW2vYcG0k21P75Lx3xJf8swQZ24gQj7dTe0NMMAis8k7olEiY7QhYxKt3z+RLTPRoCyLExbbKsCMTwreI9/vUXDhr3L/0s8ecABtLAsgAcL/O+AQ32OgJA9x//AAvhLTkX0xAB6yT9LvHhJgcNHidCBOhCGvi07RYY4fMV957butvRBPj0zCkCzfzqWKAazQr7/OUb+irk4CMXFwYcKQf2/gXl4snz2SwFJA8BAArzAhbuWfINM+Hl7VlD+CYINuU078TWRs4VFzHW/0TA+A33KPgRzR/8AdcJ6878808EMOjb/skJ+/Tg3tIRNu0MAOXE5d7sBrYIKCr3I/oT8+0JwfkwABUnFf7E7OwT1xALze4UIwDz69Ud/rXoGdUzIMMHExL5BgLUHq1E4s0aDN7l8h8TDhsvEfLxLCXEX/MH+/ujyxzQiv7p8+cX3v/4ARQVLT0WJCXcGTpOUxVB5ekbC+EFDhXt/w/uDgXeAUbR9yC9MAfu9Qzo2NjB7f5N/xFW+f4t0hz4BdMRw/3w+TbTrN73JeTY2DkUCw/6IRLgHAvUPQEG66IzIvRR7eUG0PMZ+M75rQQDtOQYBAAAP0Ih4OMD5vzqFB787Dgk2KHzIdz7QjzNoOTlD8gM7tHoGwj97kve0O+22P3Cqg9R3A4zJQAFAQX6KiwIAP7U8OcKAuriAxQFLEPP3A=="
+        },
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.",
+          "vector": "ByITACM3ALkIFBvwHPkgIcYSrvAkGPdR8AINE1QyJdcGHw0HOBkx2wrvyi/8ABUyL1/p/g8HCt0kMvYeC+7KKPP9B+jd5AIELPOxBCkdOk/rQBEv+CHOGAIAGy366Azd1/1ZJyQD+f3sBhP/BiEAEDHk2S4G1LPcux3tDgB/ILURr7fSAR4CCsbbLfgcAAEavqRJ5ekAuLUW68wgyO7/gBwGAA435B/9AubkLiL98Rz8DibEBPbwFxAK/u4UNPPs7vXUOTP/6xAZ2wXt4RUp189H4/4jD/7O+jgmMRbeO9QM0UsLCvkmEFy/H+TMyhqs/ecYGiMMDTrf8Arxy8X2FTMR4gj2xQL/zd7tHT0C6/IPQBZnAWDjUhIID9S5G+wAvyws6wAX+ALZEhUT4hwN+gYaHBhA/AT/pey6E7W5CQHwwSv47ikA2PS+f9szBB3i1vX45cgZ5g4X7e/8AawTBMTIHvP+JvP9FuEASAn+0PTqACX1LiXc3f4WQvH+5AnzAxMV8fP1J/s3JxyAyw811lb/4QUCJBrjEBIS6uLjvy7tPwP/2c85JxksEutHGAAP8xoG6MsG0ga98zPiORnTKPcs6PEtGQsQHFjeBdwDFt07ulIeAyzBV+PRIVAb1a/ewx7nvgHiUg3xABgBDAYvBvz0xJITD/oy3/0hGBYixRoAKt3qCQ9SrhZY0hctBbXl4dIW/D8+1gIw/0AzHvwbCLEfIRzdSCsM69QzRsnFAPTM5w0B6wklAB/aLAAg2+cLN9DJvRAGL+u+ow0KOP5J/wDO2RDVGQ4TxvQGzlbYN8ziJPn19xkwJf0YGu3m1SsYA+zT88f0vePr++Hs5yb42RDKMdMY0NvZK87RDj7t/PwSPPQuJf0EDAX59/368hsiFQAR8jBA9RwYI94fKBHjEVEr+UX4QN8047HTPtL7OTjnBk+98wLpOr8c+d30DtLaEuz88RUY9tPe5/k5Uerp39kq3dwIKwLD0vbuG7cbAR/qOfX/7CnzpvfoDxsOIe7QGhQQ7gTqE/zyE/Ts+us1B+4GQgAKGNEWAB/J+ATs0MBpBtcA0OKj/DD/KfUwL/bVLDjaX/wC7gWs7CXHshmz6fP8Cf7uGBwADUAALibm8B8rGCsU/gAnDgj+0yHjEzD1GQvN/D3o3zTeAP3g5wTi8gC+BAk44wtJ9c5PwAcTBdDm3PjVKyvC69ImAPEG3S0G9xreIjje/ffBACwaHbZAEORG0+sLziYd99j4pwgQ1OwGGPXwDwIZB9rgBQAP/B874Tw23Y4pI+btEh726+za7OkvDOYL9jwG6lIFygji9gWKgE1zwxBMQPf26yrjC+Hq2T4d/yPgy+DzCO8gCk/Z7w=="
+        },
+        {
+          "text": "1. Thời hạn bảo hành giả định, tính từ ngày nhận hàng: củ sạc 12 tháng, tai nghe 6 tháng, cáp sạc 3 tháng. Bộ dữ liệu chưa quy định bảo hành cho ốp điện thoại; không được suy ra là có hoặc không có bảo hành.\n2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.",
+          "vector": "EizDLuLx69gYHwgBG/8aG+4y4uEa9wItv8sBKAs2FAUNOubiEPYX7Pbo3jAA2i0sLkII9gkF/v8aJe0GCgHaMN/k2vjg/f33OgLRMTweQ177Nmgk+hboKd7pNCj49PHs7QAvCQ3j7AEHEAsS0uQW/Qnr8yMI59vVwwPXFvZxA7gS4MTl1QwX6+rFOzL6C9YB3sEy/SEExiMc5tgcC9AKwSbp7g455T35/tzrIB/lpcrxFDnYLOYINR394gAMHgnc1STjPRP79CPoGAQ1/Ton+blE1+YEKufVAPgrEyrTR/L14SMP8wYfEiTq6gOj88j0CgIYEEstEjfV9wnsvsruOBdeIhfoywL2pO/JHX/sEOMiIxpEC0/qKxsb9+yqRLcTFgVJ5xgpAP/XAgMN3xYN8fXyOg0y9/8LkNrA/bHDFSQMuvnN9jPu9PzCVfMu7h7cN/MdJxrx1A4zzda/AJUo/NbdJ/QEI+jzC73lOQQZ6gP3+AgqGDDTsfDzCfP++xcABRgI9wQGDQkB/wO3uP723UP84w4G6h778wAA5+HvujbiROX7x9QGDS0dKzVS//jV+Pno9ak8+P7fDyHgSx7tRMgn0/cSNP4WFTHT8dsMINBJyycjAg/EUNThFSsI7MvWsvPWzc3tYt3mDAoA9wQaEALKuAACGeZC5+4UNxdOwuceHAj+FtIj4gBhyQsg7Lm7ydQICyA2kKsI8x8JFwL5PKj9CQXeUmL/49s2WvXb6dy+mtBND+sJByPrRws58OsGEcPBtOAZFvvE/P/tZf5kBhwg1yz/OzoFFBP3wxvcWsr2CjcqCztd9L0hBgimA/cV6f8K9tIDyeDZD/3jyxj+1P3bbabxxPz0/NsTGy7x5Rob+QAKFQoGBvTh8tb59SEjK+vtJA8L8zkBL+37IiPUEGRQ6DQeQuBG/M3VQsgmHDrv7jrQ3/jk+OkA+hcL68st5OgTAC4L+evWAN8UEvXz6MYRP98rGxnC++/kG8j8Dkf9Qv75JAEUrfZaBQ8oDR+wAggI8BQN8QT8G+8Q/fscEwn4IRFF67r87BbqIRPeAbVLALof3vLTBxsSGDUYBPfhNyrvbQD94x+lxT/MlwPu7fzb0RgOEi4PBT8oKBvc2TJDTSsh2fgrC+kA/w3mAP3uICDA+1Pp4E6kOhj2AyH07va58zVa+gxP3P8iwwszIPsfvPPl20jqsMka/uH4uUQA7A8DMiveTzrSR+vs2agy+RtL4+oAxyEHAdz0zvnstOEIMjb2DCML/t0O/g/nCR34AiIkxaTgE/f+KDniyuTq798i29rl7h/s3lnw3QbCBgbWsiI44AA7T/cU7Bv9K/8QGPwP7eoWCufl+xAOFEPb6g=="
+        },
+        {
+          "text": "2. Khách cung cấp mã đơn hoặc chứng từ mua để nhân viên xác minh sản phẩm và thời hạn.\n3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.",
+          "vector": "CgHCVsvOCfkR+ucjAhQJFgAM7tn3GC8SzdwhGihRGeYSEgDlKgUd2PDdxjz77i834SwbEwf6DB8gPwUo/vDrD+P/2yf9Fg0CKPzBFz0lW2PvPi9N6BmxON/nQhP2Et/05vIxCAbu8/f3Lf8H+wMZEPzw4xz10+O5pS73Ae48DuoBHdsAwwoaEgLyIfUW7xMSB+NJJA/5AA0m684Y9PL9xhEiCSBP7TMQAO7UHz/zwPb6FS7cFPLpKjEL7fAMRcAAHxb+NyUMy/AP6/UP/BcR8cNF2AQcIf3aEwgY8iDQSN/JyFDMEr7o/Evws9ad1uwK8+cdCPQm7AoX0+34yukDFNRMFTQx3h3s4PHGHVK/2OweGAw+CVPsQxUl/trKbaEi8v4A2AcD2gnK+xgFHQsE3xPcD/8PD/gRpOG238/DHUjeu9jXyj0b5QLAVhYf6CbzTwE3H+PR4wwF3snXEbc0KPnu+OPz5vHrEKrsBAhRABcW4gYJGif1jgPj/xUW9u38EhEV9e8oFxUj8RSx5Acz4Vr75Q0P1CoD7+3y8OT/yR7THN30wLnhADUYJEc3/+3d+BAC9NIZ8fex0E3BexywP8AizwEGJAQFBB3r3+AGBtItxBAX//7POMjgGkQM5trW9C7swh4DQR7m/vYN8wwh+R3GyAACEfYS3RMwBxYauDIRNv30Ge9Fw+5k7Akn5dnVpMwaESBEhbA37FUxLNgeDgn44P/lIdoBz7tAdce09vDxw+g52fEeChPbSR027+T7LO3QtPsFBvzRAAD7Mvk48AkA2i8FMy8O2w/w4/gIJvDqHDIL5SUk9s8e5erM/TsA5NrX6sTYu/fRKxXoqBT8yALkOsfkwPHnIwnHNU27GQUC7xEAbBUD/c+tA9UCDDsoEOTR+jsr3O4HPN8pHQ7U6lFK/xwILe8rBevRNgz8MBr540LW5/ToENAI2wDiCc331uUXdwQXJeGo6sQVNv3Z+ugI6PEEOfvc4vnoGswH/i4OBfgICe375+5k7CY9/O3lABUj+R0Cyd3bKwYGy74gvM/ZLeoWRxwK6iz9GQXk79JY4MUaLOT65ykb8z4v9Q8MNj0IWd351wfE9zHo1N/F6h/jCQT3PCE56icVJBzy0UlPShAiJdX58ABizicGA+O5HArR907n7gW/GMbkFv7o0vDM6f496v1KAPQoyvoF+to9yN/c1DMD0sj1FuXlymAGzQ8YGjjeFjDfMPAA578eBRAm1yAeyw8v5sftqxb3rvcrFgrBJh4VFwUA5BPsBCDs7RYS/dkbOL4JLTIF0+f17AXq9NgaMy8fAx716ADgyvG8gCp3tBIfVjUh8AABGRH0LArq8dov/uvVEh8NE0vA6A=="
+        },
+        {
+          "text": "3. Lỗi kỹ thuật do sản xuất được tiếp nhận kiểm tra bảo hành. Hư hỏng do rơi vỡ, vào nước hoặc tự tháo sửa không thuộc phạm vi bảo hành mẫu. Nhân viên cần kiểm tra nguyên nhân, chatbot không tự kết luận lỗi thực tế.\n4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.",
+          "vector": "EzvbDhkY9rMQCSQVCwAHGeUV3+cJDQMt4PkfBkNGJNf//RUKH/kfCBbwyiTtABYvBW/vKRIK5vk7QQIvB+7QFtHX0TPrBBMZNeemBjkJSWXkKh42ygrNDv7+HigFCwnl/wUwCBYDCAD6IfP9AwkoFRnYth8Kysy7rQvuCflh+LAiq7vdFiLxMfDEFPgHBu8E1rF1CQgO1esW/OcG2d76ykUS+wcNykwYAOgHBg/tvOwSFynoDw7i8AAkBvsKPdnj3yDuPSj56ysZ8RTk8x9Aucgv6v0zCgnbCTgwR0ntNdbvyFT1GN8HGDjs6QDD3Nvz6PwgCQwMACYOCukD1M3xGABDCA4Qxfn5w/fPGF/e+esGLQpFBT3zNyca9fSsG9QT4wAe6EkSCvXn6BgOBRMB3CXnDww43Q0Tks3P7crVGwnbtwTX1Tgg0/7Nf+Ab1xbf9uoTCA0Q4v0JxNXcB7gpNNLQIe8QF/zwTd32Lk0I5QnqAhgAJh3i1g8EHgDi6hHUFhoP8wgDHvsqMgye2RQU3TjvywH13xkCAw4U19batD3lU/AHpqEpLi0QDjorEgT/99Pu4uwwAwS78zHYJAbJHLpCpxryNOssE1ngFgAADfoe2EwZ5y7cQcXeD0r29Pfvtvze4svwX+3w9CAF4Pga4BDImL43ItYs1P4oIT0stB0zOvwNGfxH2/lxyhgg9MHHuMoF7Ug4prUgCCgP/v39D8QRIyXGLiv118k0WsrH98gUpeRB9+kQDQfVIyck5NzTNbrNjfoVCfz82PjwGwId9f8A+RcAEiwNBCII0hHmPgPlASMQACtXFNIiAuq76gYizuIa2b7ez/C8GADI4zIE8/3oTaj11PL8CeQBKTrb+AkcJfQqJAwJH/DJ+N0C/DEnDhYk1RErDP38KNsfIgq9/D1QAgcWCe4kB93OQOclNAzy3VXT6+LWFcQs3vH1A9LsCwH9GOQFGALa+tQGJvHp5Ofw4NfcHuTc9wXsOdv6CT3xRgUZ+gD7k/EZDxQmFA+iAvTZ4OwRARgULw/j/+QWAOjgI/4PIP8O/vHPFTL5+bhf5OgKDOD720IOLAwiCwvyR0LpTNsN8BO56QDIoAfo8Pv/AB39+SYS9SbxNTbuACxcTS8p2/AqAAn7+hrpART7GPvUAnEAyh3G/PHq/f3u3/7KGhFG5tYy2/UyxQIyFdjz4v/mITThuOMy+P8L7Bb31RYUHCXpFynBKxMRAZ0tICJH2/IFv08J+coZwxIigdAROynyAhAMAs31D/kBAyYn7R0X0cARY7fzUE8MseTh8+QkBOr8/SQL5lfoCyalRBucgEl/yQ9ORDUhBxTeCA3g/O/hzff8/vXeBQwFDjfh7A=="
+        },
+        {
+          "text": "4. Thời gian kiểm tra/sửa chữa dự kiến là 7–15 ngày làm việc sau khi bộ phận bảo hành nhận sản phẩm, không phải sau khi khách vừa hỏi. Chưa có cam kết sản phẩm thay thế tạm trong thời gian chờ.\n5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.\n6. Quy trình đổi trả hàng mới nhận và bảo hành sau mua là hai quy trình khác nhau.",
+          "vector": "ACDsJfEA+tUJCxDwFQAGF/sz7en++P4X5sQAP/8JBAkFNf7/KQMu1Pvx2igM7yIVA2AEAg0S8/U8R871DgbpQuYD//f/+fr4FvGU8ycVDiPxD1kJ8AgHDPS+NQ3RK9jm2CYmLBLd4wQpDwAD1uVADgD7/wkC3NnPpjLp9fV5DNoFANTv2wEX6QPIJQP7+fb47NUsBw/s7BAL0dEhzhf3nRsG2BEx/BX0BPX+Ihj91t79ASPxFfbvEB8E//wSO8sB5y76OBT28xIKBAomBCw05cVM3vv1JtvsCuwm53ClcvYQ6ybRKPYJ/jrU6e3K7PDiIhwhGDhT+xjV3B3dodHmKPo8+Qwf3en2t+zlJ14IEtkmCh1cD07zJAwOAR7PLq4nAAo53RkP2Ab5+Qv5vB7z2+vfIAQN2f4ggLfY2czcIw3krt7d2nX98/znYPYpAyMJHAAkA/z+2goJ8Nm4/8VOKsDODuvN/esDIavzLCQs+BPxC/8jDCfT0CLVBx8U9A/cGScU8/MMMwYCJxTDy/sU8EAM4B7t8iUA7u0DBN0ArCOwSuvlzNIE/B0yKzh3AO/E5KrZvOM3PN6+3j7FYwO3JeZH3AArLvzQBDrp4sICErFF8wAv8QLYTsbfH00fztO91RbWp+/8YQP84e4QABAu/hexsPgNHecZ8/QJCwoRxS4eKTXyD/MS+vN/6PQI/d3xwdsRAB8WyOQXIST/FPQYGgb66P3qO8IZ3stGeODE6ujw0/cv7O8FDPr5MwUcAen8WqmogvkgDgDS4g34Ogk7BBoq7RsKMD8AxBoP8C0TFzUH8DMQIDZC4uUTAfPG3Rwm6+nsHqnCruTYGfPf5xAQ6QXkWaoN5xH89+kYIBvu7hssAewL+fsCARG85NkEvjzlNgAR+BUfACULVvMpGwnwy1lE+yA8JNFTDNjZJeA3BRXU7VHB2ej2Gv0A+iD75ssX3tkFFyP2RQvE0rs6/MjB4dwpLv4f9vXA9Ob587oBKh0MHfzwFt/Ry/E1ICA+Hf2y4/Dh3vsVv/v1VhYA/Ofu2sfsbOrXPAUpDQXh/AjVAqUo6vIEzOj1+UX/QA8q/vLTO1ILbvj0zwW33jLVoO3wAO4B7+n/FBgD/SD6GyXlBTQ/YRo7t/keE90HAg/p9v7q/PfdFSTo3PDJ/8fqDN7qsNm4Ev9F9/1BB+0+sAzk/b4WwwHa5kDowtTzIOn82jkS1QAeDzXbKEnEQwTgwacoEuA25+IW1CT7+9rqufcDz+zpJBsVCfoA2xLz+yrw+hYE+BcQzL7rPbzm/0DaAPzb3eQPDv3q+hIA4VzJzvG3zvmygDhlw/lWXxr98gD1ByLqBf3h9dkSA97V+PziOxbpEg=="
+        },
+        {
+          "text": "5. Bộ DEMO chưa quy định phí vận chuyển bảo hành. Nếu được hỏi ai chịu phí gửi bảo hành, cần báo chưa có quy định và chuyển nhân viên; không lấy quy định phí đổi trả để tự áp dụng.\n6. Quy trình đổi trả hàng mới nhận và bảo hành sau mua là hai quy trình khác nhau.",
+          "vector": "9BbqCM/b2eAg7vj/EA7qGglP/OgD5PwO9OQUFQ8KBP85TuX5AfISBQT41jAJDhEjHD4Y+wIQ7wU0L+8QCfHUIObu1iXxCxIIL+uZGDwcOlX5Fi8gH/bdHPTKKRTLCt/dAAE4EAPw/e8nAhAEzg4VIyDhxkEP18HY0BDeDvBzB7oxtabhyiATAd3sPxki9QAh4LBiABAgu/gc/u8Z6+n20yf35+sP4kAE9/zmAg7lvPQJGTPbEQ3iBy7x8wkMDszkwhrHMzD2GCH2AwYp9j4s4rpMytAuRfSt/vEsImHbPAHlwDjgC8/02Cvc6gmS6czZ+dQSJE4fJ2r/1/sFwO3+OxVJBBvrtvMHo8XlJ38ZAecLJx1I+jjvNA3+CQLQN6cf7RIw6hIpBQD6+Cj9qy7X1vUBT/lYEv4Io+Hay9+5IEnUtd7mzzki2v3Rf+Ii9CP5EvMVBvYA4wMO39m8+bE6JszfA/UIFfHjMb7gLg/5AwTo/R9GVDXexBDfEgQC6hzgGCz79h8AAP0TQgWjsgrg2ysT+SIf7yfy9eAA8vfz1BvdTgD489cTGTQSIVNC/d3c+ens3dotBfr11D3QWw/VHMYtx+8KKgMbJ0Hs2s3+CMYR5SoG5CzRQOHsCzEf3dTtrfAA1tD6YOk2+goHBg4u6hi8lO8aDtwF6PYYJRM0zQUjMR77FgM9vApgwg8B/sjhtNgD/i0Yscgs+TkvH/USEcwGLw3XRPkIusAdP+Xb7fLdps5REN7tAjO+NRU2zdYLIOrCzAwcOeerAg70VO9H9CgJ9AfsNz8P9yjo3f0fQPEpPBspPR5PBvEnCerV09QWxOki66TitubzHPft094Y6/rnXZcNuu/v+94hAi/43REaEQwQMBTxA+Ls1fgR0C4XOuj5LQgF9DwEO+EhIxXU+EUwBR8RGeMq+9vTLM4fBCPt5Dzd+ezpCOQNBQQE1sYX5P4fIwYGDAbW6tIwB+Ha6N4URwA5AQK/EgfsB+7k+STlOPr9DwXmtuxR//8mAhuvA/Lf7fHo9fr/O/0N5Mkg39PzQPbwH/chDAfxACgD+M5U+c8L/OjO7z8LCygy9BD6OzQCOwYA7Q+3vxbUgB0K8vj2/fz+FhEM+CIKHCzy70BoYyVRvOou/d0eFRgB6vXpLBjxFGHx+x61FRP7Bf/x2+3B0hNV9B9g2C4ptQ4YHecpsuXk50Hove0GG/j76hYTAA4cHRbTKwfKUurn6aVLFPIr7dgB1Brn8M/jtQcB5wMGKCnqAgUNC+8rAwDK7h3K7iEg5bYQG9TxNVgRy/XU5uMY28rw/CL+2Ffq2PjL8PzBjDdWwA41QxUx7xjYKPYIJPju1t4j9vDi9hT2CDbu6w=="
+        }
+      ],
+      "audit_event_id": "2026-10-30T04:56:48.869857+00:00#44b5c24030994ffe9b7fe85472938ae1"
+    },
+    {
+      "policy_id": "DEMO-SHOP-SUPPORT-001",
+      "expected_updated_at": "2026-10-30T03:22:56.676100+00:00",
+      "original_typed_item": {
+        "title_lower": {
+          "S": "demo — hỗ trợ khách hàng và giới hạn của trợ lý"
+        },
+        "content_lower": {
+          "S": "dữ liệu demo hư cấu — chỉ để kiểm thử, không áp dụng cho giao dịch thật. các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ hai đến thứ sáu, trừ ngày lễ. mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.\n3. trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.\n4. với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. không coi dữ liệu demo là chính sách chính thức hoặc quy định pháp luật áp dụng.\n5. khách không nên gửi mật khẩu, otp, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.\n6. nội dung về giờ hỗ trợ, thời hạn và quyền lợi của shop mẫu chỉ phục vụ kiểm thử. các điều khoản về vận hành website policy assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop."
+        },
+        "updated_at": {
+          "S": "2026-10-30T03:22:56.676100+00:00"
+        },
+        "category_lower": {
+          "S": "demo — shop phụ kiện mẫu"
+        },
+        "updated_by": {
+          "S": "aws-operator:arn:aws:iam::629380420098:user/huynhhao"
+        },
+        "title": {
+          "S": "DEMO — Hỗ trợ khách hàng và giới hạn của trợ lý"
+        },
+        "policy_id": {
+          "S": "DEMO-SHOP-SUPPORT-001"
+        },
+        "content": {
+          "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.\n3. Trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. Trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.\n4. Với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. Không coi dữ liệu DEMO là chính sách chính thức hoặc quy định pháp luật áp dụng.\n5. Khách không nên gửi mật khẩu, OTP, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. Chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.\n6. Nội dung về giờ hỗ trợ, thời hạn và quyền lợi của shop mẫu chỉ phục vụ kiểm thử. Các điều khoản về vận hành website Policy Assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop."
+        },
+        "keywords": {
+          "L": [
+            {
+              "S": "hỗ trợ"
+            },
+            {
+              "S": "giờ làm việc"
+            },
+            {
+              "S": "nhân viên"
+            },
+            {
+              "S": "khiếu nại"
+            },
+            {
+              "S": "dữ liệu"
+            }
+          ]
+        },
+        "search_chunks": {
+          "L": [
+            {
+              "M": {
+                "text": {
+                  "S": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n\n1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.\n3. Trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. Trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.\n4. Với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. Không coi dữ liệu DEMO là chính sách chính thức hoặc quy định pháp luật áp dụng.\n5. Khách không nên gửi mật khẩu, OTP, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. Chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.\n6. Nội dung về giờ hỗ trợ, thời hạn và quyền lợi của shop mẫu chỉ phục vụ kiểm thử. Các điều khoản về vận hành website Policy Assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop."
+                },
+                "vector": {
+                  "S": "Lym/KgAdBtUlAP0S/fT7E9RHxtYZ+gBsvfECGEJMNOsSHicaMRAh4wwA7xb23iIMKxoTJ/fu+REjAeTtCe3ZKPX19AH6DP72AfvB6gjVKgz5HBEwFfvKIejsEhj/KQT45+4uGQ7n/vr3DPXs2w/7HeLYvMQn8Azo3Rn1A/UmDtAFyrve+h4YATEtVyER/QAMF9ZWL/8KB/kU7vYd8NQNoArN+vQLwSIAFO3lPS0K6wMB9kc8Mv3KyAD+A/oWJ90ACRHtMDzv9iwy6UmpndEyFcdK9eroANgO8/4YFGbUM/sQ3Q4K7f0a61b0zc/G1Ar7+R89DC1FDSTU4hTnuNLpBJ88Bh0y0e0UywK/NUjSBvEXJPcrH1EDWBUFE8i+OcUIvyox3+gQ1Avs+gbU1A70zSr3+QQP6wkAv/XJ68DEBT/wsQ3G0jsb2QWyId9J/gHMPRUzCQcO2OoWCfjf7LYQ/eXm898L8+4AH6DnLQcZARDtCAcjLjHc5wTYBwIZAwMJDSIL7fD7KQAj5AvJ0gT01kO+wL/yAvIKLAcN+qUG6uT9Rdjrzb7sDyIvGSZd/vPC4eXZ1LkmD/a5MhnjKhHbM8Yd8gFIEwDcDX/8Asny/cAg1x4W/zG/Sc/YJDUS2eLdovjmz+Dla90LzTce0QQexvrImd/dF+UR1wAiH0gvwgsONhf3GSJRt/NE6wkj+MrWs+MVBA0rn6clBx4yFx4cQePg5e7J/kT1/NlDfsC2C8T1gOduHv7W+RvtBegB2+7LCuTMyggQKurq4vsANgVD/Q7tziDjIAADzBn6+icVIwT6Ii8ZFy45BOkj7drSACD6+eTa7bXNpufD8/PR8iQL9QDbO7UI+zkG6BLv/T2s7DgqPfczLin+I+/X1NcEzikAICEoxQnnFu/2EcwGFgG7/TIt+SzwL/Yb+8zHO+sIJyX6zjHcHBcUFvXeBffm38vt2Nv05y39FfnIJNPbKRnSGsbn6MUBUAne8OTaLaMQElUdKPEe4gAwtP4GNfYlJxnR/vEn6y31Ce89Di3yCAfyHcvP9O8wOAH93e7JHjvj/apN39UN/erpAxsOQ/c4Rd7bQDjKJwsSBf7V7BH2r8MWCgwR2wz0Gh41MzkqMj0OD1hEM/lNXs7q+dPqGBLY7QL4Jg7E/UfmAxXyLRnb+frYvOvZ7gVRBMw24AQd7BMeCN/3yw7TCECu6LtMBvLj/xDaBA/0ICvQDgD8Md4O3O8CG8Eh6gUY57b4Buv45Qr13e4w9NDmKAcU+uro2dr2E0bZ7gIEqprXTuTZMkG8sfPaCdPuGvgAIxIF7Tj31QPS6v+0jjVhz/41WQ4FBR7yIC8IEvAN5vcIJ+fgCSIg9GnS1g=="
+                }
+              }
+            },
+            {
+              "M": {
+                "text": {
+                  "S": "điều khoản về vận hành website Policy Assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop."
+                },
+                "vector": {
+                  "S": "9g3U/PDq6Mj0/QoACAr3BAVbKhAt7fgXvBYX8/UH7xQfHxFHAwMGKh8bF/PM6B0DTRICO/rh5wwgBAIeBM2zDecI9yAQJfgaIfOtFTLiMUf/ACkwF8rQJwHnEyIUGw/m8Ncp4x4FJCbg/fkH8Q8PCADu3RMX6vvXFj38DvgzPOsE07/q6BgD9T40RwE66yQiEdsbI/j07PcIv+0QGeAolgmw+dHr9B7qCdAWGAX/2+z48TPoCQDN5uTN2gRBCyEXEvsBGCzn8BULHhbsu/McCrk94szyA+H9+v0OEVL0Gw0JvzbjFOXzwgwGBAnR5bcAD+TyI2kFI08C2wUL0f7p6fIUDfz48SX3ygb2Lyr2LNsDLwsyEU33VQQW/OPVGuoU+hs58eEayQb/AOIV1gwSAATcBBcR1w4W1/fQ96bvCSrzygzu5DQM1AH2Qg07NCH2azog5Zzatv5JBP7H678E08z16/La3P3iHID4/d88FhrRMR5RSP/7Aubq8QH+7dbn0CBBABcA3tg84wrX+hgN5/4J5gD/Lvr9KiTX98Xg3/LJUdjo9dbjBiYUCh5BCAjGwvP73skPHMLluTfjYDrSN+MjAx9G5wy3DVD7+fP55+1A8swE4CDIOCjOR/EM5/420TIBovcETiX1tRVK8CoSsgDWt+e7DvYj5f38wDzdFEj4PhTSE2c6vqBJHfIg+/EetdgA+w4yrKYeNPk1IkgjWPjr9bjN9BD718FAW8296g7tgAJNBScA/g0y79v5Ce730+if1g1HQOvhANjgG+JO2BESAwLuFxoW9g3+zBT8Ou4DGyoYASsg9Rc/8OgCAFj2GfbZyw0PoNrF5+z5/R7j9fLwLN3T/i76La3KCx/5/SNN1OTMKmcQKBby7vf+2BYbBy8yzgDHHOINFdEAASOl5iUX6DX3PgYL+dvNPe4PJSf/zxffTisLJt3oNf0U/d8oBg0VJMIL8RX1UBn/E/feIM6rOdMPDerawOflAKkV5hALLAAN5gH8svLtDxIUI+rl+AD0/w/eDgL9Fwbp1cUp7LTmadbMajIms/XVQDLO/bDM5egr5OoOxiIGNCI4MtTVSDDIWUTwAhHy6CoAv//8/urgrTwAIVU08y0JGR3l6DZfO/07OtUC5/IHDRfr8/P7NRnIChTn6Q8GB8PfGdXmkgv/rv5IA9lF6N4pCxIP+uBez8rRujkH8MAvD/XH9VHj/R3gOuvW9unvHfET1tPbIc0j4ege5fkPANfQ2wLJ2vzoGtYAA/U3AxU6+yu56g7D7AUAzrjxSdzyGCn30v/Z8dX+7OHVK+Ab8Dnh7vm08gnH2wEK+rgvUmMNBQjX5inWC+7EA9oWEPbXEwsP9X+u4A=="
+                }
+              }
+            }
+          ]
+        },
+        "keywords_lower": {
+          "L": [
+            {
+              "S": "hỗ trợ"
+            },
+            {
+              "S": "giờ làm việc"
+            },
+            {
+              "S": "nhân viên"
+            },
+            {
+              "S": "khiếu nại"
+            },
+            {
+              "S": "dữ liệu"
+            }
+          ]
+        },
+        "embedding_model": {
+          "S": "cohere.embed-multilingual-v3"
+        },
+        "publication_state": {
+          "S": "published"
+        },
+        "category": {
+          "S": "DEMO — Shop phụ kiện mẫu"
+        }
+      },
+      "search_chunks": [
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.",
+          "vector": "LiDZLtgj+/AjCfvYIQryKApPF98D5w39x/DqFi8tLf76JBk5IQkNEtbz7j8XxyMsGysIFQP2/wAEExkoEOHCC/r56AvxAwH0Lfrt7x3+Ukf1FicP/BH4AOnXJQAHMunw8/BRDxT7EuwkLAbyvPr9BurModgk7wTUGiTlLhI2JMjxAcr0twkO+gz3VyoLBf8K+9E3FBES2CEK3tUc4ecJhSbE7u/8wDz9AfXqGBX23e78/TERHuHc4R8I7gYOHwDl7mDxSkndF1sk9E3qyvxnAsZM4tr+HdPvEAUW6E6+Tef50RH78eYf4hMAwQCW+s0X/xczHVc+FUHG6Bnpmt/UJ6w9Axc10+0FxuG2MVvw7OYITh0yDk7yTB0SAeijJ98D6h1Uw+MO0g7+APXOugHzzyHqBPULBPsB3gjj4PuzBWUCzR7kywEAy/3GJQI15hnkPxovA+MA2fdD/P20uIoW98v7Fu8NGvHcEMzvHQQc8QPk8Bk8QSfprvPa9v4TB+kCA0P29ffS/AgC7w7Xzvrk6Tb04PYcAw3zE/EOAbAJ8OzDTNbltKbuEiEIKSkr+OnX+vHM6aQz6TXQzkPrMQ69FbsB6gk8APonGjXV7dULFeskuxYACiLCTNjeK0AkzM/Nvui87NbrQ8nz70MW7gsd2BHBoPENIM8k1v0jIVMt0BL2MzD0Nxo0vf1k+gc2693m1uP7/RkqlK4u/iNcVyM5RuzUxunfKzv6tJkpZa+yBL7ng81qHt/2BCABF+YT+OjK8ey9tAwXJfDlAfb3IvdA9AD26Sv4FiQJtPr89Cn4HejkAAn2CB4k/ec2/vK4Ah8B5woq8rvpwMzT8f3h4Sv95fLZUqUVzib3+OEd5wvj5jYmG/8ROiL+EA351Mf3yx8AKRQJ+fblAhHlSO4ONsjb3UEu8z7oQAIOCPDKNPEKDTbn/Ty7ERv/RPMN+wX+3d4N3sf18FL/KOXQDdP8HRHh+M/7PuwCDObS6ePmG7UAIDYDFvMl5eM4uAELFuQUIA3d/AgB/QUA6AIMK/r+++cSErXfF9dEPPQAAxUI/wu1F8E+3NMWGejw8CIaGS0tDO/uKyK8XxQG/AK0wB3kgPIJAekY4grs9CMdUB4nKCULHEddMBJDF9P+A8sAMhXj8PT5GAfTC0XW8ybZQvbk9wHcxO7ezvBP/OJQ+vYk/Bv1AtQPvQfq+0S/w88ZI+HI4SX0FAvyMQjoKg3eTeYB7Lg7EbNE+OIV2r8hC9PXyPHOqtco9ecNIwku5u7+8/PqFCv67hoI0KDFMPX4RDrSl+HjENHoEOkCLgUE+Szl2+fFyvyuzgVI6g0zCi4MAv31EDb4DPwAAPAMFuLqBQgNLzzO4w=="
+        },
+        {
+          "text": "DỮ LIỆU DEMO HƯ CẤU — CHỈ ĐỂ KIỂM THỬ, KHÔNG ÁP DỤNG CHO GIAO DỊCH THẬT. Các thời hạn và mức phí dưới đây là giả định kiểm thử, chưa được shop nào phê duyệt.\n1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.",
+          "vector": "QzC+WgASB+cqBwQFHgv4K+g8CuEI+A1A5fsDIkYyMtxCHTpBEwv9KgMF9Rfr3SMfHwUvNuvn8iYv9wAW88XCBOr/79Tq/vPfGwvnDxT2PyLnOhAk7BPHEtUl4Qw8OhQE8P8iHfzuEeLyFd3ktf3uEufdpccY6QjI7DHuDAIwF9wRssncGhr7JeX5Xhj66e7jIdM9NfgJEf//FQANu+3qvAPBBO4Y2DQABf+2Nh3br9Xb3DcoI93F6QwMBRQLDOHW1wrWJzDqEjg05T7BlMUtIco18u/j9dMfBzIlDlXLO88J5w/mB/og/T3txNvNA+0E+hsa/BsM/BIm1ewOwgjq8LhhJTcjwAv8w9S6JnPo4+b/Qwc/+UjuaPX/GuzgHtgP7hQY7gAcAwDtIAbprDQP1yH9/f349PsN5AvDGL6u/TfqwQPX0BsW0/zCM/Y7CxDhNOcuMRXy8/4gBvPk/c4W//sOKNkM6gDkL8QIChw05wnyABEAMjfW3ADm/Qz//vUK6y8Y8u7uBPwl0BLo7gEO5z/Ky9Ya2vz/LwEE8rD4C+DzVOXt09oFDEAkH1pF6NesDgnh/bkw0C+kHiviGBbSRK4I8t5ACgzcKUnP9dwD8gcB0jz8/hXMQrbSLWgG6O3ToO7QwrHrY9jM6iAU2vET4BbD1OkfGeQi0xwwHldJwf0sOQoIKRpYtgA45RxP6cXLxeMD7S0rtb0eEwU3GjIdN97ky+fdJlP/1tA5f9nE6b4wj9psJ9bi9SPdEfED1u+YD+zj1gAAJOzh7PTmRwpA/ADmuD7+Ggz2xQvs5CcMO9QSBhwCCiQtANwY4+fMAwT95PgG9L3duu7mBfnt6vH7BtXjP77XuA718MMQ+wvvzUAeJAwMFCIO+9r6vukVyB8aMBEc1P/9BwD38sf0JQquKiU67Cr/OB4D+NnIMfACICEA5TDJEgzyJdb2HvH13Mn95OwDCxgF+OGl/rbmRUPvBNwW49wcbxTfCQfuQNT2/FYhNfMn3vAYjAfvMtMNHyvEE/gR5BL3FQ0iA+8H8d0gIN/dGPghHOsI6/XPAUP4y9VQ490R/ebn8TYSCj4v+PPuNyfbVSMA7ATH2B/7lKsQ/gX9Bx3k9i8MNRQUMSAoBzwhUfwnItro8NrwEBHI//nxHwC9CT/33BPVMfPtBxjj0ffQ5wBY/eVF4+Ih8QY9EfwVvgbB8FfK2MJ36fz69hK/9RD0OB3dIAb7MtwwBOD3DZ8Z5Poj6bUaEub8zvL0pswFFQ7hAPoBFvsA6A7vCCX9APLntaq+TOX6RDzBlN/eAtr/Ef8BBxf64jr27QbMCwyzviw/4vcuLicrFgDqEybwF+ZAzwgANNTQJQ0cH02Q/A=="
+        },
+        {
+          "text": "1. Trong kịch bản mẫu, nhân viên hỗ trợ từ 09:00 đến 17:00, thứ Hai đến thứ Sáu, trừ ngày lễ. Mục tiêu phản hồi ban đầu là trong 1 ngày làm việc; không đồng nghĩa xử lý xong yêu cầu trong 1 ngày.\n2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.\n3. Trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. Trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.",
+          "vector": "GhzQJ9739e83HefmIAEIJPZmCMoY4QVXqPIRCytLG+8wOikjMx4F/+7+/S8U0BsNKQJGC/f3+SEAHgYmB+y/I8jp6fEFA+nrOwT39g4GKzUEOTg1HQi/MfjjJhAPOOz/4QNAL/r0BckTAQkMxvIAAOfnq90I6P3D+zLrCPMQFeoLFsgKzQU16ezUMSTr/N7cF9g+Jx4b7z8Y4Nwx1Q73rOHWGN8dzwEVA+7qCjDmp9H1/CImG9nV6A/86gAYDhDS/0H0TR7z8iAJECYYyPUpUMZU8u8EBrH6AAwlAE3LO+HsAAjlBfUXAD/ZtezFB/nzDhQJBjIb/Rz2tRD7pfnbCrA6GyQr2BHtyPC+KGvg9eoVQS5OIU71RfjzIt3kRLEPF/8W2fQu6Ar/H+zylCsq7/8hIwAOFvgAm/K43c+vGkEAvenJwRUK5gLrLxsWBBb4RAgmHt7S5AFJEv+p68wf69zsIgAUMPfoBqTjF+Mi+xT3EvolJRHtxP7pEgYP8u7u8ioK7PjVCfUF2A3HxfX42UwDDwssCyXmL/YAKcMO+sbAO9fqwNvy5zoXKEE63uOrBhbWAZ5O2yizSA/xPAvYPsEd7elAJwYCPlTU8NYKD/QRxRf8GALTRNXfJCoT29Tqt/fZ3QDnOObhEDYU8vg3+AS2gNYFHrwb7AEKHCQ81PgpOhcBCwNByvVP2hAq7MLMyNIMACslmbcoAxxeOykyPufa7+DLHRjqsq4lbdPB7sLPmdpWGtvy8B7TMvkb3evLDPLF3Q0ZMe7gA/LmUg9RAun7sUcRBAb96RP8xyrfQ9ch2h7uKzI74/swAN3l4PL80e8X2a7cuNza+wny2/zkAPPOVMHV3CXyBtf8/Rrj7y8fKgQnQSYFICfZ6db5zyDzOQYV8RAsACTzFdsRLADJEgMX7FAKOCIGEgW4NfIZE0T0x0O6JgX0QgD3IgX2qcgPx+4c/CkB/vG41sEHNir8zuYSE+4XPgTNCtzmDszz8EhCEuQK/t0WwvUZLf0wHgzWDRkbCCP87/fjPfYLCgIEIrnnL9sOE8EO8RXvBBvq3sk539Qe4+raKDIi/mEr2vz9SDHhWCAA7jLe2CXvqfMQ9ekM3RDr/yMQGSAsKiEO8FAjTAA0HtXo+NkGIRvW6tfrOh7KF1Ly7yX3KebcAe/XrA2/2hZI8/Rb6OoV7w0JAQAwwe3Q3k7h3tg0EO3c6hLw9wAONw/YUybyUssE4MgWEqk24O8hzcUuDOfGx+jZ3fALHCj6+wEJ9OEI9vPtCzrz8QkNtIjmIfHuIxezr+DeCOva/fTmEfv54zD23QD23wfBvi9U9vBJQv/8+wsAEiYADg41AQsJIdT1EvIiHEaQKg=="
+        },
+        {
+          "text": "2. Kịch bản chưa có số điện thoại, email hoặc địa chỉ nhận hàng trả thật. Khi cần các thông tin này, trợ lý phải nói chưa được cung cấp, không tự tạo thông tin liên hệ.\n3. Trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. Trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.\n4. Với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. Không coi dữ liệu DEMO là chính sách chính thức hoặc quy định pháp luật áp dụng.",
+          "vector": "HQunTu4GFAosHwfbOA78QAFZCMwC+hQ/r/j1GiAwIPkdFjdFKhYaCd8ODjIN0x0GSQs/+fUH/gwtFfUV/c7JDvUKC8vw+uzeNwUW/QrvMTX4J0QwBBLSLffNKAHsR/rp/+NWKO7i9NsDGvT4xPISD83kxs4o+DDX1CACB+o1EvD399L69xEe/gsAPw8B6Pv7C9ovHiIQ3kAfydYm5v3+qP7d/O4g5BIACv63NRTkvs7k5isVINTX+grl/AMlHNsPBWH+RTgACycg/CPpseEfLMs04PEVBub0JfEL42jNNAoSBPIC9Bcl6zT7xOzQCeMU3R8sB28pHFP+0fX3vNTwBIBUOCEj2gATvfysLnfL/+YiGBxIGFP6Pe/5Hr7qWagTAhBL7vcf3Qv1CvHf6QMI4Pv3Hf4A+fgKx/TU4s20DlX0vw/W2BYT1wC6TgI99hraPhUfEPTsx/gwA/Kf2bYoBszp+PERE/PmFp7oEgVC/hv5Bv5DPxvduQvdEyAYBfwF+jkP7fflAPgZ3ATK3Azt1Ebt5P8J9BD6OCDPLuzm9eHHRufn4dsADSknIi1P+fW//f7b+rRD9wucJR/wNxLDMo8Xz9AmJAzuH0Ph8NELCuwU4QAG+xLTM+vcIxIX0+UGzwfKyfTyRfTl3hAl4QYg4gewmt8BKs8q3gooECMf0BshPxn1BU5Cyd9M0QYn6LK60uQE/hMin74p7itFORQaUfPhzdrvEBoK2dEuWOnb9MPfgN9vIPTv+AEBHgEQBO7N+c+659wTOfnh9uHiRglRAfwT3ScNCgkA5Qf51iniN9fd6yP2ByEt99dHGACv9usA/u/g9Oj+wvvVFvPR3BEM4fDcUbvz4Tj1Ad3mEibP6jsy6u/5Y1EDNOXM2QkQ2DQAQgMO7PzpBB/mFtYDJvWuFEoo8kryTAccF+HJJvQfIiAK6z/AOhDBVOrjLxcT579TvOQUBy308frD/+AKJx3w7cHjUes0LRzS59HaEp8OBT8iGO8V9QU+1voh5wgOCwPY9BbzBQ8Q1f32LiPx/Pv58s/3SvEeQggAyxEBFDnO8NFA7d4NBOzkADkaB0gx6gHzTzLRUA8L9ivAwzrmpfMI/A7+Bhfk/ysp7hEeFx4B60swLQkuKd/0B9MRJwzu5tf9MBei+kHt1CznGO7h/vTjxwzjyPA9Bc4+/b487hMYDc43wO/W2D3l7rIeJ+DH4Cvf+CPwK/74GhfoPdv62s4cCJ4q9Osp57stFN7Dzta7puAeIAYP+e8x5AEcCB/Y+xn4/f4Lw6XfLOr2Lj3QtObh9gjdDfwBGQ0T8iDq5vH00P7DyPcq9fEfNRTqABTN1grAM/ki/OkdGuDuAvcZIUCzDA=="
+        },
+        {
+          "text": "3. Trợ lý giải thích chính sách từ các nguồn đã công bố và nêu nguồn tham khảo. Trợ lý không truy cập trạng thái đơn trực tiếp, không tự hủy đơn, thu tiền, duyệt hoàn tiền hoặc quyết định quyền lợi trong trường hợp tranh chấp.\n4. Với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. Không coi dữ liệu DEMO là chính sách chính thức hoặc quy định pháp luật áp dụng.\n5. Khách không nên gửi mật khẩu, OTP, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. Chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.",
+          "vector": "FQi7S9wBDAApDxbcJQwAMfs6EvEK/QAMk+nwJ+oZCBQtLCBAFhQdBuIA/TQWzhgQSSoNRezx1QT6GRUnGf/TF+sNBPYRDd7vQ/4GASD4VlzqHw0LGBHhD/fRRgv0HufvF/U0HQUEEucGKgD/xeD5+enrxPgS5vPH8ybvE/s3HNX+BOQF4AQCEQ3tXTP49+PrIsxQNQgq7AUP1dEg5fz+mxW+/N/y0jUI/grMFC7VnrnsBC8DIdfoDgXrAA8WDuz4/H76TTIAEDEZCC0H1gZIB7s42vAWEOTtIusS5k7IUfUZ/PzmFA4n7SDrv/qwAtkMCRr8+XUJER332wL8yMr7/oFjIBxO2u4Dws64MXDsxwT+OjE/DkT3NAQPEN/RQbsUDg9T6Aoa5AL7DejduAv15AbZD/D0B/IMoue/6767Gkb8ygrf4QED1PrANPU83BfjMRgRCMbf1Aw9AOKl6rcy8OvqEfEqJvb7EaXuC/9H7A3w+RQqOy3irfnSCQAN9gT/9CsL+/be/Af91BXP1/EO2TEA4gcM4hn8JgYFAb/q4/ayTNzh0sXzDz8oJzse6d+2Btu6+J5f7jay/yr0JR3QLLsA59sdDRP4Nz3P4dQJGuMX3gIAAQPQPLvlICkH7ATmxwC3zMP1WuXX8hgV/Qgp+B+6zAf9DewQ5AolEzcn5v8rNTcHHQtCt/hp3QRa9cPi3fX3+goaoq4hAxlOOiMpTejm2u7rLxv+u7QsWvfh3tn0gM1uL9bu+xPsEwQK8+CoFdDE0tcGJP7pGOzdKQY67vIbADUdFC0Jzg8M4DDxMvHeASkRCCkv9d4e7evC/w375hEY4ucIyNnZD/nd3icZ0eqzTcDU1D3e99YVEA/v6isx5ufzQ0kJL/fp3PAM0yUFMfvwBw8F+kDjJ8wLO9699SMw3zoIMhgEFuTPPgIULSPk8zGyFxQCR/b2KwcGt9Qu2f8XLQAD3+bFC+YNKiIE+MXSWu8LGPXczO/dNLIP6zEwKfEm89AlrgIa5gIGC/vQ6wjxAxsB7gjuI/wH+PUGBM3nNOkzMOz//h8K/g7W9NIq7eQIAerq4zQKICUo+wvuNyfmaA0F3yK8wA/ghvYb/fL99wnt/igNHhMqIi4T+F5XJSlF690LDtkKGQ7u7f36/e6XDA7YnzPNQOriAQffx+3K0xpr5vVa4gsp5iQaI8UgxvnTzj3u2sIFNOHO4hn77BwNK/v4PS3pVsYD4b4YFrw3/PkY0sIpGNy34+etp9kWEfwGBwIz6/X57P/mDSL6B/H0r5+nL/P8Nyzxnd3cAe7b9OzoIwAH5SLHAOPn0wCvwRhE8vFSKy0OBgDe5SHTFQETB+YRJeDhEfMURCWgCQ=="
+        },
+        {
+          "text": "4. Với trường hợp ngoài quy định hoặc nguồn mâu thuẫn, chuyển nhân viên kiểm tra. Không coi dữ liệu DEMO là chính sách chính thức hoặc quy định pháp luật áp dụng.\n5. Khách không nên gửi mật khẩu, OTP, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. Chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.\n6. Nội dung về giờ hỗ trợ, thời hạn và quyền lợi của shop mẫu chỉ phục vụ kiểm thử. Các điều khoản về vận hành website Policy Assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop.",
+          "vector": "IwzNKwcsFOYNTSf8QgE6J/9U9Lv0/yNfxs72OBVCGgIMEgAPFPgm/PHt4Sz+1TMmHSkR8wv5DgYSGu/oDATzQ9QYIugI//0UKfXZ+hzYJTj5KjYiFRXjIdz8BRv4GgPsGu81GfXvAeUDC/jqtfn0GgjVwgcR6url7CftFgApIsYFCcwIBQEn2tvNPx/s+fLlNtEsOAoaAywLz+og5wkAoxjd9gAn7CLyBP6+LhXYlqoEGiQXI9fy4wABAPYiIu7z91XvTywB/iogCTrpltovQ8498fDgBsIU1v8kDEPUL/rzAeoRzPkf9yQI0Pay9tb+IfL3+zUCAwQB4u7/vPXTAIk2Kwwk9g/2sOWpLn/l9fn/LAY2/zTwTRIR/NnNYZEfCvYL4vch1hL9E9rYsQcT6w8r8AjqBPH80Qa1+Lug+Uch0Rqw0w0F5fWTSPBYBhW7XgdLFuDc/P4QHdvJ8c0zAu/uHO0aH/EAHowAR/T/8wbiARM0PC/pyADrBhEAAOgKAUcA6QfV9/YWDQHIywDn21AACA8eLiHVQiToDsPk/MuyRNrX4Nnm+yEnIxFA4+O88wnK4JdK8zTdOwcBEgH7Kswc6P8uFf74S2HB46IJH83v1+Xs+hTjLdHfGRsO3NHA2wTJ5/7yIu7c9DkkHiMv8BK8r/H7JNA+5gAgJQkiwhUkPhMCIBNJvuJO9SVL2NnFqfMUEvoGz9Eh9i1ZSBMyRtHmBeTcORP+0cpFf9nA4uPOgONbEfbt/gvNHAse6N/UC+KK7+4INfz9/OnxLflL6uMFtEsXHQ736x/zvxHvR+7J8QnyGRQO/94R4uDP/Qj+6SY+0OMGv8WwPxmf5PwXM+3DYqra3Cnr8/H4Dhfb7ywQF/caTzEEIxsH8gP+2A8MWhIe0gYnECEGK+oALvfqADAf2WP2WwkcF9/JL+4vEhf96zO6CBjsI/zpKgX3u8cU9O8P3BUD2PTPDOQOLR3tBcHeMdEnOxja/ef2/cQAMDP9KAEc9/kyxvMIDB03IOPt9hQU+CIJ7f/oNgnuBgAICbnlN90WOeoLH/3v3yPOCLZk6s8T3fbQRB8l8DQnBBgjSTLycFPi4xrh2UAErOQI//T+5fLmHBkRFhorOBYl/z9aP/5YL8Pq+PQN9goD8AQTOh+2+jPu7SfVDPPsDgX47yTQ1RE15vBN5PQh1wQbAPkU1PPG40Xb57IVH+Lbyx0AAhvWQPTuGQsCXrz91vEHD8NU5rgP0OESA/Hk1vnw7O8uHRLh6+YPEhXdASEACSkLGA4JsrihJOfvST/epufhAOjPEgAAFgnyABf+AgPJ4wO98Csq6/w5DgD77h35Ggb+DC4GPewTG8bi/v4IHDHm2A=="
+        },
+        {
+          "text": "5. Khách không nên gửi mật khẩu, OTP, thông tin thẻ hoặc ảnh giấy tờ cá nhân vào câu hỏi. Chỉ cung cấp mã đơn và thông tin tối thiểu khi trao đổi với nhân viên qua kênh chính thức đã được xác minh.\n6. Nội dung về giờ hỗ trợ, thời hạn và quyền lợi của shop mẫu chỉ phục vụ kiểm thử. Các điều khoản về vận hành website Policy Assistant là bộ tài liệu riêng, không tự trở thành chính sách của shop.",
+          "vector": "FQ/rId4E6ekUCPveHgDyFvZtHN8M5wk+uwsJ/R8rEfsVLSVUIRkZCd4LCxfhxS8eNCAJJ/zo9g0SBxUGDuXbDODq9PQMGOD6I+S96CHkSkrgG+EnBfy0HeAU8BEkJxP45dc9+Q7zChD9Cvb6zQgGFeTmzfEl7CLjAA0ALBpFLsUS6dbr9w/4+wohYBQN1Pz9GcZMMv0Y8wcP49wh6uEInArO+ekA/CzxAevaFwnuzOPk3UAPJ/XG+tn1DQYnFgAJBiHkK0LuBjg8BQzt1O4dDLxB4+b2CfLzBQoa/1nMNe0T3xfoGQYX6TPm1+XD/+f48wcmElcoF04A1/r2ufLa+YxBCxAt3PoQywXNKU3lFvcAPRU/AVL7Wgn6HLzCKscE7iNN6P4R5gjuE/PRuiQP1ij06gcY5gYFzOrs1c7gHUTquxnw2RwUzgHXMgFTPBvjYzhE88zb0PBbB/uz6cAPxdsJD+IE9QDOEpnrFP5G9RrxDv5FLhLyyQLpHBIQ/Q4VwTozAN7E3OkqtATd8AkL3hXZ1NsTBPEQNhbuDdLq8ee2XM3hwsHbCioVKzg77eW/7unU88c2+gOn8jXhVTS3RrwT9QJF/g7VHmLh8dL66+s35eEO/gjHPeLXKhQQ3QYU1xXYub8JVv/+1Cwv1QgmtgzNyvz1FOYk0Qwo+VoLzVQMQxbuI0Q/y887/wE78dDvs+L8+B0pkYobCw44IjIWY9jY3tLXAFYA0r44WbS2B975gNdgCfD8CxsPAPQK9ObM2fXD5Q0bN+bXEO3vNv1Q6RwL2xryMCQDtu7mzDXzKeD7DDcYAC417gBD4dDqAQriDQvt/PYAt+bV/v7k7xPp7vTQSMzQ5SjoHtbLCy/cACFY9uLmLFcGHA/36uj+2hQaIi0suwTeIPADCs8HCRy180Mh9zzXPwMKB93GOO8ANDr62SjeJBgILO3tOO37xscPxOsRExn88ezVMPr6OAbfHdbSKuIOKf/k1e3hLqsO/jMcIfQU8wkov/oIGPcdGQjSCALs/QreEwskDfsM5dYNCcHUGeARPw0WzgXjECfc78QG7vkY1vMI3xoYNTQMF9HZPzDFXiv/+g220CfxiOT19Afd1DjsFkYzGjksJzbuAWRLQPlaFcb3AtkAEw7j8AMAFAOzEizh1SbVMvn2APrmu+bjzfRlBN9a4usOBgMW+gFLquHh1DXZ7b1R/ffo2SrUACLqMgbvCgXpGvoT6s0OGa8a3AAn5bwaANDSxfjSvfcaAdveFPkxEwEl4RHNAxm/6w0KwqraXNzyQC3SnerdDdbz+O3yJwIW4kXL5PTG6gutwxE25eIlM1MaEfvU5STUCPoT8f76AvTKEx8QIFCa1w=="
+        }
+      ],
+      "audit_event_id": "2026-10-30T04:56:48.869857+00:00#62d3860d4812410aa1fe6ab3b86d22ec"
+    }
+  ],
+  "apply_stamp": "2026-10-30T04:56:48.869857+00:00",
+  "actor": "aws-operator:arn:aws:iam::629380420098:user/huynhhao",
+  "applied": true
+}
