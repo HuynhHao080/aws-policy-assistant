@@ -14,6 +14,8 @@ Ví dụ: từ05/11 đến10/11 nghĩa dùng được từ00:00ngày05 đến tr
 
 Client cũ không gửi trường ngày sẽ giữ thời hạn hiện có. Muốn bỏ giới hạn, gửi chuỗi rỗng rõ ràng ở trường tương ứng rồi lưu/công bố; publish loại trường đã xóa khỏi bản đã công bố. Bản legacy có ngày hỏng bị loại khỏi tra cứu, vẫn hiện trong quản trị để sửa.
 
+Công bố lại một bản đã ẩn không tự xóa ngày cũ. Hạn mức ngày/tháng của tài khoản vẫn tính theo UTC; chỉ thời hạn chính sách tính theo ngày Việt Nam.
+
 ## Tra cứu, AI và lịch sử
 
 - GET theo mã và tìm kiếm không trả nguồn chưa/không còn hiệu lực. Truy hồi AI cũng kiểm ngày trước khi đưa nguồn vào prompt; không có nguồn phù hợp thì trả thiếu bằng chứng, không gọi generation.
@@ -31,3 +33,7 @@ Không thêm cron, queue, bảng/index, endpoint, dịch vụ hay IAM grant. Tr�
 Để trình bày khả năng kiểm chứng, chạy `python -m pytest tests/unit/test_policy_validity.py -q` và giải thích: biên ngày Việt Nam, cùng ngày đầu/cuối, draft isolation, chính sách đổi giữa generation và phản hồi409 không lưu lịch sử. Các bài này dùng moto/model giả lập; không phải minh chứng độ đúng model thật. Không đổi giờ hệ thống hoặc sửa chính sách thật của shop để giả lập hết hạn.
 
 Script `scripts/check_policy_validity_live.py` là nghiệm thu riêng sau triển khai: xác minh đúng artifact có module hiệu lực trước khi tạo fixture; một identity tạm không gửi thư và ba record luôn chưa tới ngày/đã hết hạn/ngày hỏng, không hiện cho khách. Chỉ thử API đọc/quyền/lưu nháp; không gọi `/ask`, publish, embedding, OCR hoặc PDF. Script dọn các record theo nonce và xóa tài khoản theo workflow ứng dụng; cần kiểm tra cả acceptance lẫn cleanup trước khi báo đạt. Không dùng kết quả này làm bằng chứng đã thử generation/publish trên AWS.
+
+## Phục hồi phiên bản
+
+Khi đã có chính sách công bố với trường ngày, **không hạ runtime về bản chưa biết kiểm ngày**: bản đó có thể đưa chính sách hết hạn trở lại nguồn AI. Giữ bộ lọc và kiểm tra nguồn khi sửa lỗi/rollback, hoặc có kế hoạch tạm ngừng luồng chính sách được rà soát riêng. Không tự xóa ngày, archive dữ liệu thật hoặc reset bảng để làm một bản cũ chạy được. Snapshot/policy audit hiện có không phải một kho đầy đủ mọi phiên bản nội dung.

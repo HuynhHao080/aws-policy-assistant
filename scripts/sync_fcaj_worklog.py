@@ -87,6 +87,35 @@ def evidence(source: Path) -> dict:
     }
 
 
+def validity_evidence(source: Path) -> dict:
+    paths = [source / ('docs/policy-validity-' + kind + '.json') for kind in ('live-acceptance', 'artifact-verification')]
+    live, artifact = [json.loads(path.read_text(encoding='utf-8')) for path in paths]
+    if live['release'] != artifact['release']:
+        raise ValueError('Validity reports describe different releases')
+    flags = ('http_passed', 'accounts_cleaned', 'policies_cleaned')
+    if not all(live.get(key) is True for key in flags):
+        raise ValueError('Validity acceptance or cleanup is incomplete')
+    if (artifact['stack_status'] != 'UPDATE_COMPLETE' or artifact['invalidation_status'] != 'Completed'
+            or len(artifact['deployed_functions']) != 6
+            or any(f['code_sha256'] != live['release']['code_sha256'] or f['update_status'] != 'Successful' for f in artifact['deployed_functions'])):
+        raise ValueError('Validity artifact verification is incomplete')
+    return {'schema_version': 1, 'checked_at': live['checked_at'], 'scope': live['scope'],
+            'code_sha256': live['release']['code_sha256'], 'template_sha256': live['release']['template_sha256'],
+            'checks': live['checks'], 'cleanup': {key: live[key] for key in flags},
+            'verified_frontend_files': len(artifact['files']), 'verified_lambda_artifacts': 6,
+            'cloudfront_invalidation': artifact['invalidation_status'],
+            'source_report_hash_format': 'SHA256 of UTF-8 canonical JSON: sorted keys, ensure_ascii=False, separators comma/colon, no trailing newline',
+            'source_reports': {p.relative_to(source).as_posix(): json_report_sha(p) for p in paths},
+            'limits': ['Operator-seeded inactive policies and draft/read APIs only, not model or publication acceptance.',
+                       'No new browser visual, load, restore or AI accuracy result.']}
+
+
+def json_report_sha(path: Path) -> str:
+    # Git normalizes line endings; evidence hashes must survive publication.
+    data = json.loads(path.read_text(encoding='utf-8'))
+    return sha(json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
+
+
 def target_file(target: Path, relative: str) -> Path:
     path = target / relative
     # Existing directory links must not redirect an authorized write elsewhere.
@@ -106,7 +135,10 @@ def plan(source: Path, target: Path) -> dict[Path, bytes]:
             result[path] = overlay(original, notice).encode('utf-8')
         path = target_file(target, f'content/5-Workshop/5.7-PolicyAssistant/CurrentRelease/_index{suffix}')
         result[path] = (template_root / f'current.{lang}.md').read_bytes()
+        path = target_file(target, f'content/5-Workshop/5.7-PolicyAssistant/PolicyValidity/_index{suffix}')
+        result[path] = (template_root / f'validity.{lang}.md').read_bytes()
     result[target_file(target, 'static/evidence/policy-assistant-2026-11-04.json')] = (json.dumps(evidence(source), ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+    result[target_file(target, 'static/evidence/policy-validity-2026-11-05.json')] = (json.dumps(validity_evidence(source), ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     return {p: data for p, data in result.items() if not p.exists() or p.read_bytes() != data}
 
 

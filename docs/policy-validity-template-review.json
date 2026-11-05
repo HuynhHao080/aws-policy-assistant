@@ -1,0 +1,89 @@
+{
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793892751",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793892751/a082697e-2f1f-4e2e-b71d-c69d2eff314e",
+    "phase": "final",
+    "code_sha256": "eac3c36873381d674db6fb9ab2161925fce3d417f997e42252eb142bc0bd72bd",
+    "template_sha256": "79e5ee37f28212e3b163a8143a110254976d7804d272ad3e46d9c1ad77635056"
+  },
+  "raw_template_changes": [
+    "Resources.DocumentDispatcher.Properties.CodeUri.Key",
+    "Resources.DocumentRecovery.Properties.CodeUri.Key",
+    "Resources.PdfParser.Properties.CodeUri.Key",
+    "Resources.PolicyAssistantFunction.Properties.CodeUri.Key",
+    "Resources.PolicyAssistantWorker.Properties.CodeUri.Key",
+    "Resources.SignupGuard.Properties.CodeUri.Key"
+  ],
+  "processed_template_changes": [
+    "Resources.DocumentDispatcher.Properties.Code.S3Key",
+    "Resources.DocumentRecovery.Properties.Code.S3Key",
+    "Resources.PdfParser.Properties.Code.S3Key",
+    "Resources.PolicyAssistantFunction.Properties.Code.S3Key",
+    "Resources.PolicyAssistantWorker.Properties.Code.S3Key",
+    "Resources.SignupGuard.Properties.Code.S3Key"
+  ],
+  "resource_changes": [
+    {
+      "id": "DocumentDispatcher",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "DocumentRecoveryEveryFiveMinutesPermission",
+      "type": "AWS::Lambda::Permission",
+      "replacement": "Conditional"
+    },
+    {
+      "id": "DocumentRecoveryEveryFiveMinutes",
+      "type": "AWS::Events::Rule",
+      "replacement": "False"
+    },
+    {
+      "id": "DocumentRecovery",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "PdfParser",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "PolicyAssistantApi",
+      "type": "AWS::ApiGatewayV2::Api",
+      "replacement": "False"
+    },
+    {
+      "id": "PolicyAssistantFunction",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "PolicyAssistantUserPool",
+      "type": "AWS::Cognito::UserPool",
+      "replacement": "False"
+    },
+    {
+      "id": "PolicyAssistantWorkerRole",
+      "type": "AWS::IAM::Role",
+      "replacement": "False"
+    },
+    {
+      "id": "PolicyAssistantWorker",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "SignupGuard",
+      "type": "AWS::Lambda::Function",
+      "replacement": "False"
+    },
+    {
+      "id": "SignupPermission",
+      "type": "AWS::Lambda::Permission",
+      "replacement": "Conditional"
+    }
+  ],
+  "review": "Exactly six code-key changes. Other listed modifications are dynamic dependency references whose processed properties are identical. No added IAM grant, endpoint, table/index, schedule, service, model, quota or budget change."
+}

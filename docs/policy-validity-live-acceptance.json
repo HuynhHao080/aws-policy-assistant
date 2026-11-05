@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-11-05T15:39:09.840807+00:00",
+  "release": {
+    "stack": "policy-assistant",
+    "change_set": "public-final-1793892751",
+    "change_set_id": "arn:aws:cloudformation:ap-southeast-1:629380420098:changeSet/public-final-1793892751/a082697e-2f1f-4e2e-b71d-c69d2eff314e",
+    "phase": "final",
+    "code_sha256": "eac3c36873381d674db6fb9ab2161925fce3d417f997e42252eb142bc0bd72bd",
+    "template_sha256": "79e5ee37f28212e3b163a8143a110254976d7804d272ad3e46d9c1ad77635056"
+  },
+  "scope": "Real API authorization/read/draft validation; one disposable identity, three never-current synthetic policy rows. No model, publish, PDF/OCR or email calls. Operator seeds are not publication/embedding acceptance.",
+  "checks": [
+    "Anonymous administrator catalogue is rejected",
+    "Customer cannot inspect administrator validity metadata",
+    "Public lookup hides upcoming source",
+    "Public lookup hides expired source",
+    "Public lookup hides invalid source",
+    "Administrator sees computed upcoming status",
+    "Catalogue filter selects only matching QA upcoming",
+    "Administrator sees computed expired status",
+    "Catalogue filter selects only matching QA expired",
+    "Administrator sees computed invalid status",
+    "Catalogue filter selects only matching QA invalid",
+    "Unknown validity filter is rejected",
+    "Impossible date is rejected before saving",
+    "Stale revision cannot change a window",
+    "Draft date clearing leaves the published future window intact",
+    "Administrator role does not bypass public date checks"
+  ],
+  "http_passed": true,
+  "accounts_cleaned": true,
+  "policies_cleaned": true
+}

@@ -1,5 +1,7 @@
 # FCAJ readiness — reviewed 2026-11-04
 
+Publication follow-up,5November: the application/worklog have been pushed, CI passed and the primary AWS frontend published. The subsequent [policy validity extension](../policy-validity-verification.md) is deployed with298local Python/59frontend passes and16live read/draft API checks plus successful cleanup. Its [bilingual workshop chapter](https://huynhhao080.github.io/aws-internship-worklog/vi/5-workshop/5.7-policyassistant/policyvalidity/) separates real API evidence from mocked generation cases. Local/unpublished statements below describe the earlier preparation snapshot; personal FCAJ evidence still remains pending.
+
 Sources supplied by the student: [Workforce context](https://cloudjourney.awsfcaj.com/vi/8-fcjworkforce/), [workshop requirements](https://hcm-rules.awsfcaj.com/3-project/), [scoring](https://hcm-rules.awsfcaj.com/5-scoring/). The two HCM pages define submission/scoring; the general program page is context. No approval, score or attendance is inferred from code.
 
 ## Rubric-oriented gaps / Khoảng trống theo tiêu chí

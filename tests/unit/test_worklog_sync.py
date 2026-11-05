@@ -55,13 +55,20 @@ def test_backup_records_exact_old_bytes_and_new_files(tmp_path):
     assert new.read_bytes() == b'guide'
 
 
-def test_export_contains_no_operator_identifiers_or_private_text():
+def test_export_contains_no_operator_identifiers_or_private_text(tmp_path):
     exported = sync.evidence(sync.ROOT)
-    serialized = json.dumps(exported)
     assert len(exported['live_checks']) == 15
     assert exported['verified_lambda_artifacts'] == 6
-    for forbidden in ('change_set_id', 'arn:aws:', '629380420098', 'huynhhao080@', 'conversation_id', 'owner_id'):
-        assert forbidden not in serialized
+    validity = sync.validity_evidence(sync.ROOT)
+    assert len(validity['checks']) == 16 and validity['cleanup']['policies_cleaned']
+    for result in (exported, validity):
+        serialized = json.dumps(result)
+        for forbidden in ('change_set_id', 'arn:aws:', '629380420098', 'huynhhao080@', 'conversation_id', 'owner_id', 'validity-qa-'):
+            assert forbidden not in serialized
+    first, second = tmp_path / 'windows.json', tmp_path / 'github.json'
+    first.write_bytes(b'{\r\n  "a": 1, "b": 2\r\n}\r\n')
+    second.write_bytes(b'{"b":2,"a":1}\n')
+    assert sync.json_report_sha(first) == sync.json_report_sha(second)
 
 
 def test_mismatched_or_incomplete_evidence_stops_export(tmp_path):

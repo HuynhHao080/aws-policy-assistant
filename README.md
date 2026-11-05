@@ -4,7 +4,7 @@ A public, self-service AWS application for private PDF libraries, multilingual s
 
 Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Deployment and acceptance evidence: [verification report](docs/final-verification.md). The owner has confirmed registration and administrator access; the SNS subscription was confirmed.
 
-Current handover: [feature inventory](docs/FEATURE-STATUS.md), [support guide](docs/HUONG-DAN-HO-TRO.md) and [current quality extension verification](docs/quality-release-verification.md). Support is consented and in-app; administrators cannot access private customer PDFs. AI questions can use shared policies, selected PDFs or both.
+Current handover: [feature inventory](docs/FEATURE-STATUS.md), [support guide](docs/HUONG-DAN-HO-TRO.md) and [policy validity release verification](docs/policy-validity-verification.md). Support is consented and in-app; administrators cannot access private customer PDFs. AI questions can use shared policies, selected PDFs or both.
 
 Policy validity: inclusive Vietnam business dates, administrator filters and final cited-source revalidation prevent scheduled/expired/changed policy snapshots from being saved as current answers. [Operator guide and reproducible demo](docs/HUONG-DAN-HIEU-LUC-CHINH-SACH.md). No scheduler or additional AWS service is required.
 
