@@ -1,12 +1,13 @@
-## Bản chính — cập nhật kỹ thuật 04/11/2026
+## Bản chính — cập nhật tài liệu 06/11/2026
 
-**Phần cập nhật này mô tả bản chính [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Các phần 21–23/10 phía dưới là lịch sử của môi trường test khác.** Không lấy kết quả cũ làm nghiệm thu bản chính.
+**Bản chính là [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Các phần tháng 10 bên dưới là lịch sử của môi trường test khác.**
 
-- Hiện có đăng ký công khai, thư viện PDF riêng, trích xuất/OCR, hỏi đáp có nguồn, lịch sử, quản trị chính sách, yêu cầu hỗ trợ, cấu hình shop và đánh giá câu trả lời. Nội dung shop vẫn là **DEMO**, chưa có đơn vị vận hành phê duyệt chính sách thật.
-- Báo cáo release ngày 04/11: **251 Python PASS, 11 live SKIP; 54 frontend PASS; 15 kiểm tra API/metadata/dọn dữ liệu PASS**. Frontend dùng DOM giả lập; kiểm tra API chất lượng dùng dữ liệu tổng hợp và hai tài khoản tạm, không gọi model. Không phải bằng chứng kiểm thử hình ảnh trình duyệt, độ chính xác AI hoặc CI mới.
-- [Chương bản chính, hướng dẫn và giới hạn]({{< relref "/5-Workshop/5.7-PolicyAssistant/CurrentRelease" >}}) có bảng chức năng, kịch bản demo, đầu vào chi phí và bằng chứng đã lọc. Ngày 05/11, chủ dự án cho phép công bố: [CI ứng dụng đạt](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42050386735), [worklog đã lên GitHub Pages](https://github.com/HuynhHao080/aws-internship-worklog/actions/runs/42049972955). Frontend AWS đã xuất bản lại; 31 file và 6 Lambda khớp hash, backend không cần thay đổi artifact. Các ghi chú “local/chưa publish” bên dưới là snapshot trước lần công bố này.
-- Ngày 04/11, chủ dự án cho biết chưa thực hiện các mục được hỏi: ba blog đã đăng, minh chứng office/sự kiện, sơ đồ tự vẽ và Pricing Calculator. Giữ trạng thái **CHỜ**; không suy diễn điều đó thành chưa làm toàn bộ nhật ký cũ. Ba bài kỹ thuật 3.4–3.6 vẫn là bản thảo cần tự rà soát và đăng.
+- Đọc [đề xuất hiện tại]({{< relref "/2-Proposal/CurrentSolution" >}}) để xem bài toán, phạm vi, kiến trúc cần tự vẽ, kế hoạch chốt, đầu vào COST và rủi ro. [Chương bản chính]({{< relref "/5-Workshop/5.7-PolicyAssistant/CurrentRelease" >}}) giữ danh mục và bằng chứng qua từng release.
+- Đã có đăng ký công khai, PDF riêng/text/OCR, hỏi đáp có nguồn, lịch sử, draft/publish/hiệu lực chính sách, thông tin shop, đánh giá tổng hợp và hỗ trợ có consent. [Phối hợp hỗ trợ]({{< relref "/5-Workshop/5.7-PolicyAssistant/SupportTeam" >}}) bổ sung nhận việc/bàn giao/ghi chú nội bộ; không tự tạo quyền nhân viên hạn chế hoặc quyền đọc PDF khách.
+- Snapshot runtime gần nhất: **322 Python đạt, 11 live bỏ qua; 67 frontend đạt; 20 HTTP checks đạt**, ba tài khoản QA và yêu cầu thử đã dọn. 40 tệp frontend và 6 Lambda khớp artifact. Timestamp UTC 05/11 tương ứng 06/11 Việt Nam; không phải lần chạy mới khi mở trang. Không gọi model/PDF/OCR/email trong đợt HTTP này. [Báo cáo](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/support-team-verification.md), [CI ứng dụng](https://github.com/HuynhHao080/aws-policy-assistant/actions/runs/42072920395).
+- Nội dung shop vẫn **DEMO**; còn chờ chính sách thật được phê duyệt, browser/accuracy/tải/restore/email theo phạm vi. Budget 50 USD chỉ cảnh báo; dự toán 6,63 USD/budget 20 USD bên dưới thuộc môi trường cũ, không dùng làm giá bản hiện tại.
+- Ba blog đã đăng, minh chứng office/sự kiện, sơ đồ tự vẽ, Pricing Calculator và video còn chờ evidence cá nhân. Bản thảo kỹ thuật không phải bài đã đăng. Không sửa ngày thực tập, daily worklog hoặc tạo ảnh/điểm thay sinh viên.
 
-Nội dung mới có AI hỗ trợ; sinh viên cần đọc, tự thực hiện và giải thích trước khi nộp. Giữ nguyên các lần FAIL, PASS, CI và ảnh lịch sử theo đúng ngày/môi trường. Dự toán 6,63 USD và budget 20 USD trong phần cũ không mô tả đầy đủ bản AI/OCR hiện tại.
+Nội dung có AI hỗ trợ; sinh viên phải tự rà soát, thực hiện và giải thích. Kết quả DOM không phải visual browser; artifact/CI không phải accuracy hoặc SLA. Giữ nguyên mọi FAIL/PASS và ảnh lịch sử đúng môi trường.
 
 ### Tài liệu lịch sử bên dưới

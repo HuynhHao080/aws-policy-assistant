@@ -1,5 +1,7 @@
 # Actual worklog synchronization verification — 2026-11-04
 
+Latest proposal/tooling update: [6 November verification](PROPOSAL-VERIFICATION-2026-11-06.md), including eight technical guide pages and all three evidence exports. The figures below retain the original 4 November verification scope.
+
 Worklog: `C:\Users\accli\Documents\Project\aws-internship-worklog`. Application: `C:\Users\accli\Documents\Project\policy-assistant`. These are the canonical existing repositories; no replacement application/worklog was created.
 
 ## Changes delivered locally

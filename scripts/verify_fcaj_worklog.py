@@ -6,7 +6,7 @@ import argparse
 from html.parser import HTMLParser
 import json
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 
 from scripts import sync_fcaj_worklog as sync
 
@@ -16,9 +16,14 @@ class Links(HTMLParser):
         super().__init__()
         self.assets = []
         self.hrefs = []
+        self.ids = set()
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if attrs.get('id'):
+            self.ids.add(attrs['id'])
+        if tag == 'a' and attrs.get('name'):
+            self.ids.add(attrs['name'])
         if tag in ('script', 'img') and attrs.get('src'):
             self.assets.append(attrs['src'])
         if tag == 'link' and attrs.get('rel') == 'stylesheet':
@@ -44,6 +49,35 @@ def built_file(build: Path, url: str) -> Path:
     return result
 
 
+def parse_page(path: Path) -> Links:
+    html = path.read_text(encoding='utf-8')
+    if '\ufffd' in html or '{{<' in html:
+        raise ValueError(f'Encoding replacement or unrendered shortcode: {path}')
+    parser = Links()
+    parser.feed(html)
+    return parser
+
+
+def verify_guide(build: Path, route: str, assets: set) -> dict:
+    """Resolve local guide links, fragments and assets without fetching a URL."""
+    parser = parse_page(built_file(build, route))
+    checked = 0
+    for url in parser.hrefs + parser.assets:
+        resolved = urlsplit(urljoin('https://huynhhao080.github.io' + route, url))
+        if resolved.scheme not in ('http', 'https') or resolved.netloc != 'huynhhao080.github.io':
+            continue
+        destination = built_file(build, resolved.geturl())
+        if not destination.is_file():
+            raise ValueError(f'Missing local link or asset: {route} -> {url}')
+        if resolved.fragment and destination.suffix == '.html':
+            if unquote(resolved.fragment) not in parse_page(destination).ids:
+                raise ValueError(f'Missing local anchor: {route} -> {url}')
+        if url in parser.assets:
+            assets.add(resolved.path)
+        checked += 1
+    return {'route': route, 'local_links_checked': checked}
+
+
 def verify(worklog: Path, build: Path, backup: Path) -> dict:
     sync.validate_repository(worklog)
     if sync.plan(sync.ROOT, worklog):
@@ -65,7 +99,7 @@ def verify(worklog: Path, build: Path, backup: Path) -> dict:
         if left + right != old:
             raise ValueError(f'Historical bytes modified: {record["path"]}')
         preserved += 1
-    pages, assets = [], set()
+    pages, guides, assets = [], [], set()
     for language, prefix in (('en', ''), ('vi', 'vi/')):
         route = f'/aws-internship-worklog/{prefix}5-workshop/5.7-policyassistant/currentrelease/'
         page = built_file(build, route)
@@ -94,9 +128,20 @@ def verify(worklog: Path, build: Path, backup: Path) -> dict:
             if route not in links.hrefs and 'https://huynhhao080.github.io' + route not in links.hrefs:
                 raise ValueError(f'Managed release link missing in {destination}')
         pages.append({'language': language, 'path': str(page)})
+        for name, slug in sync.GUIDES.items():
+            guide_route = '/aws-internship-worklog/' + prefix + slug.lower() + '/'
+            guides.append(verify_guide(build, guide_route, assets))
+        for relative, expected in (
+            ('evidence/policy-validity-2026-11-05.json', sync.validity_evidence(sync.ROOT)),
+            ('evidence/support-team.json', sync.support_evidence(sync.ROOT)),
+        ):
+            path = built_file(build, '/aws-internship-worklog/' + relative)
+            if json.loads(path.read_text(encoding='utf-8')) != expected:
+                raise ValueError(f'Built evidence differs from allowlisted export: {relative}')
     return {'historical_files_preserved_byte_for_byte': preserved,
             'managed_pages': len(sync.PAGES) * 2,
             'new_release_pages': pages, 'local_assets_resolved': len(assets),
+            'technical_guides': guides, 'evidence_exports_verified': 3,
             'evidence_export_matches': True, 'synchronization_drift': False,
             'scope': 'Offline source preservation, generated links/assets and sanitized JSON only; no browser, publication, cloud or model checks.'}
 

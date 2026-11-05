@@ -25,6 +25,12 @@ PAGES = (
     '3-BlogsPosted/3.5-SignedUploads/_index',
     '3-BlogsPosted/3.6-QueueFailures/_index',
 )
+GUIDES = {
+    'current': '5-Workshop/5.7-PolicyAssistant/CurrentRelease',
+    'validity': '5-Workshop/5.7-PolicyAssistant/PolicyValidity',
+    'support': '5-Workshop/5.7-PolicyAssistant/SupportTeam',
+    'proposal': '2-Proposal/CurrentSolution',
+}
 
 
 def sha(data: bytes) -> str:
@@ -156,12 +162,9 @@ def plan(source: Path, target: Path) -> dict[Path, bytes]:
             path = target_file(target, f'content/{page}{suffix}')
             original = path.read_bytes().decode('utf-8')
             result[path] = overlay(original, notice).encode('utf-8')
-        path = target_file(target, f'content/5-Workshop/5.7-PolicyAssistant/CurrentRelease/_index{suffix}')
-        result[path] = (template_root / f'current.{lang}.md').read_bytes()
-        path = target_file(target, f'content/5-Workshop/5.7-PolicyAssistant/PolicyValidity/_index{suffix}')
-        result[path] = (template_root / f'validity.{lang}.md').read_bytes()
-        path = target_file(target, f'content/5-Workshop/5.7-PolicyAssistant/SupportTeam/_index{suffix}')
-        result[path] = (template_root / f'support.{lang}.md').read_bytes()
+        for name, page in GUIDES.items():
+            path = target_file(target, f'content/{page}/_index{suffix}')
+            result[path] = (template_root / f'{name}.{lang}.md').read_bytes()
     result[target_file(target, 'static/evidence/policy-assistant-2026-11-04.json')] = (json.dumps(evidence(source), ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     result[target_file(target, 'static/evidence/policy-validity-2026-11-05.json')] = (json.dumps(validity_evidence(source), ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     result[target_file(target, 'static/evidence/support-team.json')] = (json.dumps(support_evidence(source), ensure_ascii=False, indent=2) + '\n').encode('utf-8')

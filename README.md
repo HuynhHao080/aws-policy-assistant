@@ -18,7 +18,7 @@ V1 handover and operating boundaries: [RELEASE-V1.md](docs/RELEASE-V1.md). Admin
 
 New quality extension: structured private feedback, aggregate-only quality dashboard and JSON report. [FCAJ readiness and actual worklog handoff](docs/fcaj/READINESS.md).
 
-The separate internship worklog now has a dated bilingual primary-release guide, demo plan, cost inputs and sanitized evidence. [Local synchronization and build verification](docs/fcaj/WORKLOG-VERIFICATION.md). These updates preserve historical results and do not establish personal attendance, published blogs or FCAJ eligibility.
+The separate internship worklog includes a [current bilingual proposal](https://huynhhao080.github.io/aws-internship-worklog/vi/2-proposal/currentsolution/), primary-release guides, demo plan, cost inputs and sanitized evidence. [Proposal and worklog verification](docs/fcaj/PROPOSAL-VERIFICATION-2026-11-06.md). These updates preserve historical results and do not establish personal attendance, published blogs or FCAJ eligibility.
 
 ## Functional scope
 

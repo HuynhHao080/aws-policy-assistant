@@ -89,3 +89,28 @@ def test_mismatched_or_incomplete_evidence_stops_export(tmp_path):
     live_path.write_text(json.dumps(live))
     with pytest.raises(ValueError, match='different releases'):
         sync.evidence(tmp_path)
+
+
+@pytest.mark.parametrize('failure', ['cleanup', 'release', 'lambda', 'invalidation'])
+def test_support_export_rejects_invalid_release_evidence(tmp_path, failure):
+    docs = tmp_path / 'docs'
+    docs.mkdir()
+    for kind in ('live-acceptance', 'artifact-verification'):
+        name = f'support-team-{kind}.json'
+        (docs / name).write_bytes((sync.ROOT / 'docs' / name).read_bytes())
+    live_path = docs / 'support-team-live-acceptance.json'
+    artifact_path = docs / 'support-team-artifact-verification.json'
+    live = json.loads(live_path.read_text(encoding='utf-8'))
+    artifact = json.loads(artifact_path.read_text(encoding='utf-8'))
+    if failure == 'cleanup':
+        live['support_purged'] = False
+    elif failure == 'release':
+        artifact['release']['code_sha256'] = 'different'
+    elif failure == 'lambda':
+        artifact['deployed_functions'][0]['code_sha256'] = 'different'
+    else:
+        artifact['invalidation_status'] = 'InProgress'
+    live_path.write_text(json.dumps(live), encoding='utf-8')
+    artifact_path.write_text(json.dumps(artifact), encoding='utf-8')
+    with pytest.raises(ValueError):
+        sync.support_evidence(tmp_path)

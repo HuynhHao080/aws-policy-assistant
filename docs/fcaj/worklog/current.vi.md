@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — bản chính ngày 04/11/2026
 
+**Đề xuất cập nhật 06/11:** [Bài toán, phạm vi, kiến trúc, COST, kế hoạch và rủi ro]({{< relref "/2-Proposal/CurrentSolution" >}}). Phần COST có đầu vào giả định, tổng tiền vẫn chờ Calculator; sơ đồ cần sinh viên tự thiết kế.
+
 **Mới nhất — phối hợp hỗ trợ:** [Nhận việc, bàn giao và ghi chú nội bộ]({{< relref "/5-Workshop/5.7-PolicyAssistant/SupportTeam" >}}) đã lên bản chính: **322 Python / 67 frontend / 20 kiểm tra HTTP đạt**, 3 tài khoản QA và yêu cầu thử đã dọn; 40 tệp frontend và 6 Lambda khớp artifact. Không gọi model, PDF/OCR hay email. Các đoạn bên dưới giữ bằng chứng của các bản trước.
 
 **Mở rộng mới ngày05/11:** [Chính sách có thời hạn và kiểm soát nguồn AI]({{< relref "/5-Workshop/5.7-PolicyAssistant/PolicyValidity" >}}) đã triển khai:298Python/59frontend đạt,16API checks và cleanup đạt. Phần mới có demo tái lập về ngàyUTC+7, draft isolation, pagination và thay nguồn trước lưu; không thêm dịch vụ AWS hay gọi model trong lượt nghiệm thu live. Các số liệu31files/251tests dưới đây là snapshot trước mở rộng này.

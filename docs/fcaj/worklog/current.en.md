@@ -6,6 +6,8 @@ weight: 0
 
 # Policy Assistant — primary release, 4 November 2026
 
+**Proposal updated 6 November:** [Problem, scope, architecture, COST, plan and risks]({{< relref "/2-Proposal/CurrentSolution" >}}). COST contains assumed inputs; the total awaits Calculator and the student must design the architecture diagram.
+
 **Latest — support collaboration:** [Assignment, handover and internal notes]({{< relref "/5-Workshop/5.7-PolicyAssistant/SupportTeam" >}}) is deployed: **322 Python / 67 frontend / 20 HTTP checks passed**, three QA accounts and the test ticket cleaned; 40 frontend files and six Lambda hashes matched. No model, PDF/OCR or email calls. Sections below preserve evidence from earlier releases.
 
 **New5November extension:** [Time-bounded policies and AI source checks]({{< relref "/5-Workshop/5.7-PolicyAssistant/PolicyValidity" >}}) is deployed:298Python/59frontend passes,16API checks and successful cleanup. The reproducible demo covers UTC+07dates, draft isolation, pagination and changes before final source checking. No new AWS service or live model call was required. The31file/251test figures below remain earlier snapshots.
