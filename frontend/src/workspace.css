@@ -170,6 +170,30 @@ footer { margin-top: 36px; }
 .document-page-jump { display: inline-flex; gap: 6px; align-items: center; }
 .document-page-jump input { width: 68px; padding: 6px; }
 #document-page-number { font-size: 13px; font-weight: 700; }
+.document-text-find {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 12px;
+  align-items: center;
+  margin: 14px 0;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+#document-text-matches { grid-column: 1 / -1; }
+.document-text-fragment mark {
+  background: #f4dfa0;
+  color: #2f270c;
+  border-radius: 2px;
+}
+.document-text-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 10px 0;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+}
 .document-text-fragment {
   white-space: pre-wrap;
   overflow-wrap: anywhere;

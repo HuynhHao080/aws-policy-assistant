@@ -343,7 +343,7 @@ test('PDF library filters rows and the reader pages through safe text', async t 
       ],next_token:null});
       if (key === '/documents/owned/text') {
         const page = Number(url.searchParams.get('page'));
-        return json({doc_id:'owned',title:'Bảo hành củ sạc',page,page_count:2,chunks:page === 1 ? ['<script>plain</script>'] : [],truncated:false});
+        return json({doc_id:'owned',title:'Bảo hành củ sạc',page,page_count:2,chunks:page === 1 ? ['Bảo hành <script>plain</script>'] : [],truncated:false});
       }
     },
   });
@@ -354,12 +354,23 @@ test('PDF library filters rows and the reader pages through safe text', async t 
   assert.equal(f.$('documents-list').querySelector('[data-document-id="working"]').hidden,true);
   [...f.$('documents-list').querySelectorAll('button')].find(b => b.textContent === 'Xem văn bản').click();
   await until(() => f.$('document-page-number').textContent === 'Trang 1 / 2');
-  assert.equal(f.$('document-text-content').textContent, '<script>plain</script>');
+  assert.equal(f.$('document-text-content').textContent, 'Bảo hành <script>plain</script>');
   assert.equal(f.$('document-text-content').querySelector('script'), null);
+  f.$('document-text-find').value = 'bao hanh';
+  f.$('document-text-find').dispatchEvent(new f.w.Event('input', {bubbles:true}));
+  assert.equal(f.$('document-text-content').querySelector('mark').textContent, 'Bảo hành');
+  assert.match(f.$('document-text-matches').textContent, /^1 kết quả/);
+  let download;
+  f.w.URL.createObjectURL = () => 'blob:synthetic';
+  f.w.URL.revokeObjectURL = () => {};
+  f.w.HTMLAnchorElement.prototype.click = function () { download = this.download; };
+  f.click('download-document-page');
+  assert.equal(download, 'policy-assistant-trang-1.txt');
   assert.equal(f.$('previous-document-page').disabled, true);
   f.click('next-document-page');
   await until(() => f.$('document-page-number').textContent === 'Trang 2 / 2');
   assert.equal(f.$('copy-document-page').disabled, true);
+  assert.equal(f.$('download-document-page').disabled, true);
   assert.equal(f.$('next-document-page').disabled, true);
   assert.match(f.$('document-text-status').textContent, /không có văn bản/);
   f.$('document-page-input').value = '1';

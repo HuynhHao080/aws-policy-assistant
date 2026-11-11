@@ -5,6 +5,8 @@ weight: 0
 ---
 
 
+**PDF text reader.** Open extracted text from the library or jump directly from a citation. Find terms without accents, highlight matches, jump to a page and download TXT. Nine live API checks passed with a synthetic two-page PDF, and the test account was removed. [Verification](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/pdf-text-verification.md).
+
 **Primary application model:** Global Claude Haiku 5.5. The application ranks extracted PDF and policy text by keywords. Dated verification reports record their respective releases. [Model cutover evidence](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — primary release, 4 November 2026
 

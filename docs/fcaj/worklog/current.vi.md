@@ -5,6 +5,8 @@ weight: 0
 ---
 
 
+**Xem văn bản PDF.** Trong thư viện chọn **Xem văn bản**, hoặc mở trích dẫn để tới đúng trang. Có thể tìm không dấu, tô kết quả, nhảy trang và tải TXT. API thật đã qua chín ca với PDF hai trang giả lập và tài khoản thử đã dọn. [Bằng chứng](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/pdf-text-verification.md).
+
 **Model của bản chính:** Global Claude Haiku 5.5. Ứng dụng xếp hạng từ khóa trên văn bản PDF và chính sách. Các báo cáo kiểm thử có ngày bên dưới ghi lại từng bản đã nghiệm thu. [Bằng chứng chuyển model](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — bản chính ngày 04/11/2026
 

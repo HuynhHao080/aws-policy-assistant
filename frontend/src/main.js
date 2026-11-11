@@ -175,17 +175,59 @@ function clearDocumentPreview() {
   $('document-page-number').textContent = '';
   $('document-text-status').textContent = '';
   $('document-text-content').replaceChildren();
+  $('document-text-find-tools').classList.add('hidden');
+  $('document-text-find').value = '';
+  $('document-text-matches').textContent = '';
   $('retry-document-text').classList.add('hidden');
   $('jump-document-page').classList.add('hidden');
   $('document-page-input').value = '';
-  for (const id of ['previous-document-page', 'next-document-page', 'copy-document-page']) $(id).disabled = true;
+  for (const id of ['previous-document-page', 'next-document-page', 'copy-document-page', 'download-document-page']) $(id).disabled = true;
+}
+
+function renderDocumentText() {
+  const query = historySearchText($('document-text-find').value).trim();
+  let matches = 0;
+  const fragments = (documentPreview?.chunks || []).map(text => {
+    const paragraph = node('p', undefined, 'document-text-fragment');
+    if (!query) {
+      paragraph.textContent = text;
+      return paragraph;
+    }
+    let normalized = '';
+    const starts = [];
+    const ends = [];
+    for (const part of text.matchAll(/\P{M}\p{M}*|\p{M}+/gu)) {
+      const folded = historySearchText(part[0]);
+      normalized += folded;
+      for (let i = 0; i < folded.length; i++) {
+        starts.push(part.index);
+        ends.push(part.index + part[0].length);
+      }
+    }
+    let previous = 0;
+    let index = normalized.indexOf(query);
+    while (index !== -1) {
+      const start = starts[index];
+      const end = ends[index + query.length - 1];
+      paragraph.append(text.slice(previous, start), node('mark', text.slice(start, end)));
+      matches++;
+      previous = end;
+      index = normalized.indexOf(query, index + query.length);
+    }
+    paragraph.append(text.slice(previous));
+    return paragraph;
+  });
+  $('document-text-content').replaceChildren(...fragments);
+  $('document-text-matches').textContent = query ? `${matches} kết quả trong các đoạn hiển thị` : '';
 }
 
 async function openDocumentText(docId, page = 1) {
   const dialog = $('document-text-dialog');
   const isCurrent = latestTasks.begin('document-preview');
+  const search = documentPreview?.docId === docId ? $('document-text-find').value : '';
   clearDocumentPreview();
   documentPreview = {docId, page};
+  $('document-text-find').value = search;
   $('document-page-number').textContent = `Trang ${page}`;
   $('document-text-status').textContent = 'Đang tải văn bản…';
   if (!dialog.open) dialog.showModal();
@@ -203,10 +245,12 @@ async function openDocumentText(docId, page = 1) {
     $('document-text-status').textContent = data.truncated
       ? 'Văn bản dài. Hiển thị tối đa 20.000 ký tự của trang.'
       : data.chunks.length ? 'Các đoạn trích của trang' : 'Trang này không có văn bản trích xuất.';
-    $('document-text-content').replaceChildren(...data.chunks.map(chunk => node('p', chunk, 'document-text-fragment')));
+    $('document-text-find-tools').classList.toggle('hidden', !data.chunks.length);
+    renderDocumentText();
     $('previous-document-page').disabled = page <= 1;
     $('next-document-page').disabled = page >= data.page_count;
     $('copy-document-page').disabled = !data.chunks.length;
+    $('download-document-page').disabled = !data.chunks.length;
     $('document-page-input').max = data.page_count;
     $('document-page-input').value = page;
     $('jump-document-page').classList.toggle('hidden', data.page_count <= 1);
@@ -221,6 +265,7 @@ async function openDocumentText(docId, page = 1) {
 
 $('document-filter').addEventListener('input', applyDocumentFilters);
 $('document-status-filter').addEventListener('change', applyDocumentFilters);
+$('document-text-find').addEventListener('input', renderDocumentText);
 $('close-document-text').onclick = () => $('document-text-dialog').close();
 $('document-text-dialog').addEventListener('close', () => {
   if (!$('document-text-dialog').open) {
@@ -251,6 +296,16 @@ $('copy-document-page').onclick = async () => {
   } finally {
     if (documentPreview === preview) control.disabled = false;
   }
+};
+$('download-document-page').onclick = () => {
+  const preview = documentPreview;
+  if (!preview?.chunks?.length) return;
+  const url = URL.createObjectURL(new Blob([preview.chunks.join('\n\n')], {type:'text/plain;charset=utf-8'}));
+  const link = node('a');
+  link.href = url;
+  link.download = `policy-assistant-trang-${preview.page}.txt`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 async function trackDocument(docId) {
   const isCurrent = latestTasks.begin('document-processing');
