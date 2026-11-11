@@ -1,4 +1,5 @@
 import './app.css';
+import './workspace.css';
 import {FeedbackStore,feedbackReasons} from './feedback.js';
 import {LatestTask,pollDocument} from './ui-flow.js';
 import {ShopEditor,shopFields} from './shop-editor.js';
@@ -39,7 +40,19 @@ function signedIn() {
   $('support-limit-note').textContent=`Chỉ chia sẻ thông tin bạn nhập. PDF và lịch sử hỏi đáp không tự đính kèm. Không gửi email tự động; xem phản hồi tại mục này. Tối đa ${state.profile?.limits?.tickets_per_day??5} yêu cầu/ngày UTC, 20 tin nhắn/yêu cầu; lưu tối đa 90 ngày từ khi tạo.`;
   $('account-label').textContent=state.profile?.email||'Khách';$('avatar').textContent=(state.profile?.email||'P')[0].toUpperCase();$('auth-button').textContent=state.user?'Đăng xuất':'Đăng nhập / Đăng ký';$('admin-nav').classList.toggle('hidden',!groups().includes('administrators'));
   $('profile-info').replaceChildren();
-  if(state.profile){$('profile-info').append(node('p',state.profile.email),node('p',`Mỗi ngày (UTC): ${state.profile.limits.uploads_per_day} lượt tải PDF và ${state.profile.limits.questions_per_day} câu hỏi, ${state.profile.limits.tickets_per_day??5} yêu cầu hỗ trợ. Hạn mức chung của dịch vụ vẫn được áp dụng.`, 'small'));
+  if(state.profile){
+    const limits = state.profile.limits;
+    const stats = node('dl', undefined, 'account-stats');
+    for (const [label, value] of [
+      ['Lượt tải PDF', limits.uploads_per_day],
+      ['Câu hỏi', limits.questions_per_day],
+      ['Yêu cầu hỗ trợ', limits.tickets_per_day ?? 5],
+    ]) {
+      const stat = node('div');
+      stat.append(node('dt', label), node('dd', String(value)));
+      stats.append(stat);
+    }
+    $('profile-info').append(node('p', state.profile.email, 'profile-email'), node('p', 'Hạn mức mỗi ngày (UTC)', 'small muted'), stats);
     if(!state.profile.ai_available)notify('AI chưa được cấu hình. Bạn vẫn có thể quản lý tài liệu và tìm chính sách.');}
 }
 function clearPrivateState() {
@@ -63,6 +76,7 @@ async function navigate(view,{historyMode='push',focus=false}={}) {
   if(state.view==='admin'&&view!=='admin'&&(policyEditor.dirty||shopEditor.dirty)&&!confirm('Rời trang khi có thay đổi chưa lưu?'))return false;
   if(state.view!==view&&(state.view==='support'||$('ticket-dialog').open)&&supportUnsaved()&&!confirm('Rời trang khi nội dung hỗ trợ chưa được gửi?'))return false;
   state.view=view;
+  setNavigationOpen(false);
   document.querySelectorAll('[data-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.panel!==view));
   document.querySelectorAll('nav [data-view]').forEach(control=>{const active=control.dataset.view===view;control.classList.toggle('active',active);if(active)control.setAttribute('aria-current','page');else control.removeAttribute('aria-current');});
   $('view-label').textContent=labels[view];if(historyMode==='none'&&location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);if(historyMode!=='none'&&location.hash!==`#${view}`)history[historyMode==='replace'?'replaceState':'pushState'](null,'',`#${view}`);
@@ -75,6 +89,21 @@ async function navigate(view,{historyMode='push',focus=false}={}) {
   if(view==='admin')await loadAdmin();
   return true;
 }
+function setNavigationOpen(open) {
+  const toggle = $('nav-toggle');
+  toggle.setAttribute('aria-expanded', String(open));
+  toggle.textContent = open ? 'Đóng menu' : 'Menu';
+}
+
+$('nav-toggle').addEventListener('click', () => {
+  setNavigationOpen($('nav-toggle').getAttribute('aria-expanded') !== 'true');
+});
+document.querySelector('.sidebar').addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || $('nav-toggle').getAttribute('aria-expanded') !== 'true') return;
+  event.preventDefault();
+  setNavigationOpen(false);
+  $('nav-toggle').focus();
+});
 window.addEventListener('hashchange',()=>guard(null,async()=>{if(!await navigate(location.hash.slice(1),{historyMode:'none',focus:true}))history.replaceState(null,'',`#${state.view}`);}));
 function renderSources() {
   $('source-selector').replaceChildren();

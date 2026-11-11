@@ -314,3 +314,21 @@ test('copy answer writes only displayed text and citations to the clipboard', as
   await until(() => copied);
   assert.equal(copied, 'Bảo hành 12 tháng.\n\nNguồn tham khảo\n\nS1 · Hướng dẫn — Trang 4\nThời hạn 12 tháng');
 });
+
+test('navigation disclosure closes on Escape and after choosing a page', async t => {
+  const f = await fixture(t);
+  const toggle = f.$('nav-toggle');
+  const navigation = f.$('main-navigation');
+  f.click('nav-toggle');
+  assert.equal(toggle.getAttribute('aria-expanded'), 'true');
+  const history = navigation.querySelector('[data-view="history"]');
+  history.dispatchEvent(new f.w.KeyboardEvent('keydown', {key:'Escape',bubbles:true,cancelable:true}));
+  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(f.w.document.activeElement, toggle);
+  f.click('nav-toggle');
+  f.nav('history');
+  await until(() => f.w.location.hash === '#history');
+  assert.equal(toggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(history.getAttribute('aria-current'), 'page');
+  assert.equal(f.w.document.activeElement.textContent, 'Lịch sử hỏi đáp.');
+});
