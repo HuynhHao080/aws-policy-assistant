@@ -141,3 +141,5 @@ Internal writes change the opaque shared revision but preserve public `updated_a
 The API reads the pinned S3 extraction version and rechecks document and account state before returning text. Unauthenticated requests return 401, other owners receive 404, invalid pages receive 400, and documents awaiting processing return 409. The endpoint uses the application request quota.
 
 Admin ticket responses include `customer_waiting_since`, the timestamp of the first consecutive unanswered customer message on an open or in-progress request, or null. Assignments, internal notes, and status-only changes do not count as public replies. The staff queue can sort waiting requests among the pages already loaded. Customer responses omit this field.
+
+Customer ticket responses include `last_staff_reply_at`, the time of the latest public staff reply, or null. List responses omit message bodies.

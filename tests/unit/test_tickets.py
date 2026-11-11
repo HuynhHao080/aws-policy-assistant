@@ -54,6 +54,7 @@ def test_admin_queue_wait_clock_tracks_unanswered_customer_messages(support):
         return result
 
     assert row()["customer_waiting_since"] == item["created_at"]
+    assert request("/tickets")[1]["tickets"][0]["last_staff_reply_at"] is None
     status, claimed = request(path(item, True), "PATCH", owner="staff", claims=ADMIN, data={
         "action": "claim", "expected_revision": item["revision"],
     })
@@ -63,6 +64,9 @@ def test_admin_queue_wait_clock_tracks_unanswered_customer_messages(support):
         "action": "update", "expected_revision": claimed["revision"], "status": "in_progress", "message": "Checking.",
     })
     assert status == 200 and row()["customer_waiting_since"] is None
+    customer_summary = request("/tickets")[1]["tickets"][0]
+    assert customer_summary["last_staff_reply_at"] == reply["messages"][-1]["created_at"]
+    assert "messages" not in customer_summary
     status, followup = request(path(item), "PATCH", data={
         "expected_revision": reply["revision"], "message": "Could you confirm?",
     })

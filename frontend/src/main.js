@@ -27,6 +27,7 @@ let sessionEpoch=0, signingOut=false;
 let adminPolicyToken=null,adminPolicyKeyword='',adminListEpoch=0;
 let ticketToken=null,adminTicketToken=null,ticketListEpoch=0,adminTicketListEpoch=0;
 const adminQueueRows = new Map();
+const customerTicketRows = new Map();
 const shopEditor=new ShopEditor((path,options)=>{needApi();return api(path,options);},renderShopControls);
 const supportClient=new SupportClient((path,options)=>{needApi();return api(path,options);},renderSupportControls);
 const policyEditor=new PolicyEditor((path,options)=>{needApi();return api(path,options);},renderPolicyEditorStatus);
@@ -108,7 +109,7 @@ function clearPrivateState() {
   feedbackStore.clear();qualityReport=null;$('quality-overview').replaceChildren();$('quality-feedback').replaceChildren();$('quality-month').replaceChildren();$('export-quality').disabled=true;
   latestTasks.clear();state.policyToken=null;state.policyKeyword='';state.auditToken=null;$('document-count').textContent='—';$('policy-keyword').value='';$('ticket-lookup-form').reset();$('admin-ticket-category').value='';$('admin-ticket-priority').value='';$('admin-ticket-filter').value='open';$('admin-ticket-assignee').value='all';for(const id of ['more-documents','more-sources','more-history','more-policies','more-tickets','more-admin-tickets','more-audit'])$(id).classList.add('hidden');$('answer-area').setAttribute('aria-busy','false');$('question-count').textContent='0 / 2.000 ký tự';$('policy-dialog').close();$('policy-dialog-content').replaceChildren();
   shopEditor.clear();fillShopEditor(null);$('shop-profile').replaceChildren(node('p','Đăng nhập để xem thông tin shop.'));$('shop-context').classList.add('hidden');
-  supportClient.clear();resetAdminQueue();ticketToken=null;adminTicketToken=null;ticketListEpoch++;adminTicketListEpoch++;
+  supportClient.clear();resetAdminQueue();customerTicketRows.clear();customerTicketFilter.value='all';customerTicketStatus.textContent='';ticketToken=null;adminTicketToken=null;ticketListEpoch++;adminTicketListEpoch++;
   $('ticket-dialog').close();$('ticket-thread').replaceChildren();$('new-ticket-form').reset();setSupportAnswer('');$('ticket-reply-form').reset();$('ticket-note-form').reset();$('ticket-takeover-form').reset();$('ticket-internal-notes').replaceChildren();$('ticket-assignment-history').replaceChildren();$('ticket-assignment-label').textContent='';$('ticket-note-count').textContent='';$('ticket-staff-controls').classList.add('hidden');
   policyEditor.clear();adminPolicyToken=null;adminPolicyKeyword='';adminListEpoch++;
   sessionEpoch++;state.user=null;state.profile=null;state.docs=[];state.selected.clear();state.cache.clear();state.docToken=null;state.historyToken=null;
@@ -952,6 +953,10 @@ function supportRow(row,staff){
   const card=node('article',undefined,'support-row'),head=node('div');head.append(node('strong',row.subject),node('small',`#${row.ticket_id.slice(-8).toUpperCase()} · ${new Date(row.updated_at).toLocaleString('vi-VN')} · ${row.message_count} tin nhắn`));
   head.append(node('small',`${supportCategories[row.category||'general']} · Ưu tiên: ${supportPriorities[row.priority||'normal']}${row.order_ref?` · Đơn: ${row.order_ref}`:''}`,`triage-meta ${row.priority||'normal'}`));
   if(staff)head.append(node('small',row.assignment==='mine'?'Bạn phụ trách':row.assignment==='other'?'Nhân viên khác phụ trách':'Chưa có người nhận','assignment-label'));
+  if (!staff && row.last_staff_reply_at) {
+    const replied = new Date(row.last_staff_reply_at);
+    head.append(node('small', `Nhân viên phản hồi lúc ${replied.toLocaleString('vi-VN')}`, 'assignment-label'));
+  }
   if (staff && row.customer_waiting_since) {
     const since = new Date(row.customer_waiting_since);
     head.append(node('small', `Chờ phản hồi từ ${since.toLocaleString('vi-VN')}`, 'assignment-label'));
@@ -959,10 +964,46 @@ function supportRow(row,staff){
   const open=button('Xem yêu cầu',async()=>{if(ticketDraftUnsaved()&&!confirm('Bỏ các nội dung chưa lưu để mở yêu cầu khác?'))return;await supportClient.open(row,staff);showTicket();},'secondary');open.setAttribute('aria-label',`Mở yêu cầu ${row.ticket_id}`);
   card.append(head,node('span',supportStates[row.status],`support-status ${row.status}`),open);return card;
 }
+const customerTicketFilter = node('select');
+for (const [value, label] of [
+  ['all', 'Tất cả yêu cầu'], ['replied', 'Có phản hồi từ nhân viên'], ['active', 'Đang mở hoặc xử lý'],
+]) {
+  const option = node('option', label);
+  option.value = value;
+  customerTicketFilter.append(option);
+}
+const customerTicketFilterLabel = node('label');
+customerTicketFilterLabel.append(node('span', 'Lọc yêu cầu'), customerTicketFilter);
+const customerTicketStatus = node('p', '', 'small muted');
+customerTicketStatus.setAttribute('role', 'status');
+$('ticket-list').before(customerTicketFilterLabel, customerTicketStatus);
+customerTicketFilter.addEventListener('change', renderCustomerTickets);
+
+function renderCustomerTickets() {
+  const rows = [...customerTicketRows.values()];
+  const filter = customerTicketFilter.value;
+  const visible = filter === 'replied'
+    ? rows.filter(row => row.last_staff_reply_at).sort((a,b) => Date.parse(b.last_staff_reply_at) - Date.parse(a.last_staff_reply_at))
+    : filter === 'active' ? rows.filter(row => ['open', 'in_progress'].includes(row.status)) : rows;
+  const list = $('ticket-list');
+  list.replaceChildren(...visible.map(row => supportRow(row, false)));
+  customerTicketStatus.textContent = `Hiển thị ${visible.length}/${rows.length} yêu cầu đã tải.`;
+  if (!visible.length) list.append(node('p',
+    ticketToken ? 'Trang đã tải chưa có yêu cầu phù hợp. Hãy tải thêm.' : 'Chưa có yêu cầu phù hợp.',
+    'empty-small'));
+}
+
 async function loadTickets(more=false){
-  needApi();const epoch=++ticketListEpoch;const result=await api(`/tickets?limit=20${more&&ticketToken?`&next_token=${encodeURIComponent(ticketToken)}`:''}`);if(epoch!==ticketListEpoch)return;
-  if(!more)$('ticket-list').replaceChildren();for(const row of result.tickets)$('ticket-list').append(supportRow(row,false));ticketToken=result.next_token;$('more-tickets').classList.toggle('hidden',!ticketToken);
-  if(!$('ticket-list').children.length&&!ticketToken)$('ticket-list').append(node('p','Chưa có yêu cầu. Nội dung mới sẽ chỉ được chia sẻ khi bạn bấm Gửi yêu cầu.','empty-small'));
+  needApi();
+  const epoch = ++ticketListEpoch;
+  const cursor = more && ticketToken ? `&next_token=${encodeURIComponent(ticketToken)}` : '';
+  const result = await api('/tickets?limit=20' + cursor);
+  if (epoch !== ticketListEpoch) return;
+  if (!more) customerTicketRows.clear();
+  for (const row of result.tickets) customerTicketRows.set(row.ticket_id, row);
+  ticketToken = result.next_token;
+  $('more-tickets').classList.toggle('hidden', !ticketToken);
+  renderCustomerTickets();
 }
 const adminQueueFilter = node('input');
 adminQueueFilter.type = 'checkbox';

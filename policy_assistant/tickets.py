@@ -76,6 +76,12 @@ def public(item, summary=False, admin=False, viewer=None):
         if not summary:
             keys |= {"internal_notes", "assignment_events"}
     result = {**{"category": "general", "priority": "normal", "order_ref": ""}, **{k: v for k, v in item.items() if k in keys}}
+    if not admin:
+        result["last_staff_reply_at"] = next(
+            (message.get("created_at") for message in reversed(item.get("messages", []))
+             if message.get("role") == "staff"),
+            None,
+        )
     if admin:
         result["assignment"] = "mine" if item.get("assigned_to") == viewer and viewer else "other" if item.get("assigned_to") else "unassigned"
         result.setdefault("internal_note_count", 0)
@@ -128,7 +134,7 @@ def page(service, owner, params, admin=False):
     if state and (not isinstance(state, str) or state not in STATES):
         raise Problem(400, "Invalid support status")
     args = {"Limit": limit, "ConsistentRead": True, "FilterExpression": Attr("expires_at").gt(int(time.time())),
-            "ProjectionExpression": "owner_id,ticket_id,subject,#status,created_at,updated_at,expires_at,message_count,#category,#priority,order_ref", "ExpressionAttributeNames": {"#status": "status", "#category": "category", "#priority": "priority"}}
+            "ProjectionExpression": "owner_id,ticket_id,subject,#status,created_at,updated_at,expires_at,message_count,#category,#priority,order_ref,messages", "ExpressionAttributeNames": {"#status": "status", "#category": "category", "#priority": "priority"}}
     if state:
         args["FilterExpression"] &= Attr("status").eq(state)
     for field, allowed, default in (("category", CATEGORIES, "general"), ("priority", PRIORITIES, "normal")):
@@ -144,7 +150,7 @@ def page(service, owner, params, admin=False):
         if reference:
             args["FilterExpression"] &= Attr("order_ref").eq(reference)
     if admin:
-        args["ProjectionExpression"] += ",assigned_to,assigned_at,staff_updated_at,internal_note_count,messages"
+        args["ProjectionExpression"] += ",assigned_to,assigned_at,staff_updated_at,internal_note_count"
         if assignee == "mine":
             args["FilterExpression"] &= Attr("assigned_to").eq(owner)
         elif assignee == "unassigned":

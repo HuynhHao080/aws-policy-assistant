@@ -567,3 +567,29 @@ test('staff can prioritize the oldest unanswered requests among loaded rows', as
   assert.equal(filter.checked, false);
   assert.equal(list.textContent, '');
 });
+
+test('customer can find staff replies in reverse reply order across loaded pages', async t => {
+  const row = (subject, status, reply = null) => ({
+    ticket_id:subject, subject, status, updated_at:'2026-11-10T00:00:00Z', last_staff_reply_at:reply, message_count:1,
+  });
+  const f = await fixture(t, {view:'support', override:(key, options, window, url) => {
+    if (key !== '/tickets') return undefined;
+    return url.searchParams.has('next_token')
+      ? json({tickets:[row('Newer reply','resolved','2026-11-09T00:00:00Z')]})
+      : json({tickets:[row('Still open','open'),row('Older reply','resolved','2026-11-05T00:00:00Z')],next_token:'next'});
+  }});
+  const list = f.$('ticket-list');
+  await until(() => list.querySelectorAll('article').length === 2);
+  const filter = list.previousElementSibling.previousElementSibling.querySelector('select');
+  filter.value = 'replied';
+  filter.dispatchEvent(new f.w.Event('change'));
+  const subjects = () => [...list.querySelectorAll('strong')].map(node => node.textContent);
+  assert.deepEqual(subjects(), ['Older reply']);
+  f.click('more-tickets');
+  await until(() => subjects().length === 2);
+  assert.deepEqual(subjects(), ['Newer reply','Older reply']);
+  assert.match(list.textContent, /Nhân viên phản hồi lúc/);
+  f.w.__expire();
+  assert.equal(filter.value, 'all');
+  assert.equal(list.textContent, '');
+});
