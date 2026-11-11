@@ -92,13 +92,76 @@ async function loadDocs(more=false) {
     tr.append(name,status,node('td',String(doc.page_count||'—')),actions);$('documents-list').append(tr);}
   if(!state.docs.length){const row=node('tr');const td=node('td','Chưa có tài liệu. Tải PDF đầu tiên của bạn ở phía trên.','empty-small');td.colSpan=4;row.append(td);$('documents-list').append(row);}renderSources();
 }
-async function download(docId) {
-  const data=await api(`/documents/${encodeURIComponent(docId)}/download`);const url=new URL(data.download_url);if(url.protocol!=='https:')throw new Error('Đường dẫn tải không hợp lệ.');const anchor=node('a');anchor.href=url.href;anchor.rel='noopener noreferrer';anchor.download='policy-document.pdf';anchor.click();
+async function download(docId, isCurrent = () => true) {
+  const data = await api(`/documents/${encodeURIComponent(docId)}/download`);
+  if (!isCurrent()) return;
+  const url = new URL(data.download_url);
+  if (url.protocol !== 'https:') throw new Error('Đường dẫn tải không hợp lệ.');
+  const anchor = node('a');
+  anchor.href = url.href;
+  anchor.rel = 'noopener noreferrer';
+  anchor.download = 'policy-document.pdf';
+  anchor.click();
+}
+function citationTitle(source) {
+  return `${source.source_id} · ${source.title}${source.page ? ` — Trang ${source.page}` : ''}`;
+}
+
+async function openCitation(source) {
+  const dialog = $('policy-dialog');
+  const content = $('policy-dialog-content');
+  const current = node('section');
+  const quote = node('blockquote', source.excerpt || 'Đoạn trích chưa có trong lịch sử này.', 'citation-excerpt');
+  $('policy-dialog-title').textContent = citationTitle(source);
+  content.replaceChildren(node('h3', 'Đoạn trích dùng để trả lời'), quote, current);
+  if (!dialog.open) dialog.showModal();
+
+  const epoch = sessionEpoch;
+  const isCurrent = () => epoch === sessionEpoch && dialog.open && content.contains(current);
+  if (source.doc_id) {
+    const status = node('p', '', 'small muted');
+    status.setAttribute('role', 'status');
+    const action = button('Tải PDF gốc', async () => {
+      status.textContent = 'Đang lấy liên kết tải PDF…';
+      try {
+        await download(source.doc_id, isCurrent);
+        if (isCurrent()) status.textContent = 'Đã mở liên kết tải PDF.';
+      } catch (error) {
+        if (!isCurrent()) return;
+        status.textContent = [403, 404].includes(error.status)
+          ? 'PDF gốc không còn truy cập được.'
+          : 'Chưa tải được PDF. Bạn có thể thử lại.';
+      }
+    }, 'secondary');
+    current.append(action, status);
+    return;
+  }
+  if (!source.policy_id) return;
+
+  const status = node('p', 'Đang tải chính sách hiện hành…', 'small muted');
+  status.setAttribute('role', 'status');
+  current.append(node('h3', 'Chính sách hiện hành'), status);
+  try {
+    const policy = await api(`/policies/${encodeURIComponent(source.policy_id)}`);
+    if (!isCurrent()) return;
+    status.textContent = 'Nội dung công bố hiện tại có thể đã thay đổi kể từ khi trả lời.';
+    showPolicy(policy, current);
+  } catch (error) {
+    if (!isCurrent()) return;
+    status.textContent = error.status === 404
+      ? 'Chính sách hiện không còn được công bố hoặc đã hết hiệu lực.'
+      : 'Chưa tải được chính sách hiện hành. Mở lại nguồn để thử lại.';
+  }
 }
 function renderAnswer(question,result,target=$('answer-area'),append=false) {
   if(!append)target.replaceChildren();target.append(node('div',question,'question-bubble'),node('div',result.grounded?'TRẢ LỜI TỪ NGUỒN THAM KHẢO':'CHƯA ĐỦ THÔNG TIN','answer-label'),node('p',result.answer,'answer-text'),node('small',({all:'Nguồn: chính sách chung + PDF cá nhân',policies:'Nguồn: chỉ chính sách chung',documents:'Nguồn: chỉ PDF đã chọn'})[result.source_scope||'all'],'small muted'));
   renderFeedback(result,target);
-  for(const source of result.citations||[]){const card=button('',async()=>{if(source.doc_id)await download(source.doc_id);else{const policy=await api(`/policies/${encodeURIComponent(source.policy_id)}`);$('policy-dialog-title').textContent=policy.title;$('policy-dialog-content').replaceChildren();showPolicy(policy,$('policy-dialog-content'));$('policy-dialog').showModal();}},'citation-card');card.append(node('strong',`${source.source_id} · ${source.title}${source.page?` — Trang ${source.page}`:''}`),node('p',source.excerpt));target.append(card);}target.append(button('Nhờ nhân viên hỗ trợ',async()=>{
+  for (const source of result.citations || []) {
+    const card = button('', () => openCitation(source), 'citation-card');
+    card.append(node('strong', citationTitle(source)));
+    target.append(card);
+  }
+  target.append(button('Nhờ nhân viên hỗ trợ',async()=>{
     if(supportUnsaved()&&!confirm('Thay nội dung hỗ trợ đang soạn bằng câu hỏi này?'))return;
     $('new-ticket-form').reset();$('new-ticket-subject').value='Cần làm rõ chính sách';$('new-ticket-message').value=question.slice(0,1500);$('ticket-consent').checked=false;
     await navigate('support',{focus:true});notify(question.length>1500?'Đã chép 1.500 ký tự đầu để bạn xem lại. Chưa gửi cho nhân viên.':'Đã chép câu hỏi để bạn xem lại. Chưa gửi cho nhân viên; PDF và đoạn trích không đính kèm.');
@@ -284,10 +347,18 @@ document.addEventListener('click',event=>{const nav=event.target.closest('[data-
 $('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else await manager.signinRedirect();}));
 $('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
-  needApi();const question=$('question').value.trim();if(!question)return;
+  needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
   const payload=questionPayload(question,[...state.selected],$('source-scope').value),epoch=sessionEpoch;
   $('answer-area').setAttribute('aria-busy','true');$('answer-area').replaceChildren(node('p','Đang tìm nguồn và chuẩn bị câu trả lời…','loading-state'));
-  try{const result=await api('/ask',{method:'POST',body:payload});if(epoch!==sessionEpoch)return;renderAnswer(question,result);$('question').value='';$('question-count').textContent='0 / 2.000 ký tự';}
+  try {
+    const result = await api('/ask', {method:'POST', body:payload});
+    if (epoch !== sessionEpoch) return;
+    renderAnswer(question, result);
+    if ($('question').value === submittedDraft) {
+      $('question').value = '';
+      $('question-count').textContent = '0 / 2.000 ký tự';
+    }
+  }
   catch(error){if(epoch!==sessionEpoch)return;$('answer-area').replaceChildren(node('p','Chưa nhận được câu trả lời. Câu hỏi vẫn được giữ để bạn xem lại. Nếu kết nối bị ngắt, kiểm tra Lịch sử trước khi gửi lại.','empty-small'));throw error;}
   finally{if(epoch===sessionEpoch)$('answer-area').setAttribute('aria-busy','false');}
 });});

@@ -44,7 +44,7 @@ test('guest welcome prevents private forms being interactive and directs sign-in
 test('administrator tabs preserve form state and support keyboard navigation',async t=>{const f=await fixture(t,{admin:true,view:'admin'});await until(()=>f.calls.some(c=>c.key==='/admin/shop'));f.click('admin-tab-shop');assert.equal(f.$('admin-panel-shop').classList.contains('hidden'),false);const field=f.$('shop-shop_name');field.value='Unsent synthetic shop';field.dispatchEvent(new f.w.Event('input',{bubbles:true}));f.click('admin-tab-support');f.click('admin-tab-shop');assert.equal(field.value,'Unsent synthetic shop');f.$('admin-tab-shop').dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.equal(f.$('admin-tab-quality').getAttribute('aria-selected'),'true');assert.deepEqual(f.errors,[]);});
 test('customer cannot open administrator workspace via a direct hash',async t=>{const f=await fixture(t,{view:'admin'});await until(()=>f.$('view-label').textContent==='Tài khoản');assert.equal(f.w.location.hash,'#account');assert.equal(f.calls.some(c=>c.key.startsWith('/admin/')),false);});
 test('invalid PDF-only question keeps the previous answer and draft without sending an AI request',async t=>{const f=await fixture(t);f.$('answer-area').textContent='Previous verified answer';f.$('question').value='Unsent question';f.$('source-scope').value='documents';f.submit('question-form');await until(()=>f.$('notice').textContent.includes('ít nhất'));assert.equal(f.$('answer-area').textContent,'Previous verified answer');assert.equal(f.$('question').value,'Unsent question');assert.equal(f.calls.some(c=>c.key==='/ask'),false);});
-test('policy citations open full plaintext source in the current view',async t=>{const f=await fixture(t,{override:key=>key==='/ask'?json({answer:'Synthetic answer',grounded:true,source_scope:'policies',citations:[{source_id:'S1',title:'Synthetic policy',policy_id:'SYNTHETIC',excerpt:'Source excerpt'}]}):key==='/policies/SYNTHETIC'?json({policy_id:'SYNTHETIC',title:'Synthetic policy',content:'<script>Plain text only</script>',category:'Test'}):undefined});f.$('question').value='Synthetic question';f.submit('question-form');await until(()=>f.$('answer-area').textContent.includes('Synthetic answer'));f.$('answer-area').querySelector('.citation-card').click();await until(()=>f.$('policy-dialog').open);assert.ok(f.$('policy-dialog-content').textContent.includes('<script>Plain text only</script>'));assert.equal(f.$('policy-dialog-content').querySelector('script'),null);assert.equal(f.$('answer-area').textContent.includes('Synthetic answer'),true);});
+test('policy citations open full plaintext source in the current view',async t=>{const f=await fixture(t,{override:key=>key==='/ask'?json({answer:'Synthetic answer',grounded:true,source_scope:'policies',citations:[{source_id:'S1',title:'Synthetic policy',policy_id:'SYNTHETIC',excerpt:'Source excerpt'}]}):key==='/policies/SYNTHETIC'?json({policy_id:'SYNTHETIC',title:'Synthetic policy',content:'<script>Plain text only</script>',category:'Test'}):undefined});f.$('question').value='Synthetic question';f.submit('question-form');await until(()=>f.$('answer-area').textContent.includes('Synthetic answer'));f.$('answer-area').querySelector('.citation-card').click();await until(()=>f.$('policy-dialog-content').textContent.includes('<script>Plain text only</script>'));assert.equal(f.$('policy-dialog').open,true);assert.ok(f.$('policy-dialog-content').textContent.includes('Source excerpt'));assert.equal(f.$('policy-dialog-content').querySelector('script'),null);assert.equal(f.$('answer-area').textContent.includes('Synthetic answer'),true);});
 test('errors are visible inside an open support dialog and preserve the unsent reply',async t=>{const id='t-'+'0'.repeat(20)+'-'+'a'.repeat(32);const row={ticket_id:id,subject:'Synthetic ticket',status:'open',updated_at:'2026-11-04T00:00:00Z',message_count:1};const f=await fixture(t,{view:'support',override:(key,o)=>key==='/tickets'?json({tickets:[row],next_token:null}):key==='/tickets/'+id?(o.method==='PATCH'?json({message:'Synthetic conflict'},409):json({...row,revision:'v1',messages:[{role:'customer',body:'Test message',created_at:row.updated_at}],expires_at:2000000000})):undefined});await until(()=>f.$('ticket-list').querySelector('button'));f.$('ticket-list').querySelector('button').click();await until(()=>f.$('ticket-dialog').open);f.$('ticket-reply-message').value='Keep my reply';f.submit('ticket-reply-form');await until(()=>!f.$('ticket-dialog-notice').classList.contains('hidden'));assert.equal(f.$('ticket-dialog-notice').getAttribute('role'),'alert');assert.equal(f.$('ticket-reply-message').value,'Keep my reply');});
 test('navigation maintains browser history and canceled logout preserves unsent work',async t=>{const f=await fixture(t);f.$('question').value='Unsent question';const length=f.w.history.length;f.nav('documents');await until(()=>f.w.location.hash==='#documents');assert.equal(f.w.history.length,length+1);f.w.history.back();await until(()=>f.w.location.hash==='#assistant'&&f.$('view-label').textContent==='Trợ lý chính sách');assert.equal(f.$('question').value,'Unsent question');f.click('auth-button');await new Promise(r=>setTimeout(r,5));assert.equal(f.$('account-label').textContent,'unit@example.invalid');assert.equal(f.$('question').value,'Unsent question');assert.equal(f.$('auth-button').disabled,false);});
 test('a late document list cannot replace the latest refresh',async t=>{let first,reads=0;const f=await fixture(t,{override:key=>{if(key!=='/documents')return;reads++;if(reads===1)return new Promise(resolve=>first=resolve);return json({documents:[],next_token:null});}});await until(()=>first);f.nav('documents');await until(()=>reads===2);first(json({documents:[{doc_id:'old',title:'STALE PRIVATE TITLE',status:'processed'}],next_token:null}));await new Promise(r=>setTimeout(r,10));assert.equal(f.$('documents-list').textContent.includes('STALE PRIVATE TITLE'),false);});
@@ -119,4 +119,67 @@ test('customer dialog has no staff note or assignment controls',async t=>{
  const f=await fixture(t,{view:'support',override:key=>key==='/tickets'?json({tickets:[record],next_token:null}):key==='/tickets/'+id?json(record):undefined});
  await until(()=>f.$('ticket-list').querySelector('button'));f.$('ticket-list').querySelector('button').click();await until(()=>f.$('ticket-dialog').open);
  assert.equal(f.$('ticket-staff-controls').classList.contains('hidden'),true);assert.equal(f.$('ticket-note-fields').disabled,true);assert.equal(f.$('claim-ticket').disabled,true);assert.equal(f.$('ticket-internal-notes').textContent,'');assert.deepEqual(f.errors,[]);
+});
+
+test('history keeps the original excerpt when its policy expires', async t => {
+  const f = await fixture(t, {
+    view: 'history',
+    override: key => {
+      if (key === '/conversations') return json({
+        conversations: [{
+          conversation_id: 'archived-policy-answer',
+          created_at: '2026-11-04T00:00:00Z',
+          question: 'Chính sách lúc đó là gì?',
+          answer: 'Trả lời từ bản cũ',
+          grounded: true,
+          citations: [{source_id: 'S1', policy_id: 'ARCHIVED', title: 'Bảo hành', excerpt: 'Đoạn trích lúc hỏi'}],
+        }],
+      });
+      if (key === '/policies/ARCHIVED') return json({message: 'Not found'}, 404);
+    },
+  });
+  await until(() => f.$('history-list').querySelector('.citation-card'));
+  f.$('history-list').querySelector('.citation-card').click();
+  await until(() => f.$('policy-dialog-content').textContent.includes('hết hiệu lực'));
+  assert.equal(f.$('policy-dialog').open, true);
+  assert.equal(f.$('policy-dialog-content').querySelector('blockquote').textContent, 'Đoạn trích lúc hỏi');
+});
+
+test('PDF citation displays its page and excerpt even when the original PDF is unavailable', async t => {
+  const f = await fixture(t, {
+    override: key => {
+      if (key === '/ask') return json({
+        answer: 'Synthetic PDF answer',
+        grounded: true,
+        citations: [{source_id: 'S1', doc_id: 'owned', title: 'Hướng dẫn', page: 3, excerpt: 'Nội dung trang 3'}],
+      });
+      if (key === '/documents/owned/download') return json({message: 'Not found'}, 404);
+    },
+  });
+  f.$('question').value = 'Tìm thông tin trong PDF';
+  f.submit('question-form');
+  await until(() => f.$('answer-area').querySelector('.citation-card'));
+  f.$('answer-area').querySelector('.citation-card').click();
+  await until(() => f.$('policy-dialog').open);
+  assert.match(f.$('policy-dialog-title').textContent, /Trang 3/);
+  assert.equal(f.calls.some(call => call.key.endsWith('/download')), false);
+  f.$('policy-dialog-content').querySelector('button').click();
+  await until(() => f.$('policy-dialog-content').textContent.includes('không còn truy cập'));
+  assert.equal(f.$('policy-dialog-content').querySelector('blockquote').textContent, 'Nội dung trang 3');
+});
+
+test('an answer arriving late preserves the next question being composed', async t => {
+  let respond;
+  const f = await fixture(t, {
+    override: key => key === '/ask' ? new Promise(resolve => { respond = resolve; }) : undefined,
+  });
+  f.$('question').value = 'Câu đầu tiên';
+  f.submit('question-form');
+  await until(() => respond);
+  f.$('question').value = 'Câu đang soạn';
+  f.$('question').dispatchEvent(new f.w.Event('input', {bubbles: true}));
+  respond(json({answer: 'Trả lời câu đầu', grounded: false, citations: []}));
+  await until(() => f.$('answer-area').textContent.includes('Trả lời câu đầu'));
+  assert.equal(f.$('question').value, 'Câu đang soạn');
+  assert.match(f.$('question-count').textContent, /^13 /);
 });
