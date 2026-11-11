@@ -31,6 +31,7 @@ function needApi() { if(!api)throw new Error('Dịch vụ chưa được kết n
 function groups() { const value=state.profile?.groups||[];return Array.isArray(value)?value:String(value).replace(/[\[\]"]/g,'').split(',').map(s=>s.trim()); }
 function signedIn() {
   $('guest-welcome').classList.toggle('hidden',Boolean(state.user));
+  $('history-toolbar').classList.toggle('hidden', !state.user);
   document.querySelectorAll('form').forEach(form=>{if(state.user)form.removeAttribute('inert');else form.setAttribute('inert','');});
   document.querySelectorAll('[data-auth-control]').forEach(control=>{control.disabled=!state.user;});
   document.querySelector('.danger-zone').classList.toggle('hidden',!state.user);
@@ -42,6 +43,9 @@ function signedIn() {
     if(!state.profile.ai_available)notify('AI chưa được cấu hình. Bạn vẫn có thể quản lý tài liệu và tìm chính sách.');}
 }
 function clearPrivateState() {
+  $('history-filter').value = '';
+  $('history-source-filter').value = 'all';
+  $('history-results').textContent = '';
   feedbackStore.clear();qualityReport=null;$('quality-overview').replaceChildren();$('quality-feedback').replaceChildren();$('quality-month').replaceChildren();$('export-quality').disabled=true;
   latestTasks.clear();state.policyToken=null;state.policyKeyword='';state.auditToken=null;$('document-count').textContent='—';$('policy-keyword').value='';$('ticket-lookup-form').reset();$('admin-ticket-category').value='';$('admin-ticket-priority').value='';$('admin-ticket-filter').value='open';$('admin-ticket-assignee').value='all';for(const id of ['more-documents','more-sources','more-history','more-policies','more-tickets','more-admin-tickets','more-audit'])$(id).classList.add('hidden');$('answer-area').setAttribute('aria-busy','false');$('question-count').textContent='0 / 2.000 ký tự';$('policy-dialog').close();$('policy-dialog-content').replaceChildren();
   shopEditor.clear();fillShopEditor(null);$('shop-profile').replaceChildren(node('p','Đăng nhập để xem thông tin shop.'));$('shop-context').classList.add('hidden');
@@ -209,8 +213,13 @@ async function openCitation(source) {
       : 'Chưa tải được chính sách hiện hành. Mở lại nguồn để thử lại.';
   }
 }
-function renderAnswer(question,result,target=$('answer-area'),append=false) {
-  if(!append)target.replaceChildren();target.append(node('div',question,'question-bubble'),node('div',result.grounded?'TRẢ LỜI TỪ NGUỒN THAM KHẢO':'CHƯA ĐỦ THÔNG TIN','answer-label'),node('p',result.answer,'answer-text'),node('small',({all:'Nguồn: chính sách chung + PDF cá nhân',policies:'Nguồn: chỉ chính sách chung',documents:'Nguồn: chỉ PDF đã chọn'})[result.source_scope||'all'],'small muted'));
+function renderAnswer(question, result, target = $('answer-area'), inHistory = false) {
+  if (!inHistory) {
+    target.replaceChildren(node('div', question, 'question-bubble'));
+  }
+  target.append(node('div', result.grounded ? 'Có nguồn tham khảo' : 'Chưa đủ thông tin', 'answer-label'),
+    node('p', result.answer, 'answer-text'),
+    node('small', ({all:'Nguồn: chính sách chung + PDF cá nhân',policies:'Nguồn: chỉ chính sách chung',documents:'Nguồn: chỉ PDF đã chọn'})[result.source_scope || 'all'], 'small muted'));
   renderFeedback(result,target);
   const sources = result.citations || [];
   for (const source of sources) {
@@ -218,14 +227,22 @@ function renderAnswer(question,result,target=$('answer-area'),append=false) {
     card.append(node('strong', citationTitle(source)));
     target.append(card);
   }
-  if (sources.length > 1) {
-    target.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
-  }
-  target.append(button('Nhờ nhân viên hỗ trợ',async()=>{
+  const actions = node('div', undefined, 'answer-actions');
+  if (sources.length > 1) actions.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
+  actions.append(button('Sao chép câu trả lời', async () => {
+    if (!navigator.clipboard?.writeText) throw new Error('Trình duyệt chưa cấp quyền sao chép. Bạn có thể chọn và sao chép văn bản.');
+    const epoch = sessionEpoch;
+    const citations = sources.map(source => `${citationTitle(source)}\n${source.excerpt || ''}`);
+    await navigator.clipboard.writeText([result.answer, ...(citations.length ? ['Nguồn tham khảo', ...citations] : [])].join('\n\n'));
+    if (epoch === sessionEpoch) notify(citations.length ? 'Đã sao chép câu trả lời và các nguồn đi kèm.' : 'Đã sao chép câu trả lời.');
+  }, 'secondary'));
+  actions.append(button('Nhờ nhân viên hỗ trợ',async()=>{
     if(supportUnsaved()&&!confirm('Thay nội dung hỗ trợ đang soạn bằng câu hỏi này?'))return;
     $('new-ticket-form').reset();$('new-ticket-subject').value='Cần làm rõ chính sách';$('new-ticket-message').value=question.slice(0,1500);$('ticket-consent').checked=false;
     await navigate('support',{focus:true});notify(question.length>1500?'Đã chép 1.500 ký tự đầu để bạn xem lại. Chưa gửi cho nhân viên.':'Đã chép câu hỏi để bạn xem lại. Chưa gửi cho nhân viên; PDF và đoạn trích không đính kèm.');
-  }));target.scrollTop=target.scrollHeight;
+  }));
+  target.append(actions);
+  target.scrollTop = 0;
 }
 function renderFeedback(answer,target){
   const saved=feedbackStore.register(answer);if(!saved)return;
@@ -253,7 +270,91 @@ $('quality-month').onchange=()=>guard($('quality-month'),loadQuality);$('refresh
 $('export-quality').onclick=()=>guard($('export-quality'),()=>{if(!qualityReport)throw new Error('Tải báo cáo trước khi xuất.');const url=URL.createObjectURL(new Blob([JSON.stringify(qualityReport,null,2)],{type:'application/json'}));const link=node('a');link.href=url;link.download=`policy-assistant-quality-${qualityReport.month}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 function showPolicy(policy,target) {const card=node('article',undefined,'policy-card');card.append(node('div',`${policy.policy_id} / ${policy.category||'Chính sách'}`,'policy-meta'),node('h2',policy.title));if(policy.effective_from||policy.effective_until)card.append(node('p',validityText(policy),'small muted'));card.append(node('p',policy.content));target.append(card);}
 async function searchPolicies(more=false){needApi();const isCurrent=latestTasks.begin('policies');if(!more){state.policyKeyword=$('policy-keyword').value.trim();state.policyToken=null;$('policy-results').replaceChildren();}const result=await api(`/policies?keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${state.policyToken?`&next_token=${encodeURIComponent(state.policyToken)}`:''}`);if(!isCurrent())return;for(const item of result.policies)showPolicy(item,$('policy-results'));state.policyToken=result.next_token;$('more-policies').classList.toggle('hidden',!state.policyToken);if(!result.policies.length&&!state.policyToken)$('policy-results').append(node('p','Không còn kết quả phù hợp.','empty-small'));}
-async function loadHistory(more=false){needApi();const isCurrent=latestTasks.begin('history');const result=await api(`/conversations${more&&state.historyToken?`?next_token=${encodeURIComponent(state.historyToken)}`:''}`);if(!isCurrent())return;if(!more)$('history-list').replaceChildren();for(const item of result.conversations){const card=node('article',undefined,'history-card');card.append(node('small',new Date(item.created_at).toLocaleString('vi-VN'),'small'));renderAnswer(item.question,item,card,true);card.append(button('Xóa cuộc hỏi đáp',async()=>{if(!confirm('Xóa cuộc hỏi đáp này?'))return;await api(`/conversations/${encodeURIComponent(item.conversation_id)}`,{method:'DELETE'});card.remove();}));$('history-list').append(card);}state.historyToken=result.next_token;$('more-history').classList.toggle('hidden',!state.historyToken);if(!more&&!result.conversations.length&&!state.historyToken)$('history-list').append(node('p','Chưa có cuộc hỏi đáp nào.','empty-small'));}
+function historySearchText(value) {
+  return String(value ?? '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replaceAll('đ', 'd');
+}
+
+function applyHistoryFilters() {
+  const terms = historySearchText($('history-filter').value).trim().split(/\s+/).filter(Boolean);
+  const source = $('history-source-filter').value;
+  const cards = [...$('history-list').querySelectorAll('[data-conversation-id]')];
+  let visible = 0;
+  for (const card of cards) {
+    const matches = (source === 'all' || card.dataset.source === source)
+      && terms.every(term => card.dataset.search.includes(term));
+    card.hidden = !matches;
+    if (matches) visible++;
+  }
+  const pagination = state.historyToken ? ' · Có thể tải thêm để tìm trong các cuộc hỏi đáp cũ hơn.' : '';
+  $('history-results').textContent = cards.length
+    ? `${visible} / ${cards.length} cuộc đã tải${pagination}`
+    : state.historyToken ? 'Trang này chưa có cuộc hỏi đáp còn lưu. Chọn Tải thêm để tiếp tục.' : 'Chưa có cuộc hỏi đáp nào.';
+}
+
+async function putQuestionInComposer(value) {
+  const field = $('question');
+  const draft = field.value;
+  if (draft.trim() && draft !== value && !confirm('Thay câu hỏi đang soạn?')) return;
+  const epoch = sessionEpoch;
+  if (state.view !== 'assistant' && !await navigate('assistant', {focus:true})) return;
+  if (!state.user || epoch !== sessionEpoch || field.value !== draft) return;
+  field.value = value;
+  field.dispatchEvent(new Event('input', {bubbles:true}));
+  field.focus();
+}
+
+async function loadHistory(more = false) {
+  needApi();
+  const isCurrent = latestTasks.begin('history');
+  const list = $('history-list');
+  if (more && !state.historyToken) return;
+  $('history-results').textContent = 'Đang tải lịch sử…';
+  let result;
+  try {
+    result = await api(`/conversations${more ? `?next_token=${encodeURIComponent(state.historyToken)}` : ''}`);
+  } catch (error) {
+    if (!isCurrent()) return;
+    applyHistoryFilters();
+    throw error;
+  }
+  if (!isCurrent()) return;
+  if (!more) list.replaceChildren();
+  const existing = new Set([...list.querySelectorAll('[data-conversation-id]')].map(card => card.dataset.conversationId));
+  for (const item of result.conversations) {
+    if (existing.has(item.conversation_id)) continue;
+    const card = node('details', undefined, 'history-card');
+    card.dataset.conversationId = item.conversation_id;
+    card.dataset.source = item.grounded ? 'grounded' : 'unanswered';
+    card.dataset.search = historySearchText([item.question, item.answer, ...(item.citations || []).map(source => source.title)].join(' '));
+    card.open = !list.children.length;
+    const summary = node('summary');
+    const date = node('time', new Date(item.created_at).toLocaleString('vi-VN'), 'small');
+    date.dateTime = item.created_at;
+    const meta = node('span', undefined, 'history-meta');
+    meta.append(date, node('span', item.grounded ? 'Có nguồn' : 'Thiếu nguồn', 'history-source'));
+    summary.append(node('strong', item.question), meta);
+    const body = node('div', undefined, 'history-body');
+    renderAnswer(item.question, item, body, true);
+    body.querySelector('.answer-actions').append(
+      button('Dùng lại câu hỏi', () => putQuestionInComposer(item.question), 'secondary'),
+      button('Xóa cuộc hỏi đáp', async () => {
+        if (!confirm('Xóa cuộc hỏi đáp này?')) return;
+        await api(`/conversations/${encodeURIComponent(item.conversation_id)}`, {method:'DELETE'});
+        for (const row of list.querySelectorAll('[data-conversation-id]')) {
+          if (row.dataset.conversationId === item.conversation_id) row.remove();
+        }
+        applyHistoryFilters();
+      }),
+    );
+    card.append(summary, body);
+    list.append(card);
+    existing.add(item.conversation_id);
+  }
+  state.historyToken = result.next_token;
+  $('more-history').classList.toggle('hidden', !state.historyToken);
+  applyHistoryFilters();
+}
+
 async function loadAudit(more=false){const isCurrent=latestTasks.begin('audit');const result=await api(`/admin/audit${more&&state.auditToken?`?next_token=${encodeURIComponent(state.auditToken)}`:''}`);if(!isCurrent())return;if(!more)$('audit-list').replaceChildren();for(const item of result.events){const action=({'policy.put':'Công bố chính sách','policy.draft':'Lưu bản nháp','policy.publish':'Công bố chính sách','policy.archive':'Ngừng công bố','policy.archive.demo':'Ngừng công bố DEMO','policy.discard_draft':'Bỏ bản nháp','policy.delete':'Xóa chính sách','shop.save_draft':'Lưu nháp thông tin shop','shop.publish':'Công bố thông tin shop','shop.unpublish':'Ngừng công bố thông tin shop','shop.discard_draft':'Bỏ nháp thông tin shop','ticket.update':'Cập nhật hỗ trợ','ticket.delete':'Xóa yêu cầu hỗ trợ'})[item.action]||item.action;const row=node('div',`${action} · ${item.resource}`,'audit-event');row.append(node('small',`${new Date(item.event_id.split('#')[0]).toLocaleString('vi-VN')} · ${item.actor}`));$('audit-list').append(row);}state.auditToken=result.next_token;$('more-audit').classList.toggle('hidden',!state.auditToken);}
 async function loadAdmin(){needApi();const result=await api('/admin/overview');$('usage-overview').replaceChildren();for(const [title,value,caption]of[['Lượt tải tháng này',result.usage.upload,`/ ${result.limits.uploads} lượt`],['Câu hỏi tháng này',result.usage.question,`/ ${result.limits.questions} lượt`],['Yêu cầu hỗ trợ tháng này',result.usage.ticket??0,`/ ${result.limits.tickets??200} lượt`],['Lượt gọi dịch vụ tháng này',result.usage.request??0,`/ ${result.limits.requests??100000} lượt`],['Dịch vụ AI',result.model_configured?'Đã cấu hình':'Chưa cấu hình',result.month]]){const card=node('div',undefined,'usage-card');card.append(node('span',title),node('strong',String(value)),node('span',caption));$('usage-overview').append(card);}await Promise.all([loadAudit(),loadAdminPolicies(),loadTicketQueue(),loadShopEditor(),loadQuality()]);}
 
@@ -403,7 +504,7 @@ document.addEventListener('click',event=>{const target=event.target.closest('[da
 document.querySelector('.admin-tabs').addEventListener('keydown',event=>{const tabs=[...document.querySelectorAll('.admin-tabs [role="tab"]')],i=tabs.indexOf(event.target);if(i<0||!['ArrowRight','ArrowLeft','Home','End'].includes(event.key))return;event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(i+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;adminSection(tabs[next].dataset.adminTarget,true);});
 $('guest-signin').onclick=()=>$('auth-button').click();
 $('close-policy-dialog').onclick=()=>$('policy-dialog').close();
-document.addEventListener('click',event=>{const nav=event.target.closest('[data-view]');if(nav)guard(nav,()=>navigate(nav.dataset.view,{focus:true}));const suggestion=event.target.closest('[data-question]');if(suggestion){if(!state.user){notify('Đăng nhập để đặt câu hỏi và xem nguồn trả lời.',true);$('auth-button').focus();return;}$('question').value=suggestion.dataset.question;$('question').dispatchEvent(new Event('input',{bubbles:true}));$('question').focus();}});
+document.addEventListener('click',event=>{const nav=event.target.closest('[data-view]');if(nav)guard(nav,()=>navigate(nav.dataset.view,{focus:true}));const suggestion=event.target.closest('[data-question]');if(suggestion){if(!state.user){notify('Đăng nhập để đặt câu hỏi và xem nguồn trả lời.',true);$('auth-button').focus();return;}guard(suggestion, () => putQuestionInComposer(suggestion.dataset.question));}});
 $('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else await manager.signinRedirect();}));
 $('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
@@ -458,6 +559,9 @@ for(const [id,action,message]of [['publish-policy','publish','Công bố nội d
 }
 function hasUnsavedWork(){return Boolean($('question').value.trim()||policyEditor.dirty||shopEditor.dirty||supportUnsaved());}
 window.addEventListener('beforeunload',event=>{if(hasUnsavedWork()){event.preventDefault();event.returnValue='';}});
+$('history-filter').addEventListener('input', applyHistoryFilters);
+$('history-source-filter').addEventListener('change', applyHistoryFilters);
+$('choose-source').addEventListener('click', () => $('source-scope').focus());
 $('source-scope').addEventListener('change',()=>renderSources());
 $('refresh-tickets').onclick=()=>guard($('refresh-tickets'),()=>loadTickets());
 $('more-tickets').onclick=()=>guard($('more-tickets'),()=>loadTickets(true));

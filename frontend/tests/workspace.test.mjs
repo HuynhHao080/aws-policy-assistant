@@ -255,3 +255,62 @@ test('history can compare a shop policy and a PDF excerpt without new API calls'
   assert.match(f.$('policy-dialog-content').textContent, /PDF cá nhân.*Trang 2/);
   assert.equal(f.calls.length,calls);
 });
+
+test('history filters paginated records by Vietnamese text and reuses a question without submitting', async t => {
+  const first = {conversation_id:'shipping', created_at:'2026-11-10T00:00:00Z', question:'Giao hàng khi nào?', answer:'Xem lịch giao hàng.', grounded:false};
+  const second = {conversation_id:'warranty', created_at:'2026-11-09T00:00:00Z', question:'Bảo hành củ sạc bao lâu?', answer:'Mười hai tháng.', grounded:true,
+    citations:[{source_id:'S1', policy_id:'WARRANTY', title:'Chính sách phụ kiện', excerpt:'Bảo hành 12 tháng'}]};
+  const f = await fixture(t, {
+    view:'history',
+    override:(key, options, window, url) => {
+      if (key === '/conversations') return json(url.searchParams.has('next_token')
+        ? {conversations:[second],next_token:null}
+        : {conversations:[first],next_token:'older'});
+    },
+  });
+  await until(() => f.$('history-list').querySelector('details'));
+  f.$('history-filter').value = 'bao hanh';
+  f.$('history-filter').dispatchEvent(new f.w.Event('input', {bubbles:true}));
+  assert.match(f.$('history-results').textContent, /^0 \/ 1/);
+  f.click('more-history');
+  await until(() => f.$('history-list').querySelector('[data-conversation-id="warranty"]'));
+  assert.match(f.$('history-results').textContent, /^1 \/ 2/);
+  const filter = f.$('history-source-filter');
+  filter.value = 'unanswered';
+  filter.dispatchEvent(new f.w.Event('change'));
+  assert.match(f.$('history-results').textContent, /^0 \/ 2/);
+  filter.value = 'grounded';
+  filter.dispatchEvent(new f.w.Event('change'));
+  const record = f.$('history-list').querySelector('[data-conversation-id="warranty"]');
+  assert.equal(record.hidden, false);
+  record.open = true;
+  const reuse = [...record.querySelectorAll('button')].find(b => b.textContent === 'Dùng lại câu hỏi');
+  f.$('question').value = 'Giữ câu đang soạn';
+  reuse.click();
+  await until(() => !reuse.disabled);
+  assert.equal(f.$('question').value, 'Giữ câu đang soạn');
+  f.$('question').value = '';
+  reuse.click();
+  await until(() => f.$('question').value === second.question);
+  assert.equal(f.w.location.hash, '#assistant');
+  assert.equal(f.calls.some(call => call.key === '/ask'), false);
+});
+
+test('copy answer writes only displayed text and citations to the clipboard', async t => {
+  const f = await fixture(t, {
+    override:key => key === '/ask' ? json({
+      answer:'Bảo hành 12 tháng.',
+      grounded:true,
+      citations:[{source_id:'S1',doc_id:'private-id',page:4,title:'Hướng dẫn',excerpt:'Thời hạn 12 tháng'}],
+    }) : undefined,
+  });
+  let copied;
+  Object.defineProperty(f.w.navigator, 'clipboard', {value:{writeText:async value => { copied=value; }}});
+  f.$('question').value = 'Câu hỏi riêng của tôi';
+  f.submit('question-form');
+  const copy = () => [...f.$('answer-area').querySelectorAll('button')].find(b => b.textContent === 'Sao chép câu trả lời');
+  await until(copy);
+  copy().click();
+  await until(() => copied);
+  assert.equal(copied, 'Bảo hành 12 tháng.\n\nNguồn tham khảo\n\nS1 · Hướng dẫn — Trang 4\nThời hạn 12 tháng');
+});
