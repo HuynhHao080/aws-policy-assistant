@@ -46,6 +46,31 @@ def test_customer_and_staff_thread_status_and_serialization(support):
     assert audit[0]["action"]=="ticket.update" and "message" not in audit[0]
 
 
+def test_admin_queue_wait_clock_tracks_unanswered_customer_messages(support):
+    item = create()
+    def row():
+        result = request("/admin/tickets", owner="staff", claims=ADMIN)[1]["tickets"][0]
+        assert "messages" not in result
+        return result
+
+    assert row()["customer_waiting_since"] == item["created_at"]
+    status, claimed = request(path(item, True), "PATCH", owner="staff", claims=ADMIN, data={
+        "action": "claim", "expected_revision": item["revision"],
+    })
+    assert status == 200
+    assert row()["customer_waiting_since"] == item["created_at"]
+    status, reply = request(path(item, True), "PATCH", owner="staff", claims=ADMIN, data={
+        "action": "update", "expected_revision": claimed["revision"], "status": "in_progress", "message": "Checking.",
+    })
+    assert status == 200 and row()["customer_waiting_since"] is None
+    status, followup = request(path(item), "PATCH", data={
+        "expected_revision": reply["revision"], "message": "Could you confirm?",
+    })
+    assert status == 200
+    assert row()["customer_waiting_since"] == followup["messages"][-1]["created_at"]
+    assert "customer_waiting_since" not in request("/tickets")[1]["tickets"][0]
+
+
 def test_customers_cannot_access_others_or_staff_queue(support):
     item=create()
     for method,data in [("GET",None),("PATCH",{"expected_revision":item["revision"],"message":"Intrusion"}),("DELETE",{"expected_revision":item["revision"],"confirmation":"DELETE"})]:

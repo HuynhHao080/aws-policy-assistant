@@ -56,6 +56,17 @@ def get(service, owner, ticket_id):
     return item
 
 
+def customer_waiting_since(item):
+    if item.get("status") not in {"open", "in_progress"}:
+        return None
+    waiting_since = None
+    for message in reversed(item.get("messages", [])):
+        if message.get("role") != "customer":
+            break
+        waiting_since = message.get("created_at")
+    return waiting_since
+
+
 def public(item, summary=False, admin=False, viewer=None):
     keys = {"ticket_id", "subject", "status", "category", "priority", "order_ref", "created_at", "updated_at", "expires_at", "message_count"}
     if not summary:
@@ -68,6 +79,7 @@ def public(item, summary=False, admin=False, viewer=None):
     if admin:
         result["assignment"] = "mine" if item.get("assigned_to") == viewer and viewer else "other" if item.get("assigned_to") else "unassigned"
         result.setdefault("internal_note_count", 0)
+        result["customer_waiting_since"] = customer_waiting_since(item)
         if not summary:
             result.setdefault("internal_notes", [])
             result.setdefault("assignment_events", [])
@@ -132,7 +144,7 @@ def page(service, owner, params, admin=False):
         if reference:
             args["FilterExpression"] &= Attr("order_ref").eq(reference)
     if admin:
-        args["ProjectionExpression"] += ",assigned_to,assigned_at,staff_updated_at,internal_note_count"
+        args["ProjectionExpression"] += ",assigned_to,assigned_at,staff_updated_at,internal_note_count,messages"
         if assignee == "mine":
             args["FilterExpression"] &= Attr("assigned_to").eq(owner)
         elif assignee == "unassigned":

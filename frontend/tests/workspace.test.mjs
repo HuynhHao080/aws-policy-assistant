@@ -548,3 +548,22 @@ test('support handoff preserves ticket fields and requires an explicit action to
   assert.equal(attach.classList.contains('hidden'), true);
   assert.equal(f.calls.some(c => c.key === '/tickets' && c.options.method === 'POST'), false);
 });
+
+test('staff can prioritize the oldest unanswered requests among loaded rows', async t => {
+  const rows = [
+    {subject:'Recent customer', customer_waiting_since:'2026-11-09T00:00:00Z'},
+    {subject:'Already answered', customer_waiting_since:null},
+    {subject:'Older customer', customer_waiting_since:'2026-11-01T00:00:00Z'},
+  ].map((row, i) => ({...row,ticket_id:'ticket-'+i,status:'open',updated_at:'2026-11-10T00:00:00Z',message_count:1}));
+  const f = await fixture(t, {admin:true, view:'admin', override:key => key === '/admin/tickets' ? json({tickets:rows}) : undefined});
+  const list = f.$('admin-ticket-list');
+  await until(() => list.querySelectorAll('article').length === 3);
+  const filter = list.previousElementSibling.previousElementSibling.querySelector('input');
+  filter.click();
+  assert.deepEqual([...list.querySelectorAll('strong')].map(item => item.textContent), ['Older customer','Recent customer']);
+  assert.match(list.previousElementSibling.textContent, /2\/3/);
+  assert.equal(f.calls.filter(c => c.key === '/admin/tickets').length, 1);
+  f.w.__expire();
+  assert.equal(filter.checked, false);
+  assert.equal(list.textContent, '');
+});
