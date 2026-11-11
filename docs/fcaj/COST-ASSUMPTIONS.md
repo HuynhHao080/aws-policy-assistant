@@ -22,7 +22,7 @@ Use [AWS Pricing Calculator](https://calculator.aws/) and current official servi
 | Active users |50 MAU |
 | Documents |100 PDFs/month,2MiB each,10pages each |
 | OCR fraction |20% of pages →200pages/month |
-| Generation |1000attempts/month;8000input and2500output/reasoning tokens/attempt as planning headroom |
+| Generation |1,000 attempts/month, 8,000 input tokens assumed and up to 900 output tokens per attempt |
 | Quota sensitivity |Repeat at2000AIattempts and300uploads/month with variable OCR fraction |
 | Storage |Accumulate retained source/extraction versions; monthly ingress is not retained total |
 | Other dimensions |Measure or explicitly assume API traffic/durations, transfer, logs, transactional capacity and retained support/audit data in Calculator |
