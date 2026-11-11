@@ -183,3 +183,75 @@ test('an answer arriving late preserves the next question being composed', async
   assert.equal(f.$('question').value, 'Câu đang soạn');
   assert.match(f.$('question-count').textContent, /^13 /);
 });
+
+test('recovering an uploaded PDF reuses its existing ID and asks from that PDF only', async t => {
+  let uploaded = false;
+  let submits = 0;
+  let question;
+  const document = {doc_id:'owned', title:'Synthetic PDF', s3_key:'quarantine/owned/document'};
+  const f = await fixture(t, {
+    view: 'documents',
+    override: (key, options) => {
+      if (key === '/documents') return json({documents: uploaded ? [
+        {...document, status: submits > 1 ? 'processed' : 'awaiting_upload'},
+        {doc_id:'other', title:'Other PDF', status:'processed'},
+      ] : [], next_token:null});
+      if (key === '/documents/upload-session') return json({
+        ...document, upload_url:'https://storage.fixture.invalid/upload-object',
+        upload_fields:{key:document.s3_key},
+      });
+      if (key === '/upload-object') { uploaded = true; return json({}); }
+      if (key === '/documents/submit') {
+        assert.deepEqual(JSON.parse(options.body), {doc_id:'owned', s3_key:document.s3_key});
+        return ++submits === 1 ? json({message:'Transient failure'}, 503) : json({status:'pending'});
+      }
+      if (key === '/documents/owned/status') return json({...document,status:'processed'});
+      if (key === '/ask') {
+        question = JSON.parse(options.body);
+        return json({answer:'Synthetic answer', citations:[], grounded:false});
+      }
+    },
+  });
+  Object.defineProperty(f.$('pdf-file'), 'files', {configurable:true, value:[new f.w.File(['synthetic'],'test.pdf',{type:'application/pdf'})]});
+  f.submit('upload-form');
+  const findButton = label => [...f.$('documents-list').querySelectorAll('button')].find(b => b.textContent === label);
+  await until(() => findButton('Gửi xử lý'));
+  assert.match(f.$('upload-status').textContent, /Tệp đã tải lên/);
+  findButton('Gửi xử lý').click();
+  await until(() => f.$('upload-status').textContent.includes('PDF đã sẵn sàng'));
+  const row = [...f.$('documents-list').rows].find(row => row.textContent.includes('Synthetic PDF'));
+  [...row.querySelectorAll('button')].find(b => b.textContent === 'Hỏi từ PDF này').click();
+  await until(() => f.$('source-scope').value === 'documents');
+  f.$('question').value = 'Tìm quy định trong PDF';
+  f.submit('question-form');
+  await until(() => question);
+  assert.deepEqual(question.document_ids, ['owned']);
+  assert.equal(question.source_scope, 'documents');
+  assert.equal(f.calls.filter(c => c.key === '/upload-object').length, 1);
+});
+
+test('history can compare a shop policy and a PDF excerpt without new API calls', async t => {
+  const f = await fixture(t, {
+    view:'history',
+    override:key => key === '/conversations' ? json({conversations:[{
+      conversation_id:'comparison',
+      created_at:'2026-11-04T00:00:00Z',
+      question:'Thời hạn là bao lâu?',
+      answer:'Nguồn ghi hai mốc khác nhau.',
+      grounded:true,
+      citations:[
+        {source_id:'S1', policy_id:'RETURNS', title:'Đổi trả', excerpt:'7 ngày kể từ ngày nhận'},
+        {source_id:'S2', doc_id:'owned', title:'Tài liệu khách', page:2, excerpt:'14 ngày kể từ ngày mua'},
+      ],
+    }]}) : undefined,
+  });
+  const compare = () => [...f.$('history-list').querySelectorAll('button')].find(b => b.textContent === 'Đối chiếu 2 nguồn');
+  await until(compare);
+  const calls = f.calls.length;
+  compare().click();
+  await until(() => f.$('policy-dialog').open);
+  const excerpts = [...f.$('policy-dialog-content').querySelectorAll('blockquote')].map(b => b.textContent);
+  assert.deepEqual(excerpts,['7 ngày kể từ ngày nhận','14 ngày kể từ ngày mua']);
+  assert.match(f.$('policy-dialog-content').textContent, /PDF cá nhân.*Trang 2/);
+  assert.equal(f.calls.length,calls);
+});

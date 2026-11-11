@@ -38,7 +38,29 @@ export async function uploadPdf(api, file, fetcher = fetch) {
   const response = await fetcher(session.upload_url,{method:'POST',body:form,credentials:'omit',referrerPolicy:'no-referrer',redirect:'error',signal:AbortSignal.timeout(120000)});
   if (!response.ok) throw new Error(`Tải file chưa thành công (HTTP ${response.status}).`);
   try { await api('/documents/submit',{method:'POST',body:{doc_id:session.doc_id,s3_key:session.s3_key}}); }
-  catch(error) { error.message += ` Mã tài liệu: ${session.doc_id}. File đã tải lên; dùng Gửi xử lý trong thư viện để thử lại.`; throw error; }
+  catch (error) {
+    throw Object.assign(new Error(`Mã tài liệu: ${session.doc_id}. File đã tải lên; dùng Gửi xử lý trong thư viện để thử lại.`, {cause: error}), {
+      status: error.status,
+      uploadedDocId: session.doc_id,
+    });
+  }
   return session.doc_id;
 }
 export const statusText = {awaiting_upload:'Chờ gửi xử lý',pending:'Đang chờ',processing:'Đang đọc PDF',ocr_pending:'Đang nhận dạng chữ (OCR)',processed:'Sẵn sàng',failed:'Không xử lý được',deleting:'Đang xóa',deleted:'Đã xóa'};
+
+export const pdfErrorText = {
+  invalid_pdf: 'Tệp không phải PDF hợp lệ. Hãy xuất lại tài liệu dưới dạng PDF.',
+  encrypted_pdf: 'PDF có mật khẩu. Hãy tải bản không mã hóa.',
+  active_pdf_content: 'PDF có nội dung tương tác. Hãy xuất bản PDF tĩnh rồi tải lại.',
+  pdf_size_limit: 'Tệp vượt 10 MiB. Hãy nén hoặc chia nhỏ PDF.',
+  pdf_page_limit: 'PDF vượt 100 trang. Hãy chia tài liệu thành nhiều tệp.',
+  pdf_text_limit: 'Văn bản quá dài. Hãy chia PDF theo từng phần.',
+  ocr_page_limit: 'PDF scan vượt 10 trang. Hãy chia nhỏ hoặc xuất bản có văn bản.',
+  ocr_no_text: 'OCR không đọc được chữ. Hãy kiểm tra chất lượng bản scan.',
+  ocr_failed: 'OCR xử lý thất bại. Hãy thử bản scan rõ hơn hoặc PDF có văn bản.',
+  scanned_pdf_requires_ocr: 'PDF scan cần nhận dạng chữ. Hãy dùng PDF có văn bản.',
+  invalid_upload_session: 'Phiên tải lên không hợp lệ. Hãy chọn lại tệp.',
+  processing_retry_limit: 'Đã hết lượt tự phục hồi. Hãy kiểm tra tệp trước khi tải lại.',
+  processing_temporarily_unavailable: 'Dịch vụ xử lý tạm gián đoạn. Hãy làm mới sau.',
+  recovering_stalled_job: 'Hệ thống đang khôi phục lượt xử lý.',
+};

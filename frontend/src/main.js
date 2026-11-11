@@ -3,7 +3,7 @@ import {FeedbackStore,feedbackReasons} from './feedback.js';
 import {LatestTask,pollDocument} from './ui-flow.js';
 import {ShopEditor,shopFields} from './shop-editor.js';
 import { UserManager, WebStorageStateStore, Log } from 'oidc-client-ts';
-import { createApi, uploadPdf, statusText } from './api.js';
+import { createApi, uploadPdf, statusText, pdfErrorText } from './api.js';
 import { PolicyEditor, policyStates, validityStates, validityText } from './policy-editor.js';
 import { SupportClient, supportStates, supportCategories, supportPriorities, questionPayload } from './support-client.js';
 
@@ -85,12 +85,54 @@ async function loadDocs(more=false) {
   $('more-documents').classList.toggle('hidden',!state.docToken);$('more-sources').classList.toggle('hidden',!state.docToken);$('document-count').textContent=`${state.docs.length}${state.docToken?'+':''}`;
   $('documents-list').replaceChildren();
   for(const doc of state.docs){state.cache.set(doc.doc_id,doc);if(doc.status!=='processed')state.selected.delete(doc.doc_id);}
-  for(const doc of state.docs){const tr=node('tr');const name=node('td');name.append(node('div',doc.title||doc.filename||'Tài liệu','doc-title'),node('small',doc.created_at?new Date(doc.created_at).toLocaleDateString('vi-VN'):''));const status=node('td');status.append(node('span',statusText[doc.status]||doc.status,`badge ${doc.status}`));if(doc.error_code)status.append(node('span',({scanned_pdf_requires_ocr:'PDF scan: chuyển sang PDF có văn bản trước khi tải lại.',encrypted_pdf:'PDF có mật khẩu. Hãy tải bản không mã hóa.',invalid_pdf:'Tệp không phải PDF hợp lệ.',pdf_page_limit:'Vượt giới hạn 100 trang.',processing_retry_limit:'Xử lý thất bại nhiều lần. Hãy tải lại.'})[doc.error_code]||'Đang chờ khôi phục hoặc cần tải lại.', 'error-code'));const actions=node('td');
-    if(doc.status==='processed')actions.append(button('Tải PDF',()=>download(doc.doc_id)));
-    if(doc.status==='awaiting_upload')actions.append(button('Gửi xử lý',async()=>{await api('/documents/submit',{method:'POST',body:{doc_id:doc.doc_id,s3_key:doc.s3_key}});notify('Đã gửi xử lý.');await loadDocs();}));
+  for(const doc of state.docs){const tr=node('tr');const name=node('td');name.append(node('div',doc.title||doc.filename||'Tài liệu','doc-title'),node('small',doc.created_at?new Date(doc.created_at).toLocaleDateString('vi-VN'):''));const status=node('td');status.append(node('span',statusText[doc.status]||doc.status,`badge ${doc.status}`));if(doc.error_code)status.append(node('span',pdfErrorText[doc.error_code] || 'Hãy làm mới trạng thái hoặc kiểm tra lại tệp.', 'error-code'));const actions=node('td',undefined,'document-actions');
+    if (doc.status === 'processed') {
+      actions.append(button('Hỏi từ PDF này', async () => {
+        const epoch = sessionEpoch;
+        if (!await navigate('assistant', {focus:true}) || epoch !== sessionEpoch) return;
+        const selected = state.cache.get(doc.doc_id);
+        if (selected?.status !== 'processed') throw new Error('PDF chưa sẵn sàng. Hãy làm mới thư viện.');
+        state.selected.clear();
+        state.selected.add(doc.doc_id);
+        $('source-scope').value = 'documents';
+        renderSources();
+        $('question').focus();
+      }, 'secondary'), button('Tải PDF', () => download(doc.doc_id)));
+    }
+    if (doc.status === 'awaiting_upload') {
+      actions.append(button('Gửi xử lý', async () => {
+        await api('/documents/submit', {method:'POST', body:{doc_id:doc.doc_id, s3_key:doc.s3_key}});
+        await trackDocument(doc.doc_id);
+      }, 'secondary'));
+    }
     if(doc.status!=='deleting')actions.append(button('Đổi tên',async()=>{const title=prompt('Tên tài liệu mới',doc.title||doc.filename);if(!title?.trim())return;await api(`/documents/${doc.doc_id}`,{method:'PATCH',body:{title}});await loadDocs();}),button('Xóa',async()=>{if(!confirm(`Xóa vĩnh viễn PDF “${doc.title||doc.filename}” và dữ liệu trích xuất?`))return;await api(`/documents/${doc.doc_id}`,{method:'DELETE'});state.selected.delete(doc.doc_id);state.cache.delete(doc.doc_id);notify('Đã tiếp nhận yêu cầu xóa tài liệu.');await loadDocs();}));
-    tr.append(name,status,node('td',String(doc.page_count||'—')),actions);$('documents-list').append(tr);}
+    const pages = node('td', String(doc.page_count || '—'), 'document-pages');
+    pages.setAttribute('aria-label', doc.page_count ? `${doc.page_count} trang` : 'Chưa có số trang');
+    tr.append(name,status,pages,actions);$('documents-list').append(tr);}
   if(!state.docs.length){const row=node('tr');const td=node('td','Chưa có tài liệu. Tải PDF đầu tiên của bạn ở phía trên.','empty-small');td.colSpan=4;row.append(td);$('documents-list').append(row);}renderSources();
+}
+async function trackDocument(docId) {
+  const isCurrent = latestTasks.begin('document-processing');
+  const status = $('upload-status');
+  status.textContent = 'Đã gửi xử lý. Đang kiểm tra trạng thái PDF…';
+  try {
+    await loadDocs();
+    const doc = await pollDocument(api, docId, {
+      isCurrent,
+      onStatus: item => {
+        status.textContent = `${item.title || 'Tài liệu'} · ${statusText[item.status] || item.status}`;
+      },
+    });
+    if (!isCurrent()) return;
+    if (doc?.status === 'processed') status.textContent = 'PDF đã sẵn sàng. Chọn Hỏi từ PDF này trong thư viện.';
+    else if (doc?.status === 'failed') status.textContent = pdfErrorText[doc.error_code] || 'PDF chưa xử lý được. Kiểm tra lỗi trong thư viện.';
+    else if (doc?.status !== 'deleted') status.textContent = 'PDF vẫn đang xử lý. Dùng Làm mới để kiểm tra tiếp.';
+    await loadDocs();
+  } catch (error) {
+    if (!isCurrent()) return;
+    status.textContent = 'Đã gửi xử lý. Hãy làm mới thư viện để kiểm tra trạng thái.';
+    throw error;
+  }
 }
 async function download(docId, isCurrent = () => true) {
   const data = await api(`/documents/${encodeURIComponent(docId)}/download`);
@@ -105,6 +147,20 @@ async function download(docId, isCurrent = () => true) {
 }
 function citationTitle(source) {
   return `${source.source_id} · ${source.title}${source.page ? ` — Trang ${source.page}` : ''}`;
+}
+
+function compareCitations(sources) {
+  const dialog = $('policy-dialog');
+  $('policy-dialog-title').textContent = 'Đối chiếu nguồn tham khảo';
+  const cards = sources.map(source => {
+    const card = node('article', undefined, 'comparison-source');
+    const kind = source.doc_id ? 'PDF cá nhân' : 'Chính sách chung';
+    card.append(node('p', kind, 'small muted'), node('h3', citationTitle(source)),
+      node('blockquote', source.excerpt || 'Đoạn trích chưa có trong lịch sử này.', 'citation-excerpt'));
+    return card;
+  });
+  $('policy-dialog-content').replaceChildren(...cards);
+  if (!dialog.open) dialog.showModal();
 }
 
 async function openCitation(source) {
@@ -156,10 +212,14 @@ async function openCitation(source) {
 function renderAnswer(question,result,target=$('answer-area'),append=false) {
   if(!append)target.replaceChildren();target.append(node('div',question,'question-bubble'),node('div',result.grounded?'TRẢ LỜI TỪ NGUỒN THAM KHẢO':'CHƯA ĐỦ THÔNG TIN','answer-label'),node('p',result.answer,'answer-text'),node('small',({all:'Nguồn: chính sách chung + PDF cá nhân',policies:'Nguồn: chỉ chính sách chung',documents:'Nguồn: chỉ PDF đã chọn'})[result.source_scope||'all'],'small muted'));
   renderFeedback(result,target);
-  for (const source of result.citations || []) {
+  const sources = result.citations || [];
+  for (const source of sources) {
     const card = button('', () => openCitation(source), 'citation-card');
     card.append(node('strong', citationTitle(source)));
     target.append(card);
+  }
+  if (sources.length > 1) {
+    target.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
   }
   target.append(button('Nhờ nhân viên hỗ trợ',async()=>{
     if(supportUnsaved()&&!confirm('Thay nội dung hỗ trợ đang soạn bằng câu hỏi này?'))return;
@@ -364,14 +424,24 @@ $('question-form').addEventListener('submit',event=>{event.preventDefault();guar
 });});
 $('upload-form').addEventListener('submit',event=>{event.preventDefault();guard($('upload-button'),async()=>{
   needApi();const epoch=sessionEpoch,isCurrent=()=>epoch===sessionEpoch;$('upload-status').textContent='Đang tải file…';
-  try{const docId=await uploadPdf(api,$('pdf-file').files[0]);if(!isCurrent())return;$('pdf-file').value='';$('upload-status').textContent='File đã được tiếp nhận. Đang xử lý nội dung…';
-    const doc=await pollDocument(api,docId,{isCurrent,onStatus:doc=>{const message=`${doc.title||'Tài liệu'}: ${statusText[doc.status]||doc.status}`;if($('upload-status').textContent!==message)$('upload-status').textContent=message;}});
-    if(!isCurrent())return;
-    if(doc?.status==='processed')$('upload-status').textContent='PDF đã sẵn sàng. Bạn có thể chọn làm nguồn hỏi đáp.';
-    else if(doc?.status==='failed')$('upload-status').textContent='PDF chưa xử lý được. Xem lỗi trong thư viện bên dưới; không cần tải lại khi chưa kiểm tra nguyên nhân.';
-    else if(doc?.status!=='deleted')$('upload-status').textContent='File đã tiếp nhận và vẫn đang xử lý. OCR có thể mất thêm thời gian; dùng Làm mới để kiểm tra, không cần tải lại.';
-    await loadDocs();
-  }catch(error){if(!isCurrent())return;$('upload-status').textContent='Chưa xác nhận được bước tải/xử lý. Xem thông báo và làm mới thư viện trước khi thử lại.';throw error;}
+  let docId;
+  try {
+    docId = await uploadPdf(api, $('pdf-file').files[0]);
+  } catch (error) {
+    if (!isCurrent()) return;
+    if (error.uploadedDocId) {
+      $('pdf-file').value = '';
+      $('upload-status').textContent = 'Tệp đã tải lên. Kiểm tra trạng thái trong thư viện và chọn Gửi xử lý nếu còn chờ.';
+      try { await loadDocs(); } catch { /* The refresh button remains available. */ }
+    } else {
+      $('upload-status').textContent = 'Chưa xác nhận tải lên. Xem thông báo và làm mới thư viện trước khi thử lại.';
+    }
+    if (isCurrent()) throw error;
+    return;
+  }
+  if (!isCurrent()) return;
+  $('pdf-file').value = '';
+  await trackDocument(docId);
 });});
 $('refresh-documents').onclick=()=>guard($('refresh-documents'),()=>loadDocs());$('more-documents').onclick=()=>guard($('more-documents'),()=>loadDocs(true));$('more-sources').onclick=()=>guard($('more-sources'),()=>loadDocs(true));
 $('policy-form').onsubmit=event=>{event.preventDefault();guard(event.submitter,()=>searchPolicies());};$('more-policies').onclick=()=>guard($('more-policies'),()=>searchPolicies(true));
