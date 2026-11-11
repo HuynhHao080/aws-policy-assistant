@@ -108,7 +108,7 @@ function clearPrivateState() {
   latestTasks.clear();state.policyToken=null;state.policyKeyword='';state.auditToken=null;$('document-count').textContent='—';$('policy-keyword').value='';$('ticket-lookup-form').reset();$('admin-ticket-category').value='';$('admin-ticket-priority').value='';$('admin-ticket-filter').value='open';$('admin-ticket-assignee').value='all';for(const id of ['more-documents','more-sources','more-history','more-policies','more-tickets','more-admin-tickets','more-audit'])$(id).classList.add('hidden');$('answer-area').setAttribute('aria-busy','false');$('question-count').textContent='0 / 2.000 ký tự';$('policy-dialog').close();$('policy-dialog-content').replaceChildren();
   shopEditor.clear();fillShopEditor(null);$('shop-profile').replaceChildren(node('p','Đăng nhập để xem thông tin shop.'));$('shop-context').classList.add('hidden');
   supportClient.clear();ticketToken=null;adminTicketToken=null;ticketListEpoch++;adminTicketListEpoch++;
-  $('ticket-dialog').close();$('ticket-thread').replaceChildren();$('new-ticket-form').reset();$('ticket-reply-form').reset();$('ticket-note-form').reset();$('ticket-takeover-form').reset();$('ticket-internal-notes').replaceChildren();$('ticket-assignment-history').replaceChildren();$('ticket-assignment-label').textContent='';$('ticket-note-count').textContent='';$('ticket-staff-controls').classList.add('hidden');
+  $('ticket-dialog').close();$('ticket-thread').replaceChildren();$('new-ticket-form').reset();setSupportAnswer('');$('ticket-reply-form').reset();$('ticket-note-form').reset();$('ticket-takeover-form').reset();$('ticket-internal-notes').replaceChildren();$('ticket-assignment-history').replaceChildren();$('ticket-assignment-label').textContent='';$('ticket-note-count').textContent='';$('ticket-staff-controls').classList.add('hidden');
   policyEditor.clear();adminPolicyToken=null;adminPolicyKeyword='';adminListEpoch++;
   sessionEpoch++;state.user=null;state.profile=null;state.docs=[];state.selected.clear();state.cache.clear();state.docToken=null;state.historyToken=null;
   for(const id of ['answer-area','history-list','documents-list','source-selector','audit-list','usage-overview','policy-results','admin-policy-list','ticket-list','admin-ticket-list'])$(id).replaceChildren();
@@ -526,11 +526,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
     if (epoch === sessionEpoch) notify(citations.length ? 'Đã sao chép câu trả lời và các nguồn đi kèm.' : 'Đã sao chép câu trả lời.');
   }, 'secondary'));
   actions.append(button('Tải câu trả lời (.txt)', () => downloadAnswer(question, result, sources), 'secondary'));
-  actions.append(button('Nhờ nhân viên hỗ trợ',async()=>{
-    if(supportUnsaved()&&!confirm('Thay nội dung hỗ trợ đang soạn bằng câu hỏi này?'))return;
-    $('new-ticket-form').reset();$('new-ticket-subject').value='Cần làm rõ chính sách';$('new-ticket-message').value=question.slice(0,1500);$('ticket-consent').checked=false;
-    await navigate('support',{focus:true});notify(question.length>1500?'Đã chép 1.500 ký tự đầu để bạn xem lại. Chưa gửi cho nhân viên.':'Đã chép câu hỏi để bạn xem lại. Chưa gửi cho nhân viên; PDF và đoạn trích không đính kèm.');
-  }));
+  actions.append(button('Nhờ nhân viên hỗ trợ', () => prepareSupportDraft(question, result.answer)));
   target.append(actions);
   target.scrollTop = 0;
 }
@@ -856,7 +852,57 @@ for(const [id,action,promptText]of [['publish-shop','publish','Công bố bản 
 $('refresh-shop').onclick=()=>guard($('refresh-shop'),loadShopProfile);
 function triageUnsaved(){return Boolean(supportClient.staff&&supportClient.record&&($('staff-ticket-priority').value!==(supportClient.record.priority||'normal')||$('staff-ticket-status').value!==supportClient.record.status));}
 function ticketDraftUnsaved(){return Boolean($('ticket-reply-message').value.trim()||$('ticket-note-text').value.trim()||$('ticket-takeover-reason').value.trim()||triageUnsaved());}
-function supportUnsaved(){return Boolean($('new-ticket-subject').value.trim()||$('new-ticket-message').value.trim()||$('new-ticket-order').value.trim()||$('new-ticket-category').value!=='general'||ticketDraftUnsaved());}
+function readSupportDraft() {
+  return {
+    subject: $('new-ticket-subject').value,
+    message: $('new-ticket-message').value,
+    consent: $('ticket-consent').checked,
+    category: $('new-ticket-category').value,
+    order_ref: $('new-ticket-order').value,
+  };
+}
+function supportUnsaved() {
+  const {subject, message, consent, category, order_ref} = readSupportDraft();
+  return Boolean(subject.trim() || message.trim() || consent || category !== 'general' || order_ref.trim() || ticketDraftUnsaved());
+}
+
+const attachAnswer = button('Thêm câu trả lời vào yêu cầu', () => {
+  const field = $('new-ticket-message');
+  const message = [field.value.trimEnd(), 'Câu trả lời từ trợ lý:', supportAnswer].filter(Boolean).join('\n\n');
+  if (message.length > field.maxLength) {
+    throw new Error('Nội dung vượt 1.500 ký tự. Hãy rút ngắn yêu cầu hoặc tóm tắt câu trả lời bằng lời của bạn.');
+  }
+  field.value = message;
+  $('ticket-consent').checked = false;
+  setSupportAnswer('');
+  field.focus();
+}, 'secondary');
+let supportAnswer = '';
+$('new-ticket-message').after(attachAnswer);
+setSupportAnswer('');
+
+function setSupportAnswer(answer) {
+  supportAnswer = answer;
+  attachAnswer.classList.toggle('hidden', !answer);
+}
+
+async function prepareSupportDraft(question, answer) {
+  const epoch = sessionEpoch;
+  const draft = readSupportDraft();
+  if (draft.message.trim() && !confirm('Thay nội dung yêu cầu đang soạn bằng câu hỏi này?')) return;
+  if (!await navigate('support', {focus:true}) || epoch !== sessionEpoch || state.view !== 'support') return;
+  if (JSON.stringify(readSupportDraft()) !== JSON.stringify(draft) || supportClient.busy) return;
+  if (!draft.subject.trim()) $('new-ticket-subject').value = 'Cần làm rõ chính sách';
+  const field = $('new-ticket-message');
+  field.value = question.slice(0, field.maxLength);
+  $('ticket-consent').checked = false;
+  setSupportAnswer(answer);
+  field.focus();
+  notify(question.length > field.maxLength
+    ? 'Đã chép phần đầu của câu hỏi. Hãy xem lại trước khi gửi.'
+    : 'Đã chép câu hỏi vào bản nháp. Bạn có thể chọn thêm câu trả lời trước khi gửi.');
+}
+
 function renderSupportControls(){
   const r=supportClient.record,busy=supportClient.busy,staff=supportClient.staff,limit=(r?.message_count||0)>=20;
   const other=staff&&r?.assignment==='other';
@@ -1007,8 +1053,14 @@ $('more-admin-tickets').onclick=()=>guard($('more-admin-tickets'),()=>loadTicket
 $('close-ticket-dialog').onclick=closeSupportDialog;
 $('ticket-dialog').addEventListener('cancel',event=>{event.preventDefault();closeSupportDialog();});
 $('new-ticket-form').onsubmit=event=>{event.preventDefault();guard($('create-ticket'),async()=>{
-  const data={subject:$('new-ticket-subject').value,message:$('new-ticket-message').value,consent:$('ticket-consent').checked,category:$('new-ticket-category').value,order_ref:$('new-ticket-order').value};
-  await supportClient.create(data);$('new-ticket-form').reset();showTicket();notify('Đã tiếp nhận yêu cầu. Bạn có thể theo dõi phản hồi và trạng thái ngay tại đây.');await refreshSupportLists();
+  const epoch = sessionEpoch;
+  await supportClient.create(readSupportDraft());
+  if (epoch !== sessionEpoch) return;
+  $('new-ticket-form').reset();
+  setSupportAnswer('');
+  if (state.view === 'support') showTicket();
+  notify('Đã tiếp nhận yêu cầu. Bạn có thể theo dõi phản hồi trong Hỗ trợ.');
+  await refreshSupportLists();
 });};
 $('ticket-reply-form').onsubmit=event=>{event.preventDefault();guard($('send-ticket-reply'),async()=>{
   await supportClient.update($('ticket-reply-message').value,$('staff-ticket-status').value,'reply',supportClient.staff?$('staff-ticket-priority').value:undefined);$('ticket-reply-message').value='';$('staff-ticket-status').value=supportClient.record.status;$('staff-ticket-priority').value=supportClient.record.priority||'normal';showTicket({preserveDrafts:true});notify('Đã cập nhật yêu cầu hỗ trợ.');await refreshSupportLists();

@@ -520,3 +520,31 @@ test('answer export includes only the question, response and displayed citation 
   assert.match(content, /7 ngày kể từ ngày nhận/);
   assert.doesNotMatch(content, /private-owner/);
 });
+
+test('support handoff preserves ticket fields and requires an explicit action to add the answer', async t => {
+  const f = await fixture(t, {override:key => key === '/ask' ? json({
+    answer:'Cần nhân viên xác nhận.', citations:[{source_id:'S1',title:'Policy',excerpt:'PRIVATE EXCERPT'}],
+  }) : undefined});
+  f.$('new-ticket-order').value = 'ORDER-123';
+  f.$('new-ticket-subject').value = 'Đơn hàng của tôi';
+  f.$('ticket-consent').checked = true;
+  f.$('question').value = 'Tôi có thể đổi hàng không?';
+  f.submit('question-form');
+  const handoff = () => [...f.$('answer-area').querySelectorAll('button')].find(button => button.textContent === 'Nhờ nhân viên hỗ trợ');
+  await until(handoff);
+  handoff().click();
+  const field = f.$('new-ticket-message');
+  await until(() => field.value.includes('đổi hàng'));
+  assert.equal(f.$('new-ticket-order').value, 'ORDER-123');
+  assert.equal(f.$('new-ticket-subject').value, 'Đơn hàng của tôi');
+  assert.equal(f.$('ticket-consent').checked, false);
+  assert.equal(field.value, 'Tôi có thể đổi hàng không?');
+  const attach = field.nextElementSibling;
+  f.$('ticket-consent').checked = true;
+  attach.click();
+  assert.match(field.value, /Cần nhân viên xác nhận/);
+  assert.doesNotMatch(field.value, /PRIVATE EXCERPT/);
+  assert.equal(f.$('ticket-consent').checked, false);
+  assert.equal(attach.classList.contains('hidden'), true);
+  assert.equal(f.calls.some(c => c.key === '/tickets' && c.options.method === 'POST'), false);
+});
