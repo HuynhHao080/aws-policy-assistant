@@ -249,3 +249,15 @@ footer { margin-top: 36px; }
   .account-stats > div { padding: 8px; }
   #ticket-dialog, #policy-dialog { padding-inline: 12px; }
 }
+
+.followup-context:not(.hidden) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  border-inline-start: 3px solid currentColor;
+  margin-block-end: .5rem;
+}
+.followup-context span { overflow-wrap: anywhere; }

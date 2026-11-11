@@ -450,3 +450,36 @@ test('a guest can carry a shared policy through sign-in', async t => {
   assert.equal(f.w.__signInOptions.state.policy, 'RETURNS');
   assert.equal(f.calls.length, 0);
 });
+
+test('follow-up attaches the selected question and retains the chosen source scope', async t => {
+  const sent = [];
+  const f = await fixture(t, {override: (key, options) => {
+    if (key !== '/ask') return undefined;
+    sent.push(JSON.parse(options.body));
+    return json({conversation_id: 'prior-' + sent.length, answer: 'Synthetic answer', citations: []});
+  }});
+  const field = f.$('question');
+  field.value = 'Củ sạc bảo hành bao lâu?';
+  f.submit('question-form');
+  const followup = () => [...f.$('answer-area').querySelectorAll('button')].find(button => button.textContent === 'Hỏi tiếp');
+  await until(followup);
+  field.value = 'Còn phí gửi thì sao?';
+  followup().click();
+  await until(() => f.$('question-form').querySelector('.followup-context:not(.hidden)'));
+  assert.equal(field.value, 'Còn phí gửi thì sao?');
+  assert.equal(sent.length, 1);
+  f.$('source-scope').value = 'policies';
+  f.submit('question-form');
+  await until(() => sent.length === 2 && field.value === '');
+  assert.equal(sent[1].context_conversation_id, 'prior-1');
+  assert.equal(sent[1].source_scope, 'policies');
+  assert.ok(f.$('question-form').querySelector('.followup-context.hidden'));
+  followup().click();
+  const context = f.$('question-form').querySelector('.followup-context:not(.hidden)');
+  assert.ok(context);
+  context.querySelector('button').click();
+  field.value = 'Một chủ đề khác';
+  f.submit('question-form');
+  await until(() => sent.length === 3);
+  assert.equal(Object.hasOwn(sent[2], 'context_conversation_id'), false);
+});

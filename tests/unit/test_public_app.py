@@ -164,6 +164,47 @@ def test_sourced_answer_and_history_are_owner_scoped(services, ai):
     assert request("/conversations")[1]["conversations"] == []
 
 
+def test_followup_uses_previous_question_and_fresh_scoped_sources(services, ai):
+    doc = ready(services)
+    status, original = request("/ask", "POST", data={"question": "Refund deadline?"})
+    assert status == 200
+    followup = {
+        "question": "And how long?",
+        "context_conversation_id": original["conversation_id"],
+        "source_scope": "documents",
+        "document_ids": [doc["doc_id"]],
+    }
+    status, result = request("/ask", "POST", data=followup)
+    assert status == 200
+    assert result["conversation_id"] != original["conversation_id"]
+    prompt = json.loads(ai.calls[-1]["messages"][0]["content"][0]["text"])
+    assert set(prompt) == {"question", "previous_question", "source_data"}
+    assert prompt["previous_question"] == "Refund deadline?"
+    assert prompt["question"] == "And how long?"
+    assert prompt["source_data"]
+    assert all(source["doc_id"] == doc["doc_id"] for source in prompt["source_data"])
+
+
+def test_unavailable_followup_context_never_reaches_model(services, ai):
+    table = app._service().table("HISTORY_TABLE_NAME")
+    table.put_item(Item={
+        "owner_id": "alice", "conversation_id": "prior", "question": "Refund deadline?",
+        "expires_at": int((datetime.now(timezone.utc) + timedelta(days=1)).timestamp()),
+    })
+    data = {"question": "And how long?", "context_conversation_id": "prior"}
+    assert request("/ask", "POST", owner="bob", data=data)[0] == 404
+    table.update_item(
+        Key={"owner_id": "alice", "conversation_id": "prior"},
+        UpdateExpression="SET expires_at = :expired",
+        ExpressionAttributeValues={":expired": 1},
+    )
+    assert request("/ask", "POST", data=data)[0] == 404
+    assert request("/conversations/prior", "DELETE")[0] == 200
+    assert request("/ask", "POST", data=data)[0] == 404
+    assert request("/ask", "POST", data={**data, "context_conversation_id": None})[0] == 400
+    assert ai.calls == []
+
+
 def test_other_user_document_ids_never_reach_model(services, ai):
     data = ready(services)
     assert request("/ask", "POST", owner="bob", data={"question": "Refund deadline?", "document_ids": [data["doc_id"]]})[0] == 404

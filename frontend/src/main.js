@@ -66,7 +66,32 @@ function signedIn() {
     $('profile-info').append(node('p', state.profile.email, 'profile-email'), node('p', 'Hạn mức mỗi ngày (UTC)', 'small muted'), stats);
     if(!state.profile.ai_available)notify('AI chưa được cấu hình. Bạn vẫn có thể quản lý tài liệu và tìm chính sách.');}
 }
+let followupContext = null;
+const followupBox = node('div', undefined, 'followup-context hidden');
+const followupLabel = node('span');
+followupLabel.setAttribute('role', 'status');
+followupBox.append(followupLabel, button('Bỏ câu hỏi trước', () => {
+  setFollowupContext(null);
+  $('question').focus();
+}, 'secondary'));
+$('question').before(followupBox);
+
+function setFollowupContext(context) {
+  followupContext = context;
+  followupLabel.textContent = context ? `Hỏi tiếp về: ${context.question.slice(0, 120)}${context.question.length > 120 ? '…' : ''}` : '';
+  followupBox.classList.toggle('hidden', !context);
+}
+
+async function startFollowup(question, conversationId) {
+  const epoch = sessionEpoch;
+  if (state.view !== 'assistant' && !await navigate('assistant', {focus:true})) return;
+  if (!state.user || epoch !== sessionEpoch) return;
+  setFollowupContext({question, conversationId});
+  $('question').focus();
+}
+
 function clearPrivateState() {
+  setFollowupContext(null);
   policyLibraryMode = 'browse';
   $('browse-policies').setAttribute('aria-pressed', 'true');
   $('saved-policies').setAttribute('aria-pressed', 'false');
@@ -446,6 +471,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
     target.append(card);
   }
   const actions = node('div', undefined, 'answer-actions');
+  if (result.conversation_id) actions.append(button('Hỏi tiếp', () => startFollowup(question, result.conversation_id), 'secondary'));
   if (sources.length > 1) actions.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
   actions.append(button('Sao chép câu trả lời', async () => {
     if (!navigator.clipboard?.writeText) throw new Error('Trình duyệt chưa cấp quyền sao chép. Bạn có thể chọn và sao chép văn bản.');
@@ -650,6 +676,7 @@ async function putQuestionInComposer(value) {
   const epoch = sessionEpoch;
   if (state.view !== 'assistant' && !await navigate('assistant', {focus:true})) return;
   if (!state.user || epoch !== sessionEpoch || field.value !== draft) return;
+  setFollowupContext(null);
   field.value = value;
   field.dispatchEvent(new Event('input', {bubbles:true}));
   field.focus();
@@ -692,6 +719,7 @@ async function loadHistory(more = false) {
       button('Xóa cuộc hỏi đáp', async () => {
         if (!confirm('Xóa cuộc hỏi đáp này?')) return;
         await api(`/conversations/${encodeURIComponent(item.conversation_id)}`, {method:'DELETE'});
+        if (followupContext?.conversationId === item.conversation_id) setFollowupContext(null);
         for (const row of list.querySelectorAll('[data-conversation-id]')) {
           if (row.dataset.conversationId === item.conversation_id) row.remove();
         }
@@ -862,12 +890,15 @@ $('question').addEventListener('input',()=>{$('question-count').textContent=`${$
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
   needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
   const payload=questionPayload(question,[...state.selected],$('source-scope').value),epoch=sessionEpoch;
+  const submittedContext = followupContext;
+  if (submittedContext) payload.context_conversation_id = submittedContext.conversationId;
   $('answer-area').setAttribute('aria-busy','true');$('answer-area').replaceChildren(node('p','Đang tìm nguồn và chuẩn bị câu trả lời…','loading-state'));
   try {
     const result = await api('/ask', {method:'POST', body:payload});
     if (epoch !== sessionEpoch) return;
     renderAnswer(question, result);
-    if ($('question').value === submittedDraft) {
+    if ($('question').value === submittedDraft && followupContext === submittedContext) {
+      setFollowupContext(null);
       $('question').value = '';
       $('question-count').textContent = '0 / 2.000 ký tự';
     }

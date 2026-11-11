@@ -61,6 +61,9 @@ The new routes use the same gateway Cognito authorizer and server administrator-
 
 `POST /ask` additionally accepts `source_scope`: `all` (default), `policies` or `documents`. Policies-only rejects nonempty document IDs and never queries private PDFs. Documents-only requires selected owned PDF IDs and never queries shared policies. Unknown/non-string scopes fail with 400 before AI quota reservation. Returned/stored answers include `source_scope`; legacy history defaults to all in the UI.
 
+A follow-up can include `context_conversation_id` from the signed-in customer's history. The agent reads up to 400 characters of the previous question to resolve references and retrieves current sources using the new request's scope. Missing, expired, and other accounts' history entries return 404 before inference. Malformed IDs return 400. Each follow-up creates its own history entry.
+
+
 All support endpoints require gateway JWT authorization. Staff routes additionally require the administrators group.
 
 | Method | Path | Body/result |
