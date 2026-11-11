@@ -2,7 +2,7 @@
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
 from uuid import uuid4
-import subprocess,os,json,io,csv,time,hashlib,base64,zipfile,sys,re,argparse
+import subprocess,os,json,csv,time,hashlib,base64,zipfile,sys,re,argparse
 from boto3.dynamodb.types import TypeDeserializer
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.stdout.reconfigure(encoding='utf-8')
@@ -23,14 +23,9 @@ def cli(service,operation,data=None,region='ap-southeast-1',outfile=None):
     sequence+=1
     req=OUT/f'request-{sequence}.json'
     req.write_text(json.dumps(data or {},ensure_ascii=True),encoding='ascii')
-    if service=='bedrock-runtime' and operation=='invoke-model':
-        body=OUT/f'body-{sequence}.json'
-        value=data['body']
-        body.write_bytes(value if isinstance(value,bytes) else value.encode('utf-8'))
-        command=['aws',service,operation,'--model-id',data['modelId'],'--body','fileb://'+str(body),'--content-type',data['contentType'],'--accept',data['accept']]
-    else:
-        command=['aws',service,operation,'--cli-input-json','file://'+str(req)]
-        if service=='bedrock-runtime': command+=['--model-id',data['modelId']]
+    command=['aws',service,operation,'--cli-input-json','file://'+str(req)]
+    if service=='bedrock-runtime':
+        command+=['--model-id',data['modelId']]
     command+=['--region',region,'--output','json','--cli-connect-timeout','5','--cli-read-timeout','25','--no-cli-pager']
     if operation=='scan': command+=['--no-paginate']
     if outfile: command+=[str(outfile)]
@@ -50,8 +45,8 @@ with zipfile.ZipFile(archive) as z:
     for module in (ROOT/'policy_assistant').glob('*.py'):
         if z.read(module.name)!=module.read_bytes() and not (args.candidate and module.name=='assistant.py'): raise RuntimeError('Source drift: '+module.name)
 env=config['Environment']['Variables']
-for key in ['EMBEDDING_MODEL_ID','BEDROCK_MODEL_ID','REQUIRE_PUBLISHED_POLICIES','BEDROCK_GENERATION_REGION','BEDROCK_REASONING_EFFORT']: os.environ[key]=env[key]
-if env['BEDROCK_MODEL_ID']!='jp.amazon.nova-2-lite-v1:0' or env['BEDROCK_GENERATION_REGION']!='ap-northeast-1': raise RuntimeError('Expected Japan model route')
+for key in ['BEDROCK_MODEL_ID','REQUIRE_PUBLISHED_POLICIES']: os.environ[key]=env[key]
+if env['BEDROCK_MODEL_ID']!='global.anthropic.claude-haiku-5-5': raise RuntimeError('Expected Global Haiku 5.5 model route')
 deserialize=TypeDeserializer().deserialize
 class Policies:
     name=env['POLICIES_TABLE_NAME']
@@ -62,16 +57,20 @@ class Policies:
         response=cli('dynamodb','scan',request)
         response['Items']=[{k:deserialize(v) for k,v in item.items()} for item in response.get('Items',[])]
         return response
+    def get_item(self, Key, ConsistentRead=False):
+        result = cli('dynamodb', 'get-item', {
+            'TableName': self.name,
+            'Key': {key: {'S': value} for key, value in Key.items()},
+            'ConsistentRead': ConsistentRead,
+        })
+        return {'Item': {key: deserialize(value) for key, value in result['Item'].items()}} if 'Item' in result else {}
+
 class NoPrivateDocuments:
     def query(self,**kwargs): return {'Items':[]}
 class History:
     def put_item(self,**kwargs): pass
 class Runtime:
     def __init__(self,region): self.region=region;self.usage={};self.last_response={}
-    def invoke_model(self,**kwargs):
-        response_path=OUT/('embedding-'+uuid4().hex+'.json')
-        cli('bedrock-runtime','invoke-model',kwargs,self.region,response_path)
-        return {'body':io.BytesIO(response_path.read_bytes())}
     def converse(self,**kwargs):
         response=cli('bedrock-runtime','converse',kwargs,self.region)
         self.usage=response.get('usage',{})
@@ -79,7 +78,7 @@ class Runtime:
         return response
 class Probe(Service):
     def __init__(self):
-        self.region='ap-southeast-1';self.docs=NoPrivateDocuments();self.policies=Policies();self.history=History();self.generator=Runtime('ap-northeast-1');self._clients={'bedrock-runtime':Runtime('ap-southeast-1'),'bedrock-generation':self.generator}
+        self.region='ap-southeast-1';self.docs=NoPrivateDocuments();self.policies=Policies();self.history=History();self.generator=Runtime('ap-southeast-1');self._clients={'bedrock-runtime':self.generator}
     def save_answer(self,owner,item,response_ms):
         # Isolated model probe must never persist history or global quality totals.
         self.history.put_item(Item=item)
@@ -96,7 +95,7 @@ if args.cases:
     if not selected or not selected.issubset(set(range(1,31))): raise ValueError('Unknown case ID')
     cases=[row for row in cases if int(row['STT']) in selected]
 cases=cases*args.repeats
-report={'candidate':args.candidate,'local_assistant_sha256':hashlib.sha256((ROOT/'policy_assistant/assistant.py').read_bytes()).hexdigest(),'repeats':args.repeats,'run_id':run_id,'code_sha256':release['code_sha256'],'model_id':env['BEDROCK_MODEL_ID'],'generation_region':env['BEDROCK_GENERATION_REGION'],'scope':'Actual byte-matched deployed answer/retrieval code; live public-policy scan, embeddings and generation via AWS CLI transport. Private documents excluded by design, quota/history in memory. Not browser or authenticated HTTP testing. No prompt/model/index overrides.','results':[]}
+report={'candidate':args.candidate,'local_assistant_sha256':hashlib.sha256((ROOT/'policy_assistant/assistant.py').read_bytes()).hexdigest(),'repeats':args.repeats,'run_id':run_id,'code_sha256':release['code_sha256'],'model_id':env['BEDROCK_MODEL_ID'],'generation_region':'ap-southeast-1','scope':'Actual byte-matched deployed answer/retrieval code; live public-policy scan, lexical retrieval and generation via AWS CLI transport. Private documents excluded by design, quota/history in memory. Not browser or authenticated HTTP testing. No prompt/model/index overrides.','results':[]}
 if args.candidate: report['scope']='LOCAL assistant.py candidate; other runtime modules byte-match deployment. Live public policies and model; no private PDFs or persisted history/quota. Not browser or authenticated HTTP testing.'
 for row in cases:
     number=int(row['STT']);started=time.monotonic();item={'id':number,'question':row['Câu hỏi'],'expected':row['Nội dung kỳ vọng'],'review_status':'pending'}

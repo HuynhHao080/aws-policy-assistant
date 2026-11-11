@@ -10,13 +10,9 @@ from uuid import uuid4
 
 try:
     from .service import Problem, now, text, encode
-    from .embeddings import embed, model_id
-    from .policy_chunks import policy_chunks
     from .policy_validity import bounds, state as validity_state, DATE_FIELDS
 except ImportError:
     from service import Problem, now, text, encode
-    from embeddings import embed, model_id
-    from policy_chunks import policy_chunks
     from policy_validity import bounds, state as validity_state, DATE_FIELDS
 
 FIELDS = ("title", "category", "content", "keywords", *DATE_FIELDS)
@@ -70,16 +66,11 @@ def expected_condition(item, expected):
     return {"ConditionExpression": "attribute_exists(policy_id) AND attribute_not_exists(#rev) AND attribute_not_exists(updated_at)", "ExpressionAttributeNames": {"#rev": "revision"}}
 
 
-def indexed(service, fields):
+def indexed(fields):
     result = dict(fields)
     for key in ("title", "category", "content"):
         result[key + "_lower"] = result[key].lower()
     result["keywords_lower"] = [k.lower() for k in result["keywords"]]
-    if model_id():
-        chunks = policy_chunks(result["content"])
-        vectors = embed(service, [result["title"] + "\n" + chunk["embedding_text"] for chunk in chunks], "search_document")
-        result["search_chunks"] = [{"text": chunk["text"], "vector": vector} for chunk, vector in zip(chunks, vectors)]
-        result["embedding_model"] = model_id()
     return result
 
 
@@ -171,7 +162,7 @@ def handle(service, method, path, owner, data, params, request_id):
             item.pop(field, None)
         for field in ("search_chunks", "embedding_model"):
             item.pop(field, None)
-        item.update(indexed(service, fields))
+        item.update(indexed(fields))
         item.pop("draft_data", None)
         item.update(publication_state="published", published_at=now(), published_by=owner)
     elif action == "archive":

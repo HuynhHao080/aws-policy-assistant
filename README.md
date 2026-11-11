@@ -1,6 +1,6 @@
 # Policy Assistant
 
-A public, self-service AWS application for private PDF libraries, multilingual semantic retrieval, source-cited AI answers, conversation history, and administration of shared policies. The interface is in Vietnamese. Runtime: Python 3.12; deployment: AWS SAM; browser authentication: Cognito authorization code + PKCE.
+A public, self-service AWS application for private PDF libraries, lexical retrieval, source-cited AI answers, conversation history, and administration of shared policies. The interface is in Vietnamese. Runtime: Python 3.12; deployment: AWS SAM; browser authentication: Cognito authorization code + PKCE.
 
 Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Deployment and acceptance evidence: [verification report](docs/final-verification.md). The owner has confirmed registration and administrator access; the SNS subscription was confirmed.
 
@@ -25,8 +25,8 @@ The separate internship worklog includes a [current bilingual proposal](https://
 - Cognito self-registration, email confirmation, sign-in, password recovery and sign-out through hosted login. The frontend never asks users to paste JWTs.
 - Owner-scoped document upload, pagination, renaming, processing status, download and permanent deletion of all source/extraction versions.
 - PDF text extraction, with asynchronous Textract OCR for scanned PDFs. Limits: 10 MiB, 100 text pages or 10 scanned pages per file; encrypted and malformed PDFs fail explicitly.
-- Multilingual semantic retrieval using Cohere Embed Multilingual v3; compact int8 vectors live in S3, avoiding an always-running vector database. Selected document IDs are re-authorized before content is read.
-- Nova 2 Lite (Japan profile, low reasoning) answers only from retrieved excerpts, returning server-validated source IDs, document/page references and excerpts. Unsupported questions can return insufficient evidence. AI answers still require human verification.
+- Ranked lexical retrieval over extracted text and approved policies. Selected PDF IDs are re-authorized before content is read.
+- Claude Haiku 5.5 returns an answer and source IDs. The backend validates citations, checks published policy validity and stores history.
 - Owner-scoped history with 30-day expiry, per-entry deletion and JSON export.
 - Confirmed account deletion blocks access first, purges private object versions/history/support requests, then removes the Cognito identity asynchronously.
 - An `administrators` Cognito group controls shared-policy publication/deletion and a transactionally recorded audit log. The admin UI does not expose customer PDF contents.
@@ -34,7 +34,7 @@ The separate internship worklog includes a [current bilingual proposal](https://
 - Durable processing: a DynamoDB stream dispatches persisted work to SQS; duplicate delivery is safe; worker failures retry; scheduled recovery repairs stalled work; dead-letter and HTTP 5xx alarms are configured.
 - Private S3 origins, CloudFront HTTPS hosting, content security headers, versioned documents, DynamoDB recovery, bounded log retention, usage quotas and a monthly AWS budget notification.
 
-The deployed generation profile is `jp.amazon.nova-2-lite-v1:0` with low reasoning. Its Japan destinations may process retrieved excerpts in Tokyo/Osaka. Cohere embedding and Textract calls use Singapore. See the published privacy notice before uploading sensitive material.
+The sole model is Global Claude Haiku 5.5 (`global.anthropic.claude-haiku-5-5`), called from Singapore. Global inference may process the question and selected excerpts in other AWS Regions. PDF text is ranked locally and Textract OCR runs in Singapore. [Model cutover report](docs/haiku55-migration.md).
 
 ## Budget and limits
 
@@ -108,7 +108,7 @@ The helper refuses absent, disabled or unconfirmed accounts. Sign out and in aga
 ## Main files
 
 - `policy_assistant/app.py`: gateway routing and existing policy search.
-- `service.py`, `pipeline.py`, `pdf_parser.py`, `assistant.py`, `embeddings.py`, `signup.py` inside `policy_assistant/`: application, processing, grounded generation, vectors, signup limits.
+- `service.py`, `pipeline.py`, `pdf_parser.py`, `assistant.py`, `signup.py` inside `policy_assistant/`: application, processing, grounded generation, signup limits.
 - `frontend/src/`: production interface and authenticated API client.
 - `template.yaml`: AWS infrastructure and role permissions.
 - `scripts/deploy_release.py`, `scripts/bootstrap_admin.py`: repeatable release and owner setup.

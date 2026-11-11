@@ -46,26 +46,26 @@ def test_stale_lambda_build_is_rejected_before_release(monkeypatch, tmp_path):
 
 
 
-def test_release_without_model_override_preserves_current_model_and_quotas():
+def test_release_without_override_selects_haiku_and_preserves_quotas():
     from types import SimpleNamespace
     stack = {"Parameters": [{"ParameterKey": "BedrockModelId"}, {"ParameterKey": "MonthlyQuestionLimit"}]}
     template = {"Parameters": {"BedrockModelId": {}, "MonthlyQuestionLimit": {}}}
     values = release.release_parameters(SimpleNamespace(notification_email="owner@example.invalid"), stack, template)
     indexed = {p["ParameterKey"]: p for p in values}
-    assert indexed["BedrockModelId"]["UsePreviousValue"] is True
+    assert indexed["BedrockModelId"]["ParameterValue"] == "global.anthropic.claude-haiku-5-5"
     assert indexed["MonthlyQuestionLimit"]["UsePreviousValue"] is True
     assert indexed["MonthlyBudgetUSD"]["ParameterValue"] == "50"
 
 
-def test_reviewed_japan_model_override_is_explicit_and_unique():
+def test_haiku_model_override_is_explicit_and_unique():
     from types import SimpleNamespace
-    args = SimpleNamespace(notification_email="owner@example.invalid", model_id="jp.amazon.nova-2-lite-v1:0")
+    args = SimpleNamespace(notification_email="owner@example.invalid", model_id="global.anthropic.claude-haiku-5-5")
     values = release.release_parameters(args, {"Parameters": [{"ParameterKey": "BedrockModelId"}]}, {"Parameters": {"BedrockModelId": {}}})
     models = [p for p in values if p["ParameterKey"] == "BedrockModelId"]
-    assert models == [{"ParameterKey": "BedrockModelId", "ParameterValue": "jp.amazon.nova-2-lite-v1:0"}]
+    assert models == [{"ParameterKey": "BedrockModelId", "ParameterValue": "global.anthropic.claude-haiku-5-5"}]
 
 
-def test_global_model_routing_is_rejected_before_a_release():
+def test_other_model_is_rejected_before_a_release():
     from types import SimpleNamespace
-    with pytest.raises(ValueError, match="global routing"):
+    with pytest.raises(ValueError, match="Unsupported generation profile"):
         release.release_parameters(SimpleNamespace(notification_email="owner@example.invalid", model_id="global.amazon.nova-2-lite-v1:0"), {}, {})

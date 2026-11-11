@@ -14,10 +14,8 @@ from pypdf.errors import PdfReadError
 
 try:
     from .service import MAX_BYTES, Problem, now
-    from .embeddings import embed, model_id
 except ImportError:
     from service import MAX_BYTES, Problem, now
-    from embeddings import embed, model_id
 
 log = logging.getLogger(__name__)
 
@@ -198,11 +196,6 @@ def process(service, doc_id):
                 started = service.client("textract").start_document_text_detection(DocumentLocation={"S3Object": {"Bucket": service.bucket, "Name": doc["s3_key"], "Version": doc["s3_version"]}}, ClientRequestToken=token)
                 service.docs.update_item(Key={"doc_id": doc_id}, UpdateExpression="SET #s=:ocr, updated_at=:now, textract_job_id=:tid, ocr_started_at=:now, attempts=:zero REMOVE lease_until, job_id", ConditionExpression="job_id=:job", ExpressionAttributeNames={"#s": "status"}, ExpressionAttributeValues={":ocr": "ocr_pending", ":now": now(), ":tid": started["JobId"], ":zero": 0, ":job": job})
                 return
-        if model_id():
-            vectors = embed(service, [c["text"] for c in parsed["chunks"]], "search_document")
-            for chunk, vector in zip(parsed["chunks"], vectors):
-                chunk["vector"] = vector
-            parsed["embedding_model"] = model_id()
         # User presigned forms can only write uploads/. Seal the selected version.
         source_key = f"documents/{doc_id}/source.pdf"
         sealed = s3.put_object(Bucket=service.bucket, Key=source_key, Body=raw, ContentType="application/pdf", ServerSideEncryption="AES256")

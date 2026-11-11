@@ -66,12 +66,11 @@ def check_changes(changes):
 def release_parameters(args, stack, template):
     parameters = [{"ParameterKey": "NotificationEmail", "ParameterValue": args.notification_email}, {"ParameterKey": "MonthlyBudgetUSD", "ParameterValue": "50"}]
     overrides = {"NotificationEmail", "MonthlyBudgetUSD"}
-    model = getattr(args, "model_id", None)
-    if model:
-        if model not in {"apac.amazon.nova-micro-v1:0", "jp.amazon.nova-2-lite-v1:0"}:
-            raise ValueError("Unsupported generation profile; global routing is not allowed")
-        parameters.append({"ParameterKey": "BedrockModelId", "ParameterValue": model})
-        overrides.add("BedrockModelId")
+    model = getattr(args, "model_id", None) or "global.anthropic.claude-haiku-5-5"
+    if model != "global.anthropic.claude-haiku-5-5":
+        raise ValueError("Unsupported generation profile")
+    parameters.append({"ParameterKey": "BedrockModelId", "ParameterValue": model})
+    overrides.add("BedrockModelId")
     parameters.extend({"ParameterKey": p["ParameterKey"], "UsePreviousValue": True} for p in stack.get("Parameters", []) if p["ParameterKey"] not in overrides and p["ParameterKey"] in template.get("Parameters", {}))
     return parameters
 
@@ -181,7 +180,7 @@ if __name__ == "__main__":
     parser.add_argument("action", choices=["prepare", "inspect", "execute", "status", "publish"])
     parser.add_argument("--stack", default="policy-assistant")
     parser.add_argument("--notification-email")
-    parser.add_argument("--model-id", choices=["apac.amazon.nova-micro-v1:0", "jp.amazon.nova-2-lite-v1:0"])
+    parser.add_argument("--model-id", choices=["global.anthropic.claude-haiku-5-5"])
     args = parser.parse_args()
     if args.action == "prepare" and not args.notification_email:
         parser.error("--notification-email is required when preparing")

@@ -10,6 +10,6 @@ Use fictional shop policies and your own two test accounts. Personally perform/r
 6. Show draft versus publication, current shop contacts, audit, queue/alarm snapshots and deletion completion evidence.
 7. Explain your own architecture diagram, cost assumptions, retries, failure cases and which work was assisted. State what was not tested (e.g. load/restore/email/visual flows as applicable).
 
-Prepare a short answer for: why serverless/SQS/int8 vectors; why the parser is isolated; which data crosses regions; what is atomic/idempotent; how a deleting user is blocked; what the quotas do and do not cap; how to reproduce and safely clean a personal lab.
+Prepare a short answer for: why serverless/SQS/lexical ranking; why the parser is isolated; which data crosses regions; what is atomic/idempotent; how a deleting user is blocked; what the quotas do and do not cap; how to reproduce and safely clean a personal lab.
 
 No blog posting, workshop publishing, attendance record or event photo was generated/sent on your behalf. Capture only consented data and remove credentials/tokens/presigned URLs from video/screenshots.

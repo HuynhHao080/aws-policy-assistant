@@ -13,7 +13,7 @@ This is a review brief, not the final diagram. Use [official AWS icons](https://
 | How do account-deletion markers prevent a late answer/feedback from resurrecting private data? | quality.account_guard, history transaction, pipeline purge |
 | How do feedback revisions, deltas and idempotent persistence retries prevent double counting? | quality.feedback/commit and retry tests |
 | Why are the dashboard metrics not a measurement of factual correctness? | Quality DTO/captions, refusal/citation definitions |
-| What are the scale/cost limitations of a monthly rollup key and bounded S3 vector retrieval? | Quotas, reserved concurrency, conflict retry cap, cost worksheet |
+| What are the scale/cost limitations of a monthly rollup key and bounded lexical retrieval? | Quotas, reserved concurrency, conflict retry cap, cost worksheet |
 
 On your own diagram mark: actor/trust boundaries; authenticated API; private versus shared storage; upload/processing/retrieval/feedback/deletion flows; synchronous versus queued calls; DLQs/recovery; cross-region excerpts; metrics/alerts. Do not add services/subnets that are absent merely to decorate the diagram.
 

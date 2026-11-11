@@ -4,6 +4,8 @@ date: 2026-11-04
 weight: 0
 ---
 
+
+**Primary application model:** Global Claude Haiku 5.5. The application ranks extracted PDF and policy text by keywords. Dated verification reports record their respective releases. [Model cutover evidence](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — primary release, 4 November 2026
 
 **[Submission pack]({{< relref "/5-Workshop/5.7-PolicyAssistant/Submission" >}})**
@@ -31,7 +33,7 @@ Help a small shop answer policy questions using published sources and customer-p
 | Identity | Cognito signup, verification, PKCE login and recovery; administrator authorization enforced on the backend |
 | Private PDFs | 10 MiB/file, 100 text pages or 10 scanned pages; pinned S3 version, explicit failure state, owned library/rename/download/delete |
 | Background work | Metadata stream → dispatcher → SQS → worker; isolated parser, Textract for scans, recovery/retries/DLQs |
-| Answers | Cohere multilingual/int8 S3 vectors; shared policies, selected PDFs or both; Nova 2 Lite cited excerpts/pages and insufficient-evidence behavior |
+| Questions | Lexical ranking over approved policies and PDFs. Global Claude Haiku 5.5 returns cited answers. |
 | History | Owner-only, 30-day expiry, export/delete; expired records hidden before asynchronous TTL removal |
 | Policies | Separate drafts/publication, archive/restore/discard, revisions and audit; administrators cannot read private customer PDFs by virtue of their role |
 | Support | Explicit customer consent, unverified category/order reference, in-app replies; staff filters/status/priority; no automatic email or PDF/history attachments |
@@ -45,7 +47,7 @@ Source references: `policy_assistant/app.py`, `assistant.py`, `pipeline.py`, `qu
 
 A private frontend S3 origin is served through CloudFront HTTPS. Cognito supplies identity; API Gateway validates JWTs; Lambda authorizes each resource. Owned PDFs enter private versioned S3, and persisted DynamoDB metadata drives asynchronous dispatch. The parser has no general service permissions. Bounded retrieval precedes generation; answer/history and quality persistence use transactions with deletion guards.
 
-Stack, storage, embedding and OCR are in Singapore. Generation uses `jp.amazon.nova-2-lite-v1:0`, low reasoning; retrieved excerpts may be processed in Tokyo/Osaka. Explain cross-region processing and read the privacy notice before using sensitive documents. Citation presence is not factual correctness; user feedback is opinion. Server processing time is not end-to-end browser latency. Aggregate retention is 65 days after the last update; private history is 30 days and support is 90 days.
+Storage and OCR are in Singapore. Global Claude Haiku 5.5 may process questions and excerpts in other AWS Regions.
 
 **The final diagram is still missing.** Personally design/draw it with [official AWS icons](https://aws.amazon.com/architecture/icons/). Mark trust boundaries, private/shared data, synchronous/asynchronous calls, retries/DLQs and cross-region excerpts. Explain payload, authorization and failure handling for each arrow. An AI worksheet is not a student-designed final architecture.
 
@@ -94,11 +96,11 @@ This is a plan, not passing evidence. Seeded API latency is not real model outpu
 
 ## Current COST preparation — Calculator artifact still missing
 
-The owner targets USD 30–50/month; deployment reports record an account budget of USD 50 with notifications at USD 25/40/50. These are alerts, not a hard cap or freshly read invoice. Preserve the 21 October test-environment estimate as history; it does not fully include current Nova2/OCR/embedding/vector/counter costs.
+The target budget is USD 30–50 per month. The older test estimate is historical.
 
-A **proposed, unmeasured Calculator scenario**, not yet approved by the owner: 50 MAU; 100 PDFs/month × 10 pages, 20% needing OCR → 200 OCR pages; 2 MiB/PDF; 2,000 document embedding chunks plus 1,000 query embeddings/month; 1,000 generations × 8,000 input tokens and 2,500 output/reasoning tokens as planning headroom. These token quantities are assumptions, not measurements or an enforced input limit; current Nova2 maxTokens is 2,500. Also model the 2,000-attempt monthly quota scenario. Stored versions accumulate; one month's uploads are not total retained storage.
+Assume 50 MAU, 100 PDFs/month, 200 OCR pages, and 1,000 answers × 8,000 input and up to 900 output tokens.
 
-Enter each service in [AWS Pricing Calculator](https://calculator.aws/) with the actual regions: Japan generation; Singapore embedding/Textract/API/Lambda/DynamoDB/S3; CloudFront according to audience geography. Include parser/recovery/dispatcher/signup Lambdas, failed/duplicate work, transactions/indexes/PITR, all object versions/vectors, transfer, Cognito, CloudWatch logs/alarms/dashboard and SNS. Do not assume free-tier eligibility or subtract credits. Use [official Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) and each service's dated pricing page. No new verified unit rates or total USD are claimed for this scenario. If Calculator lacks a model/dimension, attach an explicit calculation from official pricing instead of omitting it. Save the real share URL/export, date and assumptions before marking COST complete.
+Enter each service in [AWS Pricing Calculator](https://calculator.aws/) with the actual regions: Global Haiku 5.5 from Singapore; Singapore Textract/API/Lambda/DynamoDB/S3; CloudFront according to audience geography. Include parser/recovery/dispatcher/signup Lambdas, failed/duplicate work, transactions/indexes/PITR, all object versions, transfer, Cognito, CloudWatch logs/alarms/dashboard and SNS. Do not assume free-tier eligibility or subtract credits. Use [official Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) and each service's dated pricing page. No new verified unit rates or total USD are claimed for this scenario. If Calculator lacks a model/dimension, attach an explicit calculation from official pricing instead of omitting it. Save the real share URL/export, date and assumptions before marking COST complete.
 
 ## Personal requirements still pending
 

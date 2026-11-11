@@ -3,6 +3,8 @@ title: "Bộ hồ sơ nộp Policy Assistant"
 weight: 0
 ---
 
+
+**Model của bản chính:** Global Claude Haiku 5.5. Ứng dụng xếp hạng từ khóa trên văn bản PDF và chính sách. Các báo cáo kiểm thử có ngày bên dưới ghi lại từng bản đã nghiệm thu. [Bằng chứng chuyển model](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 ## Bốn đường dẫn cần mở khi trình bày
 
 1. [Ứng dụng chạy trên AWS](https://djreo5eptvwk5.cloudfront.net/) dùng bộ chính sách DEMO cho shop phụ kiện.
@@ -41,7 +43,7 @@ Khi quay, che token, URL tải lên có chữ ký và thông tin tài khoản. N
 
 | Mục | Việc của người nộp |
 |---|---|
-| Kiến trúc | Tự vẽ luồng trên sơ đồ AWS và tập giải thích ranh giới quyền, Singapore/Japan, lỗi và retry. [Phiếu rà soát](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/fcaj/ARCHITECTURE-REVIEW-WORKSHEET.md). |
+| Kiến trúc | Tự vẽ luồng trên sơ đồ AWS và tập giải thích ranh giới quyền, Singapore và định tuyến Global, lỗi và retry. [Phiếu rà soát](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/fcaj/ARCHITECTURE-REVIEW-WORKSHEET.md). |
 | COST | Nhập giả định của Proposal vào Calculator, lưu tổng tiền, ngày lập và link hoặc bản export. Ngân sách mục tiêu 30–50 USD/tháng. [Đầu vào dự toán]({{< relref "/2-Proposal/CurrentSolution" >}}). |
 | Demo | Tự thực hiện, lưu video hoặc ảnh minh chứng và thời điểm kiểm tra. |
 | Worklog và minh chứng | Kiểm lại nhật ký, các bài blog đã đăng và minh chứng sự kiện, điền link thực tế. [Trang rà soát]({{< relref "/0-Audit/student-evidence" >}}). |

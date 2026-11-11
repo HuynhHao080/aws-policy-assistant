@@ -3,6 +3,8 @@ title: "Policy Assistant submission pack"
 weight: 0
 ---
 
+
+**Primary application model:** Global Claude Haiku 5.5. The application ranks extracted PDF and policy text by keywords. Dated verification reports record their respective releases. [Model cutover evidence](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 ## Four links for the presentation
 
 1. The [AWS application](https://djreo5eptvwk5.cloudfront.net/) runs with DEMO policies for an accessories shop.
@@ -41,7 +43,7 @@ Hide tokens, presigned upload URLs and account details in the recording. If a st
 
 | Item | Student action |
 |---|---|
-| Architecture | Draw your AWS flows and practise explaining identity boundaries, Singapore/Japan, failure and retry. [Review worksheet](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/fcaj/ARCHITECTURE-REVIEW-WORKSHEET.md). |
+| Architecture | Draw your AWS flows and practise explaining identity boundaries, Singapore and Global routing, failure and retry. [Review worksheet](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/fcaj/ARCHITECTURE-REVIEW-WORKSHEET.md). |
 | COST | Enter proposal assumptions into Calculator and save the total, date and share URL or export. Target budget is USD 30–50/month. [Cost inputs]({{< relref "/2-Proposal/CurrentSolution" >}}). |
 | Demo | Perform it personally and capture evidence with the date of the check. |
 | Worklog and evidence | Review daily entries, published blog posts and event evidence, then add actual links. [Evidence review]({{< relref "/0-Audit/student-evidence" >}}). |

@@ -9,7 +9,7 @@ def response(value, name="emit_policy_answer", stop="tool_use", duplicate=False)
 
 
 def test_structured_output_only_allows_retrieved_sources_and_saves_valid_answer(services, ai, monkeypatch):
-    monkeypatch.setenv("BEDROCK_MODEL_ID","jp.amazon.nova-2-lite-v1:0")
+    monkeypatch.setenv("BEDROCK_MODEL_ID","global.anthropic.claude-haiku-5-5")
     data=ready(services)
     code,result=request("/ask","POST",data={"question":"Refund deadline?","document_ids":[data["doc_id"]]})
     assert code==200 and result["grounded"] and result["citations"][0]["doc_id"]==data["doc_id"]
@@ -33,7 +33,7 @@ def test_structured_output_only_allows_retrieved_sources_and_saves_valid_answer(
     {"stopReason":"end_turn","output":{"message":{"content":[{"text":'{"answer":"Claim","sources":["S1"]}'}]}}},
 ])
 def test_invalid_or_unexpected_model_output_is_rejected_without_history(services, ai, monkeypatch, output):
-    monkeypatch.setenv("BEDROCK_MODEL_ID","jp.amazon.nova-2-lite-v1:0")
+    monkeypatch.setenv("BEDROCK_MODEL_ID","global.anthropic.claude-haiku-5-5")
     data=ready(services)
     monkeypatch.setattr(ai,"converse",lambda **kwargs:output)
     code,result=request("/ask","POST",data={"question":"Refund deadline?","document_ids":[data["doc_id"]]})

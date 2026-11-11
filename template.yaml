@@ -21,26 +21,13 @@ Globals:
         SUPPORT_TABLE_NAME: !Ref 'SupportTable'
         TICKETS_PER_MONTH: '200'
         BEDROCK_MODEL_ID: !Ref 'BedrockModelId'
-        BEDROCK_GENERATION_REGION:
-          Fn::If:
-          - UseNova2Lite
-          - ap-northeast-1
-          - Ref: AWS::Region
-        BEDROCK_REASONING_EFFORT:
-          Fn::If: [UseNova2Lite, low, '']
         QUESTIONS_PER_MONTH: !Ref 'MonthlyQuestionLimit'
         UPLOADS_PER_MONTH: !Ref 'MonthlyUploadLimit'
         QUESTIONS_PER_USER_DAY: '20'
         UPLOADS_PER_USER_DAY: '5'
         USER_POOL_ID: !Ref 'PolicyAssistantUserPool'
-        EMBEDDING_MODEL_ID: !Ref 'EmbeddingModelId'
         REQUIRE_PUBLISHED_POLICIES: 'true'
     MemorySize: 256
-Conditions:
-  UseNova2Lite:
-    Fn::Equals:
-    - Ref: BedrockModelId
-    - jp.amazon.nova-2-lite-v1:0
 Resources:
   PolicyAssistantDocumentsBucket:
     Type: AWS::S3::Bucket
@@ -156,10 +143,6 @@ Resources:
           Action:
           - cognito-idp:AdminDeleteUser
           Resource: !GetAtt 'PolicyAssistantUserPool.Arn'
-        - Effect: Allow
-          Action:
-          - bedrock:InvokeModel
-          Resource: !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/${EmbeddingModelId}'
         - Effect: Allow
           Action:
           - textract:StartDocumentTextDetection
@@ -372,25 +355,9 @@ Resources:
           Action:
           - bedrock:InvokeModel
           Resource:
-          - Fn::Sub:
-            - 'arn:${AWS::Partition}:bedrock:${GenerationRegion}:${AWS::AccountId}:inference-profile/${BedrockModelId}'
-            - GenerationRegion:
-                Fn::If:
-                - UseNova2Lite
-                - ap-northeast-1
-                - Ref: AWS::Region
-          - Fn::If:
-            - UseNova2Lite
-            - Fn::Sub: 'arn:${AWS::Partition}:bedrock:ap-northeast-1::foundation-model/amazon.nova-2-lite-v1:0'
-            - Fn::Sub: 'arn:${AWS::Partition}:bedrock:*::foundation-model/amazon.nova-micro-v1:0'
-          - Fn::If:
-            - UseNova2Lite
-            - Fn::Sub: 'arn:${AWS::Partition}:bedrock:ap-northeast-3::foundation-model/amazon.nova-2-lite-v1:0'
-            - Ref: AWS::NoValue
-        - Effect: Allow
-          Action:
-          - bedrock:InvokeModel
-          Resource: !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/${EmbeddingModelId}'
+          - !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/${BedrockModelId}'
+          - !Sub 'arn:${AWS::Partition}:bedrock:::foundation-model/anthropic.claude-haiku-5-5'
+          - !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/anthropic.claude-haiku-5-5'
         - Effect: Allow
           Action:
           - s3:PutObject
@@ -1285,12 +1252,10 @@ Outputs:
 Parameters:
   BedrockModelId:
     Type: String
-    Default: jp.amazon.nova-2-lite-v1:0
-    AllowedPattern: '[A-Za-z0-9.:-]+'
-    Description: Default Nova 2 Lite generation uses Tokyo and Osaka; Micro rollback uses the Singapore APAC profile. Embeddings remain in the stack region.
+    Default: global.anthropic.claude-haiku-5-5
+    Description: The sole generation profile for Policy Assistant
     AllowedValues:
-    - apac.amazon.nova-micro-v1:0
-    - jp.amazon.nova-2-lite-v1:0
+    - global.anthropic.claude-haiku-5-5
   NotificationEmail:
     Type: String
     AllowedPattern: '[^\s@]+@[^\s@]+\.[^\s@]+'
@@ -1310,8 +1275,3 @@ Parameters:
     Default: 300
     MinValue: 1
     MaxValue: 1000
-  EmbeddingModelId:
-    Type: String
-    Default: cohere.embed-multilingual-v3
-    AllowedValues:
-    - cohere.embed-multilingual-v3

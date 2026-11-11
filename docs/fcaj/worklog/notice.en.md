@@ -1,5 +1,7 @@
 ## Primary application — documentation update, 6 November 2026
 
+**Primary application model:** Global Claude Haiku 5.5. The application ranks extracted PDF and policy text by keywords. Dated verification reports record their respective releases. [Model cutover evidence](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
+
 **[Submission pack]({{< relref "/5-Workshop/5.7-PolicyAssistant/Submission" >}})**
 
 **The primary application is [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). October sections below describe another historical test environment.**

@@ -4,6 +4,8 @@ date: 2026-11-04
 weight: 0
 ---
 
+
+**Model của bản chính:** Global Claude Haiku 5.5. Ứng dụng xếp hạng từ khóa trên văn bản PDF và chính sách. Các báo cáo kiểm thử có ngày bên dưới ghi lại từng bản đã nghiệm thu. [Bằng chứng chuyển model](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — bản chính ngày 04/11/2026
 
 **[Bộ hồ sơ nộp]({{< relref "/5-Workshop/5.7-PolicyAssistant/Submission" >}})**
@@ -31,7 +33,7 @@ Hỗ trợ shop nhỏ trả lời câu hỏi chính sách bằng nguồn công k
 | Tài khoản | Cognito tự đăng ký, xác nhận email, đăng nhập PKCE, quên mật khẩu; quyền quản trị kiểm ở backend |
 | PDF riêng | Upload tối đa 10 MiB, 100 trang text hoặc 10 trang scan; phiên bản S3 được chốt; trạng thái lỗi rõ ràng; thư viện/đổi tên/tải/xóa theo chủ sở hữu |
 | Xử lý nền | Stream metadata → dispatcher → SQS → worker; parser cô lập quyền; Textract cho scan; recovery, retry và DLQ |
-| Hỏi đáp | Cohere đa ngôn ngữ/int8 trong S3; chọn chính sách chung, PDF hoặc cả hai; Nova 2 Lite có trích dẫn nguồn/trang, có thể trả thiếu bằng chứng |
+| Hỏi đáp | Xếp hạng từ khóa, chọn chính sách/PDF/cả hai. Global Claude Haiku 5.5 trả lời kèm trích dẫn. |
 | Lịch sử | Riêng từng tài khoản, tối đa 30 ngày, xuất JSON/xóa; bản ghi hết hạn bị ẩn dù TTL chưa dọn |
 | Chính sách | Draft tách bản published; publish/archive/restore/discard có revision và audit; admin không vì có vai trò mà đọc được PDF khách |
 | Hỗ trợ | Khách đồng ý trước khi gửi, category/mã đơn do khách nhập chưa xác minh; trao đổi trong app; nhân viên lọc, đổi trạng thái/priority; không tự gửi email hoặc đính kèm PDF/lịch sử |
@@ -45,7 +47,7 @@ Nguồn mã để đọc: `policy_assistant/app.py`, `assistant.py`, `pipeline.p
 
 Frontend S3 private qua CloudFront HTTPS; Cognito cấp identity, API Gateway kiểm JWT, Lambda kiểm quyền trên từng tài nguyên. PDF vào S3 private theo owner và version; metadata lưu DynamoDB rồi dispatch xử lý nền. Parser không có quyền dịch vụ tùy ý. Nguồn text/vector được truy hồi có giới hạn trước khi gọi model; kết quả/history và bộ đếm chất lượng cập nhật bằng transaction có guard khi xóa tài khoản.
 
-Stack, lưu trữ, embedding và OCR ở Singapore. Generation dùng `jp.amazon.nova-2-lite-v1:0`, low reasoning; trích đoạn có thể được xử lý tại Tokyo/Osaka. Cần giải thích luồng liên vùng và đọc thông báo quyền riêng tư trước khi dùng tài liệu nhạy cảm. Chỉ số có trích dẫn không chứng minh câu trả lời đúng; đánh giá người dùng là ý kiến. Thời gian xử lý server không phải độ trễ trình duyệt từ đầu đến cuối. Giữ dữ liệu tổng hợp 65 ngày sau cập nhật cuối; lịch sử riêng 30 ngày, hỗ trợ 90 ngày.
+Stack, lưu trữ và OCR ở Singapore. Global Claude Haiku 5.5 có thể xử lý câu hỏi và đoạn trích ở các vùng AWS khác.
 
 **Sơ đồ cuối cùng vẫn chưa có.** Sinh viên tự thiết kế/vẽ với [icon AWS chính thức](https://aws.amazon.com/architecture/icons/), đánh dấu trust boundary, dữ liệu riêng/chung, sync/async, retry/DLQ và liên vùng. Mỗi mũi tên cần tự giải thích payload, quyền và xử lý lỗi; không nộp worksheet AI làm sơ đồ tự thiết kế.
 
@@ -94,11 +96,11 @@ Công cụ chỉ sửa block có marker trong danh sách trang được phép, c
 
 ## COST hiện tại — đầu vào chuẩn bị, chưa có Calculator
 
-Mục tiêu chủ dự án: 30–50 USD/tháng, budget account 50 USD và ngưỡng thông báo 25/40/50 USD theo báo cáo triển khai. Đây không phải hard cap/hóa đơn mới đọc. Giữ dự toán 21/10 cho môi trường test cũ dưới nhãn lịch sử; nó không bao gồm đầy đủ Nova2/OCR/embedding/vectors/counters mới.
+Ngân sách mục tiêu 30–50 USD/tháng. Dự toán test cũ là mốc lịch sử.
 
-Một kịch bản **đề xuất để nhập Calculator**, chưa được đo hoặc chủ dự án chốt: 50 MAU; 100 PDF/tháng × 10 trang, 20% cần OCR → 200 trang OCR; 2 MiB/PDF; 2.000 chunks embedding/tháng cộng 1.000 query embedding; 1.000 lần generation × 8.000 input tokens và 2.500 output/reasoning tokens để dự trù. Số token là giả định, không đo và không phải giới hạn input bắt buộc; maxTokens Nova2 trong code là 2.500. Thử kịch bản quota 2.000 lần/tháng; retention/version tăng theo thời gian, không lấy dung lượng upload một tháng làm tổng storage.
+Giả định dự toán gồm 50 MAU, 100 PDF/tháng, 200 trang OCR, 1.000 câu trả lời × 8.000 input và tối đa 900 output token.
 
-Trong [AWS Pricing Calculator](https://calculator.aws/) nhập từng dịch vụ theo region: generation Japan; embedding/Textract/API/Lambda/DynamoDB/S3 Singapore; CloudFront theo người dùng thực. Gồm cả parser/recovery/dispatcher/signup Lambda, request thất bại/trùng, transactional writes/index/PITR, S3 mọi phiên bản và vectors, transfer, Cognito, CloudWatch logs/alarms/dashboard, SNS. Không mặc định đủ free tier hoặc trừ credit. Dùng [giá Bedrock chính thức](https://aws.amazon.com/bedrock/pricing/) và trang pricing từng dịch vụ tại ngày lập estimate. Chưa có đơn giá mới/tổng USD được xác minh cho kịch bản này; nếu Calculator chưa hỗ trợ model/dimension, đính kèm phép tính bổ sung từ giá chính thức, không bỏ chi phí đó. Lưu share URL/export và ngày/giả định thật trước khi đánh dấu COST hoàn tất.
+Dùng [AWS Pricing Calculator](https://calculator.aws/) và [giá Bedrock](https://aws.amazon.com/bedrock/pricing/) cho Global Haiku 5.5 từ Singapore. Tính cả lưu trữ, OCR, API, DynamoDB, Lambda, hàng đợi, log, cảnh báo và truyền dữ liệu.
 
 ## Các việc cá nhân còn chờ
 

@@ -42,7 +42,7 @@ f=client('lambda').get_function_configuration(FunctionName=fn)
 release=json.loads((ROOT/'.deployment/release.json').read_text(encoding='utf-8'))
 if f['CodeSha256']!=base64.b64encode(bytes.fromhex(release['code_sha256'])).decode(): raise RuntimeError('Unexpected deployed code')
 env=f['Environment']['Variables']
-if env['BEDROCK_MODEL_ID']!='jp.amazon.nova-2-lite-v1:0' or env.get('BEDROCK_GENERATION_REGION')!='ap-northeast-1' or env.get('BEDROCK_REASONING_EFFORT')!='low': raise RuntimeError('Expected generation configuration is not deployed')
+if env['BEDROCK_MODEL_ID']!='global.anthropic.claude-haiku-5-5': raise RuntimeError('Expected generation configuration is not deployed')
 cognito=client('cognito-idp')
 username='pilot-qa-'+uuid4().hex+'@example.invalid'
 password=secrets.token_urlsafe(30)+'Aa1!'

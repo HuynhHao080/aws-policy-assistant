@@ -83,12 +83,12 @@ class Service:
         return self._clients[name]
 
     def generation_client(self):
-        region = os.environ.get("BEDROCK_GENERATION_REGION", self.region)
-        if region == self.region:
-            return self.client("bedrock-runtime")
-        if "bedrock-generation" not in self._clients:
-            self._clients["bedrock-generation"] = boto3.client("bedrock-runtime", region_name=region, config=Config(connect_timeout=3, read_timeout=20, retries={"max_attempts": 0}))
-        return self._clients["bedrock-generation"]
+        if "bedrock-runtime" not in self._clients:
+            self._clients["bedrock-runtime"] = boto3.client(
+                "bedrock-runtime", region_name=self.region,
+                config=Config(connect_timeout=3, read_timeout=20, retries={"total_max_attempts": 1}),
+            )
+        return self._clients["bedrock-runtime"]
 
     def table(self, env):
         name = os.environ.get(env)

@@ -32,7 +32,7 @@
 
 - Defaults target a small public launch: 300 uploads/month, 2,000 question attempts/month, 100,000 authenticated application requests/month, 100 signup attempts/month and 1,000 total public signup attempts.
 - Atomic daily/monthly counters limit expensive operations. A quota reservation counts an attempt and is not refunded on an ambiguous downstream error. The whole AWS account budget alerts at USD 25/40/50; it does not stop charging automatically.
-- PDF text and compact int8 vectors are in S3. Retrieval checks at most 20 recent owned documents by default, or up to 10 explicitly selected documents, plus a bounded shared-policy scan (up to 1,000 evaluated records and DynamoDB's single-response size limit). This is a budget-conscious launch design, not an unbounded enterprise search engine.
+- S3 stores extracted PDF text. Lexical retrieval ranks bounded sets of up to 20 recent owned documents, 10 explicit PDF selections and 1,000 evaluated policy rows. Existing text indexes remain readable.
 - No load benchmark or availability SLA is claimed by unit tests. Increase quotas/concurrency or replace bounded retrieval only after measuring real demand and revisiting the USD 30–50 budget.
 
 ## Rollback
@@ -41,15 +41,15 @@ Keep the previous source backup and the release artifact/checksum. Use a reviewe
 
 ## Current answer serialization
 
-The Japan Nova 2 Lite route uses a forced `emit_policy_answer` schema for answer and retrieved source IDs. This is a serialization-only tool definition: the application never dispatches model-selected operations. Only one expected output block is accepted. Unknown IDs, unexpected tools, duplicate blocks, truncated responses, extra payload keys and invalid fields are rejected before saving conversation history. The legacy Nova Micro rollback route retains text-JSON parsing. No automatic generation retry was added: ambiguous failures still count as attempts, without silently multiplying inference cost.
+Global Claude Haiku 5.5 uses Converse with one forced `emit_policy_answer` tool. The application validates the answer, source IDs and current policy facts before history is written. The request has a 900 output token cap, disabled thinking and low effort. The SDK makes one attempt.
 
-The use of a schema follows [AWS Nova tool/structured-output guidance](https://docs.aws.amazon.com/nova/latest/nova2-userguide/using-tools.html). It improves format reliability; it does not prove the truth of every generated sentence. Continue to check the policy, source and any unconfirmed customer conditions.
+See [AWS Claude tool use](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html) and [migration verification](haiku55-migration.md). Source IDs are checked against the retrieved excerpts. Review the actual content when assessing factual quality.
 
 When local Python SDK networking is unavailable, `scripts/check_retail_live.py --aws-cli` uses AWS CLI control calls and real HTTP application requests. It creates only an invitation-suppressed disposable test identity and cleans it after the run. Credentials remain in memory or a short-lived user temp file and are not printed. Review its ignored report `.deployment/retail-http-acceptance.json`, including cleanup status. `scripts/run_retail_regression_cli.py` tests the deployed, byte-matched public-policy answer code with CLI model transport; it does not test browser interaction or private-PDF workflows. `--candidate` explicitly permits only a local assistant.py candidate and records that different scope. Keep candidate and deployed evidence separate.
 
 ## Policy draft operations and frontend compatibility
 
-Administrators use the catalogue/editor workflow in HUONG-DAN-QUAN-TRI.md. Draft saves do not alter the published snapshot or regenerate embeddings. Publish explicitly indexes the saved draft. Archive retains content for republishing; discard only removes the draft. Existing policies are compatible without a migration. API consumers must first fetch the edit revision before changing an existing policy; a 409 means reload/compare, not blind retry.
+Administrators use the catalogue and draft workflow in HUONG-DAN-QUAN-TRI.md. Publishing builds text search fields. Archive retains content for republishing. API consumers fetch the current revision before changing a policy and reload after a 409.
 
 Build the frontend before its tests: the build contract check validates generated HTML/JS/CSS. The build uses content-fingerprinted bundle filenames, removes only the two obsolete fixed-name generated local files, and never deletes old hosted bundles. Publish assets/config before entry HTML, preserve MIME types, then invalidate CloudFront. Do not copy the synthetic `.deployment/admin-ui-fixture` build or mock auth module into frontend/dist or hosting. The production build fails if known fixture-auth markers appear. Validate the immutable Lambda artifact/new authenticated routes before publishing the matching frontend.
 

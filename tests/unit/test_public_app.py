@@ -101,18 +101,15 @@ class FakeAI:
 
     def converse(self, **kwargs):
         self.calls.append(kwargs)
-        if kwargs.get("toolConfig"):
-            return {"stopReason": "tool_use", "output": {"message": {"content": [{"toolUse": {"toolUseId": "test-answer", "name": "emit_policy_answer", "input": self.answer}}]}}}
-        return {"output": {"message": {"content": [{"text": json.dumps(self.answer)}]}}}
+        return {"stopReason": "tool_use", "output": {"message": {"content": [{"toolUse": {"toolUseId": "test-answer", "name": "emit_policy_answer", "input": self.answer}}]}}}
 
     def invoke_model(self, **kwargs):
-        payload = json.loads(kwargs["body"])
-        return {"body": io.BytesIO(json.dumps({"embeddings": {"int8": [[1] * 1024 for _ in payload["texts"]]}}).encode())}
+        pytest.fail("The application must not call an embedding model")
 
 
 @pytest.fixture
 def ai(services, monkeypatch):
-    monkeypatch.setenv("BEDROCK_MODEL_ID", "test-model")
+    monkeypatch.setenv("BEDROCK_MODEL_ID", 'global.anthropic.claude-haiku-5-5')
     fake = FakeAI()
     service = Service(app.document_table, app.table)
     service._clients["bedrock-runtime"] = fake
@@ -140,7 +137,7 @@ def test_other_user_document_ids_never_reach_model(services, ai):
     assert ai.calls == []
 
 
-def test_semantic_search_finds_cross_language_source(services, ai, monkeypatch):
+def test_lexical_search_maps_refund_terms_without_embedding_calls(services, ai, monkeypatch):
     monkeypatch.setenv("EMBEDDING_MODEL_ID", "cohere.embed-multilingual-v3")
     data = ready(services)
     code, result = request("/ask", "POST", data={"question": "Tôi được hoàn tiền trong bao lâu?", "document_ids": [data["doc_id"]]})
@@ -266,31 +263,27 @@ def test_unpublished_legacy_policies_do_not_become_customer_content(services, ai
     assert request("/ask", "POST", data={"question": "Refund deadline?"})[1]["grounded"] is False
 
 
-def test_generation_routing_does_not_move_embedding_client(services, ai, monkeypatch):
-    service = app._service()
-    embedding_client = service.client("bedrock-runtime")
-    monkeypatch.setenv("BEDROCK_GENERATION_REGION", "ap-northeast-1")
+def test_generation_client_uses_stack_region_and_disables_automatic_retries(services, monkeypatch):
+    service = Service(app.document_table, app.table)
     generation = object()
     calls = []
     def make_client(name, **kwargs):
-        calls.append((name, kwargs["region_name"]))
+        calls.append((name, kwargs["region_name"], kwargs["config"].retries))
         return generation
     monkeypatch.setattr("policy_assistant.service.boto3.client", make_client)
     assert service.generation_client() is generation
     assert service.generation_client() is generation
-    assert service.client("bedrock-runtime") is embedding_client
-    assert calls == [("bedrock-runtime", "ap-northeast-1")]
+    assert calls == [("bedrock-runtime", service.region, {"total_max_attempts": 1})]
 
 
 def test_customer_cannot_raise_reasoning_budget_or_override_model(services, ai, monkeypatch):
-    monkeypatch.setenv("BEDROCK_REASONING_EFFORT", "low")
     data = ready(services)
     code, result = request("/ask", "POST", data={"question": "Refund deadline?", "document_ids": [data["doc_id"]], "reasoning_effort": "high", "max_tokens": 65000, "model_id": "global.unapproved"})
     assert code == 200 and result["grounded"]
     call = ai.calls[0]
-    assert call["modelId"] == "test-model"
-    assert call["inferenceConfig"]["maxTokens"] == 2500
-    assert call["additionalModelRequestFields"]["reasoningConfig"] == {"type": "enabled", "maxReasoningEffort": "low"}
+    assert call["modelId"] == 'global.anthropic.claude-haiku-5-5'
+    assert call["inferenceConfig"]["maxTokens"] == 900
+    assert call["additionalModelRequestFields"]["thinking"] == {"type": "disabled"}
 
 
 def test_admin_publication_indexes_separate_clauses_with_context(services, ai, monkeypatch):
@@ -300,6 +293,7 @@ def test_admin_publication_indexes_separate_clauses_with_context(services, ai, m
     code, _ = request("/admin/policies/SECTION-TEST", "PUT", data=policy, claims={"cognito:groups": ["administrators"]})
     assert code == 200
     item = app.table.get_item(Key={"policy_id": "SECTION-TEST"})["Item"]
-    assert item["content"] == content and len(item["search_chunks"]) == 2
-    assert all("Lỗi sản phẩm" in c["text"] and "chưa mở hộp" in c["text"] for c in item["search_chunks"])
+    assert item["content"] == content and "search_chunks" not in item and "embedding_model" not in item
+    code, result = request("/ask", "POST", data={"question": "Đổi ý mở hộp?", "source_scope":"policies"})
+    assert code == 200 and "chưa mở hộp" in result["citations"][0]["excerpt"]
     assert request("/policies/SECTION-TEST")[1].get("search_chunks") is None

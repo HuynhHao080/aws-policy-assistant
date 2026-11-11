@@ -3,6 +3,8 @@ title: "Current proposal — a policy assistant for an accessories shop"
 weight: 0
 ---
 
+
+**Primary application model:** Global Claude Haiku 5.5. The application ranks extracted PDF and policy text by keywords. Dated verification reports record their respective releases. [Model cutover evidence](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — current solution proposal
 
 Document review: **6 November 2026**. This AI-assisted proposal describes published code and the latest recorded deployment evidence. The student must review, practise and explain it. It does not establish FCAJ eligibility or authorize DEMO policies for real transactions. October proposals on the parent page remain historical records.
@@ -35,11 +37,11 @@ The following is a design description, **not a replacement for a student-designe
 |---|---|
 | Web application | CloudFront + S3; Cognito authentication; HTTP API → Python 3.12 Lambda validates JWT/groups/ownership |
 | Upload and processing | Private versioned S3 → DynamoDB metadata/Stream → dispatcher → SQS → worker; IAM-isolated PDF parser, Textract for scans; recovery and DLQ |
-| Questions | Approved policies or the customer's own extracted PDF → Cohere embeddings and S3 int8 vectors → bounded retrieval → Nova 2 Lite → output/source ID/effective-state validation → history |
+| Questions | Rank extracted text by lexical relevance → Global Claude Haiku 5.5 → validate source IDs and policy validity → history |
 | Administration/support | DynamoDB policy/shop/ticket records; revision + owner-deletion guard + audit transaction; customer DTO excludes internal notes |
 | Operations | CloudWatch logs/metrics/alarms, SNS and AWS Budgets; PITR and Retain protect data during infrastructure operations |
 
-Application services, embeddings and Textract use Singapore; generation uses a Japan profile spanning Tokyo/Osaka. Do not claim all data remains in Vietnam or Singapore. Private PDFs are not automatically shared with staff; support requests are not AI retrieval material. No VPC/NAT or always-on vector database was added merely to increase the service count.
+Application services, storage and Textract run in Singapore. The Global Claude Haiku 5.5 profile can process questions and excerpts in other AWS Regions.
 
 ## 4. Technical decisions and risks
 
@@ -59,10 +61,9 @@ The owner's target is **USD 30–50/month**. A USD 50 budget with USD 25/40/50 t
 
 | Assumed input | Dimensions to estimate |
 |---|---|
-| 50 MAU; 100 PDFs/month × 10 pages, 2 MiB/PDF | Cognito, API, Lambda and S3; include sources/versions/extraction/vectors and retention, not just first-month uploads |
+| 50 MAU; 100 PDFs/month × 10 pages, 2 MiB/PDF | Cognito, API, Lambda and S3; include sources/versions/extraction and retention, not just first-month uploads |
 | 20% of pages need OCR = 200 pages/month | Singapore Textract plus worker/poll/retry requests |
-| 2,000 chunk embeddings and 1,000 query embeddings/month | Singapore Cohere; confirm the billing unit against official pricing |
-| 1,000 generations × 8,000 input and 2,500 output/reasoning tokens | Japan Nova 2 Lite: assumed 8 million input and 2.5 million output tokens; stress scenario at 2,000 generations/month |
+| 1,000 answers × 8,000 input and up to 900 output tokens | Global Claude Haiku 5.5 from Singapore. Estimate a higher scenario at 2,000 attempts/month. |
 | Support, audit, counters and operations | DynamoDB transactions/indexes/PITR, SQS, logs/alarms/dashboard, SNS, CloudFront/transfer and failed requests |
 
 Total: **PENDING**. No current unit prices or completed estimate have been verified; do not enter zero or assume free tier/credits. Use [AWS Pricing Calculator](https://calculator.aws/) and [official Bedrock pricing](https://aws.amazon.com/bedrock/pricing/), retaining date, regions, assumptions and a share URL/export. Supplement unsupported models/dimensions with explicit calculations from official prices. [Detailed cost inputs]({{< relref "/5-Workshop/5.7-PolicyAssistant/CurrentRelease" >}}).

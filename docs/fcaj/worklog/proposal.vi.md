@@ -3,6 +3,8 @@ title: "Đề xuất hiện tại — trợ lý chính sách cho shop phụ ki�
 weight: 0
 ---
 
+
+**Model của bản chính:** Global Claude Haiku 5.5. Ứng dụng xếp hạng từ khóa trên văn bản PDF và chính sách. Các báo cáo kiểm thử có ngày bên dưới ghi lại từng bản đã nghiệm thu. [Bằng chứng chuyển model](https://github.com/HuynhHao080/aws-policy-assistant/blob/main/docs/haiku55-migration.md).
 # Policy Assistant — đề xuất giải pháp hiện tại
 
 Rà soát tài liệu: **06/11/2026**. Đây là bản mô tả khớp mã đã công bố và bằng chứng triển khai gần nhất, có AI hỗ trợ; sinh viên phải tự rà soát, thực hành và giải thích. Không phải tuyên bố đã đủ mọi điều kiện FCAJ hoặc được phép dùng chính sách DEMO cho giao dịch thật. Các proposal tháng 10 trong trang cha được giữ làm lịch sử.
@@ -35,11 +37,11 @@ Chưa có nhiều tenant, đồng bộ đơn hàng, thanh toán, tự hoàn ti�
 |---|---|
 | Giao diện | CloudFront + S3; Cognito xác thực; HTTP API → Lambda Python 3.12 kiểm JWT/nhóm/quyền sở hữu |
 | Upload và xử lý | S3 private versioned → metadata DynamoDB/Stream → dispatcher → SQS → worker; parser PDF cô lập IAM, Textract cho scan; recovery và DLQ |
-| Hỏi đáp | Bản chính sách được duyệt hoặc dữ liệu PDF của đúng khách → Cohere embedding, vector int8 trong S3 → truy hồi giới hạn → Nova 2 Lite → kiểm cấu trúc/source IDs/hiệu lực → lịch sử |
+| Hỏi đáp | Xếp hạng từ khóa trên văn bản → Global Claude Haiku 5.5 → kiểm ID nguồn và hiệu lực → lịch sử |
 | Quản trị và hỗ trợ | DynamoDB lưu policy/shop/ticket; transaction revision + owner-deletion guard + audit; DTO khách loại bỏ ghi chú nội bộ |
 | Vận hành | CloudWatch logs/metrics/alarms, SNS và AWS Budgets; PITR và Retain bảo vệ dữ liệu khi thao tác hạ tầng |
 
-Các dịch vụ ứng dụng/embedding/Textract ở Singapore; generation dùng Japan profile Tokyo/Osaka. Không mô tả toàn bộ dữ liệu chỉ ở Việt Nam hoặc Singapore. PDF riêng không tự gửi cho nhân viên; yêu cầu hỗ trợ không làm nguồn AI. Chưa bổ sung VPC/NAT hoặc vector database thường trực chỉ để tăng số dịch vụ.
+Ứng dụng, lưu trữ và Textract ở Singapore. Hồ sơ Global Claude Haiku 5.5 có thể xử lý câu hỏi và đoạn trích ngoài Singapore.
 
 ## 4. Quyết định kỹ thuật và rủi ro
 
@@ -49,7 +51,7 @@ Các dịch vụ ứng dụng/embedding/Textract ở Singapore; generation dùng
 | Truy cập chéo tài khoản | Chủ sở hữu lấy từ JWT, kiểm backend, private S3, customer DTO allowlist; operator AWS vẫn có quyền hạ tầng riêng |
 | Xử lý nền trùng hoặc lỗi | Version pin, trạng thái bền, retry giới hạn, partial batch failures, recovery và DLQ; cần diễn tập sự cố được duyệt |
 | Hai nhân viên/khách ghi đồng thời | Revision + transaction; trả xung đột, tải lại và đọc trước khi thử lại |
-| Scan và S3 vectors khi dữ liệu tăng | Truy hồi/phân trang có giới hạn; đo recall/latency/backlog trước khi tăng quota hoặc đổi storage |
+| Scan và truy hồi từ khóa khi dữ liệu tăng | Truy hồi/phân trang có giới hạn; đo recall/latency/backlog trước khi tăng quota hoặc đổi storage |
 | Chi phí phát sinh ngoài model | Tính cả mọi phiên bản S3, PITR, logs/alarms, OCR, transfer, request lỗi; budget chỉ cảnh báo |
 | Xóa dữ liệu và phục hồi | Chặn tài khoản trước purge; retention được mô tả; backup/log theo vòng đời riêng, chưa nghiệm thu restore mới |
 
@@ -59,10 +61,9 @@ Mục tiêu chủ dự án **30–50 USD/tháng**; cấu hình budget 50 USD v�
 
 | Đầu vào giả định | Cơ sở tính / dịch vụ cần nhập |
 |---|---|
-| 50 MAU; 100 PDF/tháng × 10 trang × 2 MiB/PDF | Cognito, API, Lambda, S3; cộng bản gốc/phiên bản/extraction/vector và retention, không chỉ upload tháng đầu |
+| 50 MAU; 100 PDF/tháng × 10 trang × 2 MiB/PDF | Cognito, API, Lambda, S3; cộng bản gốc/phiên bản/extraction và retention, không chỉ upload tháng đầu |
 | 20% trang cần OCR = 200 trang/tháng | Textract Singapore + worker/poll/retry |
-| 2.000 chunks embedding và 1.000 query embedding/tháng | Cohere Singapore, xác định đơn vị tính từ giá chính thức |
-| 1.000 generation × 8.000 input tokens × 2.500 output/reasoning tokens | Japan Nova 2 Lite: 8 triệu input và 2,5 triệu output tokens giả định; stress ở 2.000 generation/tháng |
+| 1.000 câu trả lời × 8.000 input và tối đa 900 output token | Global Claude Haiku 5.5 từ Singapore. Kịch bản 2.000 lượt/tháng dùng cho dự toán tải cao. |
 | Hỗ trợ, audit, counters và vận hành | DynamoDB transactional writes/index/PITR, SQS, logs/alarms/dashboard, SNS, CloudFront/transfer và request lỗi |
 
 Tổng tiền: **CHỜ**, chưa có đơn giá/estimate mới được xác minh; không ghi 0 USD hoặc mặc định free tier/credit. Chủ dự án cần [AWS Pricing Calculator](https://calculator.aws/) và [giá Bedrock chính thức](https://aws.amazon.com/bedrock/pricing/), lưu ngày, region, giả định và share URL/export. Nếu thiếu dimension/model thì bổ sung phép tính từ giá chính thức. [Kịch bản COST chi tiết]({{< relref "/5-Workshop/5.7-PolicyAssistant/CurrentRelease" >}}).
