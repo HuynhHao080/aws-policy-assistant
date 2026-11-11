@@ -618,3 +618,30 @@ test('administrator can preview the previous publication and restore it as a dra
   f.w.__expire();
   assert.doesNotMatch(restore.parentElement.textContent, /Old terms/);
 });
+
+for (const mode of ['live','demo']) {
+  test(`shop contact links are available only for a published live profile (${mode})`, async t => {
+    const f = await fixture(t, {view:'shop', override:key => key === '/shop' ? json({
+      configured:true, published_at:'2026-11-09T00:00:00Z',
+      profile:{shop_name:'Synthetic shop',mode,support_email:'help+shop@example.invalid',support_phone:'+84 (900) 123-456'},
+    }) : undefined});
+    const card = f.$('shop-profile');
+    await until(() => card.querySelector('h2'));
+    assert.match(card.textContent, /Công bố lúc/);
+    const links = [...card.querySelectorAll('a')].map(link => link.getAttribute('href'));
+    assert.deepEqual(links, mode === 'live' ? ['mailto:help%2Bshop@example.invalid','tel:+84900123456'] : []);
+    card.querySelector('button').click();
+    await until(() => f.w.location.hash === '#support');
+  });
+}
+
+test('shop editor names the missing fields in a saved live draft', async t => {
+  const f = await fixture(t, {view:'admin', admin:true, override:key => key === '/admin/shop' ? json({
+    current:null, draft:{shop_name:'Synthetic shop', mode:'live', support_email:'help@example.invalid'}, revision:'v1',
+  }) : undefined});
+  const status = f.$('shop-editor-status').nextElementSibling;
+  await until(() => status.textContent.includes('giờ hỗ trợ'));
+  assert.match(status.textContent, /hướng dẫn tiếp nhận đổi trả/);
+  assert.doesNotMatch(status.textContent, /email hoặc số điện thoại/);
+  assert.equal(f.$('publish-shop').disabled, true);
+});

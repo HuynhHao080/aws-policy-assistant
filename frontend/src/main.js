@@ -864,20 +864,82 @@ function updateScopeLabel(){
   const scope=$('source-scope').value;
   $('scope-label').textContent=scope==='policies'?'Chỉ chính sách chung':scope==='documents'?`Chỉ PDF đã chọn (${state.selected.size})`:state.selected.size?`${state.selected.size} PDF đã chọn + chính sách chung`:'Chính sách chung + tài liệu gần đây';
 }
+const shopReadiness = node('p', '', 'small muted');
+shopReadiness.setAttribute('role', 'status');
+$('shop-editor-status').after(shopReadiness);
+
+function shopMissingFields(profile) {
+  if (!profile) return [];
+  const missing = [];
+  if (!profile.shop_name) missing.push('tên shop');
+  if (profile.mode === 'live') {
+    if (!profile.support_email && !profile.support_phone) missing.push('email hoặc số điện thoại');
+    if (!profile.support_hours) missing.push('giờ hỗ trợ');
+    if (!profile.returns_instructions) missing.push('hướng dẫn tiếp nhận đổi trả');
+  }
+  return missing;
+}
+
 function renderShopControls(){
   const busy=shopEditor.busy,r=shopEditor.record;
+  const missing = shopMissingFields(r?.draft);
+  shopReadiness.textContent = missing.length ? `Bản nháp cần bổ sung: ${missing.join(', ')}.` : '';
   $('shop-fields').disabled=busy||!shopEditor.loaded;$('reload-shop').disabled=busy;
-  $('publish-shop').disabled=busy||shopEditor.dirty||!r?.draft;$('unpublish-shop').disabled=busy||shopEditor.dirty||!r?.current;$('discard-shop').disabled=busy||shopEditor.dirty||!r?.draft;
+  $('publish-shop').disabled=busy||shopEditor.dirty||!r?.draft||Boolean(missing.length);$('unpublish-shop').disabled=busy||shopEditor.dirty||!r?.current;$('discard-shop').disabled=busy||shopEditor.dirty||!r?.draft;
   $('shop-editor-status').textContent=busy?'Đang tải / cập nhật…':!shopEditor.loaded?'Chưa tải thông tin shop.':shopEditor.dirty?'Có thay đổi chưa lưu.':r?.draft?'Bản nháp đã lưu; khách vẫn thấy nội dung công bố trước đó.':r?.current?'Thông tin đang được công bố.':'Chưa có thông tin shop được công bố.';
 }
 function readShopForm(){const raw={mode:$('shop-mode').value};for(const key of Object.keys(shopFields))raw[key]=$('shop-'+key).value;return raw;}
-function shopCard(value,target){
-  target.replaceChildren();if(!value){target.append(node('p','Shop chưa công bố thông tin vận hành. Bạn có thể gửi yêu cầu hỗ trợ trong ứng dụng.'));return;}
-  target.append(node('span',value.mode==='live'?'THÔNG TIN VẬN HÀNH':'DEMO — THÔNG TIN THỬ','policy-badge'),node('h2',value.shop_name));
-  for(const [key,label]of Object.entries({support_email:'Email hỗ trợ',support_phone:'Điện thoại hỗ trợ',support_hours:'Giờ hỗ trợ',returns_instructions:'Tiếp nhận đổi trả',support_message:'Lời nhắn từ shop'})){const group=node('div',undefined,'shop-detail');group.append(node('strong',label),node('p',value[key]||'Chưa được shop cung cấp.'));target.append(group);}
+function shopContact(key, value) {
+  const email = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  if (key === 'support_email' && email.test(value)) {
+    const [local, domain] = value.split('@');
+    return 'mailto:' + encodeURIComponent(local) + '@' + domain;
+  }
+  if (key === 'support_phone' && /^[+0-9 ().-]{5,40}$/.test(value)) {
+    const digits = value.replace(/[^0-9]/g, '');
+    if (digits.length >= 5) return 'tel:' + (value.startsWith('+') ? '+' : '') + digits;
+  }
+  return '';
 }
-function fillShopEditor(record){const raw=record?.draft||record?.current||{};for(const key of Object.keys(shopFields))$('shop-'+key).value=raw[key]||'';$('shop-mode').value=raw.mode||'demo';$('shop-confirm').checked=false;shopCard(record?.current,$('shop-current-preview'));renderShopControls();}
-async function loadShopProfile(){needApi();const data=await api('/shop');shopCard(data.profile,$('shop-profile'));$('shop-context').textContent=data.configured?(data.profile.mode==='demo'?`DEMO — ${data.profile.shop_name}. Thông tin chỉ để kiểm thử.`:`Shop: ${data.profile.shop_name}. Xem kênh liên hệ tại Thông tin shop.`):'Shop chưa công bố thông tin vận hành. Nội dung DEMO chỉ để kiểm thử.';$('shop-context').classList.remove('hidden');}
+
+function shopCard(value, target, publishedAt) {
+  target.replaceChildren();
+  const customer = target.id === 'shop-profile';
+  if (!value) {
+    target.append(node('p', 'Shop chưa công bố thông tin vận hành.'));
+  } else {
+    const live = value.mode === 'live';
+    target.append(node('span', live ? 'THÔNG TIN VẬN HÀNH' : 'DEMO — THÔNG TIN THỬ', 'policy-badge'), node('h2', value.shop_name));
+    if (publishedAt && Number.isFinite(Date.parse(publishedAt))) {
+      target.append(node('p', `Công bố lúc ${new Date(publishedAt).toLocaleString('vi-VN')}`, 'small muted'));
+    }
+    for (const [key, label] of Object.entries({
+      support_email:'Email hỗ trợ', support_phone:'Điện thoại hỗ trợ', support_hours:'Giờ hỗ trợ',
+      returns_instructions:'Tiếp nhận đổi trả', support_message:'Lời nhắn từ shop',
+    })) {
+      if (!value[key]) continue;
+      const group = node('div', undefined, 'shop-detail');
+      const href = customer && live ? shopContact(key, value[key]) : '';
+      const body = node(href ? 'a' : 'p', value[key]);
+      if (href) body.href = href;
+      group.append(node('strong', label), body);
+      target.append(group);
+    }
+  }
+  if (customer) target.append(button('Mở mục Hỗ trợ', () => navigate('support', {focus:true}), 'secondary'));
+}
+function fillShopEditor(record){const raw=record?.draft||record?.current||{};for(const key of Object.keys(shopFields))$('shop-'+key).value=raw[key]||'';$('shop-mode').value=raw.mode||'demo';$('shop-confirm').checked=false;shopCard(record?.current,$('shop-current-preview'),record?.published_at);renderShopControls();}
+async function loadShopProfile(){
+  needApi();
+  const isCurrent = latestTasks.begin('shop-profile');
+  const data = await api('/shop');
+  if (!isCurrent()) return;
+  shopCard(data.profile, $('shop-profile'), data.published_at);
+  $('shop-context').textContent = data.profile
+    ? data.profile.mode === 'demo' ? `DEMO — ${data.profile.shop_name}. Thông tin chỉ để kiểm thử.` : `Shop: ${data.profile.shop_name}. Xem kênh liên hệ tại Thông tin shop.`
+    : 'Shop chưa công bố thông tin vận hành. Nội dung DEMO chỉ để kiểm thử.';
+  $('shop-context').classList.remove('hidden');
+}
 async function loadShopEditor(){if(shopEditor.dirty)return;fillShopEditor(await shopEditor.load());}
 for(const key of [...Object.keys(shopFields),'mode'])$('shop-'+key).addEventListener('input',()=>{$('shop-confirm').checked=false;shopEditor.markDirty();});
 $('shop-form').onsubmit=event=>{event.preventDefault();guard($('save-shop'),async()=>{fillShopEditor(await shopEditor.save(readShopForm()));notify('Đã lưu nháp thông tin shop. Chưa công bố cho khách.');});};
