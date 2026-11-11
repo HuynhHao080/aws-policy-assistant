@@ -35,6 +35,39 @@ def ready(services):
     return data
 
 
+def test_document_text_is_owner_only_and_reads_the_pinned_extraction(services):
+    data = ready(services)
+    doc_id = data["doc_id"]
+    item = services[0].get_item(Key={"doc_id": doc_id})["Item"]
+    services[1].put_object(Bucket="test-policy-documents", Key=item["extraction_key"],
+                           Body=json.dumps({"pages": 1, "chunks": [{"page": 1, "text": "Later object version"}]}))
+    route = f"/documents/{doc_id}/text"
+    code, result = request(route)
+    assert code == 200 and result["page"] == result["page_count"] == 1
+    assert "Refund requests" in result["chunks"][0] and "Later object version" not in result["chunks"]
+    assert set(result) == {"doc_id", "title", "page", "page_count", "chunks", "truncated"}
+    assert request(route, owner="bob", claims={"cognito:groups": ["administrators"]})[0] == 404
+    assert request(route, params={"page": "2"})[0] == 400
+    assert request(route, params={"page": "-1"})[0] == 400
+    response = app.lambda_handler(event(route, user=None), None)
+    assert response["statusCode"] == 401
+
+
+def test_document_text_limits_large_pages_and_preserves_empty_pages(services):
+    data = ready(services)
+    doc_id = data["doc_id"]
+    table, s3, *_ = services
+    key = f"documents/{doc_id}/extraction.json"
+    extracted = {"pages": 2, "chunks": [{"page": 1, "text": "A" * 1400} for _ in range(16)]}
+    version = s3.put_object(Bucket="test-policy-documents", Key=key, Body=json.dumps(extracted))["VersionId"]
+    table.update_item(Key={"doc_id": doc_id}, UpdateExpression="SET extraction_version=:v", ExpressionAttributeValues={":v": version})
+    code, first = request(f"/documents/{doc_id}/text")
+    assert code == 200 and first["truncated"] and sum(map(len, first["chunks"])) == 20_000
+    code, second = request(f"/documents/{doc_id}/text", params={"page": "2"})
+    assert code == 200 and second["chunks"] == [] and not second["truncated"]
+    assert request("/documents/" + session(services)["doc_id"] + "/text")[0] == 409
+
+
 def test_owner_document_listing_and_cursor_cannot_cross_accounts(services):
     first, second = session(services), session(services)
     code, page = request("/documents", params={"limit": "1"})

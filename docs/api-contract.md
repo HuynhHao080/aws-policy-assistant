@@ -130,3 +130,9 @@ Existing admin ticket PATCH routes additionally accept `{action,expected_revisio
 Admin DTOs expose computed `assignment`(`mine|other|unassigned`), assignment IDs/timestamps, `internal_note_count` and `staff_updated_at`; detail additionally exposes up to20internal notes and the last10assignment events. `GET /admin/tickets?assignee=all|mine|unassigned|other` combines with existing bounded filters/cursor. Customer routes reject assignment filters/private writes and omit every internal field from detail/list/export data, even when their caller also holds an admin group.
 
 Internal writes change the opaque shared revision but preserve public `updated_at`, message count/status and the original expiry. Notes share ticket lifecycle/retention and are never AI sources. Staff account deletion does not erase contributions to tickets owned by other customers. Assignment is coordination among trusted administrators, not a new confidentiality/tenant boundary or staff-directory service.
+
+### Extracted PDF text
+
+`GET /documents/{doc_id}/text?page=1` returns `doc_id`, `title`, `page`, `page_count`, `chunks`, and `truncated` for a processed document owned by the authenticated caller. The page defaults to 1. Pages are bounded by the document's page count and the 100-page application limit. The response shows up to 20,000 characters of the selected page. Chunks retain extraction order and may overlap. An empty page returns an empty array. Responses use `Cache-Control: no-store`.
+
+The API reads the pinned S3 extraction version and rechecks document and account state before returning text. Unauthenticated requests return 401, other owners receive 404, invalid pages receive 400, and documents awaiting processing return 409. The endpoint uses the application request quota.

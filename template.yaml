@@ -417,6 +417,14 @@ Resources:
             Method: get
             Auth:
               Authorizer: PolicyAssistantAuthorizer
+        DocumentText:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref 'PolicyAssistantApi'
+            Path: /documents/{doc_id}/text
+            Method: get
+            Auth:
+              Authorizer: PolicyAssistantAuthorizer
         DocumentsList:
           Type: HttpApi
           Properties:

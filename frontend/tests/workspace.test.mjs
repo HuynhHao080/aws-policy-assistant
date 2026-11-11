@@ -163,7 +163,7 @@ test('PDF citation displays its page and excerpt even when the original PDF is u
   await until(() => f.$('policy-dialog').open);
   assert.match(f.$('policy-dialog-title').textContent, /Trang 3/);
   assert.equal(f.calls.some(call => call.key.endsWith('/download')), false);
-  f.$('policy-dialog-content').querySelector('button').click();
+  [...f.$('policy-dialog-content').querySelectorAll('button')].find(b => b.textContent === 'Tải PDF gốc').click();
   await until(() => f.$('policy-dialog-content').textContent.includes('không còn truy cập'));
   assert.equal(f.$('policy-dialog-content').querySelector('blockquote').textContent, 'Nội dung trang 3');
 });
@@ -331,4 +331,59 @@ test('navigation disclosure closes on Escape and after choosing a page', async t
   assert.equal(toggle.getAttribute('aria-expanded'), 'false');
   assert.equal(history.getAttribute('aria-current'), 'page');
   assert.equal(f.w.document.activeElement.textContent, 'Lịch sử hỏi đáp.');
+});
+
+test('PDF library filters rows and the reader pages through safe text', async t => {
+  const f = await fixture(t, {
+    view:'documents',
+    override:(key, options, window, url) => {
+      if (key === '/documents') return json({documents:[
+        {doc_id:'owned', title:'Bảo hành củ sạc', status:'processed',page_count:2},
+        {doc_id:'working', title:'Đổi trả', status:'pending'},
+      ],next_token:null});
+      if (key === '/documents/owned/text') {
+        const page = Number(url.searchParams.get('page'));
+        return json({doc_id:'owned',title:'Bảo hành củ sạc',page,page_count:2,chunks:page === 1 ? ['<script>plain</script>'] : [],truncated:false});
+      }
+    },
+  });
+  await until(() => f.$('documents-list').querySelector('[data-document-id="owned"]'));
+  f.$('document-filter').value = 'bao hanh';
+  f.$('document-filter').dispatchEvent(new f.w.Event('input', {bubbles:true}));
+  assert.match(f.$('document-results').textContent, /^1 \/ 2/);
+  assert.equal(f.$('documents-list').querySelector('[data-document-id="working"]').hidden,true);
+  [...f.$('documents-list').querySelectorAll('button')].find(b => b.textContent === 'Xem văn bản').click();
+  await until(() => f.$('document-page-number').textContent === 'Trang 1 / 2');
+  assert.equal(f.$('document-text-content').textContent, '<script>plain</script>');
+  assert.equal(f.$('document-text-content').querySelector('script'), null);
+  assert.equal(f.$('previous-document-page').disabled, true);
+  f.click('next-document-page');
+  await until(() => f.$('document-page-number').textContent === 'Trang 2 / 2');
+  assert.equal(f.$('copy-document-page').disabled, true);
+  assert.equal(f.$('next-document-page').disabled, true);
+  assert.match(f.$('document-text-status').textContent, /không có văn bản/);
+  f.$('document-page-input').value = '1';
+  f.submit('jump-document-page');
+  await until(() => f.$('document-page-number').textContent === 'Trang 1 / 2');
+});
+
+test('PDF page response cannot restore private text after session expiry', async t => {
+  let respond;
+  const f = await fixture(t, {
+    view:'documents',
+    override:key => {
+      if (key === '/documents') return json({documents:[{doc_id:'owned',title:'Test PDF',status:'processed'}]});
+      if (key === '/documents/owned/text') return new Promise(resolve => { respond = resolve; });
+    },
+  });
+  const open = () => [...f.$('documents-list').querySelectorAll('button')].find(b => b.textContent === 'Xem văn bản');
+  await until(open);
+  open().click();
+  await until(() => respond);
+  f.w.__expire();
+  respond(json({doc_id:'owned',page:1,page_count:1,chunks:['PRIVATE EXTRACT'],truncated:false}));
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(f.$('document-text-dialog').open,false);
+  assert.equal(f.$('document-text-content').textContent,'');
+  assert.equal(f.$('copy-document-page').disabled,true);
 });

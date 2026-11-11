@@ -8,7 +8,7 @@ Phạm vi sản phẩm là trợ lý chính sách và hỗ trợ khách hàng ch
 |---|---|
 | Thông tin shop | Quản trị tự cấu hình liên hệ/giờ hỗ trợ/hướng dẫn tiếp nhận, lưu nháp/công bố/ngừng công bố, khách xem bản đã duyệt; không cần triển khai lại |
 | Tài khoản | Đăng ký, xác nhận email, đăng nhập/đăng xuất, khôi phục mật khẩu qua Cognito; phân quyền khách/quản trị |
-| PDF cá nhân | Tải lên, trích xuất/OCR, trạng thái xử lý, phân trang, đổi tên, tải bản gốc, xóa các phiên bản; kiểm tra quyền sở hữu |
+| PDF cá nhân | Tải lên, trích xuất/OCR, trạng thái xử lý, phân trang, tìm/lọc các PDF đã tải danh sách, xem và sao chép văn bản từng trang, mở trang từ trích dẫn, đổi tên, tải bản gốc và xóa các phiên bản |
 | Chất lượng AI | Đánh giá có cấu trúc, đổi/rút đánh giá, dashboard tổng hợp và xuất JSON; không lộ câu hỏi/PDF, không đồng nhất tỷ lệ nguồn với độ đúng |
 | Hỏi đáp | Xếp hạng từ khóa trên văn bản có chuẩn hóa tiếng Việt, chọn phạm vi nguồn, Global Claude Haiku 5.5 trả lời tiếng Việt có trích dẫn, từ chối khi thiếu bằng chứng |
 | Lịch sử | Riêng theo tài khoản, tối đa 30 ngày. Tìm và lọc trong các trang đã tải, mở từng cuộc, dùng lại câu hỏi, sao chép câu trả lời kèm nguồn, xuất JSON và xóa từng cuộc |

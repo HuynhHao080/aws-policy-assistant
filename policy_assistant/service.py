@@ -16,6 +16,8 @@ from botocore.exceptions import ClientError
 
 log = logging.getLogger(__name__)
 MAX_BYTES = 10 * 1024 * 1024
+MAX_EXTRACTION_BYTES = 2_000_000
+MAX_PAGE_PREVIEW_CHARS = 20_000
 
 
 class Problem(Exception):
@@ -208,6 +210,67 @@ class Service:
         # The DynamoDB stream is the durable outbox. Do not send inline to SQS.
         return {"doc_id": doc_id, "status": "pending"}
 
+    def read_extraction(self, doc):
+        """Read a bounded extraction from the server-selected object version."""
+        key = doc.get("extraction_key")
+        version = doc.get("extraction_version")
+        if not key or not version:
+            raise Problem(503, "Extracted text is unavailable")
+        obj = self.client("s3").get_object(Bucket=self.bucket, Key=key, VersionId=version)
+        try:
+            raw = obj["Body"].read(MAX_EXTRACTION_BYTES + 1)
+        finally:
+            obj["Body"].close()
+        if len(raw) > MAX_EXTRACTION_BYTES:
+            raise Problem(503, "Document index exceeds its configured limit")
+        try:
+            parsed = json.loads(raw)
+            if not isinstance(parsed, dict) or not isinstance(parsed.get("chunks"), list):
+                raise ValueError()
+            return parsed
+        except (ValueError, UnicodeError):
+            raise Problem(503, "Extracted text is unavailable") from None
+
+    def document_text(self, owner, doc, params):
+        raw_page = params.get("page", "1")
+        if not isinstance(raw_page, str) or not re.fullmatch(r"[1-9][0-9]{0,2}", raw_page):
+            raise Problem(400, "page must be an integer from 1 to 100")
+        page = int(raw_page)
+        if page > 100:
+            raise Problem(400, "page must be an integer from 1 to 100")
+        if doc["status"] != "processed":
+            raise Problem(409, "Document is not processed yet")
+        extracted = self.read_extraction(doc)
+        pages = extracted.get("pages")
+        if type(pages) is not int or not 1 <= pages <= 100:
+            raise Problem(503, "Extracted text is unavailable")
+        if page > pages:
+            raise Problem(400, "Page is outside this document")
+        chunks = []
+        remaining = MAX_PAGE_PREVIEW_CHARS
+        truncated = False
+        for chunk in extracted["chunks"]:
+            if not isinstance(chunk, dict) or chunk.get("page") != page:
+                continue
+            value = chunk.get("text")
+            if not isinstance(value, str) or not value:
+                continue
+            if len(value) > remaining:
+                if remaining:
+                    chunks.append(value[:remaining])
+                truncated = True
+                break
+            chunks.append(value)
+            remaining -= len(value)
+        current = self.owned(doc["doc_id"], owner)
+        account = self.table("USAGE_TABLE_NAME").get_item(Key={"pk": f"account#{owner}"}, ConsistentRead=True).get("Item", {})
+        if account.get("state") == "deleting":
+            raise Problem(410, "Account deletion is in progress")
+        if current.get("status") != "processed" or current.get("extraction_version") != doc["extraction_version"]:
+            raise Problem(409, "Document changed while loading extracted text")
+        return {"doc_id": doc["doc_id"], "title": current.get("title") or current.get("filename"), "page": page,
+                "page_count": pages, "chunks": chunks, "truncated": truncated}
+
     def document_route(self, method, path, owner, data, params):
         if path == "/documents" and method == "GET":
             return self.list_docs(owner, params)
@@ -215,13 +278,15 @@ class Service:
             return self.upload(owner, data)
         if path == "/documents/submit" and method == "POST":
             return self.submit(owner, data)
-        match = re.fullmatch(r"/documents/(doc-[a-f0-9]{32})(?:/(status|download))?", path)
+        match = re.fullmatch(r"/documents/(doc-[a-f0-9]{32})(?:/(status|download|text))?", path)
         if not match:
             raise Problem(404, "Invalid document endpoint")
         doc_id, action = match.groups()
         doc = self.owned(doc_id, owner)
         if method == "GET" and action == "status":
             return {**self.public_doc(doc), "s3_key": doc.get("s3_key")}
+        if method == "GET" and action == "text":
+            return self.document_text(owner, doc, params)
         if method == "GET" and action == "download":
             if doc["status"] != "processed":
                 raise Problem(409, "Document is not processed yet")

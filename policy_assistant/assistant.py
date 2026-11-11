@@ -46,14 +46,7 @@ def retrieve(service, owner, question, doc_ids, source_scope="all"):
             raise
         if doc.get("status") != "processed":
             continue
-        obj = service.client("s3").get_object(Bucket=service.bucket, Key=doc["extraction_key"], VersionId=doc["extraction_version"])
-        try:
-            raw = obj["Body"].read(2_000_001)
-        finally:
-            obj["Body"].close()
-        if len(raw) > 2_000_000:
-            raise Problem(503, "Document index exceeds its configured limit")
-        parsed = json.loads(raw)
+        parsed = service.read_extraction(doc)
         for chunk in parsed["chunks"]:
             candidates.append({"doc_id": doc["doc_id"], "title": doc.get("title", doc.get("filename", "Document")), "page": chunk["page"], "excerpt": chunk["text"][:1400]})
     # Shared policies are deliberately global. Private PDFs are never scanned globally.

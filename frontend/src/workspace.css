@@ -152,6 +152,34 @@ dialog .ticket-dialog-heading > button { flex-shrink: 0; }
 dialog::backdrop { background: #0d241db3; }
 footer { margin-top: 36px; }
 
+#document-toolbar { margin-top: 16px; }
+#document-results { grid-column: 1 / -1; margin: 0; }
+#documents-list tr[hidden] { display: none; }
+#document-text-dialog {
+  width: min(760px, calc(100vw - 24px));
+  max-height: 90dvh;
+  padding: 0 clamp(12px, 3vw, 24px) 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: auto;
+}
+#document-text-title { overflow-wrap: anywhere; }
+.document-text-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 12px; }
+.document-page-jump { display: inline-flex; gap: 6px; align-items: center; }
+.document-page-jump input { width: 68px; padding: 6px; }
+#document-page-number { font-size: 13px; font-weight: 700; }
+.document-text-fragment {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
 @media (max-width: 1000px) {
   .admin-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }

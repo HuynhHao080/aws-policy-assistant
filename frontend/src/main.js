@@ -15,6 +15,7 @@ let manager, api, config;
 const latestTasks=new LatestTask();
 const feedbackStore=new FeedbackStore((path,options)=>{needApi();return api(path,options);});
 let qualityReport=null;
+let documentPreview = null;
 let sessionEpoch=0, signingOut=false;
 let adminPolicyToken=null,adminPolicyKeyword='',adminListEpoch=0;
 let ticketToken=null,adminTicketToken=null,ticketListEpoch=0,adminTicketListEpoch=0;
@@ -33,6 +34,7 @@ function groups() { const value=state.profile?.groups||[];return Array.isArray(v
 function signedIn() {
   $('guest-welcome').classList.toggle('hidden',Boolean(state.user));
   $('history-toolbar').classList.toggle('hidden', !state.user);
+  $('document-toolbar').classList.toggle('hidden', !state.user);
   document.querySelectorAll('form').forEach(form=>{if(state.user)form.removeAttribute('inert');else form.setAttribute('inert','');});
   document.querySelectorAll('[data-auth-control]').forEach(control=>{control.disabled=!state.user;});
   document.querySelector('.danger-zone').classList.toggle('hidden',!state.user);
@@ -56,6 +58,11 @@ function signedIn() {
     if(!state.profile.ai_available)notify('AI chưa được cấu hình. Bạn vẫn có thể quản lý tài liệu và tìm chính sách.');}
 }
 function clearPrivateState() {
+  $('document-filter').value = '';
+  $('document-status-filter').value = 'all';
+  $('document-results').textContent = '';
+  $('document-text-dialog').close();
+  clearDocumentPreview();
   $('history-filter').value = '';
   $('history-source-filter').value = 'all';
   $('history-results').textContent = '';
@@ -114,11 +121,11 @@ function renderSources() {
 async function loadDocs(more=false) {
   needApi();const isCurrent=latestTasks.begin('documents');const result=await api(`/documents?limit=20${more&&state.docToken?`&next_token=${encodeURIComponent(state.docToken)}`:''}`);
   if(!isCurrent())return;
-  state.docs=more?[...state.docs,...result.documents]:result.documents;state.docToken=result.next_token;
+  state.docs=more?[...new Map([...state.docs,...result.documents].map(doc => [doc.doc_id,doc])).values()]:result.documents;state.docToken=result.next_token;
   $('more-documents').classList.toggle('hidden',!state.docToken);$('more-sources').classList.toggle('hidden',!state.docToken);$('document-count').textContent=`${state.docs.length}${state.docToken?'+':''}`;
   $('documents-list').replaceChildren();
   for(const doc of state.docs){state.cache.set(doc.doc_id,doc);if(doc.status!=='processed')state.selected.delete(doc.doc_id);}
-  for(const doc of state.docs){const tr=node('tr');const name=node('td');name.append(node('div',doc.title||doc.filename||'Tài liệu','doc-title'),node('small',doc.created_at?new Date(doc.created_at).toLocaleDateString('vi-VN'):''));const status=node('td');status.append(node('span',statusText[doc.status]||doc.status,`badge ${doc.status}`));if(doc.error_code)status.append(node('span',pdfErrorText[doc.error_code] || 'Hãy làm mới trạng thái hoặc kiểm tra lại tệp.', 'error-code'));const actions=node('td',undefined,'document-actions');
+  for(const doc of state.docs){const tr=node('tr');tr.dataset.documentId=doc.doc_id;const name=node('td');name.append(node('div',doc.title||doc.filename||'Tài liệu','doc-title'),node('small',doc.created_at?new Date(doc.created_at).toLocaleDateString('vi-VN'):''));const status=node('td');status.append(node('span',statusText[doc.status]||doc.status,`badge ${doc.status}`));if(doc.error_code)status.append(node('span',pdfErrorText[doc.error_code] || 'Hãy làm mới trạng thái hoặc kiểm tra lại tệp.', 'error-code'));const actions=node('td',undefined,'document-actions');
     if (doc.status === 'processed') {
       actions.append(button('Hỏi từ PDF này', async () => {
         const epoch = sessionEpoch;
@@ -130,7 +137,7 @@ async function loadDocs(more=false) {
         $('source-scope').value = 'documents';
         renderSources();
         $('question').focus();
-      }, 'secondary'), button('Tải PDF', () => download(doc.doc_id)));
+      }, 'secondary'), button('Xem văn bản', () => openDocumentText(doc.doc_id), 'secondary'), button('Tải PDF', () => download(doc.doc_id)));
     }
     if (doc.status === 'awaiting_upload') {
       actions.append(button('Gửi xử lý', async () => {
@@ -142,8 +149,109 @@ async function loadDocs(more=false) {
     const pages = node('td', String(doc.page_count || '—'), 'document-pages');
     pages.setAttribute('aria-label', doc.page_count ? `${doc.page_count} trang` : 'Chưa có số trang');
     tr.append(name,status,pages,actions);$('documents-list').append(tr);}
-  if(!state.docs.length){const row=node('tr');const td=node('td','Chưa có tài liệu. Tải PDF đầu tiên của bạn ở phía trên.','empty-small');td.colSpan=4;row.append(td);$('documents-list').append(row);}renderSources();
+  if(!state.docs.length){const row=node('tr');const td=node('td',state.docToken?'Trang này chưa có tài liệu. Chọn Xem thêm để tiếp tục.':'Chưa có tài liệu. Tải PDF đầu tiên của bạn ở phía trên.','empty-small');td.colSpan=4;row.append(td);$('documents-list').append(row);}
+  applyDocumentFilters();
+  renderSources();
 }
+function applyDocumentFilters() {
+  const query = historySearchText($('document-filter').value).trim();
+  const filter = $('document-status-filter').value;
+  const working = new Set(['awaiting_upload', 'pending', 'processing', 'ocr_pending']);
+  const docs = new Map(state.docs.map(doc => [doc.doc_id, doc]));
+  let visible = 0;
+  for (const row of $('documents-list').querySelectorAll('[data-document-id]')) {
+    const doc = docs.get(row.dataset.documentId);
+    const statusMatches = filter === 'all' || (filter === 'working' ? working.has(doc.status) : doc.status === filter);
+    const textMatches = historySearchText(`${doc.title || ''} ${doc.filename || ''}`).includes(query);
+    row.hidden = !statusMatches || !textMatches;
+    if (!row.hidden) visible++;
+  }
+  $('document-results').textContent = `${visible} / ${state.docs.length} PDF đã tải danh sách${state.docToken ? ' · Chọn Xem thêm để tìm tiếp.' : ''}`;
+}
+
+function clearDocumentPreview() {
+  documentPreview = null;
+  $('document-text-title').textContent = 'Văn bản PDF';
+  $('document-page-number').textContent = '';
+  $('document-text-status').textContent = '';
+  $('document-text-content').replaceChildren();
+  $('retry-document-text').classList.add('hidden');
+  $('jump-document-page').classList.add('hidden');
+  $('document-page-input').value = '';
+  for (const id of ['previous-document-page', 'next-document-page', 'copy-document-page']) $(id).disabled = true;
+}
+
+async function openDocumentText(docId, page = 1) {
+  const dialog = $('document-text-dialog');
+  const isCurrent = latestTasks.begin('document-preview');
+  clearDocumentPreview();
+  documentPreview = {docId, page};
+  $('document-page-number').textContent = `Trang ${page}`;
+  $('document-text-status').textContent = 'Đang tải văn bản…';
+  if (!dialog.open) dialog.showModal();
+  try {
+    const data = await api(`/documents/${encodeURIComponent(docId)}/text?page=${page}`);
+    if (!isCurrent() || !dialog.open) return;
+    if (data.doc_id !== docId || data.page !== page || !Number.isInteger(data.page_count)
+      || data.page_count < page || data.page_count > 100 || !Array.isArray(data.chunks)
+      || data.chunks.some(chunk => typeof chunk !== 'string')) {
+      throw new Error('Dữ liệu văn bản không hợp lệ.');
+    }
+    documentPreview = {docId, page, chunks:data.chunks};
+    $('document-text-title').textContent = data.title || 'Văn bản PDF';
+    $('document-page-number').textContent = `Trang ${page} / ${data.page_count}`;
+    $('document-text-status').textContent = data.truncated
+      ? 'Văn bản dài. Hiển thị tối đa 20.000 ký tự của trang.'
+      : data.chunks.length ? 'Các đoạn trích của trang' : 'Trang này không có văn bản trích xuất.';
+    $('document-text-content').replaceChildren(...data.chunks.map(chunk => node('p', chunk, 'document-text-fragment')));
+    $('previous-document-page').disabled = page <= 1;
+    $('next-document-page').disabled = page >= data.page_count;
+    $('copy-document-page').disabled = !data.chunks.length;
+    $('document-page-input').max = data.page_count;
+    $('document-page-input').value = page;
+    $('jump-document-page').classList.toggle('hidden', data.page_count <= 1);
+  } catch (error) {
+    if (!isCurrent() || !dialog.open) return;
+    $('document-text-status').textContent = [403,404,409,410].includes(error.status)
+      ? 'Văn bản PDF hiện không còn truy cập được.'
+      : 'Chưa tải được văn bản trang này.';
+    $('retry-document-text').classList.toggle('hidden', [403,404,409,410].includes(error.status));
+  }
+}
+
+$('document-filter').addEventListener('input', applyDocumentFilters);
+$('document-status-filter').addEventListener('change', applyDocumentFilters);
+$('close-document-text').onclick = () => $('document-text-dialog').close();
+$('document-text-dialog').addEventListener('close', () => {
+  if (!$('document-text-dialog').open) {
+    latestTasks.begin('document-preview');
+    clearDocumentPreview();
+  }
+});
+$('previous-document-page').onclick = () => openDocumentText(documentPreview.docId, documentPreview.page - 1);
+$('next-document-page').onclick = () => openDocumentText(documentPreview.docId, documentPreview.page + 1);
+$('retry-document-text').onclick = () => openDocumentText(documentPreview.docId, documentPreview.page);
+$('jump-document-page').onsubmit = event => {
+  event.preventDefault();
+  const input = $('document-page-input');
+  const page = input.valueAsNumber;
+  if (!documentPreview?.chunks || !input.reportValidity() || page === documentPreview.page) return;
+  openDocumentText(documentPreview.docId, page);
+};
+$('copy-document-page').onclick = async () => {
+  const preview = documentPreview;
+  if (!preview?.chunks?.length) return;
+  const control = $('copy-document-page');
+  control.disabled = true;
+  try {
+    await navigator.clipboard.writeText(preview.chunks.join('\n\n'));
+    if (documentPreview === preview) $('document-text-status').textContent = 'Đã sao chép văn bản trang.';
+  } catch {
+    if (documentPreview === preview) $('document-text-status').textContent = 'Bạn có thể chọn văn bản để sao chép thủ công.';
+  } finally {
+    if (documentPreview === preview) control.disabled = false;
+  }
+};
 async function trackDocument(docId) {
   const isCurrent = latestTasks.begin('document-processing');
   const status = $('upload-status');
@@ -222,7 +330,11 @@ async function openCitation(source) {
           : 'Chưa tải được PDF. Bạn có thể thử lại.';
       }
     }, 'secondary');
-    current.append(action, status);
+    const page = Number.isInteger(source.page) && source.page >= 1 && source.page <= 100 ? source.page : 1;
+    current.append(button('Xem văn bản trang', () => {
+      dialog.close();
+      return openDocumentText(source.doc_id, page);
+    }, 'secondary'), action, status);
     return;
   }
   if (!source.policy_id) return;

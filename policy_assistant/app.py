@@ -395,6 +395,7 @@ def _cors_headers() -> Dict[str, str]:
     """Return CORS headers for API responses."""
     return {
         "Content-Type": "application/json",
+        "Cache-Control": "no-store",
         "Access-Control-Allow-Origin": "http://localhost:8080",
         "Access-Control-Allow-Headers": "Content-Type,Authorization",
         "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS"
