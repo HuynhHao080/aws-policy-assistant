@@ -11,11 +11,11 @@ def policy_chunks(content):
         centers = [content[start:start + MAX_TEXT] for start in range(0, len(content), 1200)]
     chunks = []
     for index, center in enumerate(centers):
-        # Never let adjacent context displace the section whose vector was matched.
+        # Keep the central section intact when adding surrounding context.
         text = center
         if index and len(centers[index - 1]) + 1 + len(text) <= MAX_TEXT:
             text = centers[index - 1] + "\n" + text
         if index + 1 < len(centers) and len(text) + 1 + len(centers[index + 1]) <= MAX_TEXT:
             text += "\n" + centers[index + 1]
-        chunks.append({"embedding_text": center, "text": text})
+        chunks.append({"section_text": center, "text": text})
     return chunks

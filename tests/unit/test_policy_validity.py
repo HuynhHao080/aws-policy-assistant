@@ -35,7 +35,6 @@ def test_business_day_uses_vietnam_boundary_not_utc_or_host(monkeypatch):
 def day(monkeypatch):
     monkeypatch.setattr(validity, 'today', lambda: '2026-11-05')
     monkeypatch.setenv('REQUIRE_PUBLISHED_POLICIES', 'true')
-    monkeypatch.delenv('EMBEDDING_MODEL_ID', raising=False)
 
 
 def seed(**window):

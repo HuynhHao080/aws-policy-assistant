@@ -1,5 +1,15 @@
 # Global Claude Haiku 5.5 — cutover on 11 November 2026
 
+## Current cleanup release
+
+The 11 November follow-up removed retired pilot implementation files from the current source tree and handover archive. Dated records are linked to their original Git commit. The current worklog and the demo guide use the Haiku profile and keyword search. CloudFormation reported UPDATE_COMPLETE and all six Lambda packages matched the cleanup build. The template comparison showed only six Lambda code references changing. The profile and IAM settings are recorded below.
+
+Current code SHA-256: `a398b4f2d19b7922ea56a1c1dcdfab9f684f9113834a63672fefab53aaf36e66`.
+
+Current template SHA-256: `0fe1c75c0f5bee0cde7a0d07dca833f4931ab289d1e2b970069692063b819ff1`.
+
+## Model cutover verification
+
 The primary Policy Assistant stack calls `global.anthropic.claude-haiku-5-5` from Singapore (`ap-southeast-1`). This is the sole Bedrock model available to the application. The CloudFormation parameter accepts this profile and the API role's InvokeModel resources match the profile ARN and its two foundation model ARNs returned by Bedrock. The worker role has zero Bedrock grants. [AWS model card](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-haiku-5-5.html)
 
 PDF extraction and OCR still produce text. The assistant ranks the authorized extracted text and active published policies by terms, normalizing Vietnamese accents and expanding a small shop glossary. Older PDF indexes can be read using their text fields. This removes the second model call and its token charges. Lexical ranking can miss paraphrases and cross-language matches beyond the glossary. Textract performs OCR in Singapore.

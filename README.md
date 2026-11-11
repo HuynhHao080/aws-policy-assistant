@@ -2,7 +2,7 @@
 
 A public, self-service AWS application for private PDF libraries, lexical retrieval, source-cited AI answers, conversation history, and administration of shared policies. The interface is in Vietnamese. Runtime: Python 3.12; deployment: AWS SAM; browser authentication: Cognito authorization code + PKCE.
 
-Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Deployment and acceptance evidence: [verification report](docs/final-verification.md). The owner has confirmed registration and administrator access; the SNS subscription was confirmed.
+Published application: [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). Deployment and acceptance evidence: [verification report](docs/haiku55-migration.md). The owner has confirmed registration and administrator access; the SNS subscription was confirmed.
 
 Current handover: [feature inventory](docs/FEATURE-STATUS.md), [support guide](docs/HUONG-DAN-HO-TRO.md) and [support collaboration release verification](docs/support-team-verification.md). Support is consented and in-app; administrators cannot access private customer PDFs. AI questions can use shared policies, selected PDFs or both.
 
@@ -112,10 +112,10 @@ The helper refuses absent, disabled or unconfirmed accounts. Sign out and in aga
 - `frontend/src/`: production interface and authenticated API client.
 - `template.yaml`: AWS infrastructure and role permissions.
 - `scripts/deploy_release.py`, `scripts/bootstrap_admin.py`: repeatable release and owner setup.
-- `docs/api-contract.md`, `docs/production-runbook.md`, `docs/final-verification.md`: current behavior, operations and actual evidence.
+- `docs/api-contract.md`, `docs/production-runbook.md`, `docs/haiku55-migration.md`: current behavior, operations and actual evidence.
 
 Older internship reports and roadmaps describe historical snapshots. The current verification report is authoritative for what has actually been tested; it does not equate a local test pass with successful public operation.
 
-Canonical working repository: `C:\Users\accli\Documents\Project\policy-assistant`. See [working location](docs/WORKING-LOCATION.md) and [latest retail verification and limitations](docs/retail-pilot-verification.md). Vietnamese usage guide: [Hướng dẫn vận hành](docs/HUONG-DAN-VAN-HANH.md).
+Canonical working repository: `C:\Users\accli\Documents\Project\policy-assistant`. See [working location](docs/WORKING-LOCATION.md) and [current model verification](docs/haiku55-migration.md). Vietnamese usage guide: [Hướng dẫn vận hành](docs/HUONG-DAN-VAN-HANH.md).
 
 Administrator workflow: [Vietnamese guide](docs/HUONG-DAN-QUAN-TRI.md), [current release evidence](docs/admin-verification.md). Drafts are separate from published policies; publication is explicit, archive is reversible, and revision checks prevent stale writes. Production frontend builds use fingerprinted assets to keep previous HTML compatible during deployment.

@@ -34,7 +34,7 @@ Ngân sách AWS 30–50 USD/tháng là mục tiêu. Thông báo ở 25/40/50 USD
 - Hệ thống tra cứu và giải thích chính sách; chưa kết nối đơn hàng, tồn kho, thanh toán hoặc hãng vận chuyển, chưa tự thực hiện hủy/hoàn tiền. Những yêu cầu đó cần nhân viên xác minh qua kênh thật của shop.
 - Nếu mở cho nhiều shop, cần triển khai phân tách dữ liệu và thành viên theo shop trước; không nhập chính sách riêng của nhiều shop vào kho chung hiện tại.
 
-Kết quả kiểm tra kỹ thuật, phạm vi đã kiểm chứng và các giới hạn nằm tại `docs/retail-pilot-verification.md`.
+Kết quả kiểm tra kỹ thuật, phạm vi đã kiểm chứng và các giới hạn nằm tại [báo cáo triển khai hiện tại](haiku55-migration.md).
 
 Quy trình soạn nháp, công bố và ngừng công bố đã có hướng dẫn riêng tại [Hướng dẫn quản trị](HUONG-DAN-QUAN-TRI.md). Kiểm tra giao diện mới đã thực hiện cục bộ bằng dữ liệu giả; quyền trình duyệt hiện vẫn chặn việc quan sát website thật.
 

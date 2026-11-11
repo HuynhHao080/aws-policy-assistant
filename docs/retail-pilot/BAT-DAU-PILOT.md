@@ -9,9 +9,9 @@ Giúp nhân viên CSKH tra cứu điều kiện bán hàng/hậu mãi từ ngu�
 ## Thứ tự thao tác
 
 1. Đọc BO-DEMO-5-CHINH-SACH.md. Các con số đều là giả định kiểm thử, không đưa thành cam kết cho khách thật.
-2. Nếu chọn thử trên ứng dụng hiện tại, vào Quản trị và nhập từng mã, nhóm, tiêu đề, từ khóa, nội dung. Lưu chính sách công bố ngay cho các tài khoản. Giữ nguyên nhãn DEMO. JSON đi kèm chỉ là dữ liệu tham khảo; giao diện chưa có nút nhập hàng loạt.
+2. Nếu chọn thử trên ứng dụng hiện tại, vào Quản trị và nhập từng mã, nhóm, tiêu đề, từ khóa, nội dung. Lưu bản nháp, kiểm tra phạm vi hiệu lực rồi công bố để tài khoản khách thấy chính sách. Giữ nguyên nhãn DEMO. JSON đi kèm chỉ là dữ liệu tham khảo; giao diện chưa có nút nhập hàng loạt.
 3. Kiểm tra Chính sách chung tìm được các mã DEMO-SHOP. Không xóa hoặc ghi đè các bản DEMO cũ/nguồn khác một cách hàng loạt. Chúng có thể cùng được truy xuất và ảnh hưởng đáp án; ghi lại mã nguồn thực tế khi câu trả lời dùng nguồn ngoài bộ pilot.
-4. Không chọn PDF không liên quan. Lưu ý khi không chọn, ứng dụng vẫn có thể dùng tài liệu gần đây của tài khoản. Để có kết quả độc lập, dùng một tài khoản thử không có PDF riêng hoặc theo dõi kỹ nguồn của từng câu. Không tự xóa PDF thật để làm sạch môi trường.
+4. Không chọn PDF không liên quan. Lưu ý khi không chọn, ứng dụng vẫn có thể dùng tài liệu gần đây của tài khoản. Chọn phạm vi Chỉ chính sách chung để đối chiếu từng mã nguồn. Không tự xóa PDF thật để làm sạch môi trường.
 5. Hỏi lần lượt 30 câu trong tệp kiểm thử. Ghi kết quả thực tế và nguồn vào CSV. Tệp đáp án kỳ vọng không nên được công bố làm chính sách hoặc tải làm nguồn, vì sẽ làm sai mục tiêu kiểm thử.
 6. Với mỗi câu sai, ghi lỗi nguồn, lỗi truy xuất hay lỗi diễn giải; sửa nguyên nhân và thử lại. Nhật ký cần phân biệt lượt chạy và phiên bản chính sách. Một lượt đầy đủ là 30 câu hỏi; tài khoản hiện bị giới hạn 20 câu/ngày UTC, nên chia hai ngày, không tạo tài khoản để né hạn mức.
 7. Khi có shop thật, thay giả định bằng chính sách được chủ shop duyệt; chốt kênh hỗ trợ và cách chuyển nhân viên trước khi mời khách.

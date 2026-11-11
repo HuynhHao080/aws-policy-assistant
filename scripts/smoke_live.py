@@ -3,7 +3,7 @@
 Creates two suppressed-invitation Cognito users, exercises the public API, and
 requests account/data deletion. Passwords, JWTs and presigned forms stay in memory.
 The optional --ocr probe uses a one-page scanned synthetic PDF and incurs Textract
-and embedding inference charges within the application's configured quotas.
+inference charges within the application's configured quotas.
 """
 import argparse
 import hashlib
@@ -162,7 +162,7 @@ class Probe:
         content = {"title": "Disposable synthetic policy", "category": "Readiness testing", "content": "Synthetic readiness content only. Refund within 30 days.", "keywords": ["readiness"]}
         self.check(self.request(first, "/admin/policies/" + self.policy_id, "PUT", content)[0] == 200, "administrator publishes shared policy")
         code, policy, _ = self.request(second, "/policies/" + self.policy_id)
-        self.check(code == 200 and "search_chunks" not in policy and "content_lower" not in policy, "published policy has no internal vectors")
+        self.check(code == 200 and "search_chunks" not in policy and "content_lower" not in policy, "published policy omits internal indexing fields")
         self.check(self.request(first, "/admin/audit")[0] == 200, "administrator audit log")
         self.check(self.request(first, "/admin/policies/" + self.policy_id, "DELETE")[0] == 200, "synthetic policy deletion")
         self.policy_id = None

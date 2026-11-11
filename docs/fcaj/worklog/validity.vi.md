@@ -41,7 +41,7 @@ Không thêm dịch vụ, cron, bảng/index, endpoint hoặc execution IAM gran
 ## Demo đề xuất 4 phút
 
 1. Giải thích một policy mẫu có cửa sổ ngày, tách thời hạn tài liệu khỏi thời hạn bảo hành tính từ giao dịch. Dùng dữ liệu hư cấu rõ nhãn.
-2. Mở editor, lưu nháp ngày tương lai và chỉ ra bản đã công bố không đổi. Khi công bố phải hiểu đó là thao tác có embedding hiện có; không tự thực hiện trên dữ liệu thật để minh họa.
+2. Mở editor, lưu nháp ngày tương lai và chỉ ra bản đã công bố không đổi. Dùng bản nháp hư cấu khi minh họa công bố và tìm kiếm từ khóa.
 3. Chạy `python -m pytest tests/unit/test_policy_validity.py -q`: chỉ rõ moto/model giả, biên ngàyUTC+7, filter/cursor và tình huống nguồn bị thay trước lần kiểm cuối dẫn tới409không lưu lịch sử.
 4. Đối chiếu evidence API thật với unit mô phỏng; giải thích vì sao không cần cron, vì sao consistent read không phải một khóa, giới hạn rollback và nguồn lịch sử.
 

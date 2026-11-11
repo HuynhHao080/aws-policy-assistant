@@ -137,8 +137,7 @@ def test_other_user_document_ids_never_reach_model(services, ai):
     assert ai.calls == []
 
 
-def test_lexical_search_maps_refund_terms_without_embedding_calls(services, ai, monkeypatch):
-    monkeypatch.setenv("EMBEDDING_MODEL_ID", "cohere.embed-multilingual-v3")
+def test_lexical_search_maps_refund_terms(services, ai):
     data = ready(services)
     code, result = request("/ask", "POST", data={"question": "Tôi được hoàn tiền trong bao lâu?", "document_ids": [data["doc_id"]]})
     assert code == 200 and result["citations"][0]["doc_id"] == data["doc_id"]
@@ -286,8 +285,7 @@ def test_customer_cannot_raise_reasoning_budget_or_override_model(services, ai, 
     assert call["additionalModelRequestFields"]["thinking"] == {"type": "disabled"}
 
 
-def test_admin_publication_indexes_separate_clauses_with_context(services, ai, monkeypatch):
-    monkeypatch.setenv("EMBEDDING_MODEL_ID", "cohere.embed-multilingual-v3")
+def test_admin_publication_indexes_separate_clauses_with_context(services, ai):
     content = "1. Lỗi sản phẩm được đề nghị kiểm tra.\n2. Đổi ý yêu cầu chưa mở hộp."
     policy = {"title": "Điều kiện mẫu", "category": "Thử nghiệm", "content": content, "keywords": ["đổi trả"]}
     code, _ = request("/admin/policies/SECTION-TEST", "PUT", data=policy, claims={"cognito:groups": ["administrators"]})

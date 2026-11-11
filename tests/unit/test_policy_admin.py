@@ -36,15 +36,12 @@ def test_admin_policy_management_is_denied_to_customers(services, path, method, 
     assert "Item" not in app.table.get_item(Key={"policy_id": "PILOT-EDIT"})
 
 
-def test_new_draft_is_private_and_does_not_call_embedding_or_generation(services, ai, monkeypatch):
+def test_new_draft_is_private_and_does_not_call_generation(services, ai, monkeypatch):
     monkeypatch.setenv("REQUIRE_PUBLISHED_POLICIES", "true")
-    monkeypatch.setenv("EMBEDDING_MODEL_ID", "cohere.embed-multilingual-v3")
-    monkeypatch.setattr(ai, "invoke_model", lambda **kw: pytest.fail("Draft must not create embeddings"))
     code, draft = change("save_draft", draft=FIELDS)
     assert code == 200 and draft["publication_state"] == "draft" and draft["current"] is None
     assert request("/policies/PILOT-EDIT")[0] == 404
     assert request("/policies", params={"keyword": "refund"})[1]["policies"] == []
-    monkeypatch.delenv("EMBEDDING_MODEL_ID")
     assert request("/ask", "POST", data={"question": "Refund deadline?"})[1]["grounded"] is False
     assert ai.calls == []
 

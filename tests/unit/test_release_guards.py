@@ -68,4 +68,4 @@ def test_haiku_model_override_is_explicit_and_unique():
 def test_other_model_is_rejected_before_a_release():
     from types import SimpleNamespace
     with pytest.raises(ValueError, match="Unsupported generation profile"):
-        release.release_parameters(SimpleNamespace(notification_email="owner@example.invalid", model_id="global.amazon.nova-2-lite-v1:0"), {}, {})
+        release.release_parameters(SimpleNamespace(notification_email="owner@example.invalid", model_id="unsupported.fixture-model"), {}, {})

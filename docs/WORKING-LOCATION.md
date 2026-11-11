@@ -2,7 +2,7 @@
 
 Canonical source: C:\Users\accli\Documents\Project\policy-assistant
 
-All future application edits, builds and deployments are performed from this project. docs/policy-drafts contains draft policies; docs/retail-pilot contains fictional shop fixtures, test reports and operator helpers. .deployment holds ignored build/release evidence and rollback data.
+All future application edits, builds and deployments are performed from this project. docs/policy-drafts contains draft policies; docs/retail-pilot contains fictional shop policy and evaluation fixtures. .deployment holds ignored build/release evidence and rollback data.
 
 The former policy-assistant-completion directory was a temporary verification copy. It is not a second hosted website or a separate AWS stack. It is no longer an editing/deployment source.
 

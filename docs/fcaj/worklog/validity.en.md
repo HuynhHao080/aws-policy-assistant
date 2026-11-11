@@ -41,7 +41,7 @@ This is a **point-in-time check**, not a lock until a customer reads the answer 
 ## Suggested four-minute personal demo
 
 1. Explain a fictional dated source and distinguish its eligibility window from warranty duration measured from a purchase/receipt.
-2. Open the editor, save a future draft and show the published snapshot is unchanged. Understand that explicit publication uses the existing embedding pipeline; do not manipulate real policies for a demo.
+2. Open the editor, save a future draft and show the published snapshot is unchanged. Use a fictional draft when demonstrating publication and keyword search.
 3. Run `python -m pytest tests/unit/test_policy_validity.py -q`. Label moto/model mocks clearly; explain UTC+07boundaries, filtered cursors and a change before final checking that returns409without history persistence.
 4. Contrast real API evidence with mocked race tests. Explain no-cron design, why consistent reads are not locks, rollback compatibility and historical snapshots.
 
