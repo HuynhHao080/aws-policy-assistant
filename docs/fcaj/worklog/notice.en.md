@@ -1,5 +1,7 @@
 ## Primary application — documentation update, 6 November 2026
 
+**[Submission pack]({{< relref "/5-Workshop/5.7-PolicyAssistant/Submission" >}})**
+
 **The primary application is [Policy Assistant](https://djreo5eptvwk5.cloudfront.net/). October sections below describe another historical test environment.**
 
 - Read the [current proposal]({{< relref "/2-Proposal/CurrentSolution" >}}) for the problem, scope, architecture inputs for the student's diagram, delivery plan, COST inputs and risks. The [primary release guide]({{< relref "/5-Workshop/5.7-PolicyAssistant/CurrentRelease" >}}) retains features and evidence from successive releases.

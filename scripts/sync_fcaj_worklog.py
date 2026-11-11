@@ -29,6 +29,7 @@ GUIDES = {
     'current': '5-Workshop/5.7-PolicyAssistant/CurrentRelease',
     'validity': '5-Workshop/5.7-PolicyAssistant/PolicyValidity',
     'support': '5-Workshop/5.7-PolicyAssistant/SupportTeam',
+    'submission': '5-Workshop/5.7-PolicyAssistant/Submission',
     'proposal': '2-Proposal/CurrentSolution',
 }
 
