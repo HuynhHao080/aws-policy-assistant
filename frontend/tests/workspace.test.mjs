@@ -233,7 +233,7 @@ test('recovering an uploaded PDF reuses its existing ID and asks from that PDF o
 test('history can compare a shop policy and a PDF excerpt without new API calls', async t => {
   const f = await fixture(t, {
     view:'history',
-    override:key => key === '/conversations' ? json({conversations:[{
+    override:key => key === '/policies/RETURNS' ? json({policy_id:'RETURNS', title:'Đổi trả', content:'Chính sách mới'}) : key === '/conversations' ? json({conversations:[{
       conversation_id:'comparison',
       created_at:'2026-11-04T00:00:00Z',
       question:'Thời hạn là bao lâu?',
@@ -254,6 +254,14 @@ test('history can compare a shop policy and a PDF excerpt without new API calls'
   assert.deepEqual(excerpts,['7 ngày kể từ ngày nhận','14 ngày kể từ ngày mua']);
   assert.match(f.$('policy-dialog-content').textContent, /PDF cá nhân.*Trang 2/);
   assert.equal(f.calls.length,calls);
+  const content = f.$('policy-dialog-content');
+  content.querySelector('button').click();
+  await until(() => content.textContent.includes('Chính sách mới'));
+  assert.match(content.textContent, /7 ngày kể từ ngày nhận/);
+  content.querySelector('button').click();
+  await until(() => content.querySelectorAll('blockquote').length === 2);
+  assert.equal(f.w.document.activeElement.getAttribute('aria-label'), 'Mở nguồn S1 · Đổi trả');
+  assert.equal(f.calls.length, calls + 1);
 });
 
 test('history filters paginated records by Vietnamese text and reuses a question without submitting', async t => {
@@ -482,4 +490,33 @@ test('follow-up attaches the selected question and retains the chosen source sco
   f.submit('question-form');
   await until(() => sent.length === 3);
   assert.equal(Object.hasOwn(sent[2], 'context_conversation_id'), false);
+});
+
+test('answer export includes only the question, response and displayed citation data', async t => {
+  const f = await fixture(t, {override:key => key === '/ask' ? json({
+    answer:'Có 7 ngày.', source_scope:'policies', grounded:true, owner_id:'private-owner',
+    citations:[{source_id:'S1', title:'Đổi trả', excerpt:'7 ngày kể từ ngày nhận', policy_id:'RETURN'}],
+  }) : undefined});
+  let blob, filename;
+  f.w.URL.createObjectURL = value => { blob = value; return 'blob:answer'; };
+  f.w.URL.revokeObjectURL = () => {};
+  f.w.HTMLAnchorElement.prototype.click = function () { filename = this.download; };
+  f.$('question').value = 'Đổi hàng trong bao lâu?';
+  f.submit('question-form');
+  const action = () => [...f.$('answer-area').querySelectorAll('button')].find(b => b.textContent === 'Tải câu trả lời (.txt)');
+  await until(action);
+  action().click();
+  await until(() => filename);
+  assert.equal(filename, 'policy-assistant-cau-tra-loi.txt');
+  const content = await new Promise(resolve => {
+    const reader = new f.w.FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsText(blob);
+  });
+  assert.match(content, /Đổi hàng trong bao lâu/);
+  assert.match(content, /Có 7 ngày/);
+  assert.match(content, /chỉ chính sách chung/);
+  assert.match(content, /S1 · Đổi trả/);
+  assert.match(content, /7 ngày kể từ ngày nhận/);
+  assert.doesNotMatch(content, /private-owner/);
 });

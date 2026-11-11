@@ -392,28 +392,73 @@ function citationTitle(source) {
   return `${source.source_id} · ${source.title}${source.page ? ` — Trang ${source.page}` : ''}`;
 }
 
-function compareCitations(sources) {
+const sourceScopeLabels = {
+  all: 'chính sách chung + PDF cá nhân',
+  policies: 'chỉ chính sách chung',
+  documents: 'chỉ PDF đã chọn',
+};
+
+function citationValidity(source) {
+  return source.effective_from || source.effective_until ? validityText(source) : '';
+}
+
+function downloadAnswer(question, result, sources) {
+  const citations = sources.map(source => [
+    citationTitle(source),
+    citationValidity(source),
+    source.excerpt,
+  ].filter(Boolean).join('\n'));
+  const content = [
+    'Policy Assistant',
+    'Câu hỏi\n' + question,
+    'Câu trả lời\n' + result.answer,
+    'Phạm vi nguồn: ' + (sourceScopeLabels[result.source_scope] || sourceScopeLabels.all),
+    ...(citations.length ? ['Đoạn trích tại thời điểm trả lời', ...citations] : ['Chưa đủ nguồn tham khảo']),
+  ].join('\n\n');
+  const url = URL.createObjectURL(new Blob([content], {type:'text/plain;charset=utf-8'}));
+  const link = node('a');
+  link.href = url;
+  link.download = 'policy-assistant-cau-tra-loi.txt';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function compareCitations(sources, returnSource) {
   const dialog = $('policy-dialog');
   $('policy-dialog-title').textContent = 'Đối chiếu nguồn tham khảo';
   const cards = sources.map(source => {
     const card = node('article', undefined, 'comparison-source');
     const kind = source.doc_id ? 'PDF cá nhân' : 'Chính sách chung';
-    card.append(node('p', kind, 'small muted'), node('h3', citationTitle(source)),
-      node('blockquote', source.excerpt || 'Đoạn trích chưa có trong lịch sử này.', 'citation-excerpt'));
+    card.append(node('p', kind, 'small muted'), node('h3', citationTitle(source)));
+    const validity = citationValidity(source);
+    if (validity) card.append(node('p', validity, 'small muted'));
+    card.append(node('blockquote', source.excerpt || 'Đoạn trích chưa có trong lịch sử này.', 'citation-excerpt'));
+    if (source.doc_id || source.policy_id) {
+      const action = button('Mở nguồn', () => openCitation(source, () => compareCitations(sources, source)), 'secondary');
+      action.setAttribute('aria-label', 'Mở nguồn ' + citationTitle(source));
+      card.append(action);
+    }
     return card;
   });
   $('policy-dialog-content').replaceChildren(...cards);
   if (!dialog.open) dialog.showModal();
+  if (returnSource) cards[sources.indexOf(returnSource)]?.querySelector('button')?.focus();
 }
 
-async function openCitation(source) {
+async function openCitation(source, back) {
   const dialog = $('policy-dialog');
   const content = $('policy-dialog-content');
   const current = node('section');
   const quote = node('blockquote', source.excerpt || 'Đoạn trích chưa có trong lịch sử này.', 'citation-excerpt');
   $('policy-dialog-title').textContent = citationTitle(source);
-  content.replaceChildren(node('h3', 'Đoạn trích dùng để trả lời'), quote, current);
+  content.replaceChildren(node('h3', 'Đoạn trích dùng để trả lời'));
+  const validity = citationValidity(source);
+  if (validity) content.append(node('p', validity, 'small muted'));
+  content.append(quote, current);
+  const backButton = back && button('Về phần đối chiếu', back, 'secondary');
+  if (backButton) content.prepend(backButton);
   if (!dialog.open) dialog.showModal();
+  backButton?.focus();
 
   const epoch = sessionEpoch;
   const isCurrent = () => epoch === sessionEpoch && dialog.open && content.contains(current);
@@ -462,7 +507,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
   }
   target.append(node('div', result.grounded ? 'Có nguồn tham khảo' : 'Chưa đủ thông tin', 'answer-label'),
     node('p', result.answer, 'answer-text'),
-    node('small', ({all:'Nguồn: chính sách chung + PDF cá nhân',policies:'Nguồn: chỉ chính sách chung',documents:'Nguồn: chỉ PDF đã chọn'})[result.source_scope || 'all'], 'small muted'));
+    node('small', 'Nguồn: ' + (sourceScopeLabels[result.source_scope] || sourceScopeLabels.all), 'small muted'));
   renderFeedback(result,target);
   const sources = result.citations || [];
   for (const source of sources) {
@@ -480,6 +525,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
     await navigator.clipboard.writeText([result.answer, ...(citations.length ? ['Nguồn tham khảo', ...citations] : [])].join('\n\n'));
     if (epoch === sessionEpoch) notify(citations.length ? 'Đã sao chép câu trả lời và các nguồn đi kèm.' : 'Đã sao chép câu trả lời.');
   }, 'secondary'));
+  actions.append(button('Tải câu trả lời (.txt)', () => downloadAnswer(question, result, sources), 'secondary'));
   actions.append(button('Nhờ nhân viên hỗ trợ',async()=>{
     if(supportUnsaved()&&!confirm('Thay nội dung hỗ trợ đang soạn bằng câu hỏi này?'))return;
     $('new-ticket-form').reset();$('new-ticket-subject').value='Cần làm rõ chính sách';$('new-ticket-message').value=question.slice(0,1500);$('ticket-consent').checked=false;
