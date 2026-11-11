@@ -593,3 +593,28 @@ test('customer can find staff replies in reverse reply order across loaded pages
   assert.equal(filter.value, 'all');
   assert.equal(list.textContent, '');
 });
+
+test('administrator can preview the previous publication and restore it as a draft', async t => {
+  const prior = {title:'Old policy', category:'Support', content:'Old terms'};
+  const current = {title:'Current policy', category:'Support', content:'Current terms'};
+  const record = {policy_id:'ROLLBACK', revision:'current-rev', publication_state:'published', current,
+    previous_publication:{snapshot:prior, published_at:'2026-11-09T00:00:00Z'}};
+  const f = await fixture(t, {admin:true, view:'admin', confirm:()=>true, override:(key, options) => {
+    if (key === '/admin/policies') return json({policies:[{...record, title:current.title}]});
+    if (key === '/admin/policies/ROLLBACK') return json(options.method === 'PATCH' ? {...record, draft:prior, revision:'restored'} : record);
+  }});
+  await until(() => f.$('admin-policy-list').querySelector('button'));
+  f.$('admin-policy-list').querySelector('button').click();
+  const restore = f.$('restore-policy');
+  await until(() => !restore.disabled);
+  assert.match(restore.parentElement.textContent, /Old terms/);
+  restore.parentElement.open = true;
+  restore.click();
+  await until(() => f.$('admin-policy-form').elements.content.value === prior.content);
+  const call = f.calls.find(c => c.key === '/admin/policies/ROLLBACK' && c.options.method === 'PATCH');
+  assert.deepEqual(JSON.parse(call.options.body), {action:'restore_previous', expected_revision:'current-rev'});
+  assert.equal(f.$('policy-live-content').textContent, current.content);
+  assert.equal(restore.disabled, true);
+  f.w.__expire();
+  assert.doesNotMatch(restore.parentElement.textContent, /Old terms/);
+});

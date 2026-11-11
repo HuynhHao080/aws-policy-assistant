@@ -143,3 +143,5 @@ The API reads the pinned S3 extraction version and rechecks document and account
 Admin ticket responses include `customer_waiting_since`, the timestamp of the first consecutive unanswered customer message on an open or in-progress request, or null. Assignments, internal notes, and status-only changes do not count as public replies. The staff queue can sort waiting requests among the pages already loaded. Customer responses omit this field.
 
 Customer ticket responses include `last_staff_reply_at`, the time of the latest public staff reply, or null. List responses omit message bodies.
+
+Administrator policy details include `previous_publication` after the first replacement of a published snapshot. The field contains the previous content snapshot and its publication timestamp when available. `PATCH /admin/policies/{id}` accepts `restore_previous` with the current `expected_revision`; it creates a draft only and returns 409 if a draft already exists or no previous publication is available. Public policy responses and retrieval omit the previous snapshot.

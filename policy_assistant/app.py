@@ -349,7 +349,7 @@ def _success_response(body: Any) -> Dict[str, Any]:
 def _strip_internal_fields(item: Dict[str, Any]) -> Dict[str, Any]:
     """Remove internal lowercase fields from a policy item before returning to client."""
     internal_fields = {
-        "title_lower", "category_lower", "content_lower", "keywords_lower", "search_chunks", "embedding_model", "updated_by", "draft_data", "revision", "published_by", "edited_at"
+        "title_lower", "category_lower", "content_lower", "keywords_lower", "search_chunks", "embedding_model", "updated_by", "draft_data", "previous_publication", "revision", "published_by", "edited_at"
     }
     return {k: v for k, v in item.items() if k not in internal_fields}
 

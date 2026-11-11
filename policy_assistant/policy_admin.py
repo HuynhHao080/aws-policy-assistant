@@ -31,6 +31,7 @@ def detail(item):
             "publication_state": item.get("publication_state", "unpublished"),
             "validity_state": validity_state(item) if item.get("publication_state") == "published" else "unpublished",
             "current": snapshot(item) if item.get("content") else None,
+            "previous_publication": item.get("previous_publication"),
             "draft": snapshot(item["draft_data"]) if item.get("draft_data") else None,
             "updated_at": item.get("edited_at", item.get("updated_at")), "published_at": item.get("published_at")}
 
@@ -143,13 +144,20 @@ def handle(service, method, path, owner, data, params, request_id):
         service.policy_change(owner, "policy.delete", policy_id, request_id, condition=condition)
         return {"deleted": True}
     action = data.get("action") if method == "PATCH" else "legacy_publish"
-    if action not in {"save_draft", "publish", "archive", "discard_draft", "legacy_publish"}:
+    if action not in {"save_draft", "restore_previous", "publish", "archive", "discard_draft", "legacy_publish"}:
         raise Problem(400, "Unknown policy action")
     if not current and action not in {"save_draft", "legacy_publish"}:
         raise Problem(404, "Policy not found")
     item = dict(current or {"policy_id": policy_id, "publication_state": "draft"})
     if action == "save_draft":
         item["draft_data"] = content(data.get("draft"), item.get("draft_data") or item)
+    elif action == "restore_previous":
+        previous = item.get("previous_publication")
+        if not previous:
+            raise Problem(409, "No previous publication to restore")
+        if item.get("draft_data"):
+            raise Problem(409, "Discard or publish the existing draft before restoring")
+        item["draft_data"] = content(previous["snapshot"])
     elif action in {"publish", "legacy_publish"}:
         fields = content(data, item) if action == "legacy_publish" else item.get("draft_data")
         if fields is None and item.get("publication_state") == "archived" and item.get("content"):
@@ -158,6 +166,11 @@ def handle(service, method, path, owner, data, params, request_id):
             raise Problem(409, "Save a draft before publishing")
         # Revalidate even stored drafts before indexing; clear removed bounds.
         fields = content(fields)
+        if item.get("content") and snapshot(item) != fields:
+            item["previous_publication"] = {
+                "snapshot": snapshot(item),
+                "published_at": item.get("published_at") or item.get("updated_at"),
+            }
         for field in DATE_FIELDS:
             item.pop(field, None)
         for field in ("search_chunks", "embedding_model"):
@@ -177,8 +190,8 @@ def handle(service, method, path, owner, data, params, request_id):
             item["publication_state"] = "archived"
     stamp = now()
     item.update(edited_at=stamp, updated_by=owner, revision=uuid4().hex)
-    if current is None or action not in {"save_draft", "discard_draft"}:
+    if current is None or action not in {"save_draft", "restore_previous", "discard_draft"}:
         item["updated_at"] = stamp
-    audit_action = {"save_draft": "policy.draft", "publish": "policy.publish", "legacy_publish": "policy.put", "archive": "policy.archive", "discard_draft": "policy.discard_draft"}[action]
+    audit_action = {"save_draft": "policy.draft", "restore_previous": "policy.restore_previous", "publish": "policy.publish", "legacy_publish": "policy.put", "archive": "policy.archive", "discard_draft": "policy.discard_draft"}[action]
     service.policy_change(owner, audit_action, policy_id, request_id, item, condition=condition)
     return {"saved": True, **detail(item)}

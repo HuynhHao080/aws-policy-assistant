@@ -58,7 +58,7 @@ export class PolicyEditor {
   transition(action) {
     if(!this.record)throw new Error('Mở và lưu chính sách trước khi thao tác.');
     if(this.dirty)throw new Error('Có thay đổi chưa lưu. Lưu bản nháp trước khi tiếp tục.');
-    if(!['publish','archive','discard_draft'].includes(action))throw new Error('Thao tác không hợp lệ.');
+    if(!['publish','archive','discard_draft','restore_previous'].includes(action))throw new Error('Thao tác không hợp lệ.');
     return this.call(this.record.policy_id,{method:'PATCH',body:{action,expected_revision:this.record.revision}});
   }
 }

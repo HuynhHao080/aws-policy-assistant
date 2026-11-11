@@ -152,3 +152,28 @@ def test_unknown_actions_or_missing_drafts_cannot_publish(services):
     code, empty = change("discard_draft", draft["revision"])
     assert code == 200 and empty["publication_state"] == "archived"
     assert change("publish", empty["revision"])[0] == 409
+
+
+def test_previous_publication_can_only_be_restored_as_private_draft(services, monkeypatch):
+    monkeypatch.setenv("REQUIRE_PUBLISHED_POLICIES", "true")
+    first = publish()
+    assert first["previous_publication"] is None
+    revised = dict(FIELDS, content="Refund within 60 days.")
+    status, draft = change("save_draft", first["revision"], revised)
+    assert status == 200
+    status, second = change("publish", draft["revision"])
+    assert status == 200
+    assert second["previous_publication"]["snapshot"] == first["current"]
+    customer = request("/policies/PILOT-EDIT")[1]
+    assert customer["content"] == revised["content"]
+    assert "previous_publication" not in customer
+    assert change("restore_previous", first["revision"])[0] == 409
+    assert request(PATH, "PATCH", data={"action": "restore_previous", "expected_revision": second["revision"]})[0] == 403
+    status, restored = change("restore_previous", second["revision"])
+    assert status == 200 and restored["draft"] == first["current"]
+    assert change("restore_previous", restored["revision"])[0] == 409
+    assert request("/policies/PILOT-EDIT")[1] == customer
+    assert request("/admin/audit", claims=ADMIN)[1]["events"][0]["action"] == "policy.restore_previous"
+    status, reverted = change("publish", restored["revision"])
+    assert status == 200 and reverted["current"] == first["current"]
+    assert reverted["previous_publication"]["snapshot"]["content"] == revised["content"]
