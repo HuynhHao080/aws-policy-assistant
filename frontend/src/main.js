@@ -6,6 +6,7 @@ import {ShopEditor,shopFields} from './shop-editor.js';
 import { UserManager, WebStorageStateStore, Log } from 'oidc-client-ts';
 import { createApi, uploadPdf, statusText, pdfErrorText } from './api.js';
 import { PolicyEditor, policyStates, validityStates, validityText } from './policy-editor.js';
+import { SavedPolicies, policyLinkRoute } from './policy-library.js';
 import { SupportClient, supportStates, supportCategories, supportPriorities, questionPayload } from './support-client.js';
 
 Log.setLevel(Log.NONE);
@@ -13,6 +14,12 @@ const $ = id => document.getElementById(id);
 const state = { user:null, profile:null, docs:[], docToken:null, historyToken:null, policyToken:null, policyKeyword:'', auditToken:null, selected:new Set(), cache:new Map(), view:'assistant' };
 let manager, api, config;
 const latestTasks=new LatestTask();
+const savedPolicies = new SavedPolicies({
+  getItem: key => localStorage.getItem(key),
+  setItem: (key, value) => localStorage.setItem(key, value),
+  removeItem: key => localStorage.removeItem(key),
+});
+let policyLibraryMode = 'browse';
 const feedbackStore=new FeedbackStore((path,options)=>{needApi();return api(path,options);});
 let qualityReport=null;
 let documentPreview = null;
@@ -32,6 +39,8 @@ async function guard(control,action) { if(control?.disabled)return; if(control){
 function needApi() { if(!api)throw new Error('Dịch vụ chưa được kết nối.');if(!state.user)throw Object.assign(new Error('Vui lòng đăng nhập.'),{status:401}); }
 function groups() { const value=state.profile?.groups||[];return Array.isArray(value)?value:String(value).replace(/[\[\]"]/g,'').split(',').map(s=>s.trim()); }
 function signedIn() {
+  savedPolicies.selectAccount(state.user?.profile?.sub);
+  $('saved-policy-count').textContent = savedPolicies.items.length;
   $('guest-welcome').classList.toggle('hidden',Boolean(state.user));
   $('history-toolbar').classList.toggle('hidden', !state.user);
   $('document-toolbar').classList.toggle('hidden', !state.user);
@@ -58,6 +67,10 @@ function signedIn() {
     if(!state.profile.ai_available)notify('AI chưa được cấu hình. Bạn vẫn có thể quản lý tài liệu và tìm chính sách.');}
 }
 function clearPrivateState() {
+  policyLibraryMode = 'browse';
+  $('browse-policies').setAttribute('aria-pressed', 'true');
+  $('saved-policies').setAttribute('aria-pressed', 'false');
+  $('policy-library-status').textContent = '';
   $('document-filter').value = '';
   $('document-status-filter').value = 'all';
   $('document-results').textContent = '';
@@ -78,17 +91,26 @@ function clearPrivateState() {
   $('notice').classList.add('hidden');signedIn();
 }
 async function navigate(view,{historyMode='push',focus=false}={}) {
-  if(!labels[view])view='assistant';
+  const linkedPolicy = policyLinkRoute(view);
+  if (linkedPolicy) view = 'policies';
+  if(!Object.hasOwn(labels,view))view='assistant';
   if(view==='admin'&&!groups().includes('administrators')){view='account';notify('Quản trị chỉ dành cho tài khoản được cấp quyền.',true);}
   if(state.view==='admin'&&view!=='admin'&&(policyEditor.dirty||shopEditor.dirty)&&!confirm('Rời trang khi có thay đổi chưa lưu?'))return false;
   if(state.view!==view&&(state.view==='support'||$('ticket-dialog').open)&&supportUnsaved()&&!confirm('Rời trang khi nội dung hỗ trợ chưa được gửi?'))return false;
   state.view=view;
+  if ($('policy-dialog').open) $('policy-dialog').close();
   setNavigationOpen(false);
   document.querySelectorAll('[data-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.panel!==view));
   document.querySelectorAll('nav [data-view]').forEach(control=>{const active=control.dataset.view===view;control.classList.toggle('active',active);if(active)control.setAttribute('aria-current','page');else control.removeAttribute('aria-current');});
-  $('view-label').textContent=labels[view];if(historyMode==='none'&&location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);if(historyMode!=='none'&&location.hash!==`#${view}`)history[historyMode==='replace'?'replaceState':'pushState'](null,'',`#${view}`);
+  $('view-label').textContent=labels[view];
+  const hash = linkedPolicy ? `#policy/${linkedPolicy}` : `#${view}`;
+  if (location.hash !== hash) history[historyMode === 'push' ? 'pushState' : 'replaceState'](null, '', hash);
   if(focus){const heading=document.querySelector(`[data-panel="${view}"] h1`);heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});window.scrollTo({top:0,left:0,behavior:'auto'});}
-  if(!state.user)return true;
+  if (!state.user) {
+    if (linkedPolicy) $('policy-library-status').textContent = 'Đăng nhập để mở chính sách từ liên kết này.';
+    return true;
+  }
+  if (linkedPolicy) await openLibraryPolicy(linkedPolicy);
   if(view==='documents'||view==='assistant')await loadDocs(false);
   if(view==='history')await loadHistory(false);
   if(view==='support')await loadTickets();
@@ -465,7 +487,141 @@ async function loadQuality(){
 $('quality-month').onchange=()=>guard($('quality-month'),loadQuality);$('refresh-quality').onclick=()=>guard($('refresh-quality'),loadQuality);
 $('export-quality').onclick=()=>guard($('export-quality'),()=>{if(!qualityReport)throw new Error('Tải báo cáo trước khi xuất.');const url=URL.createObjectURL(new Blob([JSON.stringify(qualityReport,null,2)],{type:'application/json'}));const link=node('a');link.href=url;link.download=`policy-assistant-quality-${qualityReport.month}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 function showPolicy(policy,target) {const card=node('article',undefined,'policy-card');card.append(node('div',`${policy.policy_id} / ${policy.category||'Chính sách'}`,'policy-meta'),node('h2',policy.title));if(policy.effective_from||policy.effective_until)card.append(node('p',validityText(policy),'small muted'));card.append(node('p',policy.content));target.append(card);}
-async function searchPolicies(more=false){needApi();const isCurrent=latestTasks.begin('policies');if(!more){state.policyKeyword=$('policy-keyword').value.trim();state.policyToken=null;$('policy-results').replaceChildren();}const result=await api(`/policies?keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${state.policyToken?`&next_token=${encodeURIComponent(state.policyToken)}`:''}`);if(!isCurrent())return;for(const item of result.policies)showPolicy(item,$('policy-results'));state.policyToken=result.next_token;$('more-policies').classList.toggle('hidden',!state.policyToken);if(!result.policies.length&&!state.policyToken)$('policy-results').append(node('p','Không còn kết quả phù hợp.','empty-small'));}
+function policyActions(policy, open = true) {
+  const actions = node('div', undefined, 'policy-library-actions');
+  const status = node('p', '', 'small muted');
+  status.setAttribute('role', 'status');
+  if (open) actions.append(button('Đọc chính sách', () => openLibraryPolicy(policy.policy_id), 'secondary'));
+  const save = button('', () => {
+    try {
+      savedPolicies.toggle(policy);
+      refreshPolicyBookmarks();
+      status.textContent = savedPolicies.has(policy.policy_id) ? 'Đã lưu trên thiết bị này.' : 'Đã bỏ lưu.';
+    } catch (error) {
+      status.textContent = error.name === 'QuotaExceededError' || error.name === 'SecurityError'
+        ? 'Trình duyệt chưa cho phép lưu trên thiết bị.' : error.message;
+    }
+  }, 'secondary');
+  save.dataset.savedPolicy = policy.policy_id;
+  updatePolicyBookmark(save);
+  actions.append(save, button('Sao chép liên kết', async () => {
+    const href = `${location.origin}${location.pathname}#policy/${policy.policy_id}`;
+    try {
+      await navigator.clipboard.writeText(href);
+      status.textContent = 'Đã sao chép liên kết.';
+    } catch {
+      status.replaceChildren(node('span', 'Liên kết để sao chép'), node('code', href));
+    }
+  }), status);
+  return actions;
+}
+
+function updatePolicyBookmark(control) {
+  const saved = savedPolicies.has(control.dataset.savedPolicy);
+  control.textContent = saved ? 'Bỏ lưu' : 'Lưu chính sách';
+  control.setAttribute('aria-pressed', String(saved));
+}
+
+function refreshPolicyBookmarks() {
+  $('saved-policy-count').textContent = savedPolicies.items.length;
+  document.querySelectorAll('[data-saved-policy]').forEach(updatePolicyBookmark);
+  if (policyLibraryMode === 'saved') renderSavedPolicies();
+}
+
+function policyCard(policy) {
+  const card = node('article', undefined, 'policy-card policy-directory-card');
+  card.append(node('div', [policy.category, policy.policy_id].filter(Boolean).join(' · '), 'policy-meta'), node('h2', policy.title));
+  if (policy.effective_from || policy.effective_until) card.append(node('p', validityText(policy), 'small muted'));
+  if (policy.content) {
+    const excerpt = policy.content.trim().replace(/\s+/g, ' ');
+    card.append(node('p', excerpt.length > 240 ? excerpt.slice(0, 240) + '…' : excerpt));
+  }
+  card.append(policyActions(policy));
+  return card;
+}
+
+async function openLibraryPolicy(id) {
+  const dialog = $('policy-dialog');
+  const content = $('policy-dialog-content');
+  const panel = node('div');
+  content.replaceChildren(panel);
+  $('policy-dialog-title').textContent = 'Chính sách';
+  panel.append(node('p', 'Đang tải chính sách…', 'loading-state'));
+  if (!dialog.open) dialog.showModal();
+  const isCurrent = latestTasks.begin('policy-detail');
+  try {
+    const policy = await api(`/policies/${encodeURIComponent(id)}`);
+    if (!isCurrent() || !dialog.open || !content.contains(panel)) return;
+    if (policy.policy_id !== id) throw new Error('Dữ liệu chính sách không hợp lệ.');
+    $('policy-dialog-title').textContent = policy.title;
+    panel.replaceChildren();
+    showPolicy(policy, panel);
+    panel.append(policyActions(policy, false));
+  } catch (error) {
+    if (!isCurrent() || !dialog.open || !content.contains(panel)) return;
+    panel.replaceChildren(node('p', error.status === 404
+      ? 'Chính sách hiện không còn được công bố hoặc đã hết hiệu lực.'
+      : 'Chưa tải được chính sách. Mở lại để thử lại.', 'empty-small'));
+    const bookmark = savedPolicies.items.find(item => item.policy_id === id);
+    if (bookmark) panel.append(policyActions(bookmark, false));
+  }
+}
+
+function renderSavedPolicies() {
+  const query = historySearchText($('policy-keyword').value).trim();
+  const matches = savedPolicies.items.filter(item => historySearchText(`${item.title} ${item.policy_id}`).includes(query));
+  $('policy-results').replaceChildren(...matches.map(policyCard));
+  $('policy-library-status').textContent = `${matches.length} / ${savedPolicies.items.length} chính sách lưu trên thiết bị này`;
+  if (!matches.length) $('policy-results').append(node('p', savedPolicies.items.length ? 'Chưa tìm thấy mục đã lưu phù hợp.' : 'Bạn chưa lưu chính sách nào.', 'empty-small'));
+}
+
+function setPolicyLibraryMode(mode) {
+  latestTasks.begin('policies');
+  policyLibraryMode = mode;
+  state.policyToken = null;
+  $('browse-policies').setAttribute('aria-pressed', String(mode === 'browse'));
+  $('saved-policies').setAttribute('aria-pressed', String(mode === 'saved'));
+  $('more-policies').classList.add('hidden');
+  if (mode === 'saved') renderSavedPolicies();
+  else {
+    $('policy-results').replaceChildren();
+    $('policy-library-status').textContent = 'Nhập từ khóa để tìm trong chính sách đang công bố.';
+  }
+}
+
+async function searchPolicies(more = false) {
+  needApi();
+  if (policyLibraryMode === 'saved') {
+    renderSavedPolicies();
+    return;
+  }
+  const isCurrent = latestTasks.begin('policies');
+  if (!more) {
+    state.policyKeyword = $('policy-keyword').value.trim();
+    state.policyToken = null;
+    $('policy-results').replaceChildren();
+    $('more-policies').classList.add('hidden');
+  }
+  if (!state.policyKeyword || (more && !state.policyToken)) {
+    $('policy-library-status').textContent = 'Nhập từ khóa để tìm chính sách.';
+    return;
+  }
+  $('policy-library-status').textContent = 'Đang tìm chính sách…';
+  const cursor = state.policyToken ? `&next_token=${encodeURIComponent(state.policyToken)}` : '';
+  try {
+    const result = await api(`/policies?keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${cursor}`);
+    if (!isCurrent()) return;
+    $('policy-results').append(...result.policies.map(policyCard));
+    state.policyToken = result.next_token;
+    $('more-policies').classList.toggle('hidden', !state.policyToken);
+    $('policy-library-status').textContent = `${$('policy-results').children.length} kết quả đã tải${state.policyToken ? ' · Còn trang tiếp theo' : ''}`;
+  } catch (error) {
+    if (!isCurrent()) return;
+    $('policy-library-status').textContent = 'Chưa tải được kết quả.';
+    throw error;
+  }
+}
+
 function historySearchText(value) {
   return String(value ?? '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replaceAll('đ', 'd');
 }
@@ -701,7 +857,7 @@ document.querySelector('.admin-tabs').addEventListener('keydown',event=>{const t
 $('guest-signin').onclick=()=>$('auth-button').click();
 $('close-policy-dialog').onclick=()=>$('policy-dialog').close();
 document.addEventListener('click',event=>{const nav=event.target.closest('[data-view]');if(nav)guard(nav,()=>navigate(nav.dataset.view,{focus:true}));const suggestion=event.target.closest('[data-question]');if(suggestion){if(!state.user){notify('Đăng nhập để đặt câu hỏi và xem nguồn trả lời.',true);$('auth-button').focus();return;}guard(suggestion, () => putQuestionInComposer(suggestion.dataset.question));}});
-$('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else await manager.signinRedirect();}));
+$('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else await manager.signinRedirect({state:{policy:policyLinkRoute(location.hash.slice(1))}});}));
 $('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
   needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
@@ -741,6 +897,11 @@ $('upload-form').addEventListener('submit',event=>{event.preventDefault();guard(
   await trackDocument(docId);
 });});
 $('refresh-documents').onclick=()=>guard($('refresh-documents'),()=>loadDocs());$('more-documents').onclick=()=>guard($('more-documents'),()=>loadDocs(true));$('more-sources').onclick=()=>guard($('more-sources'),()=>loadDocs(true));
+$('browse-policies').onclick = () => setPolicyLibraryMode('browse');
+$('saved-policies').onclick = () => setPolicyLibraryMode('saved');
+$('policy-keyword').addEventListener('input', () => {
+  if (policyLibraryMode === 'saved') renderSavedPolicies();
+});
 $('policy-form').onsubmit=event=>{event.preventDefault();guard(event.submitter,()=>searchPolicies());};$('more-policies').onclick=()=>guard($('more-policies'),()=>searchPolicies(true));
 $('refresh-history').onclick=()=>guard($('refresh-history'),()=>loadHistory());$('more-history').onclick=()=>guard($('more-history'),()=>loadHistory(true));$('refresh-admin').onclick=()=>guard($('refresh-admin'),loadAdmin);$('more-audit').onclick=()=>guard($('more-audit'),()=>loadAudit(true));
 $('admin-policy-form').addEventListener('input',()=>{policyEditor.markDirty();renderPolicyValidityPreview();});
@@ -783,7 +944,7 @@ $('close-own-ticket').onclick=()=>guard($('close-own-ticket'),async()=>{if(!conf
 $('delete-own-ticket').onclick=()=>guard($('delete-own-ticket'),async()=>{if(!confirm('Xóa vĩnh viễn toàn bộ yêu cầu và phản hồi? Không thể khôi phục từ ứng dụng.'))return;await supportClient.remove();$('ticket-dialog').close();$('ticket-thread').replaceChildren();$('ticket-reply-form').reset();notify('Đã xóa yêu cầu hỗ trợ.');await refreshSupportLists();});
 $('export-tickets').onclick=()=>guard($('export-tickets'),async()=>{needApi();const items=[];let token;do{const result=await api(`/tickets?limit=50${token?`&next_token=${encodeURIComponent(token)}`:''}`);for(const row of result.tickets)items.push(await api(`/tickets/${encodeURIComponent(row.ticket_id)}`));token=result.next_token;}while(token);const url=URL.createObjectURL(new Blob([JSON.stringify(items,null,2)],{type:'application/json'}));const link=node('a');link.href=url;link.download='policy-assistant-support.json';link.click();URL.revokeObjectURL(url);});
 $('export-history').onclick=()=>guard($('export-history'),async()=>{needApi();const items=[];let token;do{const result=await api(`/conversations${token?`?next_token=${encodeURIComponent(token)}`:''}`);items.push(...result.conversations);token=result.next_token;}while(token);const url=URL.createObjectURL(new Blob([JSON.stringify(items,null,2)],{type:'application/json'}));const link=node('a');link.href=url;link.download='policy-assistant-history.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-$('delete-account').onclick=()=>guard($('delete-account'),async()=>{needApi();if($('delete-confirmation').value!=='DELETE')throw new Error('Nhập chính xác DELETE để xác nhận.');if(!confirm('Xóa vĩnh viễn tài khoản, tất cả PDF và lịch sử? Không thể hoàn tác trong ứng dụng.'))return;await api('/account/delete',{method:'POST',body:{confirmation:'DELETE'}});signingOut=true;manager.stopSilentRenew();await manager.removeUser();clearPrivateState();notify('Đã tiếp nhận yêu cầu xóa. Tài khoản hiện bị chặn và dữ liệu sẽ được xóa ở nền.');});
+$('delete-account').onclick=()=>guard($('delete-account'),async()=>{needApi();if($('delete-confirmation').value!=='DELETE')throw new Error('Nhập chính xác DELETE để xác nhận.');if(!confirm('Xóa vĩnh viễn tài khoản, tất cả PDF và lịch sử? Không thể hoàn tác trong ứng dụng.'))return;await api('/account/delete',{method:'POST',body:{confirmation:'DELETE'}});signingOut=true;manager.stopSilentRenew();try{savedPolicies.removeAccount();}catch{}await manager.removeUser();clearPrivateState();notify('Đã tiếp nhận yêu cầu xóa. Tài khoản hiện bị chặn và dữ liệu sẽ được xóa ở nền.');});
 
 async function start(){
   signedIn();renderShopControls();
@@ -793,7 +954,7 @@ async function start(){
   const issuer=`https://cognito-idp.${config.region}.amazonaws.com/${config.userPoolId}`;
   manager=new UserManager({authority:issuer,client_id:config.clientId,redirect_uri:location.origin+'/',post_logout_redirect_uri:location.origin+'/',response_type:'code',scope:'openid email profile',loadUserInfo:false,automaticSilentRenew:true,userStore:new WebStorageStateStore({store:sessionStorage}),stateStore:new WebStorageStateStore({store:sessionStorage}),metadata:{issuer,authorization_endpoint:config.authDomain+'/oauth2/authorize',token_endpoint:config.authDomain+'/oauth2/token',jwks_uri:issuer+'/.well-known/jwks.json',userinfo_endpoint:config.authDomain+'/oauth2/userInfo',revocation_endpoint:config.authDomain+'/oauth2/revoke'}});
   manager.events.addUserLoaded(user=>{if(!signingOut)state.user=user;});manager.events.addAccessTokenExpired(()=>{manager.stopSilentRenew();clearPrivateState();manager.removeUser().catch(()=>{});notify('Phiên đăng nhập hết hạn. Hãy đăng nhập lại.',true);});
-  if(new URLSearchParams(location.search).has('code')||new URLSearchParams(location.search).has('error')){try{state.user=await manager.signinRedirectCallback();}catch{history.replaceState(null,'',location.pathname);throw new Error('Đăng nhập chưa hoàn tất hoặc liên kết đã hết hạn. Hãy thử đăng nhập lại.');}history.replaceState(null,'',location.pathname);}
+  if(new URLSearchParams(location.search).has('code')||new URLSearchParams(location.search).has('error')){try{state.user=await manager.signinRedirectCallback();}catch{history.replaceState(null,'',location.pathname);throw new Error('Đăng nhập chưa hoàn tất hoặc liên kết đã hết hạn. Hãy thử đăng nhập lại.');}const linked = policyLinkRoute('policy/' + (state.user?.state?.policy || ''));history.replaceState(null,'',location.pathname+(linked ? '#policy/'+linked : ''));}
   else state.user=await manager.getUser();
   api=createApi(config.apiBase,async()=>{if(state.user?.expired){const epoch=sessionEpoch;const user=await manager.signinSilent();if(epoch!==sessionEpoch)return null;state.user=user;}return state.user?.id_token;},fetch,()=>sessionEpoch);
   if(state.user){state.profile=await api('/me');signedIn();try{await loadShopProfile();}catch{if(state.user){$('shop-context').textContent='Chưa tải được thông tin shop. Bạn có thể làm mới tại mục Thông tin shop.';$('shop-context').classList.remove('hidden');}}}

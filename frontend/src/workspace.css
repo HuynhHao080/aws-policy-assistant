@@ -204,6 +204,23 @@ footer { margin-top: 36px; }
   font-size: 14px;
 }
 
+.policy-library-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.policy-library-bar button[aria-pressed="true"] { background: var(--green); color: var(--white); }
+.policy-library-bar span { margin-inline-start: 5px; }
+.policy-library-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.policy-library-grid > .empty-small { grid-column: 1 / -1; }
+.policy-directory-card { display: flex; flex-direction: column; margin: 0; min-width: 0; }
+.policy-directory-card h2 { overflow-wrap: anywhere; margin-bottom: 8px; }
+.policy-directory-card .policy-meta { color: var(--muted); overflow-wrap: anywhere; }
+.policy-library-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: auto; padding-top: 10px; }
+.policy-library-actions [aria-pressed="true"] { background: var(--surface); }
+.policy-library-actions p { width: 100%; margin: 0; overflow-wrap: anywhere; }
+.policy-library-actions p:empty { display: none; }
+.policy-library-actions code { display: block; font-size: 11px; }
+@media (max-width: 600px) {
+  .policy-library-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 1000px) {
   .admin-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }

@@ -7,7 +7,7 @@ import{build}from'esbuild';
 import{JSDOM,VirtualConsole}from'jsdom';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const html=await readFile(path.join(root,'index.html'),'utf8');
-const mockAuth=`export const Log={NONE:0,setLevel(){}};export class WebStorageStateStore{};export class UserManager{constructor(){this.events={addUserLoaded(){},addAccessTokenExpired:fn=>window.__expire=fn};}async getUser(){return window.__fixtureUser;}async removeUser(){window.__fixtureUser=null;}async revokeTokens(){}stopSilentRenew(){}async signinRedirect(){window.__signInRequested=true;}}`;
+const mockAuth=`export const Log={NONE:0,setLevel(){}};export class WebStorageStateStore{};export class UserManager{constructor(){this.events={addUserLoaded(){},addAccessTokenExpired:fn=>window.__expire=fn};}async getUser(){return window.__fixtureUser;}async removeUser(){window.__fixtureUser=null;}async revokeTokens(){}stopSilentRenew(){}async signinRedirect(options){window.__signInRequested=true;window.__signInOptions=options;}}`;
 const built=await build({absWorkingDir:root,entryPoints:['src/main.js'],bundle:true,write:false,format:'iife',loader:{'.css':'empty'},plugins:[{name:'unit-auth-only',setup(b){b.onResolve({filter:/^oidc-client-ts$/},()=>({path:'unit-auth',namespace:'unit'}));b.onLoad({filter:/.*/,namespace:'unit'},()=>({contents:mockAuth,loader:'js'}));}}]});
 const script=built.outputFiles[0].text;
 const json=(body,status=200)=>({ok:status>=200&&status<300,status,json:async()=>body});
@@ -397,4 +397,56 @@ test('PDF page response cannot restore private text after session expiry', async
   assert.equal(f.$('document-text-dialog').open,false);
   assert.equal(f.$('document-text-content').textContent,'');
   assert.equal(f.$('copy-document-page').disabled,true);
+});
+
+test('policy search saves only a shortcut and opens the latest published text', async t => {
+  const original = {policy_id:'WARRANTY',title:'Bảo hành phụ kiện',category:'Bảo hành',content:'A'.repeat(350)};
+  const f = await fixture(t, {
+    view:'policies',
+    override:key => {
+      if (key === '/policies') return json({policies:[original],next_token:null});
+      if (key === '/policies/WARRANTY') return json({...original,content:'Nội dung công bố mới'});
+    },
+  });
+  f.$('policy-keyword').value = 'bảo hành';
+  f.submit('policy-form');
+  await until(() => f.$('policy-results').querySelector('.policy-directory-card'));
+  assert.equal(f.$('policy-results').textContent.includes(original.content), false);
+  f.$('policy-results').querySelector('[data-saved-policy]').click();
+  assert.equal(f.$('saved-policy-count').textContent, '1');
+  assert.deepEqual(JSON.parse(f.w.localStorage.getItem('policy-assistant:saved-policies:synthetic-user')),
+    [{policy_id:'WARRANTY',title:'Bảo hành phụ kiện'}]);
+  f.click('saved-policies');
+  [...f.$('policy-results').querySelectorAll('button')].find(b => b.textContent === 'Đọc chính sách').click();
+  await until(() => f.$('policy-dialog-content').textContent.includes('Nội dung công bố mới'));
+  let copied;
+  Object.defineProperty(f.w.navigator, 'clipboard', {value:{writeText:async value => { copied=value; }}});
+  [...f.$('policy-dialog-content').querySelectorAll('button')].find(b => b.textContent === 'Sao chép liên kết').click();
+  await until(() => copied);
+  assert.equal(copied, 'https://ui.fixture.invalid/#policy/WARRANTY');
+  f.w.__expire();
+  assert.equal(f.$('saved-policy-count').textContent,'0');
+  assert.equal(f.$('policy-dialog-content').textContent,'');
+});
+
+test('a shared policy route opens the correct published policy', async t => {
+  const f = await fixture(t, {
+    view:'policy/RETURNS',
+    override:key => key === '/policies/RETURNS'
+      ? json({policy_id:'RETURNS',title:'Đổi trả',content:'Chính sách đang công bố.'}) : undefined,
+  });
+  await until(() => f.$('policy-dialog-content').textContent.includes('Chính sách đang công bố.'));
+  assert.equal(f.w.location.hash, '#policy/RETURNS');
+  assert.equal(f.$('policy-dialog').open, true);
+  assert.equal(f.$('view-label').textContent, 'Chính sách chung');
+});
+
+
+test('a guest can carry a shared policy through sign-in', async t => {
+  const f = await fixture(t, {guest:true,view:'policy/RETURNS'});
+  await until(() => f.$('policy-library-status').textContent.includes('Đăng nhập'));
+  f.click('guest-signin');
+  await until(() => f.w.__signInRequested);
+  assert.equal(f.w.__signInOptions.state.policy, 'RETURNS');
+  assert.equal(f.calls.length, 0);
 });

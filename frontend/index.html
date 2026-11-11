@@ -36,7 +36,14 @@
 </select></label>
 <p id="document-results" class="small muted" role="status"></p>
 </div><div class="table-wrap" tabindex="0" role="region" aria-label="Danh sách PDF của tôi"><table><caption class="sr-only">PDF riêng của tài khoản: tên, trạng thái xử lý, số trang và thao tác.</caption><thead><tr><th>Tài liệu</th><th>Trạng thái</th><th>Trang</th><th>Thao tác</th></tr></thead><tbody id="documents-list"><tr><td colspan="4" class="empty-small">Đăng nhập để bắt đầu.</td></tr></tbody></table></div><button id="more-documents" class="secondary hidden">Xem thêm</button></section>
-<section class="hidden" data-panel="policies"><div class="page-heading"><div><div class="eyebrow">KIẾN THỨC CHUNG</div><h1>Chính sách<span>.</span></h1><p>Nội dung quản trị viên công bố cho các tài khoản.</p></div></div><form id="policy-form" class="search-box"><label class="sr-only" for="policy-keyword">Từ khóa chính sách</label><input id="policy-keyword" maxlength="200" placeholder="Từ khóa, ví dụ: hoàn tiền" required><button type="submit">Tìm kiếm</button></form><div id="policy-results"><p class="empty-small">Nhập từ khóa để tìm chính sách.</p></div><button class="secondary hidden" id="more-policies">Trang tiếp theo</button></section>
+<section class="hidden" data-panel="policies"><div class="page-heading"><div><div class="eyebrow">KIẾN THỨC CHUNG</div><h1>Chính sách<span>.</span></h1><p>Nội dung quản trị viên công bố cho các tài khoản.</p></div></div><div class="policy-library-bar" id="policy-library-bar">
+<button type="button" class="secondary" id="browse-policies" data-auth-control aria-pressed="true">Tìm chính sách</button>
+<button type="button" class="secondary" id="saved-policies" data-auth-control aria-pressed="false">Đã lưu <span id="saved-policy-count">0</span></button>
+</div>
+<form id="policy-form" class="search-box"><label class="sr-only" for="policy-keyword">Từ khóa chính sách</label><input id="policy-keyword" maxlength="200" placeholder="Ví dụ: bảo hành, đổi trả"><button type="submit">Tìm kiếm</button></form>
+<p id="policy-library-status" class="small muted" role="status"></p>
+<div id="policy-results" class="policy-library-grid"><p class="empty-small">Nhập từ khóa để tìm chính sách đang công bố.</p></div>
+<button class="secondary hidden" type="button" id="more-policies">Tải thêm chính sách</button></section>
 <section class="hidden" data-panel="history"><div class="page-heading"><div><div class="eyebrow">NHỮNG ĐIỀU ĐÃ LÀM RÕ</div><h1>Lịch sử hỏi đáp<span>.</span></h1><p>Lưu tối đa 30 ngày. Bạn có thể xóa từng cuộc hỏi đáp.</p></div><button id="refresh-history" data-auth-control class="secondary">Làm mới ↻</button></div><div id="history-toolbar" class="history-toolbar hidden">
 <label for="history-filter">Tìm trong lịch sử<input id="history-filter" data-auth-control type="search" maxlength="200" placeholder="Câu hỏi, câu trả lời hoặc tên nguồn"></label>
 <label for="history-source-filter">Trích dẫn<select id="history-source-filter" data-auth-control><option value="all">Tất cả</option><option value="grounded">Có nguồn</option><option value="unanswered">Thiếu nguồn</option></select></label>

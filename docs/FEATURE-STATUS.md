@@ -12,7 +12,7 @@ Phạm vi sản phẩm là trợ lý chính sách và hỗ trợ khách hàng ch
 | Chất lượng AI | Đánh giá có cấu trúc, đổi/rút đánh giá, dashboard tổng hợp và xuất JSON; không lộ câu hỏi/PDF, không đồng nhất tỷ lệ nguồn với độ đúng |
 | Hỏi đáp | Xếp hạng từ khóa trên văn bản có chuẩn hóa tiếng Việt, chọn phạm vi nguồn, Global Claude Haiku 5.5 trả lời tiếng Việt có trích dẫn, từ chối khi thiếu bằng chứng |
 | Lịch sử | Riêng theo tài khoản, tối đa 30 ngày. Tìm và lọc trong các trang đã tải, mở từng cuộc, dùng lại câu hỏi, sao chép câu trả lời kèm nguồn, xuất JSON và xóa từng cuộc |
-| Chính sách | Tìm kiếm nội dung công bố; quản trị danh mục, bản nháp, chỉnh sửa, công bố, ẩn/khôi phục, bỏ nháp, chống ghi đè và nhật ký |
+| Chính sách | Tìm và đọc nội dung công bố, lưu tối đa 30 lối tắt theo tài khoản trên thiết bị, sao chép liên kết mở đúng chính sách; quản trị danh mục, bản nháp, chỉnh sửa, công bố, ẩn/khôi phục, bỏ nháp, chống ghi đè và nhật ký |
 | Hiệu lực chính sách | Ngày áp dụng UTC+7, lọc bản chưa/hết hiệu lực, sửa ngày hỏng, kiểm tra lại dữ kiện nguồn trước lưu câu trả lời; giới hạn point-in-time được nêu rõ |
 | Hỗ trợ | Đồng ý chia sẻ, tạo/theo dõi/phản hồi/đóng/xóa yêu cầu; nhân viên xử lý theo trạng thái/ưu tiên, lọc theo loại và mã đơn khách tự cung cấp; xuất JSON; lưu tối đa 90 ngày |
 | Phối hợp hỗ trợ | Tự nhận/bỏ nhận/tiếp quản có lý do; lọc người nhận; ghi chú nội bộ tách hội thoại khách; revision chung và lịch sử phân công giới hạn |
