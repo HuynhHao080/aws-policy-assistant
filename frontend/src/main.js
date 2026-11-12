@@ -1225,7 +1225,12 @@ document.querySelector('.admin-tabs').addEventListener('keydown',event=>{const t
 $('guest-signin').onclick=()=>$('auth-button').click();
 $('close-policy-dialog').onclick=()=>$('policy-dialog').close();
 document.addEventListener('click',event=>{const nav=event.target.closest('[data-view]');if(nav)guard(nav,()=>navigate(nav.dataset.view,{focus:true}));const suggestion=event.target.closest('[data-question]');if(suggestion){if(!state.user){notify('Đăng nhập để đặt câu hỏi và xem nguồn trả lời.',true);$('auth-button').focus();return;}guard(suggestion, () => putQuestionInComposer(suggestion.dataset.question));}});
-$('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else await manager.signinRedirect({state:{policy:policyLinkRoute(location.hash.slice(1))}});}));
+$('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{if(!manager)throw new Error('Đăng nhập chưa được cấu hình.');if(signingOut)return;if(state.user){if(hasUnsavedWork()&&!confirm('Đăng xuất và bỏ các nội dung chưa gửi hoặc chưa lưu?'))return;signingOut=true;manager.stopSilentRenew();clearPrivateState();try{await manager.revokeTokens(['refresh_token']);}catch{}await manager.removeUser();location.assign(`${config.authDomain}/logout?client_id=${encodeURIComponent(config.clientId)}&logout_uri=${encodeURIComponent(location.origin+'/')}`);}else {
+    const requested = location.hash.slice(1);
+    const policy = policyLinkRoute(requested);
+    const view = Object.hasOwn(labels, requested) ? requested : 'assistant';
+    await manager.signinRedirect({state:{policy, view}});
+  }}));
 $('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
   needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
@@ -1334,11 +1339,24 @@ async function start(){
   const issuer=`https://cognito-idp.${config.region}.amazonaws.com/${config.userPoolId}`;
   manager=new UserManager({authority:issuer,client_id:config.clientId,redirect_uri:location.origin+'/',post_logout_redirect_uri:location.origin+'/',response_type:'code',scope:'openid email profile',loadUserInfo:false,automaticSilentRenew:true,userStore:new WebStorageStateStore({store:sessionStorage}),stateStore:new WebStorageStateStore({store:sessionStorage}),metadata:{issuer,authorization_endpoint:config.authDomain+'/oauth2/authorize',token_endpoint:config.authDomain+'/oauth2/token',jwks_uri:issuer+'/.well-known/jwks.json',userinfo_endpoint:config.authDomain+'/oauth2/userInfo',revocation_endpoint:config.authDomain+'/oauth2/revoke'}});
   manager.events.addUserLoaded(user=>{if(!signingOut)state.user=user;});manager.events.addAccessTokenExpired(()=>{manager.stopSilentRenew();clearPrivateState();manager.removeUser().catch(()=>{});notify('Phiên đăng nhập hết hạn. Hãy đăng nhập lại.',true);});
-  if(new URLSearchParams(location.search).has('code')||new URLSearchParams(location.search).has('error')){try{state.user=await manager.signinRedirectCallback();}catch{history.replaceState(null,'',location.pathname);throw new Error('Đăng nhập chưa hoàn tất hoặc liên kết đã hết hạn. Hãy thử đăng nhập lại.');}const linked = policyLinkRoute('policy/' + (state.user?.state?.policy || ''));history.replaceState(null,'',location.pathname+(linked ? '#policy/'+linked : ''));}
-  else state.user=await manager.getUser();
+  const query = new URLSearchParams(location.search);
+  let callbackFailed = false;
+  if (query.has('code') || query.has('error')) {
+    try {
+      state.user = await manager.signinRedirectCallback();
+    } catch {
+      state.user = null;
+      callbackFailed = true;
+    }
+    const saved = state.user?.state;
+    const linked = policyLinkRoute('policy/' + (saved?.policy || ''));
+    const view = typeof saved?.view === 'string' && Object.hasOwn(labels, saved.view) ? saved.view : 'assistant';
+    history.replaceState(null, '', location.pathname + (linked ? '#policy/' + linked : '#' + view));
+  } else state.user = await manager.getUser();
   api=createApi(config.apiBase,async()=>{if(state.user?.expired){const epoch=sessionEpoch;const user=await manager.signinSilent();if(epoch!==sessionEpoch)return null;state.user=user;}return state.user?.id_token;},fetch,()=>sessionEpoch);
   if(state.user){state.profile=await api('/me');signedIn();try{await loadShopProfile();}catch{if(state.user){$('shop-context').textContent='Chưa tải được thông tin shop. Bạn có thể làm mới tại mục Thông tin shop.';$('shop-context').classList.remove('hidden');}}}
   await navigate(location.hash.slice(1)||'assistant',{historyMode:'replace'});
+  if (callbackFailed) notify('Đăng nhập chưa hoàn tất hoặc phiên xác thực đã hết hạn. Bạn có thể thử lại.', true);
 }
 window.addEventListener('pageshow',async event=>{if(!event.persisted||!manager)return;if(signingOut){await manager.removeUser();clearPrivateState();location.reload();return;}const stored=await manager.getUser();if(!stored||stored.expired)clearPrivateState();else if(stored.profile.sub!==state.user?.profile.sub)location.reload();});
 start().catch(fail);

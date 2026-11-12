@@ -7,15 +7,15 @@ import{build}from'esbuild';
 import{JSDOM,VirtualConsole}from'jsdom';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const html=await readFile(path.join(root,'index.html'),'utf8');
-const mockAuth=`export const Log={NONE:0,setLevel(){}};export class WebStorageStateStore{};export class UserManager{constructor(){this.events={addUserLoaded(){},addAccessTokenExpired:fn=>window.__expire=fn};}async getUser(){return window.__fixtureUser;}async removeUser(){window.__fixtureUser=null;}async revokeTokens(){}stopSilentRenew(){}async signinRedirect(options){window.__signInRequested=true;window.__signInOptions=options;}}`;
+const mockAuth=`export const Log={NONE:0,setLevel(){}};export class WebStorageStateStore{};export class UserManager{constructor(){this.events={addUserLoaded(){},addAccessTokenExpired:fn=>window.__expire=fn};}async getUser(){return window.__fixtureUser;}async signinRedirectCallback(){if(window.__callbackFailed)throw new Error('Expired callback');return window.__fixtureUser;}async removeUser(){window.__fixtureUser=null;}async revokeTokens(){}stopSilentRenew(){}async signinRedirect(options){window.__signInRequested=true;window.__signInOptions=options;}}`;
 const built=await build({absWorkingDir:root,entryPoints:['src/main.js'],bundle:true,write:false,format:'iife',loader:{'.css':'empty'},plugins:[{name:'unit-auth-only',setup(b){b.onResolve({filter:/^oidc-client-ts$/},()=>({path:'unit-auth',namespace:'unit'}));b.onLoad({filter:/.*/,namespace:'unit'},()=>({contents:mockAuth,loader:'js'}));}}]});
 const script=built.outputFiles[0].text;
 const json=(body,status=200)=>({ok:status>=200&&status<300,status,json:async()=>body});
 async function until(check){for(let i=0;i<120;i++){if(check())return;await new Promise(r=>setTimeout(r,2));}throw new Error('Timed out waiting for synthetic DOM state');}
-async function fixture(t,{admin=false,guest=false,view='assistant',override=()=>undefined,confirm=()=>false}={}){
+async function fixture(t,{admin=false,guest=false,view='assistant',callback=null,override=()=>undefined,confirm=()=>false}={}){
  const errors=[];const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
- const dom=new JSDOM(html,{url:'https://ui.fixture.invalid/#'+view,runScripts:'outside-only',virtualConsole:vc});t.after(()=>dom.window.close());
- const w=dom.window;w.__fixtureUser=guest?null:{id_token:'unit-fixture-not-a-jwt',expired:false,profile:{sub:'synthetic-user'}};w.confirm=confirm;w.prompt=()=>null;w.scrollTo=options=>{w.__lastScroll=options;};
+ const dom=new JSDOM(html,{url:'https://ui.fixture.invalid/'+(callback?'?code=synthetic&state=synthetic':'')+'#'+view,runScripts:'outside-only',virtualConsole:vc});t.after(()=>dom.window.close());
+ const w=dom.window;w.__fixtureUser=guest?null:{id_token:'unit-fixture-not-a-jwt',expired:false,profile:{sub:'synthetic-user'}};w.__callbackFailed=callback==='failed';if(callback&&w.__fixtureUser)w.__fixtureUser.state=callback;w.confirm=confirm;w.prompt=()=>null;w.scrollTo=options=>{w.__lastScroll=options;};
  w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
  const timer=w.setTimeout.bind(w);w.setTimeout=(fn,ms,...args)=>timer(fn,ms===2500?0:ms,...args);
  const calls=[];w.fetch=async(url,options={})=>{
@@ -694,4 +694,28 @@ test('answer parts show what is missing and open the source for the supported cl
   assert.equal(area.querySelectorAll('.answer-part')[1].querySelector('button'), null);
   area.querySelector('.answer-part button').click();
   assert.match(f.$('policy-dialog-content').textContent, /Củ sạc: 12 tháng/);
+});
+
+
+test('sign-in returns to the requested app view and removes the callback query', async t => {
+  const guest = await fixture(t, {guest:true,view:'support'});
+  guest.click('guest-signin');
+  await until(() => guest.w.__signInRequested);
+  assert.equal(guest.w.__signInOptions.state.view, 'support');
+
+  const returned = await fixture(t, {callback:{view:'support'}});
+  await until(() => returned.calls.some(call => call.key === '/tickets'));
+  assert.equal(returned.w.location.hash, '#support');
+  assert.equal(returned.w.location.search, '');
+});
+
+test('expired sign-in callback returns to a usable guest view', async t => {
+  const f = await fixture(t, {guest:true,callback:'failed'});
+  await until(() => f.$('notice').textContent.includes('xác thực đã hết hạn'));
+  assert.equal(f.w.location.search, '');
+  assert.equal(f.w.location.hash, '#assistant');
+  assert.equal(f.$('question-form').hasAttribute('inert'), true);
+  f.click('guest-signin');
+  await until(() => f.w.__signInRequested);
+  assert.deepEqual(f.calls, []);
 });
