@@ -1,15 +1,16 @@
 :root {
-  --paper: #f4f5ee;
-  --white: #fffefa;
+  --paper: #f4f6f1;
+  --white: #fff;
   --ink: #1b3028;
   --green: #194f3d;
-  --line: #d4ddd2;
+  --line: #cedbd2;
   --muted: #52645a;
   --sidebar: #142e27;
   --sidebar-text: #e0ebdf;
   --sidebar-active: #2e584a;
   --surface: #edf2e8;
-  --radius: 12px;
+  --radius: 15px;
+  --shadow: 0 2px 3px #163d2510, 0 12px 30px #163d2508;
 }
 
 .sidebar { background: var(--sidebar); color: var(--sidebar-text); border: 0; padding: 28px 16px 20px; }
@@ -57,10 +58,11 @@
 .account-chip #account-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workspace main { padding-top: clamp(20px, 4vw, 42px); }
 .page-heading {
-  padding: clamp(15px, 2.6vw, 26px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: linear-gradient(105deg, #e9f0e4, #f7f7ed);
+  padding: 0 0 clamp(14px, 2.4vw, 24px);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
   margin-bottom: clamp(16px, 3vw, 28px);
 }
 .page-heading h1 { margin: 0 0 6px; font-size: clamp(1.85rem, 3.7vw, 3.2rem); letter-spacing: -.045em; }
@@ -68,7 +70,7 @@
 .page-heading > div { min-width: 0; }
 .page-heading > button { flex-shrink: 0; }
 .shop-context { border-radius: 8px; }
-.guest-welcome { background: var(--surface); border-radius: var(--radius); }
+.guest-welcome { background: #e5efe7; border: 1px solid #c6dacb; border-radius: var(--radius); gap: 1rem; }
 .guest-welcome h2 { color: var(--ink); }
 
 .editor-card, .policy-card, .ticket-list-panel, .table-wrap,
@@ -83,7 +85,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.source-panel { background: var(--surface); }
+.source-panel { background: var(--white); box-shadow: var(--shadow); }
 .search-box { align-items: stretch; gap: 10px; }
 .table-wrap { scrollbar-width: thin; }
 thead { background: var(--surface); color: var(--ink); }
@@ -118,7 +120,7 @@ thead { background: var(--surface); color: var(--ink); }
 }
 .admin-tabs button { min-width: 0; min-height: 44px; white-space: normal; padding: 6px; line-height: 1.35; border-radius: 7px; }
 .admin-tabs button[aria-selected="true"] { background: var(--green); color: #fffefa; }
-.usage-card { background: var(--white); border-radius: var(--radius); }
+.usage-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); }
 .usage-card span { color: var(--muted); font-size: 12px; }
 .usage-card strong { color: var(--ink); overflow-wrap: anywhere; }
 .history-card { padding: 0; }
@@ -274,3 +276,87 @@ footer { margin-top: 36px; }
 }
 .answer-part .answer-text { margin: .25rem 0; }
 .answer-part button { margin-inline-end: .35rem; }
+
+
+/* Shared workspace surfaces */
+.workspace main { max-width: 1360px; }
+.workspace > header { border-bottom: 1px solid var(--line); }
+.page-heading p { max-width: 65ch; color: var(--muted); font-size: .94rem; }
+.editor-card, .policy-directory-card, .ticket-list-panel, .history-card, .table-wrap {
+  box-shadow: var(--shadow);
+}
+[data-panel] h2 { color: var(--ink); }
+.question-label {
+  display: block;
+  margin-bottom: .65rem;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .88rem;
+}
+.assistant-main .composer { border-color: #a2baaa; box-shadow: var(--shadow); }
+.assistant-main .composer textarea { min-height: 6rem; padding: .65rem .75rem; background: var(--paper); border-radius: 9px; }
+.assistant-main .composer > div:last-child { margin-top: .7rem; }
+#ask-button { min-height: 44px; padding-inline: 1.15rem; }
+.source-panel h2 { padding-bottom: .75rem; margin-bottom: .9rem; }
+.source-panel select { min-height: 42px; font-size: .84rem; }
+.source-option { background: var(--paper); border-radius: 8px; padding-inline: .55rem; }
+.assistant-main .answer-area { box-shadow: var(--shadow); }
+.empty-intro { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.empty-intro h2 { grid-column: 1 / -1; margin-bottom: .2rem; }
+.assistant-main .empty-intro button {
+  margin: 0;
+  min-height: 52px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--green);
+  border-radius: 9px;
+  font-size: .83rem;
+  line-height: 1.45;
+}
+.assistant-main .empty-intro button:hover { background: #e3eee5; }
+.question-bubble { background: #e5efe7; border-radius: 12px; font-size: .9rem; }
+.answer-part { border-radius: 8px; background: var(--paper); border-inline-start-color: #719581; }
+.citation-card { min-height: 44px; background: #f3f7f3; border-color: var(--line); border-radius: 9px; }
+.citation-card strong { font-size: .82rem; font-weight: 650; }
+.upload-zone { border-style: dashed; border-color: #90ad9a; }
+.history-toolbar { background: #eaf1eb; }
+.history-card[open] > summary { background: #eaf1eb; border-radius: 14px 14px 0 0; }
+.support-row, .admin-policy-row { padding-inline: .65rem; }
+.support-row:nth-of-type(odd), .admin-policy-row:nth-of-type(odd) { background: #f4f7f3; }
+.support-row small, .admin-policy-row small { font-size: .76rem; }
+#shop-profile {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+#shop-profile > :not(.shop-detail) { grid-column: 1 / -1; justify-self: start; margin-block: 0; }
+#shop-profile .shop-detail {
+  margin: 0;
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow-wrap: anywhere;
+}
+#shop-profile .shop-detail > a { display: block; margin-top: 6px; color: var(--green); text-underline-offset: 3px; }
+.danger-zone { box-shadow: none; }
+.admin-tabs { background: #e6efe8; }
+.admin-tabs button:not([aria-selected="true"]):hover { background: #d6e5d9; color: var(--green); }
+dialog .ticket-dialog-heading { background: var(--paper); }
+@media (max-width: 800px) {
+  .workspace main { padding-block-start: 22px; }
+  .source-panel select { font-size: 16px; }
+  .sidebar nav button { min-height: 44px; }
+}
+@media (max-width: 520px) {
+  .empty-intro, #shop-profile { grid-template-columns: minmax(0, 1fr); }
+  .assistant-main .composer > div:last-child { align-items: stretch; flex-direction: column; }
+  .assistant-main .composer-meta { max-width: none; }
+  #ask-button { align-self: stretch; }
+  .answer-actions button, .policy-library-actions button { min-height: 44px; }
+}
+
+/* Shop publication context belongs with the catalogue and assistant. */
+main:not(:has([data-panel="assistant"]:not(.hidden), [data-panel="policies"]:not(.hidden))) #shop-context {
+  display: none;
+}

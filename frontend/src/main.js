@@ -1016,7 +1016,7 @@ async function loadShopProfile(){
     : 'Shop chưa công bố thông tin vận hành. Nội dung DEMO chỉ để kiểm thử.';
   $('shop-context').classList.remove('hidden');
 }
-async function loadShopEditor(){if(shopEditor.dirty)return;fillShopEditor(await shopEditor.load());}
+async function loadShopEditor(){if(shopEditor.dirty||shopEditor.busy)return;fillShopEditor(await shopEditor.load());}
 for(const key of [...Object.keys(shopFields),'mode'])$('shop-'+key).addEventListener('input',()=>{$('shop-confirm').checked=false;shopEditor.markDirty();});
 $('shop-form').onsubmit=event=>{event.preventDefault();guard($('save-shop'),async()=>{fillShopEditor(await shopEditor.save(readShopForm()));notify('Đã lưu nháp thông tin shop. Chưa công bố cho khách.');});};
 $('reload-shop').onclick=()=>guard($('reload-shop'),async()=>{if(shopEditor.dirty&&!confirm('Bỏ thay đổi chưa lưu để tải lại thông tin shop?'))return;fillShopEditor(await shopEditor.load());});
