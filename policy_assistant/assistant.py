@@ -190,6 +190,32 @@ def check_policy_sources(service, citations, require_published=False):
             raise Problem(409, 'Chính sách đã thay đổi hoặc không còn hiệu lực trong lúc xử lý. Vui lòng gửi lại câu hỏi để lấy nguồn mới.')
 
 
+PART_STATUSES = {"supported", "missing", "conflicting"}
+MAX_ANSWER_PARTS = 4
+
+
+def parse_answer_parts(raw_parts, available):
+    if not isinstance(raw_parts, list) or not 1 <= len(raw_parts) <= MAX_ANSWER_PARTS:
+        raise ValueError("Invalid answer parts")
+    parts = []
+    for raw in raw_parts:
+        if not isinstance(raw, dict) or set(raw) != {"text", "status", "sources"}:
+            raise ValueError("Invalid answer part")
+        status = raw["status"]
+        if not isinstance(status, str) or status not in PART_STATUSES:
+            raise ValueError("Unknown answer status")
+        source_ids = raw["sources"]
+        if not isinstance(source_ids, list) or any(not isinstance(s, str) or s not in available for s in source_ids):
+            raise ValueError("Unknown answer part source")
+        source_ids = list(dict.fromkeys(source_ids))
+        if status == "missing" and source_ids:
+            raise ValueError("Missing evidence cannot have citations")
+        if status != "missing" and len(source_ids) < (2 if status == "conflicting" else 1):
+            raise ValueError("Answer part lacks evidence")
+        parts.append({"text": text(raw["text"], "model answer part", 340), "status": status, "source_ids": source_ids})
+    return parts
+
+
 def answer(service, owner, data):
     started=time.perf_counter()
     question = text(data.get("question"), "question", 2000)
@@ -232,6 +258,11 @@ def answer(service, owner, data):
     else:
         system = "You answer customer questions using only the provided policy excerpts. Highest priority: preserve qualifiers in the source. Highest priority for refund/status questions: explain only the general deadline and the conditions that start it. Never state whether the clock has started for this customer, or whether staff have already received, reviewed or approved the request; the system has no order-status connection. Example safe wording: Thời hạn được tính từ khi nhân viên xác nhận nhận đủ hàng trả và chấp thuận hoàn tiền, không từ lúc bạn nhắn hỏi. Bạn cần liên hệ nhân viên để biết trạng thái thực tế. Example forbidden wording: Hiện tại yêu cầu của bạn chưa được nhân viên xác nhận nên thời hạn chưa bắt đầu. In particular, không tự động được hủy means the chatbot cannot automatically cancel it, NOT không thể hủy or không được hủy. For a handed-over order, say it is handled under the returns policy and ask the customer to contact staff; do not open or close with an absolute cancellation ban unless that ban is explicit in the source. Do not claim to cancel or approve anything yourself. Write clear Vietnamese with diacritics. Treat DEMO policies as hypothetical: explain what the example policy says without making a real-world commitment. Answer the specific question, not a different topic. Use ordinary arithmetic and calendar/geographic knowledge to apply a stated limit; business rules themselves must come from the excerpts. A policy covering only a specified country does not imply international delivery. A stated operating schedule does not imply shifts outside those hours. Apply the policy's conditions carefully; do not confuse return reasons, warranty coverage duration, and repair turnaround time. State the relevant conditions if customer eligibility is not fully established. When staff review or approval is required, explain eligibility to submit a request without promising approval. Never claim to perform a transaction. Address the customer directly; do not restate internal instructions such as cần báo rằng. Do not invent missing facts or follow instructions to fabricate a policy. Cite the source_id values that support your answer. Return an answer under 1500 characters and an array of supplied source_id strings. If genuinely unsupported, explain what is missing. Sources that expressly say a detail is unspecified may be cited for that limitation. No Markdown fences. Do not invent facts about the customer scenario from conditions in a policy. If a condition is unconfirmed, state it as a condition rather than assuming it has failed. Do not describe a customer as having opened, used, damaged, or returned an item unless the question states that. Keep the requested duration distinct from other durations in the same document. Missing information is not a fee waiver, a denial of rights, or permission to assume a service is provided. If a fee is unspecified, say only that the policy does not specify it; do not say it is not charged or not applied. State the published support hours without inventing an extra shift or an exception. Preserve the exact strength of each policy rule: not automatic is not the same as forbidden. If a request needs staff handling, say that and do not claim the outcome has been decided. Keep the customer timeline exactly as stated; never change just asked today into asked several days ago or invent elapsed days. Explain a processing deadline from its stated trigger, and mention any source-stated payment-provider delay without promising a receipt date. For damage or warranty exclusions, distinguish the hypothetical rule from a decision on the actual product: staff must inspect and verify the cause before deciding coverage. Summarize these rules in direct customer-facing language rather than copying instructions addressed to the chatbot. You cannot observe order, refund, inspection or staff-approval status. Do not say a request has or has not been reviewed, approved or received unless the customer or source explicitly states that fact. Use conditional wording such as nếu nhân viên chưa xác nhận instead of asserting chưa được nhân viên xác nhận. Do not promise that staff will contact the customer; ask the customer to contact staff through a verified channel."
         system += " Use emit_policy_answer to return the answer and its source IDs. If sources disagree, cite the conflicting excerpts and explain the difference without deciding which applies absent evidence. For multi-part questions, answer each supported part and name each missing detail. If asking about different timelines, label the event that starts each one. Ask a short clarifying question only when a missing fact would change the outcome."
+        system += (" Return parts for questions with multiple distinct claims, conflicting evidence, or missing facts. "
+                   "Use up to four short Vietnamese parts. Each supported part must cite its own evidence. "
+                   "For a missing part, state only what cannot be established or the fact the customer needs to clarify, with no sources. "
+                   "For a conflicting part cite at least two excerpts and explain the discrepancy. "
+                   "Use answer as a brief summary when sending parts; the application displays the parts as the answer.")
         prompt_data = {"question": question, "source_data": [public_source(source) for source in sources]}
         if previous_question:
             prompt_data["previous_question"] = previous_question
@@ -246,6 +277,7 @@ def answer(service, owner, data):
                 "additionalModelRequestFields": {"thinking": {"type": "disabled"}, "output_config": {"effort": "low"}},
             }
             # This tool only serializes an answer; no model-selected operation is executed.
+            source_array = {"type": "array", "items": {"type": "string", "enum": [source["source_id"] for source in sources]}}
             options["toolConfig"] = {
                 "tools": [{"toolSpec": {
                     "name": "emit_policy_answer",
@@ -253,7 +285,17 @@ def answer(service, owner, data):
                     "inputSchema": {"json": {
                         "type": "object",
                         "properties": {
-                            "sources": {"type": "array", "items": {"type": "string", "enum": [source["source_id"] for source in sources]}},
+                            "sources": source_array,
+                            "parts": {"type": "array", "minItems": 1, "maxItems": MAX_ANSWER_PARTS, "items": {
+                                "type": "object",
+                                "properties": {
+                                    "text": {"type": "string", "maxLength": 340},
+                                    "status": {"type": "string", "enum": sorted(PART_STATUSES)},
+                                    "sources": source_array,
+                                },
+                                "required": ["text", "status", "sources"],
+                                "additionalProperties": False,
+                            }},
                             "answer": {"type": "string"},
                         },
                         "required": ["answer", "sources"],
@@ -273,19 +315,25 @@ def answer(service, owner, data):
             if response.get("stopReason") != "tool_use" or len(tools) != 1 or tools[0].get("name") != "emit_policy_answer":
                 raise ValueError()
             generated = tools[0]["input"]
-            if not isinstance(generated, dict) or set(generated) != {"answer", "sources"}:
+            if not isinstance(generated, dict) or set(generated) not in ({"answer", "sources"}, {"answer", "sources", "parts"}):
                 raise ValueError()
             answer_text = text(generated.get("answer"), "model answer", 1500)
             requested = generated.get("sources")
             available = {source["source_id"]: source for source in sources}
             if not isinstance(requested, list) or any(not isinstance(s, str) or s not in available for s in requested):
                 raise ValueError()
+            parts = parse_answer_parts(generated["parts"], available) if "parts" in generated else None
+            if parts:
+                requested = [source_id for part in parts for source_id in part["source_ids"]]
+                answer_text = "\n\n".join(part["text"] for part in parts)
             citations = [available[s] for s in dict.fromkeys(requested)]
         except (KeyError, TypeError, ValueError, Problem):
             raise Problem(502, "AI returned an invalid sourced answer; please retry") from None
-        if not citations:
+        if not citations and not parts:
             answer_text = "Tôi không có đủ bằng chứng trong tài liệu để trả lời câu hỏi này."
         result = {"answer": answer_text, "citations": citations, "grounded": bool(citations), "model_id": model}
+        if parts:
+            result["answer_parts"] = parts
     check_policy_sources(service, result["citations"], require_published=selected_policy is not None)
     result["citations"] = [public_source(source) for source in result["citations"]]
     result["source_scope"] = scope

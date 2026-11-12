@@ -438,6 +438,39 @@ function answerScopeLabel(result) {
   return sourceScopeLabels[result.source_scope] || sourceScopeLabels.all;
 }
 
+const answerPartLabels = {
+  supported: 'Có nguồn',
+  missing: 'Cần thêm thông tin',
+  conflicting: 'Nguồn có khác biệt',
+};
+
+function answerWithSourceLabels(result) {
+  if (!result.answer_parts?.length) return result.answer;
+  return result.answer_parts.map(part => [
+    answerPartLabels[part.status],
+    part.text,
+    part.source_ids.length ? `Nguồn ${part.source_ids.join(', ')}` : '',
+  ].filter(Boolean).join('\n')).join('\n\n');
+}
+
+function renderAnswerParts(parts, sources) {
+  const byId = new Map(sources.map(source => [source.source_id, source]));
+  const list = node('ul', undefined, 'answer-parts');
+  for (const part of parts) {
+    const item = node('li', undefined, 'answer-part');
+    item.append(node('strong', answerPartLabels[part.status], 'small'), node('p', part.text, 'answer-text'));
+    for (const sourceId of part.source_ids) {
+      const source = byId.get(sourceId);
+      if (!source) continue;
+      const action = button(sourceId, () => openCitation(source), 'secondary');
+      action.setAttribute('aria-label', `Xem nguồn ${citationTitle(source)}`);
+      item.append(action);
+    }
+    list.append(item);
+  }
+  return list;
+}
+
 function downloadAnswer(question, result, sources) {
   const citations = sources.map(source => [
     citationTitle(source),
@@ -447,7 +480,7 @@ function downloadAnswer(question, result, sources) {
   const content = [
     'Policy Assistant',
     'Câu hỏi\n' + question,
-    'Câu trả lời\n' + result.answer,
+    'Câu trả lời\n' + answerWithSourceLabels(result),
     'Phạm vi nguồn: ' + answerScopeLabel(result),
     ...(citations.length ? ['Đoạn trích tại thời điểm trả lời', ...citations] : ['Chưa đủ nguồn tham khảo']),
   ].join('\n\n');
@@ -542,11 +575,15 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
   if (!inHistory) {
     target.replaceChildren(node('div', question, 'question-bubble'));
   }
-  target.append(node('div', result.grounded ? 'Có nguồn tham khảo' : 'Chưa đủ thông tin', 'answer-label'),
-    node('p', result.answer, 'answer-text'),
+  const parts = result.answer_parts;
+  const sources = result.citations || [];
+  const label = result.grounded
+    ? parts?.some(part => part.status === 'missing') ? 'Có nguồn cho một phần câu hỏi' : 'Có nguồn tham khảo'
+    : 'Chưa đủ thông tin';
+  target.append(node('div', label, 'answer-label'),
+    parts?.length ? renderAnswerParts(parts, sources) : node('p', result.answer, 'answer-text'),
     node('small', 'Nguồn: ' + answerScopeLabel(result), 'small muted'));
   renderFeedback(result,target);
-  const sources = result.citations || [];
   for (const source of sources) {
     const card = button('', () => openCitation(source), 'citation-card');
     card.append(node('strong', citationTitle(source)));
@@ -559,7 +596,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
     if (!navigator.clipboard?.writeText) throw new Error('Trình duyệt chưa cấp quyền sao chép. Bạn có thể chọn và sao chép văn bản.');
     const epoch = sessionEpoch;
     const citations = sources.map(source => `${citationTitle(source)}\n${source.excerpt || ''}`);
-    await navigator.clipboard.writeText([result.answer, ...(citations.length ? ['Nguồn tham khảo', ...citations] : [])].join('\n\n'));
+    await navigator.clipboard.writeText([answerWithSourceLabels(result), ...(citations.length ? ['Nguồn tham khảo', ...citations] : [])].join('\n\n'));
     if (epoch === sessionEpoch) notify(citations.length ? 'Đã sao chép câu trả lời và các nguồn đi kèm.' : 'Đã sao chép câu trả lời.');
   }, 'secondary'));
   actions.append(button('Tải câu trả lời (.txt)', () => downloadAnswer(question, result, sources), 'secondary'));

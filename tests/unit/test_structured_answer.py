@@ -40,3 +40,37 @@ def test_invalid_or_unexpected_model_output_is_rejected_without_history(services
     assert code==502 and result["error"]=="Bad gateway"
     assert "invalid sourced answer" in result["message"]
     assert request("/conversations")[1]["conversations"]==[]
+
+
+def test_multi_part_answer_preserves_only_verified_source_links(services, ai, monkeypatch):
+    data = ready(services)
+    monkeypatch.setattr(ai, "converse", lambda **_: response({
+        "answer": "Model summary is not used.",
+        "sources": ["S1"],
+        "parts": [
+            {"text": "The refund deadline comes from the PDF.", "status": "supported", "sources": ["S1"]},
+            {"text": "The shipping fee is unspecified.", "status": "missing", "sources": []},
+        ],
+    }))
+    code, result = request("/ask", "POST", data={"question": "Refund deadline and shipping fee?", "document_ids": [data["doc_id"]]})
+    assert code == 200 and result["grounded"]
+    assert [part["source_ids"] for part in result["answer_parts"]] == [["S1"], []]
+    assert "Model summary" not in result["answer"]
+    assert result["citations"][0]["source_id"] == "S1"
+    assert request("/conversations")[1]["conversations"][0]["answer_parts"] == result["answer_parts"]
+
+
+@pytest.mark.parametrize(("status", "source_ids"), [
+    ("supported", []),
+    ("supported", ["UNKNOWN"]),
+    ("missing", ["S1"]),
+    ("conflicting", ["S1", "S1"]),
+])
+def test_invalid_part_evidence_is_rejected(services, ai, monkeypatch, status, source_ids):
+    data = ready(services)
+    monkeypatch.setattr(ai, "converse", lambda **_: response({
+        "answer": "Short summary.", "sources": ["S1"],
+        "parts": [{"text": "A policy claim.", "status": status, "sources": source_ids}],
+    }))
+    assert request("/ask", "POST", data={"question": "Refund deadline?", "document_ids": [data["doc_id"]]})[0] == 502
+    assert request("/conversations")[1]["conversations"] == []

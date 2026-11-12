@@ -261,3 +261,16 @@ footer { margin-top: 36px; }
   margin-block-end: .5rem;
 }
 .followup-context span { overflow-wrap: anywhere; }
+
+.answer-parts {
+  display: grid;
+  gap: .65rem;
+  padding: 0;
+  list-style: none;
+}
+.answer-part {
+  padding: .65rem .85rem;
+  border-inline-start: 2px solid currentColor;
+}
+.answer-part .answer-text { margin: .25rem 0; }
+.answer-part button { margin-inline-end: .35rem; }

@@ -674,3 +674,24 @@ test('asking from a published policy pins only that source and can be cleared', 
   await until(() => sent.length === 2);
   assert.equal(Object.hasOwn(sent[1], 'policy_id'), false);
 });
+
+test('answer parts show what is missing and open the source for the supported claim', async t => {
+  const f = await fixture(t, {override:key => key === '/ask' ? json({
+    answer:'Fallback', grounded:true,
+    answer_parts:[
+      {text:'Củ sạc bảo hành 12 tháng.',status:'supported',source_ids:['S1']},
+      {text:'Chưa có mức phí gửi bảo hành.',status:'missing',source_ids:[]},
+    ],
+    citations:[{source_id:'S1', title:'Bảo hành', doc_id:'doc1', page:2, excerpt:'Củ sạc: 12 tháng.'}],
+  }) : undefined});
+  f.$('question').value = 'Bảo hành bao lâu và phí gửi thế nào?';
+  f.submit('question-form');
+  const area = f.$('answer-area');
+  await until(() => area.querySelectorAll('.answer-part').length === 2);
+  assert.match(area.textContent, /Có nguồn cho một phần câu hỏi/);
+  assert.match(area.textContent, /Cần thêm thông tin/);
+  assert.doesNotMatch(area.textContent, /Fallback/);
+  assert.equal(area.querySelectorAll('.answer-part')[1].querySelector('button'), null);
+  area.querySelector('.answer-part button').click();
+  assert.match(f.$('policy-dialog-content').textContent, /Củ sạc: 12 tháng/);
+});
