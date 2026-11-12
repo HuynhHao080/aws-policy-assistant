@@ -106,3 +106,13 @@ Use the [staff guide](HUONG-DAN-PHOI-HOP-HO-TRO.md) and [release evidence](suppo
 Limits: 20 internal notes × 1,000 characters, rolling last 10 assignment events, independent public message limit. Notes do not extend the original 90-day ticket expiry or alter its public update timestamp. Deleting the customer purges the ticket; deleting staff does not erase contributions on customer-owned records. Revision conflicts are expected across public and internal activity: reload and review before retrying. Filtering uses bounded scans and cursors; an empty page is not a global queue count.
 
 The live helper `scripts/check_support_team_live.py` is opt-in and writes synthetic fixtures. Review its primary-account/artifact guards and private cleanup manifest before running; never substitute real customers. Acceptance verified three suppressed QA identities and one ticket removed through the account-deletion workflow. Audit metadata and retained logs/backups follow their lifecycle; an empty Support partition is not proof that every historical copy is erased. No extra IAM/table/index/service was required.
+
+## Cognito hosted sign-in branding
+
+The production client uses Cognito Hosted UI (classic). The CSS and PNG wordmark are in `frontend/branding`. This client-level setting is applied separately from the SAM stack and frontend build. Read the pool and client IDs from stack outputs before applying it.
+
+```powershell
+aws cognito-idp set-ui-customization --region ap-southeast-1 --user-pool-id $poolId --client-id $clientId --css file://frontend/branding/cognito-classic.css --image-file fileb://frontend/branding/cognito-wordmark.png
+```
+
+Keep CSS and logo together in the request. Check the hosted sign-in page from the application's normal sign-in entry point after the CDN serves the new assets. [AWS hosted UI branding reference](https://docs.aws.amazon.com/cognito/latest/developerguide/hosted-ui-classic-branding.html).
