@@ -78,22 +78,50 @@ followupBox.append(followupLabel, button('Bỏ câu hỏi trước', () => {
 }, 'secondary'));
 $('question').before(followupBox);
 
+let pinnedPolicy = null;
+const pinnedPolicyBox = node('div', undefined, 'followup-context hidden');
+const pinnedPolicyLabel = node('span');
+pinnedPolicyLabel.setAttribute('role', 'status');
+pinnedPolicyBox.append(pinnedPolicyLabel, button('Bỏ chọn chính sách', () => {
+  setPinnedPolicy(null);
+  $('source-scope').focus();
+}, 'secondary'));
+$('question').before(pinnedPolicyBox);
+
+function setPinnedPolicy(policy) {
+  pinnedPolicy = policy;
+  pinnedPolicyLabel.textContent = policy ? `Chỉ tra cứu trong ${policy.title}` : '';
+  pinnedPolicyBox.classList.toggle('hidden', !policy);
+  $('source-scope').disabled = Boolean(policy);
+  renderSources();
+}
+
+async function askFromPolicy(policy) {
+  const epoch = sessionEpoch;
+  if (!await navigate('assistant', {focus:true}) || !state.user || epoch !== sessionEpoch || state.view !== 'assistant') return;
+  setFollowupContext(null);
+  setPinnedPolicy({id:policy.policy_id, title:policy.title});
+  $('question').focus();
+}
+
 function setFollowupContext(context) {
   followupContext = context;
   followupLabel.textContent = context ? `Hỏi tiếp về: ${context.question.slice(0, 120)}${context.question.length > 120 ? '…' : ''}` : '';
   followupBox.classList.toggle('hidden', !context);
 }
 
-async function startFollowup(question, conversationId) {
+async function startFollowup(question, result) {
   const epoch = sessionEpoch;
   if (state.view !== 'assistant' && !await navigate('assistant', {focus:true})) return;
   if (!state.user || epoch !== sessionEpoch) return;
-  setFollowupContext({question, conversationId});
+  setPinnedPolicy(result.source_policy_id ? {id:result.source_policy_id, title:result.source_policy_title || result.source_policy_id} : null);
+  setFollowupContext({question, conversationId:result.conversation_id});
   $('question').focus();
 }
 
 function clearPrivateState() {
   setFollowupContext(null);
+  setPinnedPolicy(null);
   policyLibraryMode = 'browse';
   $('browse-policies').setAttribute('aria-pressed', 'true');
   $('saved-policies').setAttribute('aria-pressed', 'false');
@@ -164,7 +192,7 @@ window.addEventListener('hashchange',()=>guard(null,async()=>{if(!await navigate
 function renderSources() {
   $('source-selector').replaceChildren();
   const visible=new Map(state.docs.map(d=>[d.doc_id,d]));for(const id of state.selected)if(state.cache.has(id))visible.set(id,state.cache.get(id));const ready=[...visible.values()].filter(d=>d.status==='processed');
-  for(const doc of ready){const label=node('label',undefined,'source-option');const check=node('input');check.type='checkbox';check.disabled=$('source-scope').value==='policies';check.checked=state.selected.has(doc.doc_id);check.addEventListener('change',()=>{if(check.checked&&state.selected.size>=10){check.checked=false;notify('Chọn tối đa 10 tài liệu.',true);return;}check.checked?state.selected.add(doc.doc_id):state.selected.delete(doc.doc_id);updateScopeLabel();});const name=node('span',doc.title||doc.filename);name.append(node('small',`${doc.page_count||'—'} trang · Sẵn sàng`));label.append(check,name);$('source-selector').append(label);}
+  for(const doc of ready){const label=node('label',undefined,'source-option');const check=node('input');check.type='checkbox';check.disabled=Boolean(pinnedPolicy)||$('source-scope').value==='policies';check.checked=state.selected.has(doc.doc_id);check.addEventListener('change',()=>{if(check.checked&&state.selected.size>=10){check.checked=false;notify('Chọn tối đa 10 tài liệu.',true);return;}check.checked?state.selected.add(doc.doc_id):state.selected.delete(doc.doc_id);updateScopeLabel();});const name=node('span',doc.title||doc.filename);name.append(node('small',`${doc.page_count||'—'} trang · Sẵn sàng`));label.append(check,name);$('source-selector').append(label);}
   if(!ready.length)$('source-selector').append(node('p','Chưa có PDF đã xử lý. Tải tài liệu có văn bản để bắt đầu.','empty-small'));updateScopeLabel();
 }
 async function loadDocs(more=false) {
@@ -181,6 +209,7 @@ async function loadDocs(more=false) {
         if (!await navigate('assistant', {focus:true}) || epoch !== sessionEpoch) return;
         const selected = state.cache.get(doc.doc_id);
         if (selected?.status !== 'processed') throw new Error('PDF chưa sẵn sàng. Hãy làm mới thư viện.');
+        setPinnedPolicy(null);
         state.selected.clear();
         state.selected.add(doc.doc_id);
         $('source-scope').value = 'documents';
@@ -404,6 +433,11 @@ function citationValidity(source) {
   return source.effective_from || source.effective_until ? validityText(source) : '';
 }
 
+function answerScopeLabel(result) {
+  if (result.source_policy_id) return result.source_policy_title || result.source_policy_id;
+  return sourceScopeLabels[result.source_scope] || sourceScopeLabels.all;
+}
+
 function downloadAnswer(question, result, sources) {
   const citations = sources.map(source => [
     citationTitle(source),
@@ -414,7 +448,7 @@ function downloadAnswer(question, result, sources) {
     'Policy Assistant',
     'Câu hỏi\n' + question,
     'Câu trả lời\n' + result.answer,
-    'Phạm vi nguồn: ' + (sourceScopeLabels[result.source_scope] || sourceScopeLabels.all),
+    'Phạm vi nguồn: ' + answerScopeLabel(result),
     ...(citations.length ? ['Đoạn trích tại thời điểm trả lời', ...citations] : ['Chưa đủ nguồn tham khảo']),
   ].join('\n\n');
   const url = URL.createObjectURL(new Blob([content], {type:'text/plain;charset=utf-8'}));
@@ -496,6 +530,7 @@ async function openCitation(source, back) {
     if (!isCurrent()) return;
     status.textContent = 'Nội dung công bố hiện tại có thể đã thay đổi kể từ khi trả lời.';
     showPolicy(policy, current);
+    current.append(button('Hỏi từ chính sách này', () => askFromPolicy(policy), 'secondary'));
   } catch (error) {
     if (!isCurrent()) return;
     status.textContent = error.status === 404
@@ -509,7 +544,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
   }
   target.append(node('div', result.grounded ? 'Có nguồn tham khảo' : 'Chưa đủ thông tin', 'answer-label'),
     node('p', result.answer, 'answer-text'),
-    node('small', 'Nguồn: ' + (sourceScopeLabels[result.source_scope] || sourceScopeLabels.all), 'small muted'));
+    node('small', 'Nguồn: ' + answerScopeLabel(result), 'small muted'));
   renderFeedback(result,target);
   const sources = result.citations || [];
   for (const source of sources) {
@@ -518,7 +553,7 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
     target.append(card);
   }
   const actions = node('div', undefined, 'answer-actions');
-  if (result.conversation_id) actions.append(button('Hỏi tiếp', () => startFollowup(question, result.conversation_id), 'secondary'));
+  if (result.conversation_id) actions.append(button('Hỏi tiếp', () => startFollowup(question, result), 'secondary'));
   if (sources.length > 1) actions.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
   actions.append(button('Sao chép câu trả lời', async () => {
     if (!navigator.clipboard?.writeText) throw new Error('Trình duyệt chưa cấp quyền sao chép. Bạn có thể chọn và sao chép văn bản.');
@@ -626,7 +661,7 @@ async function openLibraryPolicy(id) {
     $('policy-dialog-title').textContent = policy.title;
     panel.replaceChildren();
     showPolicy(policy, panel);
-    panel.append(policyActions(policy, false));
+    panel.append(policyActions(policy, false), button('Hỏi từ chính sách này', () => askFromPolicy(policy), 'secondary'));
   } catch (error) {
     if (!isCurrent() || !dialog.open || !content.contains(panel)) return;
     panel.replaceChildren(node('p', error.status === 404
@@ -861,6 +896,10 @@ async function loadAdminPolicies(more=false){
 }
 
 function updateScopeLabel(){
+  if (pinnedPolicy) {
+    $('scope-label').textContent = `Chỉ chính sách đã chọn · ${pinnedPolicy.title}`;
+    return;
+  }
   const scope=$('source-scope').value;
   $('scope-label').textContent=scope==='policies'?'Chỉ chính sách chung':scope==='documents'?`Chỉ PDF đã chọn (${state.selected.size})`:state.selected.size?`${state.selected.size} PDF đã chọn + chính sách chung`:'Chính sách chung + tài liệu gần đây';
 }
@@ -1153,7 +1192,10 @@ $('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{i
 $('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
   needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
-  const payload=questionPayload(question,[...state.selected],$('source-scope').value),epoch=sessionEpoch;
+  const submittedPolicy = pinnedPolicy;
+  const payload = questionPayload(question, [...state.selected], submittedPolicy ? 'policies' : $('source-scope').value);
+  const epoch = sessionEpoch;
+  if (submittedPolicy) payload.policy_id = submittedPolicy.id;
   const submittedContext = followupContext;
   if (submittedContext) payload.context_conversation_id = submittedContext.conversationId;
   $('answer-area').setAttribute('aria-busy','true');$('answer-area').replaceChildren(node('p','Đang tìm nguồn và chuẩn bị câu trả lời…','loading-state'));
@@ -1161,7 +1203,7 @@ $('question-form').addEventListener('submit',event=>{event.preventDefault();guar
     const result = await api('/ask', {method:'POST', body:payload});
     if (epoch !== sessionEpoch) return;
     renderAnswer(question, result);
-    if ($('question').value === submittedDraft && followupContext === submittedContext) {
+    if ($('question').value === submittedDraft && followupContext === submittedContext && pinnedPolicy === submittedPolicy) {
       setFollowupContext(null);
       $('question').value = '';
       $('question-count').textContent = '0 / 2.000 ký tự';
@@ -1213,7 +1255,7 @@ function hasUnsavedWork(){return Boolean($('question').value.trim()||policyEdito
 window.addEventListener('beforeunload',event=>{if(hasUnsavedWork()){event.preventDefault();event.returnValue='';}});
 $('history-filter').addEventListener('input', applyHistoryFilters);
 $('history-source-filter').addEventListener('change', applyHistoryFilters);
-$('choose-source').addEventListener('click', () => $('source-scope').focus());
+$('choose-source').addEventListener('click', () => (pinnedPolicy ? pinnedPolicyBox.querySelector('button') : $('source-scope')).focus());
 $('source-scope').addEventListener('change',()=>renderSources());
 $('refresh-tickets').onclick=()=>guard($('refresh-tickets'),()=>loadTickets());
 $('more-tickets').onclick=()=>guard($('more-tickets'),()=>loadTickets(true));

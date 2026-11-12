@@ -645,3 +645,32 @@ test('shop editor names the missing fields in a saved live draft', async t => {
   assert.doesNotMatch(status.textContent, /email hoặc số điện thoại/);
   assert.equal(f.$('publish-shop').disabled, true);
 });
+
+test('asking from a published policy pins only that source and can be cleared', async t => {
+  const sent = [];
+  const policy = {policy_id:'EXACT', title:'Chính sách đổi trả', content:'Điều kiện đổi trả.'};
+  const f = await fixture(t, {view:'policy/EXACT', override:(key, options) => {
+    if (key === '/policies/EXACT') return json(policy);
+    if (key === '/ask') {
+      sent.push(JSON.parse(options.body));
+      return json({answer:'Synthetic answer',citations:[],source_policy_id:sent.at(-1).policy_id,source_policy_title:policy.title});
+    }
+  }});
+  const action = () => [...f.$('policy-dialog-content').querySelectorAll('button')].find(b => b.textContent === 'Hỏi từ chính sách này');
+  await until(action);
+  f.$('question').value = 'Tôi có thể đổi hàng không?';
+  action().click();
+  await until(() => f.$('source-scope').disabled);
+  assert.equal(f.$('question').value, 'Tôi có thể đổi hàng không?');
+  assert.equal(sent.length, 0);
+  f.submit('question-form');
+  await until(() => f.$('answer-area').textContent.includes('Synthetic answer'));
+  assert.deepEqual(sent[0], {question:'Tôi có thể đổi hàng không?',document_ids:[],source_scope:'policies',policy_id:'EXACT'});
+  assert.match(f.$('answer-area').textContent, /Nguồn: Chính sách đổi trả/);
+  [...f.$('question-form').querySelectorAll('button')].find(b => b.textContent === 'Bỏ chọn chính sách').click();
+  assert.equal(f.$('source-scope').disabled, false);
+  f.$('question').value = 'Một câu hỏi khác';
+  f.submit('question-form');
+  await until(() => sent.length === 2);
+  assert.equal(Object.hasOwn(sent[1], 'policy_id'), false);
+});

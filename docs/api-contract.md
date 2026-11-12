@@ -145,3 +145,5 @@ Admin ticket responses include `customer_waiting_since`, the timestamp of the fi
 Customer ticket responses include `last_staff_reply_at`, the time of the latest public staff reply, or null. List responses omit message bodies.
 
 Administrator policy details include `previous_publication` after the first replacement of a published snapshot. The field contains the previous content snapshot and its publication timestamp when available. `PATCH /admin/policies/{id}` accepts `restore_previous` with the current `expected_revision`; it creates a draft only and returns 409 if a draft already exists or no previous publication is available. Public policy responses and retrieval omit the previous snapshot.
+
+`POST /ask` accepts optional `policy_id` with `source_scope: policies` and no document IDs. It reads only the selected published, currently effective policy, and returns 404 for unavailable policies before inference. The response and history retain `source_policy_id` and `source_policy_title`; later follow-ups can reuse that selection.

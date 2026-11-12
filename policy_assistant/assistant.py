@@ -26,7 +26,7 @@ def words(value):
     return re.findall(r"\w{2,}", "".join(c for c in normalized if unicodedata.category(c) != "Mn"))
 
 
-def retrieve(service, owner, question, doc_ids, source_scope="all", previous_question=""):
+def retrieve(service, owner, question, doc_ids, source_scope="all", previous_question="", selected_policy=None):
     candidates = []
     if source_scope == "policies":
         docs = []
@@ -50,11 +50,15 @@ def retrieve(service, owner, question, doc_ids, source_scope="all", previous_que
         for chunk in parsed["chunks"]:
             candidates.append({"doc_id": doc["doc_id"], "title": doc.get("title", doc.get("filename", "Document")), "page": chunk["page"], "excerpt": chunk["text"][:1400]})
     # Shared policies are deliberately global. Private PDFs are never scanned globally.
-    scan = {"Limit": 1000, "ConsistentRead": True, "ProjectionExpression": "#id,#title,#content,effective_from,effective_until", "ExpressionAttributeNames": {"#id": "policy_id", "#title": "title", "#content": "content"}}
-    if os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true":
-        scan["FilterExpression"] = Attr("publication_state").eq("published")
-    result = service.policies.scan(**scan) if source_scope != "documents" else {"Items": []}
-    for policy in result.get("Items", []):
+    policies = []
+    if selected_policy is not None:
+        policies = [selected_policy]
+    elif source_scope != "documents":
+        scan = {"Limit": 1000, "ConsistentRead": True, "ProjectionExpression": "#id,#title,#content,effective_from,effective_until", "ExpressionAttributeNames": {"#id": "policy_id", "#title": "title", "#content": "content"}}
+        if os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true":
+            scan["FilterExpression"] = Attr("publication_state").eq("published")
+        policies = service.policies.scan(**scan).get("Items", [])
+    for policy in policies:
         if not policy_active(policy):
             continue
         content = policy.get("content", "")[:20000]
@@ -87,7 +91,7 @@ def public_source(source):
     return {key: value for key, value in source.items() if not key.startswith('_')}
 
 
-def check_policy_sources(service, citations):
+def check_policy_sources(service, citations, require_published=False):
     checked = {}
     for source in citations:
         policy_id = source.get('policy_id')
@@ -97,7 +101,7 @@ def check_policy_sources(service, citations):
             checked[policy_id] = service.policies.get_item(Key={'policy_id': policy_id}, ConsistentRead=True).get('Item')
         current = checked[policy_id]
         if (not current or not policy_active(current)
-                or (os.environ.get('REQUIRE_PUBLISHED_POLICIES') == 'true' and current.get('publication_state') != 'published')
+                or ((require_published or os.environ.get('REQUIRE_PUBLISHED_POLICIES') == 'true') and current.get('publication_state') != 'published')
                 or source.get('_policy_signature') != policy_signature(current)):
             raise Problem(409, 'Chính sách đã thay đổi hoặc không còn hiệu lực trong lúc xử lý. Vui lòng gửi lại câu hỏi để lấy nguồn mới.')
 
@@ -115,6 +119,14 @@ def answer(service, owner, data):
         raise Problem(400, "Policies-only scope must not include document IDs")
     if scope == "documents" and not ids:
         raise Problem(400, "Choose at least one owned PDF for documents-only scope")
+    selected_policy = None
+    policy_id = data.get("policy_id")
+    if "policy_id" in data:
+        if scope != "policies" or not isinstance(policy_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", policy_id):
+            raise Problem(400, "policy_id requires a valid ID and policies-only scope")
+        selected_policy = service.policies.get_item(Key={"policy_id": policy_id}, ConsistentRead=True).get("Item")
+        if not selected_policy or selected_policy.get("publication_state") != "published" or not policy_active(selected_policy):
+            raise Problem(404, "Chính sách đã chọn không còn hiệu lực hoặc không còn được công bố.")
     model = os.environ.get("BEDROCK_MODEL_ID")
     if model != "global.anthropic.claude-haiku-5-5":
         raise Problem(503, "AI model is not configured")
@@ -130,7 +142,7 @@ def answer(service, owner, data):
             raise Problem(404, "Câu hỏi trước không còn trong lịch sử.")
         previous_question = prior["question"][:400]
     service.quota(owner, "question")
-    sources = retrieve(service, owner, question, ids, scope, previous_question) if previous_question else retrieve(service, owner, question, ids, scope)
+    sources = retrieve(service, owner, question, ids, scope, previous_question, selected_policy)
     if not sources:
         result = {"answer": "Tôi chưa tìm thấy thông tin phù hợp trong tài liệu của bạn hoặc chính sách chung. Hãy chọn tài liệu đã xử lý và hỏi cụ thể hơn.", "citations": [], "grounded": False, "model_id": None}
     else:
@@ -190,9 +202,11 @@ def answer(service, owner, data):
         if not citations:
             answer_text = "Tôi không có đủ bằng chứng trong tài liệu để trả lời câu hỏi này."
         result = {"answer": answer_text, "citations": citations, "grounded": bool(citations), "model_id": model}
-    check_policy_sources(service, result["citations"])
+    check_policy_sources(service, result["citations"], require_published=selected_policy is not None)
     result["citations"] = [public_source(source) for source in result["citations"]]
     result["source_scope"] = scope
+    if selected_policy is not None:
+        result.update(source_policy_id=policy_id, source_policy_title=selected_policy.get("title") or policy_id)
     stamp = now()
     conversation_id = stamp + "#" + uuid4().hex
     item={"owner_id":owner,"conversation_id":conversation_id,"created_at":stamp,"question":question,**result,"expires_at":int(time.time())+30*86400}

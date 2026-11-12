@@ -369,3 +369,27 @@ def test_admin_publication_indexes_separate_clauses_with_context(services, ai):
     code, result = request("/ask", "POST", data={"question": "Đổi ý mở hộp?", "source_scope":"policies"})
     assert code == 200 and "chưa mở hộp" in result["citations"][0]["excerpt"]
     assert request("/policies/SECTION-TEST")[1].get("search_chunks") is None
+
+
+def test_ask_from_exact_policy_excludes_other_sources_and_checks_availability(services, ai):
+    for policy_id, state in (("SELECTED", "published"), ("OTHER", "published"), ("DRAFT", "draft")):
+        app.table.put_item(Item={
+            "policy_id": policy_id, "title": policy_id, "content": "Refund eligibility and deadline.",
+            "publication_state": state,
+        })
+    app.table.put_item(Item={
+        "policy_id": "EXPIRED", "title": "Expired", "content": "Refund eligibility.",
+        "publication_state": "published", "effective_until": "2000-01-01",
+    })
+    payload = {"question": "Refund deadline?", "source_scope": "policies", "policy_id": "SELECTED"}
+    status, result = request("/ask", "POST", data=payload)
+    assert status == 200 and result["source_policy_id"] == "SELECTED"
+    assert result["source_policy_title"] == "SELECTED"
+    prompt = json.loads(ai.calls[0]["messages"][0]["content"][0]["text"])
+    assert {source["policy_id"] for source in prompt["source_data"]} == {"SELECTED"}
+    assert request("/conversations")[1]["conversations"][0]["source_policy_id"] == "SELECTED"
+    for policy_id in ("DRAFT", "EXPIRED", "MISSING"):
+        assert request("/ask", "POST", data={**payload, "policy_id": policy_id})[0] == 404
+    for invalid in ({"source_scope": "all"}, {"policy_id": "../OTHER"}, {"document_ids": ["pdf"]}):
+        assert request("/ask", "POST", data={**payload, **invalid})[0] == 400
+    assert len(ai.calls) == 1
