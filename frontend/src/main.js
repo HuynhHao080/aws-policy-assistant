@@ -458,14 +458,17 @@ function renderAnswerParts(parts, sources) {
   const list = node('ul', undefined, 'answer-parts');
   for (const part of parts) {
     const item = node('li', undefined, 'answer-part');
-    item.append(node('strong', answerPartLabels[part.status], 'small'), node('p', part.text, 'answer-text'));
+    item.dataset.status = part.status;
+    item.append(node('strong', answerPartLabels[part.status], 'part-status'), node('p', part.text, 'answer-text'));
+    const links = node('div', undefined, 'part-citations');
     for (const sourceId of part.source_ids) {
       const source = byId.get(sourceId);
       if (!source) continue;
       const action = button(sourceId, () => openCitation(source), 'secondary');
       action.setAttribute('aria-label', `Xem nguồn ${citationTitle(source)}`);
-      item.append(action);
+      links.append(action);
     }
+    if (links.childElementCount) item.append(links);
     list.append(item);
   }
   return list;
@@ -583,12 +586,18 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
   target.append(node('div', label, 'answer-label'),
     parts?.length ? renderAnswerParts(parts, sources) : node('p', result.answer, 'answer-text'),
     node('small', 'Nguồn: ' + answerScopeLabel(result), 'small muted'));
-  renderFeedback(result,target);
-  for (const source of sources) {
-    const card = button('', () => openCitation(source), 'citation-card');
-    card.append(node('strong', citationTitle(source)));
-    target.append(card);
+  if (sources.length) {
+    const references = node('section', undefined, 'answer-references');
+    references.append(node('h3', `Đoạn trích tham khảo (${sources.length})`));
+    for (const source of sources) {
+      const card = button('', () => openCitation(source), 'citation-card');
+      card.append(node('strong', citationTitle(source)), node('span', '↗', 'citation-arrow'));
+      card.lastElementChild.setAttribute('aria-hidden', 'true');
+      references.append(card);
+    }
+    target.append(references);
   }
+  renderFeedback(result,target);
   const actions = node('div', undefined, 'answer-actions');
   if (result.conversation_id) actions.append(button('Hỏi tiếp', () => startFollowup(question, result), 'secondary'));
   if (sources.length > 1) actions.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));

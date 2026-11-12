@@ -360,3 +360,56 @@ dialog .ticket-dialog-heading { background: var(--paper); }
 main:not(:has([data-panel="assistant"]:not(.hidden), [data-panel="policies"]:not(.hidden))) #shop-context {
   display: none;
 }
+
+.mobile-dock { display: none; }
+.answer-part[data-status="missing"] {
+  background: #fff8ea;
+  border-inline-start-color: #a87827;
+}
+.answer-part[data-status="conflicting"] {
+  background: #fff1ed;
+  border-inline-start-color: #a75742;
+}
+.part-status { display: block; color: var(--green); font-size: .78rem; }
+.answer-part[data-status="missing"] .part-status { color: #67460e; }
+.answer-part[data-status="conflicting"] .part-status { color: #7f3627; }
+.part-citations { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+.part-citations button { min-height: 36px; margin: 0; padding: .35rem .6rem; }
+.answer-references { margin-block: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; }
+.answer-references h3 { margin: 0 0 .5rem; color: var(--ink); font: 700 .84rem/1.4 'Noto Sans', sans-serif; }
+.answer-references .citation-card { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.citation-arrow { flex: none; color: var(--green); font-size: 1rem; }
+.answer-feedback { margin-top: 1rem; }
+
+@media (max-width: 800px) {
+  .workspace main { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  .mobile-dock {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    position: fixed;
+    z-index: 5;
+    inset: auto 0 0;
+    gap: .25rem;
+    padding: .4rem .55rem calc(.4rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: var(--white);
+    box-shadow: 0 -6px 18px #142e2712;
+  }
+  .mobile-dock button {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 2px;
+    min-width: 0;
+    min-height: 49px;
+    padding: .2rem;
+    color: var(--muted);
+    background: transparent;
+    border-radius: 8px;
+    font-size: .72rem;
+    line-height: 1.2;
+  }
+  .mobile-dock button span { font-size: 1rem; }
+  .mobile-dock button:is(.active, :hover) { color: var(--green); background: var(--surface); }
+  .part-citations button { min-height: 44px; }
+}
