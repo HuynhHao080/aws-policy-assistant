@@ -393,3 +393,74 @@ def test_ask_from_exact_policy_excludes_other_sources_and_checks_availability(se
     for invalid in ({"source_scope": "all"}, {"policy_id": "../OTHER"}, {"document_ids": ["pdf"]}):
         assert request("/ask", "POST", data={**payload, **invalid})[0] == 400
     assert len(ai.calls) == 1
+
+
+def test_ask_retrieves_policy_after_first_dynamodb_page(services, ai, monkeypatch):
+    from policy_assistant import assistant
+
+    monkeypatch.setattr(assistant, "MAX_POLICY_PAGE_ITEMS", 1)
+    monkeypatch.setenv("REQUIRE_PUBLISHED_POLICIES", "true")
+    for policy_id, text, state in (
+        ("A-DRAFT", "Private sapphire refund.", "draft"),
+        ("B-OTHER", "Office hours and delivery.", "published"),
+        ("C-REFUND", "Sapphire refund requests are accepted within seven days.", "published"),
+    ):
+        app.table.put_item(Item={"policy_id": policy_id, "title": policy_id, "content": text, "publication_state": state})
+    code, result = request("/ask", "POST", data={"question": "Sapphire refund?", "source_scope": "policies"})
+    assert code == 200 and result["citations"][0]["policy_id"] == "C-REFUND"
+    sources = json.loads(ai.calls[0]["messages"][0]["content"][0]["text"])["source_data"]
+    assert all("_section_text" not in source for source in sources)
+    assert all(source["policy_id"] != "A-DRAFT" for source in sources)
+
+
+def test_general_retrieval_does_not_generate_from_a_truncated_policy_catalogue(services, ai, monkeypatch):
+    from policy_assistant import assistant
+
+    monkeypatch.setattr(assistant, "MAX_POLICY_PAGE_ITEMS", 1)
+    monkeypatch.setattr(assistant, "MAX_POLICY_SCAN_PAGES", 1)
+    for policy_id in ("A", "B"):
+        app.table.put_item(Item={
+            "policy_id": policy_id, "title": policy_id, "content": "Refund deadline.", "publication_state": "published",
+        })
+    assert request("/ask", "POST", data={"question": "Refund?", "source_scope": "policies"})[0] == 503
+    assert ai.calls == []
+    code, result = request("/ask", "POST", data={"question": "Refund?", "source_scope": "policies", "policy_id": "B"})
+    assert code == 200 and result["source_policy_id"] == "B"
+
+
+def test_evidence_ranks_matching_section_above_neighbouring_context():
+    from policy_assistant.assistant import rank_evidence
+
+    excerpt = "Bảo hành củ sạc 12 tháng. Thời gian sửa chữa từ 7 đến 15 ngày."
+    candidates = [
+        {"policy_id":"WARRANTY","title":"Bảo hành", "excerpt":excerpt, "_section_text":"Bảo hành củ sạc 12 tháng."},
+        {"policy_id":"WARRANTY","title":"Bảo hành", "excerpt":excerpt, "_section_text":"Thời gian sửa chữa từ 7 đến 15 ngày."},
+    ]
+    sources = rank_evidence(candidates, "Thời gian sửa chữa là bao nhiêu ngày?", "Bảo hành củ sạc bao lâu?")
+    assert sources[0]["_section_text"] == candidates[1]["_section_text"]
+    assert sources[0]["excerpt"] == excerpt
+
+
+def test_demo_retrieval_retains_expected_sources_for_all_thirty_questions():
+    import csv
+    from pathlib import Path
+    from types import SimpleNamespace
+
+    from policy_assistant.assistant import retrieve
+
+    fixtures = Path(__file__).resolve().parents[2] / "docs" / "retail-pilot"
+    policies = json.loads((fixtures / "du-lieu-demo.json").read_text(encoding="utf8"))
+    service = SimpleNamespace(policies=SimpleNamespace(scan=lambda **_: {"Items": policies}))
+    misses = []
+    first_matches = 0
+    with (fixtures / "30-CAU-HOI-KIEM-THU.csv").open(encoding="utf-8-sig", newline="") as csv_file:
+        cases = list(csv.reader(csv_file))[1:]
+    assert len(cases) == 30
+    for number, _, question, _, labels, *_ in cases:
+        expected = {f"DEMO-SHOP-{label}-001" for label in labels.split(",")}
+        actual = [source["policy_id"] for source in retrieve(service, "fixture", question, [], "policies")]
+        if not expected.intersection(actual):
+            misses.append(number)
+        first_matches += bool(expected.intersection(actual[:1]))
+    assert misses == []
+    assert first_matches >= 28
