@@ -143,7 +143,7 @@ function clearPrivateState() {
   policyEditor.clear();adminPolicyToken=null;adminPolicyKeyword='';adminListEpoch++;
   sessionEpoch++;state.user=null;state.profile=null;state.docs=[];state.selected.clear();state.cache.clear();state.docToken=null;state.historyToken=null;
   for(const id of ['answer-area','history-list','documents-list','source-selector','audit-list','usage-overview','policy-results','admin-policy-list','ticket-list','admin-ticket-list'])$(id).replaceChildren();
-  $('question').value='';$('pdf-file').value='';$('upload-status').textContent='';$('delete-confirmation').value='';fillPolicyEditor(null);$('admin-policy-keyword').value='';$('more-admin-policies').classList.add('hidden');
+  $('question').value='';updateQuestionControls();$('pdf-file').value='';$('upload-status').textContent='';$('delete-confirmation').value='';fillPolicyEditor(null);$('admin-policy-keyword').value='';$('more-admin-policies').classList.add('hidden');
   $('notice').classList.add('hidden');signedIn();
 }
 async function navigate(view,{historyMode='push',focus=false}={}) {
@@ -576,7 +576,7 @@ async function openCitation(source, back) {
       : 'Chưa tải được chính sách hiện hành. Mở lại nguồn để thử lại.';
   }
 }
-function renderAnswer(question, result, target = $('answer-area'), inHistory = false) {
+function renderAnswer(question, result, target = $('answer-area'), inHistory = false, submitted = null) {
   if (!inHistory) {
     target.replaceChildren(node('div', question, 'question-bubble'));
   }
@@ -601,6 +601,18 @@ function renderAnswer(question, result, target = $('answer-area'), inHistory = f
   }
   renderFeedback(result,target);
   const actions = node('div', undefined, 'answer-actions');
+  if (submitted) actions.append(button('Sửa câu hỏi', () => {
+    const field = $('question');
+    if (field.value.trim() && field.value !== question && !confirm('Thay nội dung câu hỏi đang soạn?')) return;
+    $('source-scope').value = submitted.scope;
+    state.selected.clear();
+    for (const id of submitted.documentIds) state.selected.add(id);
+    setPinnedPolicy(submitted.policy);
+    setFollowupContext(submitted.context);
+    field.value = question;
+    updateQuestionControls();
+    field.focus();
+  }, 'secondary'));
   if (result.conversation_id) actions.append(button('Hỏi tiếp', () => startFollowup(question, result), 'secondary'));
   if (sources.length > 1) actions.append(button(`Đối chiếu ${sources.length} nguồn`, () => compareCitations(sources), 'secondary'));
   actions.append(button('Sao chép câu trả lời', async () => {
@@ -1242,11 +1254,28 @@ $('auth-button').addEventListener('click',()=>guard($('auth-button'),async()=>{i
     const view = Object.hasOwn(labels, requested) ? requested : 'assistant';
     await manager.signinRedirect({state:{policy, view}});
   }}));
-$('question').addEventListener('input',()=>{$('question-count').textContent=`${$('question').value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;});
+function updateQuestionControls() {
+  const value = $('question').value;
+  $('question-count').textContent = `${value.length.toLocaleString('vi-VN')} / 2.000 ký tự`;
+  $('clear-question').disabled = !value.length;
+}
+$('question').addEventListener('input', updateQuestionControls);
+$('clear-question').addEventListener('click', () => {
+  $('question').value = '';
+  updateQuestionControls();
+  $('question').focus();
+});
+$('question').addEventListener('keydown', event => {
+  if (event.key !== 'Enter' || !(event.ctrlKey || event.metaKey) || event.isComposing || event.repeat) return;
+  event.preventDefault();
+  if (state.user && !$('ask-button').disabled && $('question').value.trim()) $('question-form').requestSubmit();
+});
 $('question-form').addEventListener('submit',event=>{event.preventDefault();guard($('ask-button'),async()=>{
   needApi();const submittedDraft=$('question').value;const question=submittedDraft.trim();if(!question)return;
   const submittedPolicy = pinnedPolicy;
-  const payload = questionPayload(question, [...state.selected], submittedPolicy ? 'policies' : $('source-scope').value);
+  const composerScope = $('source-scope').value;
+  const composerDocuments = [...state.selected];
+  const payload = questionPayload(question, composerDocuments, submittedPolicy ? 'policies' : composerScope);
   const epoch = sessionEpoch;
   if (submittedPolicy) payload.policy_id = submittedPolicy.id;
   const submittedContext = followupContext;
@@ -1255,11 +1284,13 @@ $('question-form').addEventListener('submit',event=>{event.preventDefault();guar
   try {
     const result = await api('/ask', {method:'POST', body:payload});
     if (epoch !== sessionEpoch) return;
-    renderAnswer(question, result);
+    renderAnswer(question, result, $('answer-area'), false, {
+      scope: composerScope, documentIds: composerDocuments, policy: submittedPolicy, context: submittedContext,
+    });
     if ($('question').value === submittedDraft && followupContext === submittedContext && pinnedPolicy === submittedPolicy) {
       setFollowupContext(null);
       $('question').value = '';
-      $('question-count').textContent = '0 / 2.000 ký tự';
+      updateQuestionControls();
     }
   }
   catch(error){if(epoch!==sessionEpoch)return;$('answer-area').replaceChildren(node('p','Chưa nhận được câu trả lời. Câu hỏi vẫn được giữ để bạn xem lại. Nếu kết nối bị ngắt, kiểm tra Lịch sử trước khi gửi lại.','empty-small'));throw error;}

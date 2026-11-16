@@ -735,3 +735,31 @@ test('mobile source picker moves the existing controls and restores them on clos
   assert.equal(f.$('source-scope').value, 'policies');
   assert.equal(f.w.document.activeElement, f.$('choose-source'));
 });
+
+test('composer shortcut sends once and editing restores the submitted scope', async t => {
+  const sent = [];
+  const f = await fixture(t, {override:(key, options) => {
+    if (key !== '/ask') return undefined;
+    sent.push(JSON.parse(options.body));
+    return json({answer:'Synthetic response', grounded:false, citations:[]});
+  }});
+  const question = f.$('question');
+  question.value = 'Thời hạn bảo hành?';
+  question.dispatchEvent(new f.w.Event('input'));
+  f.$('source-scope').value = 'policies';
+  question.dispatchEvent(new f.w.KeyboardEvent('keydown', {key:'Enter',ctrlKey:true,isComposing:true,cancelable:true}));
+  assert.equal(sent.length, 0);
+  question.dispatchEvent(new f.w.KeyboardEvent('keydown', {key:'Enter',ctrlKey:true,cancelable:true}));
+  const edit = () => [...f.$('answer-area').querySelectorAll('button')].find(b => b.textContent === 'Sửa câu hỏi');
+  await until(edit);
+  assert.equal(sent.length, 1);
+  f.$('source-scope').value = 'all';
+  edit().click();
+  assert.equal(question.value, 'Thời hạn bảo hành?');
+  assert.equal(f.$('source-scope').value, 'policies');
+  assert.equal(sent.length, 1);
+  f.click('clear-question');
+  assert.equal(question.value, '');
+  assert.ok(f.$('clear-question').disabled);
+  assert.equal(f.w.document.activeElement, question);
+});

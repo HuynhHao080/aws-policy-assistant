@@ -431,3 +431,36 @@ main:not(:has([data-panel="assistant"]:not(.hidden), [data-panel="policies"]:not
   box-shadow: none;
 }
 .source-picker-dialog #source-panel > h2 { display: none; }
+
+.assistant-main .composer > div:has(.composer-actions) { margin-top: .7rem; }
+.composer .composer-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+  max-width: none;
+}
+.composer-actions button { min-height: 44px; }
+.composer-shortcut { margin: .55rem 0 0; text-align: end; }
+.composer-shortcut kbd { padding: 1px .28rem; border: 1px solid var(--line); border-radius: 4px; }
+#answer-area:has(.question-bubble) { scroll-margin-top: 1rem; }
+@media (max-width: 520px) {
+  .assistant-main .composer > div:has(.composer-actions) { align-items: stretch; flex-direction: column; }
+  .composer .composer-actions { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+  .composer-shortcut { display: none; }
+}
+
+[data-panel] :is(.history-toolbar, .policy-library-bar, .editor-heading) { margin-block-end: 1rem; }
+.policy-directory-card { border-top: 3px solid #a6bdae; }
+.policy-directory-card .policy-meta { font-weight: 650; }
+.history-card summary:hover { background: var(--surface); }
+#ticket-list .support-row, #admin-ticket-list .support-row { border-bottom: 1px solid var(--line); }
+#support-list select, .history-toolbar :is(input, select) { min-height: 42px; }
+.account-stats > div { border: 1px solid var(--line); }
+.admin-tabs button[aria-selected="true"] { box-shadow: inset 0 -3px #dec68a; }
+@media (max-width: 520px) {
+  .support-row { padding-block: .8rem; }
+  .support-row > button { align-self: end; min-height: 44px; }
+  .account-export > button { flex: 1 1 100%; }
+}
