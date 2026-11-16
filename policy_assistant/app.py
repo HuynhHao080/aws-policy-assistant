@@ -218,14 +218,15 @@ def _search_policies(keyword: Optional[str], query_parameters: Optional[Dict[str
     found, the response includes "truncated": true to indicate results may be
     incomplete.
     """
-    if not keyword or not keyword.strip():
+    browse = (query_parameters or {}).get("browse") == "true"
+    if (not keyword or not keyword.strip()) and not browse:
         return _error_response(400, "Bad request", "Query parameter 'keyword' is required")
 
-    keyword_lower = keyword.strip().lower()
+    keyword_lower = (keyword or "").strip().lower()
     logger.info("Searching policies with keyword: %s requestId=%s", keyword_lower, request_id)
 
     # Parse optional limit parameter
-    limit = None
+    limit = 10 if browse else None
     if query_parameters:
         limit_raw = query_parameters.get("limit")
         if limit_raw is not None:
@@ -249,24 +250,21 @@ def _search_policies(keyword: Optional[str], query_parameters: Optional[Dict[str
                 return _error_response(400, "Bad request", "Invalid next_token")
 
     try:
-        # Use Scan with FilterExpression on lowercase fields for case-insensitive search
-        # Note: Scan reads entire table - suitable for small MVP dataset only
-        # For production, consider GSI or OpenSearch
-        filter_expression = (
-            "contains(#title, :kw) OR contains(#category, :kw) OR "
-            "contains(#content, :kw) OR contains(#keywords, :kw)"
-        )
-        expression_attribute_names = {
-            "#title": "title_lower",
-            "#category": "category_lower",
-            "#content": "content_lower",
-            "#keywords": "keywords_lower"
-        }
-        expression_attribute_values = {
-            ":kw": keyword_lower
-        }
-        if os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true":
-            filter_expression = f"({filter_expression}) AND #publication = :published"
+        filters = []
+        expression_attribute_names = {}
+        expression_attribute_values = {}
+        if keyword_lower:
+            filters.append(
+                "(contains(#title, :kw) OR contains(#category, :kw) OR "
+                "contains(#content, :kw) OR contains(#keywords, :kw))"
+            )
+            expression_attribute_names.update({
+                "#title": "title_lower", "#category": "category_lower",
+                "#content": "content_lower", "#keywords": "keywords_lower",
+            })
+            expression_attribute_values[":kw"] = keyword_lower
+        if browse or os.environ.get("REQUIRE_PUBLISHED_POLICIES") == "true":
+            filters.append("#publication = :published")
             expression_attribute_names["#publication"] = "publication_state"
             expression_attribute_values[":published"] = "published"
 
@@ -284,12 +282,17 @@ def _search_policies(keyword: Optional[str], query_parameters: Optional[Dict[str
                 break
 
             scan_kwargs = {
-                "FilterExpression": filter_expression,
-                "ExpressionAttributeNames": expression_attribute_names,
-                "ExpressionAttributeValues": expression_attribute_values,
                 # Pass DynamoDB's Limit parameter to bound items evaluated per page
                 "Limit": min(remaining_budget, limit - len(items) if limit is not None else 1000),
             }
+            if filters:
+                scan_kwargs.update(
+                    FilterExpression=" AND ".join(filters),
+                    ExpressionAttributeNames=expression_attribute_names,
+                    ExpressionAttributeValues=expression_attribute_values,
+                )
+            if browse:
+                scan_kwargs["ConsistentRead"] = True
             if last_evaluated_key:
                 scan_kwargs["ExclusiveStartKey"] = last_evaluated_key
 

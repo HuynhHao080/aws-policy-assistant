@@ -168,6 +168,7 @@ async function navigate(view,{historyMode='push',focus=false}={}) {
     return true;
   }
   if (linkedPolicy) await openLibraryPolicy(linkedPolicy);
+  else if (view === 'policies' && policyLibraryMode === 'browse') await searchPolicies();
   if(view==='documents'||view==='assistant')await loadDocs(false);
   if(view==='history')await loadHistory(false);
   if(view==='support')await loadTickets();
@@ -750,7 +751,7 @@ function setPolicyLibraryMode(mode) {
   if (mode === 'saved') renderSavedPolicies();
   else {
     $('policy-results').replaceChildren();
-    $('policy-library-status').textContent = 'Nhập từ khóa để tìm trong chính sách đang công bố.';
+    return searchPolicies();
   }
 }
 
@@ -767,19 +768,20 @@ async function searchPolicies(more = false) {
     $('policy-results').replaceChildren();
     $('more-policies').classList.add('hidden');
   }
-  if (!state.policyKeyword || (more && !state.policyToken)) {
-    $('policy-library-status').textContent = 'Nhập từ khóa để tìm chính sách.';
-    return;
-  }
+  if (more && !state.policyToken) return;
   $('policy-library-status').textContent = 'Đang tìm chính sách…';
   const cursor = state.policyToken ? `&next_token=${encodeURIComponent(state.policyToken)}` : '';
   try {
-    const result = await api(`/policies?keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${cursor}`);
+    const result = await api(`/policies?browse=true&keyword=${encodeURIComponent(state.policyKeyword)}&limit=10${cursor}`);
     if (!isCurrent()) return;
     $('policy-results').append(...result.policies.map(policyCard));
     state.policyToken = result.next_token;
     $('more-policies').classList.toggle('hidden', !state.policyToken);
-    $('policy-library-status').textContent = `${$('policy-results').children.length} kết quả đã tải${state.policyToken ? ' · Còn trang tiếp theo' : ''}`;
+    const count = $('policy-results').children.length;
+    $('policy-library-status').textContent = count || state.policyToken
+      ? `${count} chính sách đã tải${state.policyToken ? ' · Còn trang tiếp theo' : ''}`
+      : state.policyKeyword ? 'Không tìm thấy chính sách phù hợp.' : 'Chưa có chính sách đang có hiệu lực.';
+
   } catch (error) {
     if (!isCurrent()) return;
     $('policy-library-status').textContent = 'Chưa tải được kết quả.';
@@ -1318,10 +1320,15 @@ $('upload-form').addEventListener('submit',event=>{event.preventDefault();guard(
   await trackDocument(docId);
 });});
 $('refresh-documents').onclick=()=>guard($('refresh-documents'),()=>loadDocs());$('more-documents').onclick=()=>guard($('more-documents'),()=>loadDocs(true));$('more-sources').onclick=()=>guard($('more-sources'),()=>loadDocs(true));
-$('browse-policies').onclick = () => setPolicyLibraryMode('browse');
+$('browse-policies').onclick = () => guard($('browse-policies'), () => setPolicyLibraryMode('browse'));
 $('saved-policies').onclick = () => setPolicyLibraryMode('saved');
 $('policy-keyword').addEventListener('input', () => {
   if (policyLibraryMode === 'saved') renderSavedPolicies();
+});
+$('clear-policy-search').onclick = () => guard($('clear-policy-search'), async () => {
+  $('policy-keyword').value = '';
+  $('policy-keyword').focus();
+  await searchPolicies();
 });
 $('policy-form').onsubmit=event=>{event.preventDefault();guard(event.submitter,()=>searchPolicies());};$('more-policies').onclick=()=>guard($('more-policies'),()=>searchPolicies(true));
 $('refresh-history').onclick=()=>guard($('refresh-history'),()=>loadHistory());$('more-history').onclick=()=>guard($('more-history'),()=>loadHistory(true));$('refresh-admin').onclick=()=>guard($('refresh-admin'),loadAdmin);$('more-audit').onclick=()=>guard($('more-audit'),()=>loadAudit(true));

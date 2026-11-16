@@ -763,3 +763,20 @@ test('composer shortcut sends once and editing restores the submitted scope', as
   assert.ok(f.$('clear-question').disabled);
   assert.equal(f.w.document.activeElement, question);
 });
+
+test('policy catalogue opens without a keyword and reset returns to browsing', async t => {
+  const f = await fixture(t, {view:'policies', override:(key, options, window, url) => {
+    if (key !== '/policies') return undefined;
+    const keyword = url.searchParams.get('keyword');
+    return json({policies:[{policy_id:'CATALOG',title:keyword ? 'Filtered' : 'Catalogue',content:'Example'}]});
+  }});
+  const results = f.$('policy-results');
+  await until(() => results.textContent.includes('Catalogue'));
+  assert.match(f.calls.find(c => c.key === '/policies').url, /browse=true/);
+  f.$('policy-keyword').value = 'refund';
+  f.submit('policy-form');
+  await until(() => results.textContent.includes('Filtered'));
+  f.click('clear-policy-search');
+  await until(() => results.textContent.includes('Catalogue'));
+  assert.equal(f.$('policy-keyword').value, '');
+});

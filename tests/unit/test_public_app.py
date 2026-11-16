@@ -464,3 +464,18 @@ def test_demo_retrieval_retains_expected_sources_for_all_thirty_questions():
         first_matches += bool(expected.intersection(actual[:1]))
     assert misses == []
     assert first_matches >= 28
+
+
+def test_policy_catalog_browses_only_current_publications_and_paginates(services):
+    for policy_id, state in (("A", "draft"), ("B", "archived"), ("C", "published"), ("D", "published"), ("E", "published")):
+        item = {"policy_id": policy_id, "title": policy_id, "content": "Example", "publication_state": state}
+        if policy_id == "C":
+            item["effective_until"] = "2000-01-01"
+        app.table.put_item(Item=item)
+    params = {"browse": "true", "limit": "1"}
+    status, page = request("/policies", params=params)
+    assert status == 200 and [row["policy_id"] for row in page["policies"]] == ["D"]
+    assert page["next_token"]
+    status, page = request("/policies", params={**params, "next_token": page["next_token"]})
+    assert status == 200 and [row["policy_id"] for row in page["policies"]] == ["E"]
+    assert request("/policies")[0] == 400
