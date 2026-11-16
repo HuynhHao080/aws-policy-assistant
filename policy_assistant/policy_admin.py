@@ -9,9 +9,11 @@ import re
 from uuid import uuid4
 
 try:
+    from .policy_conflicts import review as conflict_review
     from .service import Problem, now, text, encode
     from .policy_validity import bounds, state as validity_state, DATE_FIELDS
 except ImportError:
+    from policy_conflicts import review as conflict_review
     from service import Problem, now, text, encode
     from policy_validity import bounds, state as validity_state, DATE_FIELDS
 
@@ -132,6 +134,8 @@ def handle(service, method, path, owner, data, params, request_id):
     if method == "GET":
         if not current:
             raise Problem(404, "Policy not found")
+        if params.get("review") == "deadlines":
+            return {"revision": revision(current), **conflict_review(service, current)}
         return detail(current)
     if method not in ("PATCH", "PUT", "DELETE"):
         raise Problem(405, "Method not allowed")

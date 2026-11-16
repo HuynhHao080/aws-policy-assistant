@@ -37,7 +37,7 @@ function noticeAt(target,message,error=false){target.replaceChildren(node('span'
 function notify(message,error=false){if($('ticket-dialog').open){noticeAt($('ticket-dialog-notice'),message,error);return;}noticeAt($('notice'),message,error);}
 function fail(error){const message=error.status===401?'Phiên đăng nhập đã hết hạn hoặc bạn chưa đăng nhập. Hãy đăng nhập để tiếp tục.':error.status===403?'Tài khoản này không có quyền thực hiện thao tác.':error.status===429?'Đã đạt hạn mức sử dụng trong ngày hoặc tháng. Hãy kiểm tra hạn mức và thử lại sau.':error instanceof TypeError&&/fetch|network/i.test(error.message)?'Kết nối bị gián đoạn. Hãy kiểm tra trạng thái trước khi gửi lại để tránh tạo trùng dữ liệu.':error.message||'Chưa thể hoàn tất. Vui lòng thử lại.';notify(message,true);}
 function button(label,action,className='text-button') { const item=node('button',label,className);item.type='button';item.addEventListener('click',()=>guard(item,action));return item; }
-async function guard(control,action) { if(control?.disabled)return; if(control){control.disabled=true;control.setAttribute('aria-busy','true');}try{return await action();}catch(error){fail(error);}finally{if(control){control.disabled=false;control.removeAttribute('aria-busy');}if(control?.closest('#admin-policy-form')||['new-policy','restore-policy'].includes(control?.id))renderPolicyEditorStatus();if(control?.closest('#ticket-dialog'))renderSupportControls();if(control?.closest('#shop-form')||control?.id==='reload-shop')renderShopControls();} }
+async function guard(control,action) { if(control?.disabled)return; if(control){control.disabled=true;control.setAttribute('aria-busy','true');}try{return await action();}catch(error){fail(error);}finally{if(control){control.disabled=false;control.removeAttribute('aria-busy');}if(control?.closest('#admin-policy-form')||['new-policy','restore-policy','review-policy-deadlines'].includes(control?.id))renderPolicyEditorStatus();if(control?.closest('#ticket-dialog'))renderSupportControls();if(control?.closest('#shop-form')||control?.id==='reload-shop')renderShopControls();} }
 function needApi() { if(!api)throw new Error('Dịch vụ chưa được kết nối.');if(!state.user)throw Object.assign(new Error('Vui lòng đăng nhập.'),{status:401}); }
 function groups() { const value=state.profile?.groups||[];return Array.isArray(value)?value:String(value).replace(/[\[\]"]/g,'').split(',').map(s=>s.trim()); }
 function signedIn() {
@@ -890,8 +890,51 @@ function renderPolicyEditorStatus(){
   $('publish-policy').textContent=r?.publication_state==='archived'&&!r.draft?'Công bố lại bản đã lưu':'Công bố bản nháp';
   $('archive-policy').disabled=busy||dirty||r?.publication_state!=='published';
   $('discard-policy-draft').disabled=busy||dirty||!r?.draft;
+  reviewPolicy.disabled=busy||dirty||!r?.draft;
   restorePolicy.disabled=busy||dirty||Boolean(r?.draft)||!r?.previous_publication?.snapshot;
 }
+const conflictReview = node('section', undefined, 'editor-card hidden');
+const conflictResults = node('div');
+const conflictStatus = node('p', '', 'small muted');
+conflictStatus.setAttribute('role', 'status');
+const reviewPolicy = button('Rà soát thời hạn', async () => {
+  const record = policyEditor.record;
+  if (!record?.draft || policyEditor.dirty) return;
+  const isCurrent = latestTasks.begin('policy-conflicts');
+  conflictResults.replaceChildren();
+  conflictStatus.textContent = 'Đang đối chiếu bản nháp…';
+  try {
+    const result = await api(`/admin/policies/${encodeURIComponent(record.policy_id)}?review=deadlines`);
+    if (!isCurrent() || policyEditor.record !== record || policyEditor.dirty) return;
+    if (result.revision !== record.revision) {
+      conflictStatus.textContent = 'Bản nháp đã thay đổi. Hãy mở lại trước khi rà soát.';
+      return;
+    }
+    conflictStatus.textContent = result.draft_deadlines
+      ? `Đã đối chiếu ${result.checked_policies} chính sách. ${result.findings.length} khác biệt cần xác minh.${result.truncated ? ' Phạm vi rà soát đã chạm giới hạn.' : ''}`
+      : 'Chưa tìm thấy dòng thời hạn theo mẫu. Ví dụ: Thời hạn hoàn ứng: 7 ngày làm việc.';
+    for (const finding of result.findings) {
+      const card = node('article', undefined, 'comparison-source');
+      card.append(node('h3', finding.label),
+        node('p', `Bản nháp · dòng ${finding.draft.line}`, 'small muted'),
+        node('blockquote', finding.draft.excerpt, 'citation-excerpt'),
+        node('p', `${finding.published.title} · ${finding.published.policy_id} · dòng ${finding.published.line}`, 'small muted'),
+        node('blockquote', finding.published.excerpt, 'citation-excerpt'),
+        node('p', validityText({effective_from:finding.overlap_from, effective_until:finding.overlap_until || ''}), 'small muted'));
+      conflictResults.append(card);
+    }
+  } catch (error) {
+    if (!isCurrent() || policyEditor.record !== record) return;
+    conflictStatus.textContent = 'Chưa rà soát được. Hãy kiểm tra bản nháp rồi thử lại.';
+    throw error;
+  }
+}, 'secondary');
+reviewPolicy.id = 'review-policy-deadlines';
+conflictReview.append(node('h2', 'Rà soát xung đột'), node('p',
+  'Đối chiếu các dòng thời hạn cùng nhãn. Hãy kiểm tra phạm vi áp dụng trước khi công bố.', 'small muted'),
+  reviewPolicy, conflictStatus, conflictResults);
+$('admin-policy-form').after(conflictReview);
+
 const previousPolicy = node('details', undefined, 'policy-card hidden');
 const previousPolicyContent = node('div');
 const restorePolicy = button('Khôi phục thành bản nháp', async () => {
@@ -938,6 +981,10 @@ function fillPolicyEditor(record){
   try{$('policy-live-validity').textContent=record?.current?validityText(record.current):'';}
   catch{$('policy-live-validity').textContent='Thời hạn đã lưu không hợp lệ. Sửa ngày và lưu bản nháp để khắc phục.';}
   $('policy-live-title').textContent=record?.current?.title||'';$('policy-live-content').textContent=record?.current?.content||'';
+  latestTasks.begin('policy-conflicts');
+  conflictReview.classList.toggle('hidden', !record?.draft);
+  conflictStatus.textContent = '';
+  conflictResults.replaceChildren();
   renderPreviousPolicy(record);renderPolicyEditorStatus();renderPolicyValidityPreview();
 }
 async function loadAdminPolicies(more=false){

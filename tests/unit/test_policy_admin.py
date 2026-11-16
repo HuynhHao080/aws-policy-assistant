@@ -177,3 +177,27 @@ def test_previous_publication_can_only_be_restored_as_private_draft(services, mo
     status, reverted = change("publish", restored["revision"])
     assert status == 200 and reverted["current"] == first["current"]
     assert reverted["previous_publication"]["snapshot"]["content"] == revised["content"]
+
+
+def test_deadline_review_uses_only_overlapping_public_policies(services):
+    status, draft = change("save_draft", draft={**FIELDS, "content": "Thời hạn hoàn ứng: 14 ngày"})
+    assert status == 200
+    for policy_id, publication, extra in (
+        ("HR", "published", {}),
+        ("OLD", "published", {"effective_until": "2000-01-01"}),
+        ("HIDDEN", "archived", {}),
+        ("DRAFT", "draft", {}),
+    ):
+        app.table.put_item(Item={
+            "policy_id": policy_id, "title": policy_id, "publication_state": publication,
+            "content": "Không liên quan\nThời hạn hoàn ứng: 7 ngày", **extra,
+        })
+    params = {"review": "deadlines"}
+    assert request(PATH, params=params)[0] == 403
+    status, result = request(PATH, claims=ADMIN, params=params)
+    assert status == 200 and result["revision"] == draft["revision"]
+    assert result["checked_policies"] == 1
+    finding, = result["findings"]
+    assert finding["published"]["policy_id"] == "HR" and finding["published"]["line"] == 2
+    assert finding["draft"]["excerpt"].endswith("14 ngày")
+    assert request(PATH, claims=ADMIN)[1]["revision"] == draft["revision"]

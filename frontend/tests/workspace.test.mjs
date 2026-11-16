@@ -780,3 +780,23 @@ test('policy catalogue opens without a keyword and reset returns to browsing', a
   await until(() => results.textContent.includes('Catalogue'));
   assert.equal(f.$('policy-keyword').value, '');
 });
+
+test('policy review compares saved draft evidence without publishing', async t => {
+  const record = {policy_id:'FIN', revision:'v1', publication_state:'draft', draft:{title:'Finance', category:'Internal', content:'Thời hạn hoàn ứng: 14 ngày'}};
+  const f = await fixture(t, {admin:true, view:'admin', override:(key, options, window, url) => {
+    if (key === '/admin/policies') return json({policies:[{policy_id:'FIN',title:'Finance'}]});
+    if (key === '/admin/policies/FIN') return json(url.searchParams.has('review') ? {
+      revision:'v1', draft_deadlines:1, checked_policies:1, truncated:false,
+      findings:[{label:'thời hạn hoàn ứng', draft:{line:1,excerpt:'14 ngày'},
+        published:{policy_id:'HR',title:'Nhân sự',line:2,excerpt:'7 ngày'},overlap_from:'2026-11-01'}],
+    } : record);
+  }});
+  await until(() => f.$('admin-policy-list').querySelector('button'));
+  f.$('admin-policy-list').querySelector('button').click();
+  const control = f.$('review-policy-deadlines');
+  await until(() => !control.disabled);
+  control.click();
+  await until(() => control.parentElement.textContent.includes('14 ngày'));
+  assert.match(control.parentElement.textContent, /7 ngày/);
+  assert.equal(f.calls.some(call => call.options.method === 'PATCH'), false);
+});
