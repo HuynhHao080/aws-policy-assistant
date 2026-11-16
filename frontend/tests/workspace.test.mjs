@@ -719,3 +719,19 @@ test('expired sign-in callback returns to a usable guest view', async t => {
   await until(() => f.w.__signInRequested);
   assert.deepEqual(f.calls, []);
 });
+test('mobile source picker moves the existing controls and restores them on close', async t => {
+  const f = await fixture(t);
+  f.w.matchMedia = () => ({matches:true});
+  const panel = f.$('source-panel');
+  const home = panel.parentElement;
+  f.click('choose-source');
+  const dialog = f.$('source-picker-dialog');
+  assert.ok(dialog.open);
+  assert.ok(dialog.contains(panel));
+  f.$('source-scope').value = 'policies';
+  dialog.querySelector('button').click();
+  dialog.dispatchEvent(new f.w.Event('close'));
+  assert.equal(panel.parentElement, home);
+  assert.equal(f.$('source-scope').value, 'policies');
+  assert.equal(f.w.document.activeElement, f.$('choose-source'));
+});

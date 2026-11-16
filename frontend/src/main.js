@@ -120,6 +120,7 @@ async function startFollowup(question, result) {
 }
 
 function clearPrivateState() {
+  if (sourceDialog.open) sourceDialog.close();
   setFollowupContext(null);
   setPinnedPolicy(null);
   policyLibraryMode = 'browse';
@@ -153,6 +154,7 @@ async function navigate(view,{historyMode='push',focus=false}={}) {
   if(state.view==='admin'&&view!=='admin'&&(policyEditor.dirty||shopEditor.dirty)&&!confirm('Rời trang khi có thay đổi chưa lưu?'))return false;
   if(state.view!==view&&(state.view==='support'||$('ticket-dialog').open)&&supportUnsaved()&&!confirm('Rời trang khi nội dung hỗ trợ chưa được gửi?'))return false;
   state.view=view;
+  if (sourceDialog.open) sourceDialog.close();
   if ($('policy-dialog').open) $('policy-dialog').close();
   setNavigationOpen(false);
   document.querySelectorAll('[data-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.panel!==view));
@@ -1306,7 +1308,35 @@ function hasUnsavedWork(){return Boolean($('question').value.trim()||policyEdito
 window.addEventListener('beforeunload',event=>{if(hasUnsavedWork()){event.preventDefault();event.returnValue='';}});
 $('history-filter').addEventListener('input', applyHistoryFilters);
 $('history-source-filter').addEventListener('change', applyHistoryFilters);
-$('choose-source').addEventListener('click', () => (pinnedPolicy ? pinnedPolicyBox.querySelector('button') : $('source-scope')).focus());
+const sourcePanel = $('source-panel');
+const sourceDialog = node('dialog', undefined, 'source-picker-dialog');
+sourceDialog.id = 'source-picker-dialog';
+sourceDialog.setAttribute('aria-labelledby', 'source-picker-title');
+const sourceDialogHeading = node('header', undefined, 'ticket-dialog-heading');
+const sourceDialogTitle = node('h2', 'Chọn nguồn tra cứu');
+sourceDialogTitle.id = 'source-picker-title';
+sourceDialogHeading.append(sourceDialogTitle, button('Xong', () => sourceDialog.close(), 'secondary'));
+sourceDialog.append(sourceDialogHeading);
+const sourcePanelHome = sourcePanel.parentElement;
+document.body.append(sourceDialog);
+
+sourceDialog.addEventListener('close', () => {
+  // A close event can arrive after the picker has already been reopened.
+  if (sourceDialog.open) return;
+  sourcePanelHome.append(sourcePanel);
+  if (state.view === 'assistant' && state.user) $('choose-source').focus();
+});
+$('choose-source').addEventListener('click', () => {
+  if (pinnedPolicy) {
+    pinnedPolicyBox.querySelector('button').focus();
+    return;
+  }
+  if (window.matchMedia?.('(max-width: 800px)').matches) {
+    sourceDialog.append(sourcePanel);
+    sourceDialog.showModal();
+  }
+  $('source-scope').focus();
+});
 $('source-scope').addEventListener('change',()=>renderSources());
 $('refresh-tickets').onclick=()=>guard($('refresh-tickets'),()=>loadTickets());
 $('more-tickets').onclick=()=>guard($('more-tickets'),()=>loadTickets(true));

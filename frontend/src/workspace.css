@@ -413,3 +413,21 @@ main:not(:has([data-panel="assistant"]:not(.hidden), [data-panel="policies"]:not
   .mobile-dock button:is(.active, :hover) { color: var(--green); background: var(--surface); }
   .part-citations button { min-height: 44px; }
 }
+
+.source-picker-dialog {
+  width: min(34rem, calc(100vw - 24px));
+  max-height: 88dvh;
+  padding: 0 1rem 1rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.source-picker-dialog #source-panel {
+  position: static;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+.source-picker-dialog #source-panel > h2 { display: none; }
