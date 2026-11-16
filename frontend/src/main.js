@@ -897,7 +897,7 @@ const conflictReview = node('section', undefined, 'editor-card hidden');
 const conflictResults = node('div');
 const conflictStatus = node('p', '', 'small muted');
 conflictStatus.setAttribute('role', 'status');
-const reviewPolicy = button('Rà soát thời hạn', async () => {
+const reviewPolicy = button('Rà soát thay đổi và xung đột', async () => {
   const record = policyEditor.record;
   if (!record?.draft || policyEditor.dirty) return;
   const isCurrent = latestTasks.begin('policy-conflicts');
@@ -913,6 +913,26 @@ const reviewPolicy = button('Rà soát thời hạn', async () => {
     conflictStatus.textContent = result.draft_deadlines
       ? `Đã đối chiếu ${result.checked_policies} chính sách. ${result.findings.length} khác biệt cần xác minh.${result.truncated ? ' Phạm vi rà soát đã chạm giới hạn.' : ''}`
       : 'Chưa tìm thấy dòng thời hạn theo mẫu. Ví dụ: Thời hạn hoàn ứng: 7 ngày làm việc.';
+    if (result.changes) {
+      const delta = node('section', undefined, 'comparison-source');
+      delta.append(node('h3', 'Thay đổi so với bản công bố gần nhất'));
+      if (!result.changes.length) delta.append(node('p', 'Chưa thấy thay đổi ở các thời hạn theo mẫu.', 'small muted'));
+      for (const change of result.changes) {
+        const card = node('article', undefined, 'comparison-source');
+        card.append(node('h4', change.label));
+        for (const [label, entries] of [['Bản đã công bố', change.before], ['Bản nháp', change.after]]) {
+          if (!entries.length) continue;
+          card.append(node('p', label, 'small muted'));
+          for (const entry of entries) {
+            card.append(node('blockquote', `Dòng ${entry.line} · ${entry.excerpt}`, 'citation-excerpt'));
+          }
+        }
+        delta.append(card);
+      }
+      if (result.changes_truncated) delta.append(node('p', 'Chỉ hiển thị một phần thay đổi.', 'small muted'));
+      conflictResults.append(delta);
+    }
+    if (result.findings.length) conflictResults.append(node('h3', 'Khác biệt với chính sách liên quan'));
     for (const finding of result.findings) {
       const card = node('article', undefined, 'comparison-source');
       card.append(node('h3', finding.label),

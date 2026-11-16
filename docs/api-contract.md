@@ -155,3 +155,5 @@ Structured answers may include `answer_parts` in the response and history. Each 
 `GET /policies?browse=true` lists published, currently effective policies for signed-in users. It accepts an optional keyword, limit (default 10), and the returned next_token. Keep requesting pages while a cursor exists, even when a page is empty. Calls without browse=true still require a keyword.
 
 Administrator-only `GET /admin/policies/{id}?review=deadlines` compares a saved draft with distinct published policies whose effective windows overlap from today onward (UTC+7). It recognizes explicitly labelled day values (e.g. `Thời hạn hoàn ứng: 14 ngày`), reports both lines and the overlap, and returns a draft revision and truncation flag. The bounded scan reviews at most four pages and returns at most 20 findings. Review does not change policy state or invoke AI.
+
+The deadline review also returns `changes` against the latest publication of the same policy. Each changed label has `before` and `after` arrays of line evidence for removed and added values. Empty sides indicate additions or removals. The response flags truncation separately with `changes_truncated`.

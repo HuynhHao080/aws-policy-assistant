@@ -34,14 +34,41 @@ def deadlines(content):
             yield label, int(value), unit, number, line.strip()
 
 
+def deadline_groups(content):
+    groups = {}
+    for label, value, unit, line, excerpt in deadlines(content):
+        groups.setdefault(label, {}).setdefault((value, unit), {"line": line, "excerpt": excerpt})
+    return groups
+
+
+def deadline_changes(previous, proposed):
+    changes = []
+    truncated = False
+    for label in dict.fromkeys([*previous, *proposed]):
+        before, after = previous.get(label, {}), proposed.get(label, {})
+        removed = [excerpt for term, excerpt in before.items() if term not in after]
+        added = [excerpt for term, excerpt in after.items() if term not in before]
+        if not (added or removed):
+            continue
+        if len(changes) == MAX_FINDINGS:
+            truncated = True
+            break
+        truncated |= len(removed) > 3 or len(added) > 3
+        changes.append({"label": label, "before": removed[:3], "after": added[:3]})
+    return changes, truncated
+
+
 def review(service, item):
     draft = item.get("draft_data")
     if not draft:
         raise Problem(409, "Lưu bản nháp trước khi rà soát.")
-    draft_facts = {}
-    for label, value, unit, line, excerpt in deadlines(draft["content"]):
-        draft_facts.setdefault(label, []).append((value, unit, line, excerpt))
-    result = {"findings": [], "checked_policies": 0, "draft_deadlines": sum(map(len, draft_facts.values())), "truncated": False}
+    draft_facts = deadline_groups(draft["content"])
+    previous = deadline_groups(item.get("content", ""))
+    changes, truncated = deadline_changes(previous, draft_facts)
+    result = {
+        "findings": [], "checked_policies": 0, "draft_deadlines": sum(map(len, draft_facts.values())),
+        "truncated": False, "changes": changes, "changes_truncated": truncated,
+    }
     if not draft_facts:
         return result
 
@@ -66,7 +93,7 @@ def review(service, item):
                 continue
             result["checked_policies"] += 1
             for label, value, unit, line, excerpt in deadlines(policy.get("content", "")):
-                for draft_value, draft_unit, draft_line, draft_excerpt in draft_facts.get(label, []):
+                for (draft_value, draft_unit), evidence in draft_facts.get(label, {}).items():
                     if (draft_value, draft_unit) == (value, unit):
                         continue
                     if len(result["findings"]) >= MAX_FINDINGS:
@@ -74,7 +101,7 @@ def review(service, item):
                         return result
                     result["findings"].append({
                         "label": label,
-                        "draft": {"line": draft_line, "excerpt": draft_excerpt},
+                        "draft": evidence,
                         "published": {"policy_id": policy["policy_id"], "title": policy.get("title", policy["policy_id"]),
                                       "line": line, "excerpt": excerpt, "published_at": policy.get("published_at")},
                         "overlap_from": overlap_start,

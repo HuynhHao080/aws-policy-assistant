@@ -201,3 +201,23 @@ def test_deadline_review_uses_only_overlapping_public_policies(services):
     assert finding["published"]["policy_id"] == "HR" and finding["published"]["line"] == 2
     assert finding["draft"]["excerpt"].endswith("14 ngày")
     assert request(PATH, claims=ADMIN)[1]["revision"] == draft["revision"]
+
+
+def test_deadline_review_reports_changed_added_and_removed_terms(services):
+    original = {**FIELDS, "content": "Expense deadline: 7 days\nAppeal deadline: 5 days\nResponse deadline: 3 days"}
+    status, draft = change("save_draft", draft=original)
+    assert status == 200
+    status, live = change("publish", draft["revision"])
+    assert status == 200
+    amended = {**FIELDS, "content": "Expense deadline: 14 days\nApproval deadline: 2 business days\nResponse deadline: 3 days"}
+    status, draft = change("save_draft", live["revision"], amended)
+    assert status == 200
+    status, report = request(PATH, claims=ADMIN, params={"review": "deadlines"})
+    assert status == 200
+    changes = {row["label"]: row for row in report["changes"]}
+    assert set(changes) == {"expense deadline", "appeal deadline", "approval deadline"}
+    assert changes["expense deadline"]["before"][0]["excerpt"] == "Expense deadline: 7 days"
+    assert changes["expense deadline"]["after"][0]["excerpt"] == "Expense deadline: 14 days"
+    assert changes["appeal deadline"]["after"] == []
+    assert changes["approval deadline"]["before"] == []
+    assert report["revision"] == draft["revision"]
